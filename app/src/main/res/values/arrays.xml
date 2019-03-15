@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="selected_channels">
+        <item>要闻</item>
+        <item>视频</item>
+        <item>新时代</item>
+        <item>娱乐</item>
+        <item>体育</item>
+        <item>科技</item>
+        <item>财经</item>
+        <item>汽车</item>
+        <item>图片</item>
+        <item>电影</item>
+        <item>科普</item>
+    </string-array>
+
+    <string-array name="recommended_channels">
+        <item>问答</item>
+        <item>足球</item>
+        <item>两会</item>
+        <item>军事</item>
+        <item>时尚</item>
+        <item>文化</item>
+        <item>房产</item>
+        <item>佛学</item>
+        <item>游戏</item>
+        <item>股票</item>
+        <item>动漫</item>
+        <item>理财</item>
+        <item>情感</item>
+        <item>职场</item>
+        <item>政务</item>
+        <item>家居</item>
+        <item>电竞</item>
+        <item>数码</item>
+        <item>星座</item>
+        <item>教育</item>
+        <item>美容</item>
+        <item>搏击</item>
+        <item>健康</item>
+        <item>NBA</item>
+        <item>改革开放</item>
+        <item>电视剧</item>
+        <item>生活</item>
+        <item>旅游</item>
+        <item>韩流</item>
+        <item>综艺</item>
+        <item>美食</item>
+        <item>育儿</item>
+    </string-array>
+
+    <string-array name="sticky_list1">
+        <item>问答</item>
+        <item>足球</item>
+        <item>两会</item>
+        <item>军事</item>
+    </string-array>
+
+    <string-array name="sticky_list2">
+        <item>时尚</item>
+        <item>文化</item>
+        <item>房产</item>
+        <item>教育</item>
+        <item>美容</item>
+    </string-array>
+
+    <string-array name="sticky_list3">
+        <item>佛学</item>
+        <item>游戏</item>
+        <item>股票</item>
+        <item>动漫</item>
+        <item>理财</item>
+    </string-array>
+
+    <string-array name="sticky_list4">
+        <item>情感</item>
+        <item>职场</item>
+        <item>政务</item>
+        <item>家居</item>
+    </string-array>
+
+    <string-array name="sticky_list5">
+        <item>电竞</item>
+        <item>数码</item>
+        <item>星座</item>
+    </string-array>
+
+    <string-array name="sticky_list6">
+        <item>搏击</item>
+        <item>健康</item>
+        <item>NBA</item>
+        <item>改革开放</item>
+        <item>电视剧</item>
+        <item>生活</item>
+        <item>旅游</item>
+    </string-array>
+
+    <string-array name="sticky_list7">
+        <item>韩流</item>
+        <item>综艺</item>
+        <item>美食</item>
+        <item>育儿</item>
+    </string-array>z
+
+</resources>

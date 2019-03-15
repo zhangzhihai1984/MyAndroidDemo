@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="./libs/three.js"></script>
+    <script type="text/javascript" src="./libs/stats.js"></script>
+    <script type="text/javascript" src="./libs/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="./libs/TrackballControls.js"></script>
+    <script type="text/javascript" src="./libs/OrbitControls.js"></script>
+    <script type="text/javascript" src="./libs/SwipeControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="stats"></div>
+<div id="container"></div>
+
+<script type="text/javascript">
+    //TODO:
+    // const CAMERA_POSITION = new THREE.Vector3(-52, 35, 38);
+    // const BUILDING_BASE_POSITION = new THREE.Vector3(15, -30, -5);
+    const CAMERA_POSITION = new THREE.Vector3(-45, 0, 40);
+    const BUILDING_BASE_POSITION = new THREE.Vector3(15, -60, -5); //Change y to -20 while look at (0, CAMERA_POSITION.y - 0, 0)
+
+    const BUILDING_FLOOR_NUM = 10;
+
+    const BUILDING_CHILD_WIDTH = 24;
+    const BUILDING_CHILD_HEIGHT = 8;
+    const BUILDING_CHILD_DEPTH = 18;
+    const BUILDING_CHILD_RADIUS = 3;
+
+    const BUILDING_CHILD_OFFSET_WIDTH = BUILDING_CHILD_WIDTH - 1.5;
+    const BUILDING_CHILD_OFFSET_HEIGHT = 2.5;
+    const BUILDING_CHILD_OFFSET_DEPTH = BUILDING_CHILD_DEPTH - 1.5;
+    const BUILDING_CHILD_OFFSET_RADIUS = 3;
+
+    let buildingChildLRTexture = null;
+    let buildingChildFBTexture = null;
+    let buildingChildUDTexture = null;
+    let buildingOffsetLRTexture = null;
+    let buildingOffsetFBTexture = null;
+
+    let clock = new THREE.Clock();
+
+    let scene = initScene();
+    let camera = initCamera();
+    let renderer = initRenderer();
+
+    let stats = initStats();
+    let controls = initControls();
+
+    let SELECTED_FLOOR_INDEX = -1;
+
+    let buildingChildrenMeshes = [];
+
+    let raycaster = null;
+    let mouse = null;
+    let INTERSECTED = null;
+
+    // initHelper();
+    initRaycaster();
+    initEvent();
+    initLight();
+
+    initBuilding();
+
+    animate();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+    }
+
+    function render() {
+        /**
+         * THREE.Clock对象用来精确计算出上次调用后经过的时间，或者一个渲染循环耗费的时间。
+         * clock.getDelta返回此次调用和上次调用的时间间隔。
+         **/
+        let delta = clock.getDelta();
+
+        controls.update(delta);
+        stats.update();
+
+        renderer.render(scene, camera);
+
+        // console.log(camera.position);
+    }
+
+    function initStats() {
+        let stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        stats.domElement.style.left = '0px';
+        $('#stats').append(stats.domElement);
+
+        return stats;
+    }
+
+    function initControls() {
+        // let controls = new THREE.TrackballControls(camera);
+
+        /**
+         * OrbitControls是在场景中围绕某个对象旋转，平移的好方法
+         * */
+        // let controls = new THREE.OrbitControls(camera);
+        /*controls.autoRotate = false;
+        controls.minPolarAngle = 0.3 * Math.PI / 2;
+        controls.maxPolarAngle = Math.PI / 2;
+        controls.minAzimuthAngle = -0.9 * Math.PI;
+        controls.maxAzimuthAngle = -0.1 * Math.PI;
+        controls.minDistance = 50;
+        controls.maxDistance = 150;*/
+        //    controls.addEventListener('change', render);
+
+        let controls = new THREE.SwipeControls(camera);
+        controls.lockX = true;
+        controls.speed = 0.1;
+        controls.swipeBuffer = 0.95;
+
+        //TODO:
+        // controls.setLimit("top", 90);
+        // controls.setLimit("bottom", 35);
+        controls.setLimit("top", 70);
+        controls.setLimit("bottom", CAMERA_POSITION.y);
+
+        return controls;
+    }
+
+    function initScene() {
+        let scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111c2a);
+
+        return scene;
+    }
+
+    function initCamera() {
+        let camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.up.x = 0;
+        camera.up.y = 1;
+        camera.up.z = 0;
+        camera.position.x = CAMERA_POSITION.x;
+        camera.position.y = CAMERA_POSITION.y;
+        camera.position.z = CAMERA_POSITION.z;
+
+        //TODO:
+        // camera.lookAt(scene.position);
+        camera.lookAt(new THREE.Vector3(0, CAMERA_POSITION.y - 40, 0));
+
+        return camera;
+    }
+
+    function initRenderer() {
+        let renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        // renderer.setClearColor(0x111c2a);
+        // renderer.gammaInput = true;
+        // renderer.gammaOutput = true;
+        renderer.shadowMapEnabled = true;
+
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        return renderer;
+    }
+
+    function initRaycaster() {
+        raycaster = new THREE.Raycaster();
+
+        /** 初始化为new THREE.Vector2()的话，默认为(0, 0)， 有可能会导致上来就有物体被选中 */
+        mouse = new THREE.Vector2(Infinity, Infinity);
+    }
+
+    function initEvent() {
+        document.addEventListener('mousemove', onMouseMove, false);
+        window.addEventListener('resize', onWindowResize, false);
+    }
+
+    function initHelper() {
+        let axis = new THREE.AxesHelper(200);
+        scene.add(axis);
+
+        let helper = new THREE.GridHelper(1000, 200, 0x0000ff, 0x808080);
+        helper.position.y = BUILDING_BASE_POSITION.y;
+        scene.add(helper);
+    }
+
+    function initLight() {
+        let spotLight = new THREE.SpotLight(0xFFFFFF, 1.0);
+        spotLight.position.set(-100, 100, 40);
+        spotLight.castShadow = true;
+        // scene.add(spotLight);
+        // scene.add(new THREE.CameraHelper(spotLight.shadow.camera));
+
+        let ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
+        scene.add(ambientLight);
+
+        let directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        directionalLight.position.set(-1, 0.6, 0.2);
+        directionalLight.castShadow = true;
+        // scene.add(directionalLight);
+        // scene.add(new THREE.CameraHelper(directionalLight.shadow.camera));
+    }
+
+    function initBuilding() {
+        let buildingChildrenGroup = new THREE.Group();
+        buildingChildrenGroup.position.set(BUILDING_BASE_POSITION.x, BUILDING_BASE_POSITION.y, BUILDING_BASE_POSITION.z);
+        scene.add(buildingChildrenGroup);
+
+        let buildingChildGeometry = new THREE.BoxGeometry(BUILDING_CHILD_WIDTH, BUILDING_CHILD_HEIGHT, BUILDING_CHILD_DEPTH, BUILDING_CHILD_WIDTH * 2, BUILDING_CHILD_HEIGHT * 2, BUILDING_CHILD_DEPTH * 2);
+        roundedGeometry(buildingChildGeometry, BUILDING_CHILD_RADIUS);
+
+        let buildingChildOffsetGeometry = new THREE.BoxGeometry(BUILDING_CHILD_OFFSET_WIDTH, BUILDING_CHILD_OFFSET_HEIGHT, BUILDING_CHILD_OFFSET_DEPTH, BUILDING_CHILD_OFFSET_WIDTH * 2, BUILDING_CHILD_OFFSET_HEIGHT * 2, BUILDING_CHILD_OFFSET_DEPTH * 2);
+        roundedGeometry(buildingChildOffsetGeometry, BUILDING_CHILD_OFFSET_RADIUS);
+
+        for (let i = 0; i < BUILDING_FLOOR_NUM; i++) {
+            let buildingChildMesh = new THREE.Mesh(buildingChildGeometry, getBuildingChildMaterial(-1));
+            buildingChildMesh.castShadow = true;
+            buildingChildMesh.name = i;
+            buildingChildMesh.position.set(0, 0, 0);
+            buildingChildMesh.position.y += (BUILDING_CHILD_HEIGHT + BUILDING_CHILD_OFFSET_HEIGHT) * i;
+
+            // console.log(buildingChildMesh.position);
+
+            buildingChildrenGroup.add(buildingChildMesh);
+            buildingChildrenMeshes.push(buildingChildMesh);
+
+            let buildingChildNoMesh = new THREE.Mesh(buildingChildGeometry, getBuildingChildMaterial(i));
+            buildingChildNoMesh.castShadow = true;
+            buildingChildNoMesh.position.copy(buildingChildMesh.position);
+            // buildingChildNoMesh.position.y -= 2;
+            buildingChildNoMesh.position.x -= 1;
+            buildingChildrenGroup.add(buildingChildNoMesh);
+
+            if (i !== BUILDING_FLOOR_NUM - 1) {
+                let buildingChildOffsetMesh = new THREE.Mesh(buildingChildOffsetGeometry, getBuildingOffsetMaterial());
+                buildingChildOffsetMesh.position.copy(buildingChildMesh.position);
+                buildingChildOffsetMesh.position.y += BUILDING_CHILD_HEIGHT / 2 + BUILDING_CHILD_OFFSET_HEIGHT / 2;
+                buildingChildrenGroup.add(buildingChildOffsetMesh);
+            }
+        }
+
+        /*let textGeometry = new THREE.TextGeometry('hello', {
+            size: 10,
+            height: 5,
+        });
+
+        let textMaterial = new THREE.MeshLambertMaterial({
+            color: 0xffff00,
+        });
+
+        let textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        textMesh.position.set(-100, 0, 0);
+        scene.add(textMesh);*/
+    }
+
+    function roundedGeometry(geometry, radius) {
+        let v1 = new THREE.Vector3();
+        let w1 = (geometry.parameters.width - (radius * 2)) * 0.5,
+            d1 = (geometry.parameters.depth - (radius * 2)) * 0.5;
+        let vTemp = new THREE.Vector3(),
+            vSign = new THREE.Vector3(),
+            vRad = new THREE.Vector3();
+        geometry.vertices.forEach(v => {
+            v1.set(w1, v.y, d1);
+            vTemp.multiplyVectors(v1, vSign.set(Math.sign(v.x), 1, Math.sign(v.z)));
+            vRad.subVectors(v, vTemp);
+            if (Math.abs(v.x) > v1.x && Math.abs(v.z) > v1.z && vRad.length() > radius) {
+                vRad.setLength(radius).add(vTemp);
+                v.copy(vRad);
+            }
+        });
+    }
+
+    /**
+     * materials index:
+     * 0: Right
+     * 1: Left
+     * 2: Up
+     * 3: Down
+     * 4: Front
+     * 5: Back
+     * */
+    function getBuildingChildMaterial(index) {
+        if (!buildingChildLRTexture) {
+            buildingChildLRTexture = new THREE.TextureLoader().load('./textures/floor_LR.png');
+        }
+
+        if (!buildingChildFBTexture) {
+            buildingChildFBTexture = new THREE.TextureLoader().load('./textures/floor_FB.png');
+        }
+
+        if (!buildingChildUDTexture) {
+            buildingChildUDTexture = new THREE.TextureLoader().load('./textures/floor_UD.png');
+        }
+
+        if (index < 0) {
+            let material = new THREE.MeshLambertMaterial({
+                side: THREE.DoubleSide,
+                // color: 0x223147,
+                wireframe: false,
+                transparent: true,
+                opacity: 0.8,
+                map: buildingChildUDTexture,
+            });
+
+            let materialUD = new THREE.MeshLambertMaterial({
+                side: THREE.DoubleSide,
+                wireframe: false,
+                transparent: false,
+                map: buildingChildUDTexture,
+            });
+
+            let materialLR = new THREE.MeshLambertMaterial({
+                side: THREE.DoubleSide,
+                wireframe: false,
+                transparent: true,
+                opacity: 0.8,
+                map: buildingChildLRTexture,
+            });
+
+            let materialFB = new THREE.MeshLambertMaterial({
+                side: THREE.DoubleSide,
+                wireframe: false,
+                transparent: true,
+                opacity: 0.8,
+                map: buildingChildFBTexture,
+            });
+
+            return [
+                material,
+                materialLR,
+                materialUD,
+                materialUD,
+                materialFB,
+                material
+            ];
+        } else {
+            return [
+                null,
+                new THREE.MeshLambertMaterial({
+                    map: getFloorNoTexture(index),
+                    transparent: true,
+                    opacity: 0.9,
+                }),
+                null,
+                null,
+                null,
+                null
+            ];
+        }
+    }
+
+    function getBuildingOffsetMaterial() {
+        if (!buildingOffsetLRTexture) {
+            buildingOffsetLRTexture = new THREE.TextureLoader().load('./textures/offset_LR.png');
+        }
+
+        if (!buildingOffsetFBTexture) {
+            buildingOffsetFBTexture = new THREE.TextureLoader().load('./textures/offset_FB.png');
+        }
+
+        let material = new THREE.MeshLambertMaterial({
+            side: THREE.DoubleSide,
+            color: 0x66cd98,
+            wireframe: false,
+            transparent: true,
+            opacity: 0.9,
+        });
+
+        let materialLR = new THREE.MeshLambertMaterial({
+            side: THREE.DoubleSide,
+            wireframe: false,
+            transparent: false,
+            opacity: 0.9,
+            map: buildingOffsetLRTexture,
+        });
+
+        let materialFB = new THREE.MeshLambertMaterial({
+            side: THREE.DoubleSide,
+            wireframe: false,
+            transparent: false,
+            opacity: 0.9,
+            map: buildingOffsetFBTexture,
+        });
+
+        return [
+            material,
+            materialLR,
+            null,
+            null,
+            materialFB,
+            material
+        ];
+    }
+
+    function getFloorNoTexture(index) {
+        //Default size is 300 x 150, we'd better to avoid the warning like this:
+        // image is not power of two (300x150). Resized to 256x128
+        let canvas = document.createElement("canvas");
+        canvas.width = 256;
+        canvas.height = 128;
+
+        let ctx = canvas.getContext("2d");
+
+        let text = (index < 9 ? '0' : '') + (index + 1) + 'L';
+
+        ctx.fillStyle = "white";
+        ctx.font = "Bold 30px Arial";
+        ctx.fillText(text, 50, 60);
+
+        let texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
+
+        return texture;
+    }
+
+    function onMouseMove(event) {
+        event.preventDefault();
+
+        //[-1, 1]
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        updateIntersection(buildingChildrenMeshes)
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function updateIntersection(objects) {
+        raycaster.setFromCamera(mouse, camera);
+
+        let intersects = raycaster.intersectObjects(objects);
+
+        if (intersects.length > 0) {
+            /**
+             * 选中了某个或某几个物体，选择数组中第一个元素，也就是距离我们最近的一个物体进行处理
+             * 如果当前选中的物体与我们之前选中的物体(INTERSECTED)不一样，恢复之前物体的反射光 (如果之前物体不为空)
+             * 将当前选中的物体赋值给INTERSECTED，同时添加反射光
+             *
+             * */
+            if (INTERSECTED !== intersects[0].object) {
+                if (INTERSECTED) {
+                    if (!INTERSECTED.material.length) {
+                        INTERSECTED.material.emissive.set(0x000000);
+                    } else {
+                        for (let i = 0; i < INTERSECTED.material.length; i++) {
+                            INTERSECTED.material[i].emissive.set(0x000000);
+                        }
+                    }
+                }
+
+                INTERSECTED = intersects[0].object;
+                if (!INTERSECTED.material.length) {
+                    INTERSECTED.material.emissive.set(0xFF0000);
+                } else {
+                    for (let i = 0; i < INTERSECTED.material.length; i++) {
+                        INTERSECTED.material[i].emissive.set(0xFF0000);
+                    }
+                }
+            }
+        } else {
+            /**
+             * 没有选中任何物体，如果之前选中的物体(INTERSECTED)不为空，那么恢复之前的反射光，最后将其置空
+             * */
+            if (INTERSECTED) {
+                if (!INTERSECTED.material.length) {
+                    INTERSECTED.material.emissive.set(0x000000);
+                } else {
+                    for (let i = 0; i < INTERSECTED.material.length; i++) {
+                        INTERSECTED.material[i].emissive.set(0x000000);
+                    }
+                }
+            }
+            INTERSECTED = null;
+        }
+
+        render();
+    }
+</script>
+</body>
+</html>

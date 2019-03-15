@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    tools:context=".pager.PagerActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.twigcodes.ui.pager.LoopViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:pager_autopage_enabled="true"
+            app:pager_autopage_interval="2000" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.2"
+            android:background="@android:color/black" />
+
+        <com.twigcodes.ui.indicator.PageIndicatorView
+            android:id="@+id/indicatorview"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            app:indicator_animator_in="@animator/indicator_animator"
+            app:indicator_animator_out="@animator/indicator_animator_reverse"
+            app:indicator_drawable="@drawable/black_radius_square"
+            app:indicator_height="4dp"
+            app:indicator_margin="6dp"
+            app:indicator_width="10dp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hello" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Remove" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="10dp">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+        </android.support.v7.widget.CardView>
+
+        <com.twigcodes.ui.indicator.PageIndicatorView
+            android:id="@+id/indicatorview2"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.5"
+            android:background="@android:color/black"
+            app:indicator_gravity="center_vertical" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/add2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/remove2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Remove" />
+
+    </RelativeLayout>
+
+</LinearLayout>
