@@ -3,6 +3,7 @@ package com.usher.demo;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -91,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
 
         mContext = this;
 
-        initView();
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
 
         testStrFormat();
 
+        initView();
     }
 
     @Override
@@ -191,9 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
 
         findViewById(R.id.selection_button).setOnClickListener(v -> startActivity(new Intent(mContext, SelectionActivity.class)));
         findViewById(R.id.wave_button).setOnClickListener(v -> startActivity(new Intent(mContext, WaveActivity.class)));
-        findViewById(R.id.intent_button).setOnClickListener(v -> {
-            startActivity(new Intent(mContext, AActivity.class));
-        });
+        findViewById(R.id.intent_button).setOnClickListener(v -> startActivity(new Intent(mContext, AActivity.class)));
         findViewById(R.id.notification_button).setOnClickListener(v -> startActivity(new Intent(mContext, NotificationActivity.class)));
         findViewById(R.id.round_image_button).setOnClickListener(v -> startActivity(new Intent(mContext, RoundImageActivity.class)));
         findViewById(R.id.marquee_textview_button).setOnClickListener(v -> startActivity(new Intent(mContext, MarqueeTextActivity.class)));
@@ -203,6 +202,8 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
         findViewById(R.id.profile_button).setOnClickListener(v -> startActivity(new Intent(mContext, ProfileActivity.class)));
         findViewById(R.id.home_button).setOnClickListener(v -> startActivity(new Intent(mContext, HomeActivity.class)));
         findViewById(R.id.angular_button).setOnClickListener(v -> startActivity(new Intent(mContext, AngularActivity.class)));
+
+        findViewById(R.id.imageview).setOnClickListener(v -> new AppInfoDialog(mContext).show());
     }
 
     private void setBackgroundAlpha(float alpha) {
@@ -365,6 +366,33 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class AppInfoDialog extends Dialog {
+
+        AppInfoDialog(@NonNull Context context) {
+            super(context, R.style.FramelessDialog);
+
+            setContentView(R.layout.app_info_layout);
+
+            String appName = null;
+
+            try {
+                PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+                appName = getPackageManager().getApplicationLabel(packageInfo.applicationInfo).toString();
+
+
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            ((TextView) findViewById(R.id.app_id_textview)).setText(getString(R.string.application_id, BuildConfig.APPLICATION_ID));
+            ((TextView) findViewById(R.id.app_name_textview)).setText(getString(R.string.application_name, appName));
+            ((TextView) findViewById(R.id.app_version_textview)).setText(getString(R.string.application_version, BuildConfig.VERSION_NAME));
+            ((TextView) findViewById(R.id.app_flavor_textview)).setText(getString(R.string.application_flavor, BuildConfig.FLAVOR));
+            ((TextView) findViewById(R.id.app_api_textview)).setText(getString(R.string.application_api_host, BuildConfig.API_HOST));
+        }
     }
 
     class TestDialog extends Dialog {

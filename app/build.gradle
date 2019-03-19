@@ -10,17 +10,28 @@ buildscript {
 
 android {
     compileSdkVersion 28
+    flavorDimensions "default"
+
     defaultConfig {
         applicationId "com.usher.demo"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+
+        resValue "string", "app_name", "MyDemo"
+        buildConfigField "String", "API_HOST", '"https://api.twigcodes.usher"'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            debuggable true
         }
     }
 
@@ -46,6 +57,53 @@ android {
 
     lintOptions {
         disable 'GoogleAppIndexingWarning'
+    }
+
+    productFlavors {
+        usher {
+            applicationId "com.usher.demo"
+            ext {
+                api_host = [
+                        debug  : '"https://api.twigcodes.usher:debug"',
+                        local  : '"https://api.twigcodes.usher:local"',
+                        release: '"https://api.twigcodes.usher:release"'
+                ]
+                app_name = [
+                        debug  : "Usher-D",
+                        local  : "Usher-L",
+                        release: "Usher"
+                ]
+            }
+        }
+        john {
+            applicationId "com.john.demo"
+            ext {
+                api_host = [
+                        debug  : '"https://api.twigcodes.john:debug"',
+                        local  : '"https://api.twigcodes.john:local"',
+                        release: '"https://api.twigcodes.john:release"'
+                ]
+                app_name = [
+                        debug  : "John-D",
+                        local  : "John-L",
+                        release: "John"
+                ]
+            }
+        }
+    }
+
+    applicationVariants.all { variant ->
+        def flavor = variant.productFlavors[0]
+        def buildType = variant.buildType.name
+
+        def appName = flavor.app_name[buildType]
+
+        variant.resValue "string", "app_name", appName
+        variant.buildConfigField "String", "API_HOST", flavor.api_host[buildType]
+
+        variant.outputs.all { output ->
+            outputFileName = "${appName}-${variant.buildType.name}-${variant.versionName}.apk"
+        }
     }
 }
 
