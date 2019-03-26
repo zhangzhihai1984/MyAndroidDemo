@@ -3,7 +3,6 @@ package com.usher.demo;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -43,10 +42,10 @@ import com.usher.demo.image.RoundImageActivity;
 import com.usher.demo.launchmode.AActivity;
 import com.usher.demo.material.FitsSystemWindowActivity;
 import com.usher.demo.material.ProfileActivity;
-import com.usher.demo.material.TabLayoutActivity;
 import com.usher.demo.material.home.HomeActivity;
 import com.usher.demo.notification.NotificationActivity;
 import com.usher.demo.rx.SplashActivity;
+import com.usher.demo.rx.SumActivity;
 import com.usher.demo.selection.SelectionActivity;
 import com.usher.demo.text.MarqueeTextActivity;
 import com.usher.demo.wave.WaveActivity;
@@ -65,13 +64,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -79,7 +75,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements View.OnCreateContextMenuListener {
-    private static final String TAG = "zzh";
     private Context mContext;
 
     private TestDialog mDialog;
@@ -111,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
 //                startActivity(new Intent(mContext, ThreeActivity.class));
 //                startActivity(new Intent(mContext, RxActivity.class));
 //            startActivity(new Intent(mContext, PagerActivity.class));
-            startActivity(new Intent(mContext, TabLayoutActivity.class));
+//            startActivity(new Intent(mContext, TabLayoutActivity.class));
+            startActivity(new Intent(mContext, SumActivity.class));
         });
 
         mDialog = new TestDialog(this);

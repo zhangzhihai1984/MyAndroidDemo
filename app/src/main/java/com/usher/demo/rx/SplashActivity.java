@@ -1,12 +1,18 @@
 package com.usher.demo.rx;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding3.view.RxView;
+import com.uber.autodispose.AutoDispose;
+import com.uber.autodispose.AutoDisposeConverter;
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import com.usher.demo.R;
+import com.usher.demo.utils.RxUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -109,7 +115,7 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 });
 
-//        startCountdown();
+        startCountdown();
     }
 
     <T> ObservableTransformer<T, T> getThreadTransformer() {
@@ -119,10 +125,11 @@ public class SplashActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+
     private void startCountdown() {
         Observable.interval(0, 1, TimeUnit.SECONDS)
                 .map(v -> 3 - v)
-
+                .takeWhile(v -> v >= 0)
                 .compose(getThreadTransformer())
                 .subscribe(new Observer<Long>() {
                     @Override
@@ -145,6 +152,12 @@ public class SplashActivity extends AppCompatActivity {
                     public void onComplete() {
                         Log.i("zzh", "[Countdown] onComplete");
                     }
+                });
+
+        Observable.interval(1000, TimeUnit.SECONDS)
+                .take(10)
+                .as(RxUtil.autoDispose(this))
+                .subscribe(v -> {
                 });
     }
 }

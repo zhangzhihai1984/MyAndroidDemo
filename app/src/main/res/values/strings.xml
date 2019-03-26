@@ -136,4 +136,6 @@
     <string name="application_flavor">App Flavor: %1$s</string>
     <string name="application_api_host">API Host: %1$s</string>
 
+    <string name="rx_sum_init_value">--</string>
+
 </resources>
