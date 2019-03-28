@@ -1,0 +1,100 @@
+package com.usher.demo.main;
+
+import com.usher.demo.angular.AngularActivity;
+import com.usher.demo.decoration.DecorationActivity;
+import com.usher.demo.drag.ChannelActivity;
+import com.usher.demo.image.BlurActivity;
+import com.usher.demo.image.RoundImageActivity;
+import com.usher.demo.launchmode.AActivity;
+import com.usher.demo.loading.LoadingActivity;
+import com.usher.demo.material.FitsSystemWindowActivity;
+import com.usher.demo.material.ProfileActivity;
+import com.usher.demo.material.TabLayoutActivity;
+import com.usher.demo.material.home.HomeActivity;
+import com.usher.demo.notification.NotificationActivity;
+import com.usher.demo.pager.PagerActivity;
+import com.usher.demo.rx.RxExitActivity;
+import com.usher.demo.rx.SplashActivity;
+import com.usher.demo.rx.SumActivity;
+import com.usher.demo.selection.SelectionActivity;
+import com.usher.demo.text.MarqueeTextActivity;
+import com.usher.demo.three.ThreeActivity;
+import com.usher.demo.wave.WaveActivity;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class DemoConfig {
+    private static final Map<String, List<DemoItem>> configMap = new HashMap<>();
+    static final String TAG_KEY = "TAG_KEY";
+    private static final String KEY_RX = "rx";
+    private static final String KEY_WEB = "web";
+    private static final String KEY_IMAGE = "image";
+    private static final String KEY_VIEW = "view";
+    private static final String KEY_MATERIAL = "material";
+    private static final String KEY_AWESOME = "awesome";
+    private static final String KEY_OTHER = "other";
+
+
+    static {
+
+        configMap.put("main", Arrays.asList(
+                new DemoItem("rx", KEY_RX, DemoListActivity.class),
+                new DemoItem("image", KEY_IMAGE, DemoListActivity.class),
+                new DemoItem("material", KEY_MATERIAL, DemoListActivity.class),
+                new DemoItem("view", KEY_VIEW, DemoListActivity.class),
+                new DemoItem("web", KEY_WEB, DemoListActivity.class),
+                new DemoItem("other", KEY_OTHER, DemoListActivity.class),
+                new DemoItem("awesome", KEY_AWESOME, DemoListActivity.class)
+        ));
+
+        configMap.put(KEY_RX, Arrays.asList(
+                new DemoItem("splash", SplashActivity.class),
+                new DemoItem("sum", SumActivity.class),
+                new DemoItem("exit", RxExitActivity.class)
+        ));
+
+        configMap.put(KEY_IMAGE, Arrays.asList(
+                new DemoItem("blur", BlurActivity.class),
+                new DemoItem("picasso transform", RoundImageActivity.class)
+        ));
+
+        configMap.put(KEY_WEB, Arrays.asList(
+                new DemoItem("three", ThreeActivity.class),
+                new DemoItem("angular", AngularActivity.class)
+        ));
+
+        configMap.put(KEY_MATERIAL, Arrays.asList(
+                new DemoItem("fitsSystemWindow", FitsSystemWindowActivity.class),
+                new DemoItem("tab", TabLayoutActivity.class),
+                new DemoItem("profile", ProfileActivity.class),
+                new DemoItem("home", HomeActivity.class)
+
+        ));
+
+        configMap.put(KEY_VIEW, Arrays.asList(
+                new DemoItem("wave", WaveActivity.class),
+                new DemoItem("pager", PagerActivity.class),
+                new DemoItem("marquee text", MarqueeTextActivity.class),
+                new DemoItem("loading", LoadingActivity.class)
+
+        ));
+
+        configMap.put(KEY_OTHER, Arrays.asList(
+                new DemoItem("notification", NotificationActivity.class),
+                new DemoItem("launch mode", AActivity.class)
+        ));
+
+        configMap.put(KEY_AWESOME, Arrays.asList(
+                new DemoItem("selection", SelectionActivity.class),
+                new DemoItem("edit channel", ChannelActivity.class),
+                new DemoItem("recyclerView decoration", DecorationActivity.class)
+        ));
+    }
+
+    static List<DemoItem> getDemoConfig(String key) {
+        return configMap.get(key);
+    }
+}

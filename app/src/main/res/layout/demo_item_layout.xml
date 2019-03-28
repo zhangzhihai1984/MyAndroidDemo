@@ -11,7 +11,7 @@
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp">
 
-        <TextView
+        <com.twigcodes.ui.MarqueeTextView
             android:id="@+id/desc_textview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -1,6 +1,7 @@
 package com.usher.demo.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,11 +11,15 @@ import android.widget.TextView;
 
 import com.usher.demo.R;
 
+import java.util.List;
+
 public class DemoListAdapter extends RecyclerView.Adapter {
     private final Context mContext;
+    private final List<DemoItem> mItems;
 
-    public DemoListAdapter(Context context) {
+    DemoListAdapter(Context context, List<DemoItem> items) {
         this.mContext = context;
+        this.mItems = items;
     }
 
     @NonNull
@@ -27,25 +32,35 @@ public class DemoListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        bindDemoViewHolder((DemoViewHolder) viewHolder);
+        bindDemoViewHolder((DemoViewHolder) viewHolder, mItems.get(position));
     }
 
-    private void bindDemoViewHolder(DemoViewHolder holder) {
-        holder.desc.setText("Rx");
+    private void bindDemoViewHolder(DemoViewHolder holder, DemoItem demoItem) {
+        holder.itemView.setTag(demoItem);
+        holder.desc.setText(demoItem.desc);
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mItems.size();
     }
 
     class DemoViewHolder extends RecyclerView.ViewHolder {
         final TextView desc;
 
-        public DemoViewHolder(@NonNull View itemView) {
+        DemoViewHolder(@NonNull View itemView) {
             super(itemView);
 
             desc = itemView.findViewById(R.id.desc_textview);
+
+            itemView.setOnClickListener(v -> {
+                DemoItem demoItem = (DemoItem) itemView.getTag();
+
+                Intent intent = new Intent(mContext, demoItem.aClass);
+                intent.putExtra(DemoConfig.TAG_KEY, demoItem.key);
+                mContext.startActivity(intent);
+            });
+
         }
     }
 }
