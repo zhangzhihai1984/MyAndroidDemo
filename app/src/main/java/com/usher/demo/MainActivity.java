@@ -40,6 +40,7 @@ import com.usher.demo.drag.ChannelActivity;
 import com.usher.demo.image.BlurActivity;
 import com.usher.demo.image.RoundImageActivity;
 import com.usher.demo.launchmode.AActivity;
+import com.usher.demo.main.DemoListActivity;
 import com.usher.demo.material.FitsSystemWindowActivity;
 import com.usher.demo.material.ProfileActivity;
 import com.usher.demo.material.home.HomeActivity;
@@ -107,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
 //                startActivity(new Intent(mContext, RxActivity.class));
 //            startActivity(new Intent(mContext, PagerActivity.class));
 //            startActivity(new Intent(mContext, TabLayoutActivity.class));
-            startActivity(new Intent(mContext, SumActivity.class));
+//            startActivity(new Intent(mContext, SumActivity.class));
+            startActivity(new Intent(mContext, DemoListActivity.class));
         });
 
         mDialog = new TestDialog(this);

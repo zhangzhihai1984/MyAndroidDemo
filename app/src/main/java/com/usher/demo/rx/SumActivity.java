@@ -1,14 +1,11 @@
 package com.usher.demo.rx;
 
-import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
 import com.jakewharton.rxbinding3.view.RxView;
-import com.uber.autodispose.AutoDispose;
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import com.usher.demo.R;
 import com.usher.demo.utils.RxUtil;
 

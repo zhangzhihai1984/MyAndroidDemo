@@ -24,6 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".main.DemoListActivity"
+            android:theme="@style/CommonTheme"/>
         <activity
             android:name=".ScrollingActivity"
             android:label="@string/title_activity_scrolling"
@@ -88,6 +90,9 @@
             android:theme="@style/FullScreenTheme" />
         <activity
             android:name=".rx.SumActivity"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".rx.RxExitActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".material.TabLayoutActivity"
