@@ -14,7 +14,7 @@
             android:id="@+id/param1_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/teal_ripple_background"
+            android:background="@drawable/teal_oval_background"
             android:text="@string/rx_sum_init_value" />
 
         <ImageView
@@ -29,7 +29,7 @@
             android:id="@+id/param2_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/teal_ripple_background"
+            android:background="@drawable/teal_oval_background"
             android:text="@string/rx_sum_init_value" />
 
         <ImageView
@@ -44,7 +44,7 @@
             android:id="@+id/sum_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/teal_ripple_background"
+            android:background="@drawable/teal_oval_background"
             android:enabled="false"
             android:text="@string/rx_sum_init_value" />
 
