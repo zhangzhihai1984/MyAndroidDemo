@@ -14,6 +14,7 @@ import com.usher.demo.material.home.HomeActivity;
 import com.usher.demo.notification.NotificationActivity;
 import com.usher.demo.pager.PagerActivity;
 import com.usher.demo.rx.RxExitActivity;
+import com.usher.demo.rx.RxSearchActivity;
 import com.usher.demo.rx.SplashActivity;
 import com.usher.demo.rx.SumActivity;
 import com.usher.demo.selection.SelectionActivity;
@@ -37,7 +38,6 @@ class DemoConfig {
     private static final String KEY_AWESOME = "awesome";
     private static final String KEY_OTHER = "other";
 
-
     static {
 
         configMap.put("main", Arrays.asList(
@@ -53,7 +53,8 @@ class DemoConfig {
         configMap.put(KEY_RX, Arrays.asList(
                 new DemoItem("splash", SplashActivity.class),
                 new DemoItem("sum", SumActivity.class),
-                new DemoItem("exit", RxExitActivity.class)
+                new DemoItem("exit", RxExitActivity.class),
+                new DemoItem("search", RxSearchActivity.class)
         ));
 
         configMap.put(KEY_IMAGE, Arrays.asList(

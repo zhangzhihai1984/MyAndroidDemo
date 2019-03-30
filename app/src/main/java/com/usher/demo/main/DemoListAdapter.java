@@ -60,7 +60,6 @@ public class DemoListAdapter extends RecyclerView.Adapter {
                 intent.putExtra(DemoConfig.TAG_KEY, demoItem.key);
                 mContext.startActivity(intent);
             });
-
         }
     }
 }

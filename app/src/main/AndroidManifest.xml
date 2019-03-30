@@ -92,6 +92,8 @@
         <activity
             android:name=".rx.RxExitActivity"
             android:theme="@style/CommonTheme" />
+        <activity android:name=".rx.RxSearchActivity"
+            android:theme="@style/CommonTheme"/>
         <activity
             android:name=".material.TabLayoutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
