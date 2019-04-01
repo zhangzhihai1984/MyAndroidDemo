@@ -11,7 +11,7 @@ import com.usher.demo.utils.RxUtil;
 
 import io.reactivex.Observable;
 
-public class SumActivity extends AppCompatActivity {
+public class RxSumActivity extends AppCompatActivity {
     private Button mParam1Button;
     private Button mParam2Button;
     private Button mSumButton;

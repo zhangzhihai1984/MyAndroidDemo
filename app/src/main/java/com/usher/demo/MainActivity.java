@@ -45,8 +45,7 @@ import com.usher.demo.material.FitsSystemWindowActivity;
 import com.usher.demo.material.ProfileActivity;
 import com.usher.demo.material.home.HomeActivity;
 import com.usher.demo.notification.NotificationActivity;
-import com.usher.demo.rx.SplashActivity;
-import com.usher.demo.rx.SumActivity;
+import com.usher.demo.rx.RxSplashActivity;
 import com.usher.demo.selection.SelectionActivity;
 import com.usher.demo.text.MarqueeTextActivity;
 import com.usher.demo.wave.WaveActivity;
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
 //                startActivity(new Intent(mContext, RxActivity.class));
 //            startActivity(new Intent(mContext, PagerActivity.class));
 //            startActivity(new Intent(mContext, TabLayoutActivity.class));
-//            startActivity(new Intent(mContext, SumActivity.class));
+//            startActivity(new Intent(mContext, RxSumActivity.class));
             startActivity(new Intent(mContext, DemoListActivity.class));
         });
 
@@ -194,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
         findViewById(R.id.notification_button).setOnClickListener(v -> startActivity(new Intent(mContext, NotificationActivity.class)));
         findViewById(R.id.round_image_button).setOnClickListener(v -> startActivity(new Intent(mContext, RoundImageActivity.class)));
         findViewById(R.id.marquee_textview_button).setOnClickListener(v -> startActivity(new Intent(mContext, MarqueeTextActivity.class)));
-        findViewById(R.id.splash_button).setOnClickListener(v -> startActivity(new Intent(mContext, SplashActivity.class)));
+        findViewById(R.id.splash_button).setOnClickListener(v -> startActivity(new Intent(mContext, RxSplashActivity.class)));
         findViewById(R.id.fitssystemwindow_button).setOnClickListener(v -> startActivity(new Intent(mContext, FitsSystemWindowActivity.class)));
         findViewById(R.id.blur_button).setOnClickListener(v -> startActivity(new Intent(mContext, BlurActivity.class)));
         findViewById(R.id.profile_button).setOnClickListener(v -> startActivity(new Intent(mContext, ProfileActivity.class)));

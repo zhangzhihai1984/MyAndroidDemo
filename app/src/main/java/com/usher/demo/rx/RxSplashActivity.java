@@ -13,14 +13,14 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
-public class SplashActivity extends AppCompatActivity {
+public class RxSplashActivity extends AppCompatActivity {
 
     private static final int COUNTDOWN_SECONDS = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.activity_rx_splash);
 
         initView();
     }

@@ -15,8 +15,8 @@ import com.usher.demo.notification.NotificationActivity;
 import com.usher.demo.pager.PagerActivity;
 import com.usher.demo.rx.RxExitActivity;
 import com.usher.demo.rx.RxSearchActivity;
-import com.usher.demo.rx.SplashActivity;
-import com.usher.demo.rx.SumActivity;
+import com.usher.demo.rx.RxSplashActivity;
+import com.usher.demo.rx.RxSumActivity;
 import com.usher.demo.selection.SelectionActivity;
 import com.usher.demo.text.MarqueeTextActivity;
 import com.usher.demo.three.ThreeActivity;
@@ -51,8 +51,8 @@ class DemoConfig {
         ));
 
         configMap.put(KEY_RX, Arrays.asList(
-                new DemoItem("splash", SplashActivity.class),
-                new DemoItem("sum", SumActivity.class),
+                new DemoItem("splash", RxSplashActivity.class),
+                new DemoItem("sum", RxSumActivity.class),
                 new DemoItem("exit", RxExitActivity.class),
                 new DemoItem("search", RxSearchActivity.class)
         ));
