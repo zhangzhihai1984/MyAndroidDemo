@@ -438,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
             mAdapter = new DecorationAdapter(mContext, mList);
 
             mRecyclerView = view.findViewById(R.id.recyclerview);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(mAdapter);
         }
 

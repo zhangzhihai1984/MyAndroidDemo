@@ -26,7 +26,7 @@ public class DemoListActivity extends AppCompatActivity {
             tag = "main";
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3, RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(new DemoListAdapter(this, DemoConfig.getDemoConfig(tag)));
     }
 }

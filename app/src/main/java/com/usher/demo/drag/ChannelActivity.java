@@ -71,7 +71,7 @@ public class ChannelActivity extends AppCompatActivity {
 
         RecyclerView mRecyclerView = findViewById(R.id.recyclerview);
 
-        final GridLayoutManager mGridLayoutManager = new GridLayoutManager(mContext, 4, LinearLayoutManager.VERTICAL, false);
+        final GridLayoutManager mGridLayoutManager = new GridLayoutManager(mContext, 4, RecyclerView.VERTICAL, false);
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {

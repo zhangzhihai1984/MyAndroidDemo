@@ -53,7 +53,7 @@ public class SelectionActivity extends AppCompatActivity {
     private void initView() {
         final RecyclerView mRecyclerView = findViewById(R.id.recyclerview);
 
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(mContext, SELECTION_SIZE, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(mContext, SELECTION_SIZE, RecyclerView.VERTICAL, false);
 
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -70,7 +70,7 @@ public class SelectionActivity extends AppCompatActivity {
 
         final RecyclerView mRecyclerView2 = findViewById(R.id.recyclerview2);
 
-        GridLayoutManager mGridLayoutManager2 = new GridLayoutManager(mContext, SELECTION_SIZE, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager mGridLayoutManager2 = new GridLayoutManager(mContext, SELECTION_SIZE, RecyclerView.VERTICAL, false);
         mGridLayoutManager2.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {

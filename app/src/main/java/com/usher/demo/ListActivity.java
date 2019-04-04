@@ -103,7 +103,7 @@ public class ListActivity extends AppCompatActivity {
     private void initView() {
         mRecyclerView = findViewById(R.id.recyclerview);
 //        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 4, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
 
 //        ItemDragCallback mItemDragCallback = new ItemDragCallback(mAdapter);

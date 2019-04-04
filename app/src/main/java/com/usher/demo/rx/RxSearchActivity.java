@@ -41,7 +41,7 @@ public class RxSearchActivity extends AppCompatActivity {
         RxSearchAdapter adapter = new RxSearchAdapter(this, mSearchResults);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
 

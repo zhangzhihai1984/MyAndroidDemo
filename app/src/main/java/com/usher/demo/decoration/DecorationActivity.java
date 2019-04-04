@@ -50,7 +50,7 @@ public class DecorationActivity extends AppCompatActivity {
         DecorationAdapter mAdapter = new DecorationAdapter(mContext, mList);
 
         RecyclerView mRecyclerView = findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
         mRecyclerView.addItemDecoration(new StickyItemDecoration(mContext, mList));
         mRecyclerView.setAdapter(mAdapter);
     }
