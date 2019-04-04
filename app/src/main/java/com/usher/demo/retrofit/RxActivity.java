@@ -1,11 +1,6 @@
 package com.usher.demo.retrofit;
 
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -18,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.lifecycle.Lifecycle;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
@@ -38,13 +34,6 @@ public class RxActivity extends RxAppCompatActivity {
     }
 
     private Disposable disposable;
-
-    DefaultLifecycleObserver b = new DefaultLifecycleObserver() {
-        @Override
-        public void onCreate(@NonNull LifecycleOwner owner) {
-
-        }
-    };
 
     private void initData() {
 

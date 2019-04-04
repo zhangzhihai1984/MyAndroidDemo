@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 buildscript {
     ext.versions = [
-            'supportLibrary': '1.0.0-beta01',
             'retrofit2'     : '2.4.0',
             'autodispose'   : '1.0.0-RC1'
     ]
@@ -109,10 +108,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.appcompat:appcompat:${versions.supportLibrary}"
-    implementation "androidx.legacy:legacy-support-v4:$versions.supportLibrary"
-    implementation "com.google.android.material:material:${versions.supportLibrary}"
+    implementation "androidx.appcompat:appcompat:1.0.2"
+//    implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "com.google.android.material:material:1.1.0-alpha05"
+
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit2}"
     implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit2}"
@@ -126,10 +126,8 @@ dependencies {
     implementation "com.uber.autodispose:autodispose-android:${versions.autodispose}"
     implementation "com.uber.autodispose:autodispose-lifecycle:${versions.autodispose}"
     implementation "com.uber.autodispose:autodispose-android-archcomponents:${versions.autodispose}"
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.0.0-beta01'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation project(path: ':TwigCodesUI')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
 }
