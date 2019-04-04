@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" filepath="$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyAndroidDemo.iml" filepath="$PROJECT_DIR$/MyAndroidDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyApplication.iml" filepath="$PROJECT_DIR$/MyApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyKotlin/MyKotlin.iml" filepath="$PROJECT_DIR$/MyKotlin/MyKotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" filepath="$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" />

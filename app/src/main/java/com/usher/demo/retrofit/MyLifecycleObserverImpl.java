@@ -1,8 +1,8 @@
 package com.usher.demo.retrofit;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 public class MyLifecycleObserverImpl implements MyLifecycleObserver {

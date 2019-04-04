@@ -1,17 +1,15 @@
 package com.usher.demo.retrofit;
 
-import android.arch.lifecycle.DefaultLifecycleObserver;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.LifecycleOwner;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
-import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 import com.uber.autodispose.AutoDispose;
-import com.uber.autodispose.android.AutoDisposeAndroidPlugins;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import com.usher.demo.R;
 

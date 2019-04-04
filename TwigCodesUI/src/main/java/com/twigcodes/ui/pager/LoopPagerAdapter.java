@@ -1,11 +1,13 @@
 package com.twigcodes.ui.pager;
 
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +31,11 @@ class LoopPagerAdapter extends PagerAdapter {
     /**
      * 为什么都是{@link PagerAdapter}，却要对{@link FragmentPagerAdapter}和{@link FragmentStatePagerAdapter}要区别对待呢？
      * <p>
-     * 从名字上可以看出，这两个support包中仅有的两个与{@link android.support.v4.view.ViewPager}
-     * 配合的Adapter都是与{@link android.support.v4.app.Fragment}相关。
+     * 从名字上可以看出，这两个support包中仅有的两个与{@link ViewPager}
+     * 配合的Adapter都是与{@link Fragment}相关。
      * <p>
      * 以{@link FragmentPagerAdapter}为例，{@link FragmentPagerAdapter#instantiateItem(ViewGroup, int)}中是以position作为itemId，
-     * 进而生成一个name作为Fragment的Tag，{@link android.support.v4.app.FragmentManager}通过这个Tag来维护所有的Fragment，
+     * 进而生成一个name作为Fragment的Tag，{@link FragmentManager}通过这个Tag来维护所有的Fragment，
      * 如果有该Tag对应的Fragment，则复用这个Fragment，否则调用{@link FragmentPagerAdapter#getItem(int)}生成一个新的Fragment。
      * <p>
      * 还是以4个元素为例，最终形成的6个元素效果为[3,0,1,2,3,0]，对于两个"0"元素，如果position都传所谓"real"0的话，

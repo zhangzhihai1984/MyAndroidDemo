@@ -6,11 +6,12 @@ import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ import java.util.List;
  * 在实现{@link FragmentPagerAdapter#getItem(int)}或{@link FragmentStatePagerAdapter#getItem(int)}时，
  * 不要直接使用position的值，因为那个值是real的，是针对count+2而言的，需要你将该position和Adapter的count传给
  * {@link LoopViewPager#getMatchedPosition(int, int)}，使用该方法返回的index来获取你列表中的数据，以生成相应的
- * {@link android.support.v4.app.Fragment}。具体原因可查看{@link LoopPagerAdapter#instantiateItem(ViewGroup, int)}
+ * {@link Fragment}。具体原因可查看{@link LoopPagerAdapter#instantiateItem(ViewGroup, int)}
  * <p>
  * <p>
  * <strong>如果你有更新数据的需求的话，不要开启缓存模式(默认不开启)。</strong>同时，建议你的Adapter不要继承自{@link FragmentPagerAdapter}，

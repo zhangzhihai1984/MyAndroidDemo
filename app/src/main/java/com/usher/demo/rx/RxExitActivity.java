@@ -1,9 +1,9 @@
 package com.usher.demo.rx;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,7 +12,6 @@ import com.jakewharton.rxbinding3.view.RxView;
 import com.usher.demo.R;
 import com.usher.demo.utils.RxUtil;
 
-import io.reactivex.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 public class RxExitActivity extends AppCompatActivity {

@@ -3,9 +3,11 @@ package com.usher.demo.pager;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
 
 import com.twigcodes.ui.indicator.PageIndicatorView;
@@ -18,12 +20,12 @@ import java.util.List;
 public class PagerActivity extends AppCompatActivity {
     private final List<String> mUrlList = new ArrayList<>();
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link FragmentStatePagerAdapter}.
      */
     private FragmentAdapter mPagerAdapter;
 
