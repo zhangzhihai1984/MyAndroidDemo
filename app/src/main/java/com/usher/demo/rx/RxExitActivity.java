@@ -48,7 +48,6 @@ public class RxExitActivity extends AppCompatActivity {
                 })
                 .filter(v -> v.getIntervalInMilliseconds() < EXIT_DURATION)
                 .subscribe(v -> finish());
-
     }
 
     @Override
