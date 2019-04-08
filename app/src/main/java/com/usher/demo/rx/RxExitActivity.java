@@ -1,20 +1,19 @@
 package com.usher.demo.rx;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding3.view.RxView;
 import com.usher.demo.R;
+import com.usher.demo.base.BaseActivity;
 import com.usher.demo.utils.RxUtil;
 
+import androidx.annotation.Nullable;
 import rx.subjects.PublishSubject;
 
-public class RxExitActivity extends AppCompatActivity {
+public class RxExitActivity extends BaseActivity {
     private static final int EXIT_DURATION = 500;
 
     private PublishSubject<Integer> subject = PublishSubject.create();

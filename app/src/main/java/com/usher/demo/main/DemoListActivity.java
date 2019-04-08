@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.usher.demo.R;
+import com.usher.demo.base.BaseActivity;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DemoListActivity extends AppCompatActivity {
+public class DemoListActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -9,14 +9,14 @@ import android.widget.Toast;
 
 import com.jakewharton.rxbinding3.view.RxView;
 import com.usher.demo.R;
+import com.usher.demo.base.BaseActivity;
 import com.usher.demo.utils.RxUtil;
 
 import java.util.concurrent.TimeUnit;
 
-import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.Observable;
 
-public class RxSplashActivity extends AppCompatActivity {
+public class RxSplashActivity extends BaseActivity {
 
     private static final int COUNTDOWN_SECONDS = 10;
 

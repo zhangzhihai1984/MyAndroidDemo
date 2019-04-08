@@ -1,14 +1,11 @@
 package com.usher.demo.rx;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.widget.EditText;
 
 import com.jakewharton.rxbinding3.widget.RxTextView;
 import com.usher.demo.R;
+import com.usher.demo.base.BaseActivity;
 import com.usher.demo.utils.RxUtil;
 
 import java.util.ArrayList;
@@ -17,9 +14,12 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Observable;
 
-public class RxSearchActivity extends AppCompatActivity {
+public class RxSearchActivity extends BaseActivity {
     private final List<String> mSearchResults = new ArrayList<>();
     private final List<String> mCities = new ArrayList<>();
 

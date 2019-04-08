@@ -2,8 +2,9 @@ apply plugin: 'com.android.application'
 
 buildscript {
     ext.versions = [
-            'retrofit2'     : '2.4.0',
-            'autodispose'   : '1.0.0-RC1'
+            'retrofit2'  : '2.4.0',
+            'autodispose': '1.0.0-RC1',
+            'butterknife': '10.1.0',
     ]
 }
 
@@ -130,4 +131,7 @@ dependencies {
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation project(path: ':TwigCodesUI')
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
+
+    implementation "com.jakewharton:butterknife:${versions.butterknife}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butterknife}"
 }
