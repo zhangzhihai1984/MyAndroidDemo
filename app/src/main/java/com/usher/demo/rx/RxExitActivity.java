@@ -11,7 +11,7 @@ import com.usher.demo.base.BaseActivity;
 import com.usher.demo.utils.RxUtil;
 
 import androidx.annotation.Nullable;
-import rx.subjects.PublishSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public class RxExitActivity extends BaseActivity {
     private static final int EXIT_DURATION = 500;
@@ -42,10 +42,11 @@ public class RxExitActivity extends BaseActivity {
 
         subject.timeInterval()
                 .doOnNext(v -> {
-                    if (v.getIntervalInMilliseconds() > EXIT_DURATION)
+                    if (v.time() > EXIT_DURATION)
                         Toast.makeText(this, "Click once more to exit", Toast.LENGTH_SHORT).show();
                 })
-                .filter(v -> v.getIntervalInMilliseconds() < EXIT_DURATION)
+                .filter(v -> v.time() < EXIT_DURATION)
+                .as(RxUtil.autoDispose(this))
                 .subscribe(v -> finish());
     }
 

@@ -1,21 +1,34 @@
 package com.usher.demo.material;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
 import com.google.android.material.tabs.TabLayout;
+import com.jakewharton.rxbinding3.viewpager.RxViewPager;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.usher.demo.R;
+import com.usher.demo.utils.RxUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.usher.demo.R;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 public class TabLayoutActivity extends AppCompatActivity {
 
@@ -41,18 +54,18 @@ public class TabLayoutActivity extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText("推荐"));
-        tabLayout.addTab(tabLayout.newTab().setText("音乐"));
-        tabLayout.addTab(tabLayout.newTab().setText("节目"));
-        tabLayout.addTab(tabLayout.newTab().setText("儿童"));
-        tabLayout.addTab(tabLayout.newTab().setText("我的"));
+        tabLayout.addTab(tabLayout.newTab().setText("场景管理"));
+        tabLayout.addTab(tabLayout.newTab().setText("设备管理"));
+        tabLayout.addTab(tabLayout.newTab().setText("其他设备"));
+//        tabLayout.addTab(tabLayout.newTab().setText("儿童"));
+//        tabLayout.addTab(tabLayout.newTab().setText("我的"));
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -64,6 +77,19 @@ public class TabLayoutActivity extends AppCompatActivity {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             params.rightMargin = 50;
         }
+
+        SmartTabLayout smartTabLayout = findViewById(R.id.smarttablayout);
+        smartTabLayout.setViewPager(mViewPager);
+
+        RxViewPager.pageSelections(mViewPager)
+                .as(RxUtil.autoDispose(this))
+                .subscribe(position -> {
+                    for (int i = 0; i < 3; i++) {
+                        TextView view = (TextView) smartTabLayout.getTabAt(i);
+                        view.setTextSize(i == position ? 18 : 14);
+                    }
+                });
+
     }
 
     /**
@@ -76,7 +102,24 @@ public class TabLayoutActivity extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        private View mFragmentView;
+
+        private final PublishSubject<Boolean> mVisible$ = PublishSubject.create();
+        private final PublishSubject<Boolean> mCreated$ = PublishSubject.create();
+
+        @SuppressWarnings("ResultOfMethodCallIgnored")
+        @SuppressLint("CheckResult")
         public PlaceholderFragment() {
+            Observable.combineLatest(
+                    mVisible$.filter(visible -> visible),
+                    mCreated$,
+                    (v1, v2) -> v1
+            )
+                    .take(1)
+                    .subscribe(
+                            v -> doRequest(),
+                            err -> Log.i("zzh", err.getMessage())
+                    );
         }
 
         /**
@@ -93,10 +136,33 @@ public class TabLayoutActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_tab_layout, container, false);
-            TextView textView = rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+            Log.i("zzh", getArguments().getInt(ARG_SECTION_NUMBER) + " onCreateView");
+            if (null == mFragmentView) {
+                mFragmentView = inflater.inflate(R.layout.fragment_tab_layout, container, false);
+                TextView textView = mFragmentView.findViewById(R.id.section_label);
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+                mCreated$.onNext(true);
+            } else {
+                ViewGroup parent = (ViewGroup) mFragmentView.getParent();
+                if (null != parent)
+                    parent.removeView(mFragmentView);
+            }
+
+            return mFragmentView;
+        }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+
+            mVisible$.onNext(isVisibleToUser);
+
+            Log.i("zzh", getArguments().getInt(ARG_SECTION_NUMBER) + " setUserVisibleHint " + isVisibleToUser);
+        }
+
+        private void doRequest() {
+            Log.i("zzh", getArguments().getInt(ARG_SECTION_NUMBER) + " doRequest");
         }
     }
 
@@ -105,22 +171,47 @@ public class TabLayoutActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mTitleList = new ArrayList<>();
 
-        SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(Context context, FragmentManager fm) {
             super(fm);
+
+//            Observable.range(0, 5)
+//                    .as(RxUtil.autoDispose((LifecycleOwner) context))
+//                    .subscribe(
+//                            v -> mFragmentList.add(PlaceholderFragment.newInstance(v + 1)),
+//                            err -> Log.i("zzh", err.getMessage())
+//                    );
+
+            for (int i = 0; i < 3; i++)
+                mFragmentList.add(PlaceholderFragment.newInstance(i + 1));
+
+            mTitleList.add("场景管理");
+            mTitleList.add("设备管理");
+            mTitleList.add("其他设备");
+//            mTitleList.add("儿童");
+//            mTitleList.add("我的");
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+//            return PlaceholderFragment.newInstance(position + 1);
+            return mFragmentList.get(position);
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 5;
+            return mFragmentList.size();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitleList.get(position);
         }
     }
 }

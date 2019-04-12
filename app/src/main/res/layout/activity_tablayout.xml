@@ -19,9 +19,23 @@
         app:tabMode="fixed"
         app:tabRippleColor="@android:color/holo_red_dark"
         app:tabSelectedTextColor="@android:color/holo_blue_dark"
-        app:tabTextColor="@android:color/black">
+        app:tabTextColor="@android:color/black" />
 
-    </com.google.android.material.tabs.TabLayout>
+    <com.ogaclejapan.smarttablayout.SmartTabLayout
+        android:id="@+id/smarttablayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:stl_customTabTextLayoutId="@layout/smart_tab_item"
+        app:stl_customTabTextViewId="@id/textview"
+        app:stl_dividerColor="#4D000000"
+        app:stl_dividerThickness="1dp"
+        app:stl_indicatorColor="#40C4FF"
+        app:stl_indicatorCornerRadius="2dp"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorThickness="4dp"
+        app:stl_indicatorWidth="20dp"
+        app:stl_indicatorWithoutPadding="false"
+        app:stl_underlineColor="@android:color/transparent" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/container"

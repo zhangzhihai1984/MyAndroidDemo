@@ -5,6 +5,7 @@ buildscript {
             'retrofit2'  : '2.4.0',
             'autodispose': '1.0.0-RC1',
             'butterknife': '10.1.0',
+            'rxbinding'  : '3.0.0-alpha2',
     ]
 }
 
@@ -109,6 +110,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(path: ':TwigCodesUI')
+
     implementation "androidx.appcompat:appcompat:1.0.2"
 //    implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -129,9 +132,19 @@ dependencies {
     implementation "com.uber.autodispose:autodispose-android-archcomponents:${versions.autodispose}"
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
-    implementation project(path: ':TwigCodesUI')
-    implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
+
+    implementation "com.jakewharton.rxbinding3:rxbinding:${versions.rxbinding}"
+    implementation "com.jakewharton.rxbinding3:rxbinding-appcompat:${versions.rxbinding}"
+    implementation "com.jakewharton.rxbinding3:rxbinding-leanback:${versions.rxbinding}"
+    implementation "com.jakewharton.rxbinding3:rxbinding-recyclerview:${versions.rxbinding}"
+    implementation "com.jakewharton.rxbinding3:rxbinding-swiperefreshlayout:${versions.rxbinding}"
+    implementation "com.jakewharton.rxbinding3:rxbinding-viewpager:${versions.rxbinding}"
+    implementation "com.jakewharton.rxbinding3:rxbinding-material:${versions.rxbinding}"
 
     implementation "com.jakewharton:butterknife:${versions.butterknife}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butterknife}"
+
+    implementation 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'
+    //Optional: see how to use the utility.
+    implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
 }
