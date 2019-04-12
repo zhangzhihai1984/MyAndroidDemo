@@ -1,4 +1,4 @@
-package com.usher.demo.decoration;
+package com.usher.demo.awesome.decoration;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;

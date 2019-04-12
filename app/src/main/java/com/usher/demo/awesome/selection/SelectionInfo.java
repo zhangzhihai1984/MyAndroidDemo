@@ -1,4 +1,4 @@
-package com.usher.demo.selection;
+package com.usher.demo.awesome.selection;
 
 public class SelectionInfo {
     public enum Status {

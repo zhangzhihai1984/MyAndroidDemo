@@ -25,17 +25,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".ListActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".drag.ChannelActivity"
+            android:name=".awesome.drag.ChannelActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".decoration.DecorationActivity"
+            android:name=".awesome.decoration.DecorationActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.loading.LoadingActivity"
@@ -47,10 +43,10 @@
             android:name=".web.three.ThreeActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".selection.SelectionActivity"
+            android:name=".awesome.selection.SelectionActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".retrofit.RxActivity"
+            android:name=".other.retrofit.RxActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.pager.PagerActivity"

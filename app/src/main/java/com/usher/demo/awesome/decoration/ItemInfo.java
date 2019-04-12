@@ -1,4 +1,4 @@
-package com.usher.demo.decoration;
+package com.usher.demo.awesome.decoration;
 
 public class ItemInfo {
     private String groupId;

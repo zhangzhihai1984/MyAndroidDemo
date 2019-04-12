@@ -1,8 +1,8 @@
 package com.usher.demo.main;
 
 import com.usher.demo.web.AngularActivity;
-import com.usher.demo.decoration.DecorationActivity;
-import com.usher.demo.drag.ChannelActivity;
+import com.usher.demo.awesome.decoration.DecorationActivity;
+import com.usher.demo.awesome.drag.ChannelActivity;
 import com.usher.demo.image.BlurActivity;
 import com.usher.demo.image.RoundImageActivity;
 import com.usher.demo.other.launchmode.AActivity;
@@ -16,7 +16,7 @@ import com.usher.demo.rx.RxExitActivity;
 import com.usher.demo.rx.RxSearchActivity;
 import com.usher.demo.rx.RxSplashActivity;
 import com.usher.demo.rx.RxSumActivity;
-import com.usher.demo.selection.SelectionActivity;
+import com.usher.demo.awesome.selection.SelectionActivity;
 import com.usher.demo.web.three.ThreeActivity;
 import com.usher.demo.view.MarqueeTextActivity;
 import com.usher.demo.view.WaveActivity;

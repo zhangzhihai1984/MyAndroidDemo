@@ -1,11 +1,7 @@
-package com.usher.demo.selection;
+package com.usher.demo.awesome.selection;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
@@ -13,6 +9,10 @@ import com.usher.demo.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SelectionActivity extends AppCompatActivity {
     private final int SELECTION_SIZE = 8;

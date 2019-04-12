@@ -6,12 +6,13 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import com.usher.demo.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class RoundImageActivity extends AppCompatActivity {
 

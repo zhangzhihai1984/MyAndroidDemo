@@ -1,7 +1,6 @@
-package com.usher.demo.selection;
+package com.usher.demo.awesome.selection;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,9 @@ import android.view.ViewGroup;
 import com.usher.demo.R;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SelectionAdapter extends RecyclerView.Adapter {
     private final List<SelectionInfo> mList;
@@ -25,15 +27,16 @@ public class SelectionAdapter extends RecyclerView.Adapter {
         mListener = listener;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.selection_item_layout, parent, false);
 
         return new SelectionViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         bindSelectionViewHolder((SelectionViewHolder) holder, position);
     }
 
@@ -62,27 +65,24 @@ public class SelectionAdapter extends RecyclerView.Adapter {
         SelectionViewHolder(View itemView) {
             super(itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SelectionInfo info = (SelectionInfo) v.getTag();
+            itemView.setOnClickListener(v -> {
+                SelectionInfo info = (SelectionInfo) v.getTag();
 
-                    switch (info.getStatus()) {
-                        case SELECTED:
-                            info.setStatus(SelectionInfo.Status.DEFAULT);
-                            notifyDataSetChanged();
-                            if (null != mListener) {
-                                mListener.onSelected();
-                            }
-                            break;
-                        case DEFAULT:
-                            info.setStatus(SelectionInfo.Status.SELECTED);
-                            notifyDataSetChanged();
-                            if (null != mListener) {
-                                mListener.onSelected();
-                            }
-                            break;
-                    }
+                switch (info.getStatus()) {
+                    case SELECTED:
+                        info.setStatus(SelectionInfo.Status.DEFAULT);
+                        notifyDataSetChanged();
+                        if (null != mListener) {
+                            mListener.onSelected();
+                        }
+                        break;
+                    case DEFAULT:
+                        info.setStatus(SelectionInfo.Status.SELECTED);
+                        notifyDataSetChanged();
+                        if (null != mListener) {
+                            mListener.onSelected();
+                        }
+                        break;
                 }
             });
         }

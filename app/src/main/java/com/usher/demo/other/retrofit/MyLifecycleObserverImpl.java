@@ -1,4 +1,4 @@
-package com.usher.demo.retrofit;
+package com.usher.demo.other.retrofit;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;

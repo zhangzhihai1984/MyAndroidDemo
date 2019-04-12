@@ -1,4 +1,4 @@
-package com.usher.demo.retrofit;
+package com.usher.demo.other.retrofit;
 
 import android.os.Bundle;
 import android.util.Log;

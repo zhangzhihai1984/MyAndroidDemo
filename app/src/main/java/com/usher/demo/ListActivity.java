@@ -4,15 +4,14 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 
-import com.usher.demo.drag.ChannelAdapter;
-import com.usher.demo.drag.ItemDragHelperCallback;
-import com.usher.demo.drag.OnItemDragListener;
+import com.usher.demo.awesome.drag.ChannelAdapter;
+import com.usher.demo.awesome.drag.ItemDragHelperCallback;
+import com.usher.demo.awesome.drag.OnItemDragListener;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

@@ -1,8 +1,7 @@
-package com.usher.demo.drag;
+package com.usher.demo.awesome.drag;
 
 import android.content.Context;
 import android.graphics.Color;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,8 @@ import com.usher.demo.R;
 
 import java.util.Collections;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemDragListener {
     private final int ITEM_VIEW_TYPE_SELECTED_TITLE = 0;

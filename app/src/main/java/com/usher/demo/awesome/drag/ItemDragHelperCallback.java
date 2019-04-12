@@ -1,9 +1,9 @@
-package com.usher.demo.drag;
+package com.usher.demo.awesome.drag;
 
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     private final OnItemDragListener mOnItemDragListener;

@@ -1,14 +1,15 @@
 package com.usher.demo.view.pager;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import com.twigcodes.ui.pager.LoopViewPager;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 public class FragmentAdapter extends FragmentStatePagerAdapter {
     private List<String> mUrlList;

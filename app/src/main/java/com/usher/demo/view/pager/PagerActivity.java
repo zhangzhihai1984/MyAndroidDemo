@@ -3,11 +3,6 @@ package com.usher.demo.view.pager;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
 
 import com.twigcodes.ui.indicator.PageIndicatorView;
@@ -16,6 +11,12 @@ import com.usher.demo.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class PagerActivity extends AppCompatActivity {
     private final List<String> mUrlList = new ArrayList<>();
