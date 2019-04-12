@@ -1,26 +1,26 @@
 package com.usher.demo.main;
 
-import com.usher.demo.angular.AngularActivity;
+import com.usher.demo.web.AngularActivity;
 import com.usher.demo.decoration.DecorationActivity;
 import com.usher.demo.drag.ChannelActivity;
 import com.usher.demo.image.BlurActivity;
 import com.usher.demo.image.RoundImageActivity;
-import com.usher.demo.launchmode.AActivity;
-import com.usher.demo.loading.LoadingActivity;
+import com.usher.demo.other.launchmode.AActivity;
 import com.usher.demo.material.FitsSystemWindowActivity;
 import com.usher.demo.material.ProfileActivity;
 import com.usher.demo.material.TabLayoutActivity;
 import com.usher.demo.material.home.HomeActivity;
-import com.usher.demo.notification.NotificationActivity;
-import com.usher.demo.pager.PagerActivity;
+import com.usher.demo.other.notification.NotificationActivity;
+import com.usher.demo.view.pager.PagerActivity;
 import com.usher.demo.rx.RxExitActivity;
 import com.usher.demo.rx.RxSearchActivity;
 import com.usher.demo.rx.RxSplashActivity;
 import com.usher.demo.rx.RxSumActivity;
 import com.usher.demo.selection.SelectionActivity;
-import com.usher.demo.text.MarqueeTextActivity;
-import com.usher.demo.three.ThreeActivity;
-import com.usher.demo.wave.WaveActivity;
+import com.usher.demo.web.three.ThreeActivity;
+import com.usher.demo.view.MarqueeTextActivity;
+import com.usher.demo.view.WaveActivity;
+import com.usher.demo.view.loading.LoadingActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;

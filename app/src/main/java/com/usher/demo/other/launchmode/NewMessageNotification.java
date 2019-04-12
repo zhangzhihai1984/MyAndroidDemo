@@ -1,4 +1,4 @@
-package com.usher.demo.launchmode;
+package com.usher.demo.other.launchmode;
 
 import android.annotation.TargetApi;
 import android.app.Notification;

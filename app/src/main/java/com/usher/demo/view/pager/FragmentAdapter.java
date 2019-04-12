@@ -1,4 +1,4 @@
-package com.usher.demo.pager;
+package com.usher.demo.view.pager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

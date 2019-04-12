@@ -1,4 +1,4 @@
-package com.usher.demo.launchmode;
+package com.usher.demo.other.launchmode;
 
 import android.app.ActivityManager;
 import android.app.Application;

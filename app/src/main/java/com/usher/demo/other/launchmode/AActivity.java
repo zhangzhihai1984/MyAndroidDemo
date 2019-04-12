@@ -1,13 +1,14 @@
-package com.usher.demo.launchmode;
+package com.usher.demo.other.launchmode;
 
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.usher.demo.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class AActivity extends AppCompatActivity {
 

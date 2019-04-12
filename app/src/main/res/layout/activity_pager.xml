@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
-    tools:context=".pager.PagerActivity">
+    tools:context=".view.pager.PagerActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

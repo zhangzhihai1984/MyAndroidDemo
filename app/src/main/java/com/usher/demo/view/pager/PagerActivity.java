@@ -1,4 +1,4 @@
-package com.usher.demo.pager;
+package com.usher.demo.view.pager;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;

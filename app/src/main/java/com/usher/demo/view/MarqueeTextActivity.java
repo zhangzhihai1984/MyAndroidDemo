@@ -1,24 +1,16 @@
-package com.usher.demo.text;
+package com.usher.demo.view;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.usher.demo.R;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MarqueeTextActivity extends AppCompatActivity {
-    public static final String TAG = "TAG";
-    private boolean mFlag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marquee_text);
-    }
-
-    private String getHello() {
-        int a = 1;
-        int b = 2;
-        String c = a + b + "";
-        return c + "";
     }
 }

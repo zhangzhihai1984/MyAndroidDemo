@@ -1,14 +1,14 @@
-package com.usher.demo.three;
+package com.usher.demo.web.three;
 
 import android.annotation.SuppressLint;
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.usher.demo.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ThreeActivity extends AppCompatActivity {
     private WebView mWebView;
@@ -46,7 +46,7 @@ public class ThreeActivity extends AppCompatActivity {
 
         mWebView.setWebChromeClient(new WebChromeClient());
 
-//        mWebView.loadUrl("file:///android_asset/three/index.html");
-        mWebView.loadUrl("https://twigcodes.com/three/index.html");
+        mWebView.loadUrl("file:///android_asset/three/index.html");
+//        mWebView.loadUrl("https://twigcodes.com/three/index.html");
     }
 }

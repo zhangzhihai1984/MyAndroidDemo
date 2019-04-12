@@ -1,16 +1,17 @@
-package com.usher.demo.loading;
+package com.usher.demo.view.loading;
 
 import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.usher.demo.R;
 
 import java.lang.ref.WeakReference;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadingActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;

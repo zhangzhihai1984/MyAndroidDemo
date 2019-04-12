@@ -1,4 +1,4 @@
-package com.usher.demo.angular;
+package com.usher.demo.web;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

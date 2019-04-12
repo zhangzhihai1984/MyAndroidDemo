@@ -1,4 +1,4 @@
-package com.usher.demo.loading;
+package com.usher.demo.view.loading;
 
 import android.content.Context;
 import android.graphics.Bitmap;

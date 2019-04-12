@@ -1,4 +1,4 @@
-package com.usher.demo.launchmode;
+package com.usher.demo.other.launchmode;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,10 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import com.usher.demo.R;
+
+import androidx.core.app.NotificationCompat;
 
 public class MyService extends Service {
     public MyService() {

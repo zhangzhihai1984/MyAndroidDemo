@@ -1,4 +1,4 @@
-package com.usher.demo.notification;
+package com.usher.demo.other.notification;
 
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -13,14 +13,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import androidx.core.app.NotificationCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.usher.demo.R;
 
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 public class NotificationActivity extends AppCompatActivity {
     private static final String MESSAGE_CHANNEL_GROUP_ID = "MESSAGE_CHANNEL_GROUP_ID";

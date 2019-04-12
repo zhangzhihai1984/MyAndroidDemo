@@ -1,8 +1,8 @@
-package com.usher.demo.launchmode;
+package com.usher.demo.other.launchmode;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -14,12 +14,12 @@ import android.content.Context;
 public class MyIntentService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.usher.demo.launchmode.action.FOO";
-    private static final String ACTION_BAZ = "com.usher.demo.launchmode.action.BAZ";
+    private static final String ACTION_FOO = "com.usher.demo.other.launchmode.action.FOO";
+    private static final String ACTION_BAZ = "com.usher.demo.other.launchmode.action.BAZ";
 
     // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.usher.demo.launchmode.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.usher.demo.launchmode.extra.PARAM2";
+    private static final String EXTRA_PARAM1 = "com.usher.demo.other.launchmode.extra.PARAM1";
+    private static final String EXTRA_PARAM2 = "com.usher.demo.other.launchmode.extra.PARAM2";
 
     public MyIntentService() {
         super("MyIntentService");
