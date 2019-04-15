@@ -1,5 +1,6 @@
 package com.usher.demo.main;
 
+import com.usher.demo.awesome.smarthome.SmartHomeActivity;
 import com.usher.demo.web.AngularActivity;
 import com.usher.demo.awesome.decoration.DecorationActivity;
 import com.usher.demo.awesome.drag.ChannelActivity;
@@ -91,7 +92,8 @@ class DemoConfig {
         configMap.put(KEY_AWESOME, Arrays.asList(
                 new DemoItem("selection", SelectionActivity.class),
                 new DemoItem("edit channel", ChannelActivity.class),
-                new DemoItem("recyclerView decoration", DecorationActivity.class)
+                new DemoItem("recyclerView decoration", DecorationActivity.class),
+                new DemoItem("smart home", SmartHomeActivity.class)
         ));
     }
 

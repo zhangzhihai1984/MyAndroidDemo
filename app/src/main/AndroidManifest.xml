@@ -27,6 +27,8 @@
         <activity
             android:name=".ListActivity"
             android:theme="@style/CommonTheme" />
+
+        <!-- Awesome Demo -->
         <activity
             android:name=".awesome.drag.ChannelActivity"
             android:theme="@style/CommonTheme" />
@@ -34,50 +36,35 @@
             android:name=".awesome.decoration.DecorationActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".view.loading.LoadingActivity"
-            android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".view.WaveActivity"
-            android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".web.three.ThreeActivity"
-            android:theme="@style/CommonTheme" />
-        <activity
             android:name=".awesome.selection.SelectionActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".other.retrofit.RxActivity"
+            android:name=".awesome.smarthome.SmartHomeActivity"
             android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".view.pager.PagerActivity"
-            android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".other.launchmode.AActivity"
-            android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".other.launchmode.BActivity"
-            android:theme="@style/CommonTheme" />
-        <!-- android:launchMode="singleTask" -->
-        <!-- android:taskAffinity="com.usher.demo.hahaha" -->
 
-        <service
-            android:name=".other.launchmode.MyService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":zzhprocess" />
-        <service
-            android:name=".other.launchmode.MyIntentService"
-            android:exported="false" />
-
+        <!-- Image Demo -->
         <activity
-            android:name=".other.notification.NotificationActivity"
+            android:name=".image.BlurActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".image.RoundImageActivity"
             android:theme="@style/CommonTheme" />
+
+        <!-- Material Demo -->
         <activity
-            android:name=".view.MarqueeTextActivity"
+            android:name=".material.TabLayoutActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".material.FitsSystemWindowActivity"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".material.ProfileActivity"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".material.home.HomeActivity"
+            android:theme="@style/CommonTheme" />
+
+        <!-- Rx Demo -->
         <activity
             android:name=".rx.RxSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -91,23 +78,52 @@
         <activity
             android:name=".rx.RxSearchActivity"
             android:theme="@style/CommonTheme" />
+
+        <!-- View Demo -->
         <activity
-            android:name=".material.TabLayoutActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".material.FitsSystemWindowActivity"
+            android:name=".view.MarqueeTextActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".material.ProfileActivity"
+            android:name=".view.loading.LoadingActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.BlurActivity"
+            android:name=".view.WaveActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".material.home.HomeActivity"
+            android:name=".view.pager.PagerActivity"
+            android:theme="@style/CommonTheme" />
+
+        <!-- Web Demo -->
+        <activity
+            android:name=".web.three.ThreeActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".web.AngularActivity"
+            android:theme="@style/CommonTheme" />
+
+        <!-- Other Demo -->
+        <activity
+            android:name=".other.launchmode.AActivity"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".other.launchmode.BActivity"
+            android:theme="@style/CommonTheme" />
+        <!-- android:launchMode="singleTask" -->
+        <!-- android:taskAffinity="com.usher.demo.hahaha" -->
+        <service
+            android:name=".other.launchmode.MyService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":zzhprocess" />
+        <service
+            android:name=".other.launchmode.MyIntentService"
+            android:exported="false" />
+
+        <activity
+            android:name=".other.notification.NotificationActivity"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".other.retrofit.RxActivity"
             android:theme="@style/CommonTheme" />
     </application>
 
