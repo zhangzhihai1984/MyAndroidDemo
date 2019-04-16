@@ -25,6 +25,6 @@
     <dimen name="smart_appbar_height">250dp</dimen>
     <dimen name="smart_toolbar_height">60dp</dimen>
     <dimen name="smart_tab_background_height">80dp</dimen>
-    <dimen name="smart_image_height">190dp</dimen> <!-- 250 - 60 = 190 -->
+    <dimen name="smart_indoor_background_height">190dp</dimen> <!-- 250 - 60 = 190 -->
 
 </resources>
