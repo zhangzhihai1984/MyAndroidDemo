@@ -1,13 +1,20 @@
 package com.usher.demo.awesome.smarthome.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.jakewharton.rxbinding3.material.RxAppBarLayout;
+import com.jakewharton.rxbinding3.viewpager.RxViewPager;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.SmartFragmentAdapter;
+import com.usher.demo.utils.RxUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +24,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SmartFragment extends Fragment {
+    @BindView(R.id.appbarlayout)
+    AppBarLayout mAppBarLayout;
+
+    @BindView(R.id.background_imageview)
+    ImageView mBackgroundImageView;
+
     @BindView(R.id.smarttablayout)
     SmartTabLayout mSmartTabLayout;
 
@@ -54,7 +67,45 @@ public class SmartFragment extends Fragment {
     }
 
     private void initView() {
+        int statusBarHeight = 72;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        int appbarHeight = getResources().getDimensionPixelSize(R.dimen.smart_appbar_height);
+        int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.smart_toolbar_height);
+
+        Log.i("zzh", "StatusBar: " + statusBarHeight);
+        Log.i("zzh", "ToolBar: " + toolbarHeight);
+        Log.i("zzh", "AppBar: " + appbarHeight);
+
+        float threshold = appbarHeight - toolbarHeight * 2 - statusBarHeight;
+        Log.i("zzh", "threshold: " + threshold);
+//        float maxOffset = appbarHeight - toolbarHeight - statusBarHeight;
+
+
+        RxAppBarLayout.offsetChanges(mAppBarLayout)
+                .as(RxUtil.autoDispose(requireActivity()))
+                .subscribe(offset -> {
+                    Log.i("zzh", "" + offset);
+                    mBackgroundImageView.setImageAlpha((int) ((threshold - Math.min(threshold, Math.abs(offset))) / threshold * 255));
+//                    if (Math.abs(offset) > threshold)
+//                        mBackgroundImageView.setImageAlpha(0);
+//                    else
+//                        mBackgroundImageView.setImageAlpha(255);
+
+                });
+
         mViewPager.setAdapter(new SmartFragmentAdapter(requireFragmentManager()));
         mSmartTabLayout.setViewPager(mViewPager);
+
+        RxViewPager.pageSelections(mViewPager)
+                .as(RxUtil.autoDispose(requireActivity()))
+                .subscribe(position -> {
+                    for (int i = 0; i < 3; i++) {
+                        TextView textView = (TextView) mSmartTabLayout.getTabAt(i);
+                        textView.setTextSize(i == position ? 22 : 16);
+                    }
+                });
     }
 }

@@ -25,7 +25,6 @@
         android:id="@+id/smarttablayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:stl_indicatorGravity="center"
         app:stl_customTabTextLayoutId="@layout/smart_tab_item"
         app:stl_customTabTextViewId="@id/textview"
         app:stl_dividerColor="#4D000000"
@@ -33,8 +32,8 @@
         app:stl_indicatorColor="#40C4FF"
         app:stl_indicatorCornerRadius="2dp"
         app:stl_indicatorInterpolation="smart"
-        app:stl_indicatorThickness="50dp"
-        app:stl_indicatorWidth="40dp"
+        app:stl_indicatorThickness="4dp"
+        app:stl_indicatorWidth="auto"
         app:stl_indicatorWithoutPadding="true"
         app:stl_underlineColor="@android:color/transparent" />
 
