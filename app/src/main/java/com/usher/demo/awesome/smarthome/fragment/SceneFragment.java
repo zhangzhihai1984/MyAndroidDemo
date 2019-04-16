@@ -9,18 +9,21 @@ import com.usher.demo.R;
 import com.usher.demo.awesome.drag.ChannelAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 public class SceneFragment extends Fragment {
+    @BindView(R.id.recyclerview)
+    RecyclerView mRecyclerView;
+
     private View mFragmentView;
 
     private final PublishSubject<Boolean> mVisible$ = PublishSubject.create();
@@ -50,6 +53,7 @@ public class SceneFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (null == mFragmentView) {
             mFragmentView = inflater.inflate(R.layout.fragment_smarthome_scene, container, false);
+            ButterKnife.bind(this, mFragmentView);
             initView();
 
             mCreated$.onNext(true);
@@ -70,13 +74,7 @@ public class SceneFragment extends Fragment {
     }
 
     private void initView() {
-
-        RecyclerView recyclerView = mFragmentView.findViewById(R.id.recyclerview);
-        List<String> a = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.selected_channels)));
-        List<String> b = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.recommended_channels)));
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false));
-        recyclerView.setAdapter(new ChannelAdapter(requireContext(), a, b));
-
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false));
+        mRecyclerView.setAdapter(new ChannelAdapter(requireContext(), new ArrayList<>(), new ArrayList<>()));
     }
 }

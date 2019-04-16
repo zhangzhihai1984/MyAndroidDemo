@@ -1,7 +1,6 @@
 package com.usher.demo.awesome.smarthome.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +35,6 @@ public class SmartFragment extends Fragment {
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
 
-    private View mFragmentView;
-
     public SmartFragment() {
 
     }
@@ -59,11 +56,11 @@ public class SmartFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mFragmentView = inflater.inflate(R.layout.fragment_smarthome_smart, container, false);
-        ButterKnife.bind(this, mFragmentView);
+        View fragmentView = inflater.inflate(R.layout.fragment_smarthome_smart, container, false);
+        ButterKnife.bind(this, fragmentView);
         initView();
 
-        return mFragmentView;
+        return fragmentView;
     }
 
     private void initView() {
@@ -72,29 +69,14 @@ public class SmartFragment extends Fragment {
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
+
         int appbarHeight = getResources().getDimensionPixelSize(R.dimen.smart_appbar_height);
         int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.smart_toolbar_height);
-
-        Log.i("zzh", "StatusBar: " + statusBarHeight);
-        Log.i("zzh", "ToolBar: " + toolbarHeight);
-        Log.i("zzh", "AppBar: " + appbarHeight);
-
         float threshold = appbarHeight - toolbarHeight * 2 - statusBarHeight;
-        Log.i("zzh", "threshold: " + threshold);
-//        float maxOffset = appbarHeight - toolbarHeight - statusBarHeight;
-
 
         RxAppBarLayout.offsetChanges(mAppBarLayout)
                 .as(RxUtil.autoDispose(requireActivity()))
-                .subscribe(offset -> {
-                    Log.i("zzh", "" + offset);
-                    mBackgroundImageView.setImageAlpha((int) ((threshold - Math.min(threshold, Math.abs(offset))) / threshold * 255));
-//                    if (Math.abs(offset) > threshold)
-//                        mBackgroundImageView.setImageAlpha(0);
-//                    else
-//                        mBackgroundImageView.setImageAlpha(255);
-
-                });
+                .subscribe(offset -> mBackgroundImageView.setImageAlpha((int) ((threshold - Math.min(threshold, Math.abs(offset))) / threshold * 255)));
 
         mViewPager.setAdapter(new SmartFragmentAdapter(requireFragmentManager()));
         mSmartTabLayout.setViewPager(mViewPager);
@@ -103,8 +85,7 @@ public class SmartFragment extends Fragment {
                 .as(RxUtil.autoDispose(requireActivity()))
                 .subscribe(position -> {
                     for (int i = 0; i < 3; i++) {
-                        TextView textView = (TextView) mSmartTabLayout.getTabAt(i);
-                        textView.setTextSize(i == position ? 22 : 16);
+                        ((TextView) mSmartTabLayout.getTabAt(i)).setTextSize(i == position ? 22 : 16);
                     }
                 });
     }
