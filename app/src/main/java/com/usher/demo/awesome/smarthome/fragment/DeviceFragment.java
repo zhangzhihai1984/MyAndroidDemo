@@ -9,20 +9,11 @@ import com.usher.demo.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
 
-public class DeviceFragment extends Fragment {
-    private View mFragmentView;
-
-    private final PublishSubject<Boolean> mVisible$ = PublishSubject.create();
-    private final PublishSubject<Boolean> mCreated$ = PublishSubject.create();
+public class DeviceFragment extends BasePagerFragment {
 
     public DeviceFragment() {
-        Observable.combineLatest(mVisible$, mCreated$, (visible, created) -> true)
-                .take(1)
-                .subscribe();
+        super();
     }
 
     public static DeviceFragment newInstance() {
@@ -41,28 +32,17 @@ public class DeviceFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (null == mFragmentView) {
-            mFragmentView = inflater.inflate(R.layout.fragment_smarthome_device, container, false);
-            initView();
-
-            mCreated$.onNext(true);
-        } else {
-            ViewGroup parent = (ViewGroup) mFragmentView.getParent();
-            if (null != parent)
-                parent.removeView(mFragmentView);
-        }
-
-        return mFragmentView;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        mVisible$.onNext(isVisibleToUser);
+    public int getLayoutRes() {
+        return R.layout.fragment_smarthome_device;
     }
 
-    private void initView() {
+    @Override
+    public void init() {
 
     }
+
 }
