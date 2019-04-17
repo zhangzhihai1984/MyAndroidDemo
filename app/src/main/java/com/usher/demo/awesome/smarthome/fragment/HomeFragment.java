@@ -9,10 +9,9 @@ import com.usher.demo.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import butterknife.ButterKnife;
 
-public class HomeFragment extends Fragment {
-    private View mFragmentView;
+public class HomeFragment extends BaseNavigationFragment {
 
     public HomeFragment() {
 
@@ -35,16 +34,21 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mFragmentView = inflater.inflate(R.layout.fragment_smarthome_home, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_smarthome_home, container, false);
+        ButterKnife.bind(this, fragmentView);
+        setStatusBarTheme(Theme.LIGHT);
         initView();
 
-        return mFragmentView;
+        return fragmentView;
     }
 
     private void initView() {
-
     }
 
-    public static class SmartFragment extends Fragment {
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            setStatusBarTheme(Theme.LIGHT);
+        }
     }
 }

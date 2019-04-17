@@ -17,12 +17,11 @@ import com.usher.demo.utils.RxUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SmartFragment extends Fragment {
+public class SmartFragment extends BaseNavigationFragment {
     @BindView(R.id.appbarlayout)
     AppBarLayout mAppBarLayout;
 
@@ -58,9 +57,17 @@ public class SmartFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_smarthome_smart, container, false);
         ButterKnife.bind(this, fragmentView);
+        setStatusBarTheme(Theme.DARK);
         initView();
 
         return fragmentView;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            setStatusBarTheme(getTheme());
+        }
     }
 
     private void initView() {
@@ -69,14 +76,16 @@ public class SmartFragment extends Fragment {
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
-
         int appbarHeight = getResources().getDimensionPixelSize(R.dimen.smart_appbar_height);
         int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.smart_toolbar_height);
         float threshold = appbarHeight - toolbarHeight * 2 - statusBarHeight;
 
         RxAppBarLayout.offsetChanges(mAppBarLayout)
                 .as(RxUtil.autoDispose(requireActivity()))
-                .subscribe(offset -> mBackgroundImageView.setImageAlpha((int) ((threshold - Math.min(threshold, Math.abs(offset))) / threshold * 255)));
+                .subscribe(offset -> {
+                    mBackgroundImageView.setImageAlpha((int) ((threshold - Math.min(threshold, Math.abs(offset))) / threshold * 255));
+                    setStatusBarTheme(Math.abs(offset) > threshold ? Theme.LIGHT : Theme.DARK);
+                });
 
         mViewPager.setAdapter(new SmartFragmentAdapter(requireFragmentManager()));
         mSmartTabLayout.setViewPager(mViewPager);
