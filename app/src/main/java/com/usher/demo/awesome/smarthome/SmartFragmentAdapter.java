@@ -2,7 +2,7 @@ package com.usher.demo.awesome.smarthome;
 
 import com.usher.demo.awesome.smarthome.fragment.DeviceFragment;
 import com.usher.demo.awesome.smarthome.fragment.OtherFragment;
-import com.usher.demo.awesome.smarthome.fragment.SceneFragment;
+import com.usher.demo.awesome.smarthome.fragment.SmartSceneFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class SmartFragmentAdapter extends FragmentPagerAdapter {
     }
 
     private void initData() {
-        mFragmentList.add(SceneFragment.newInstance());
+        mFragmentList.add(SmartSceneFragment.newInstance());
         mFragmentList.add(DeviceFragment.newInstance());
         mFragmentList.add(OtherFragment.newInstance());
 

@@ -6,27 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.usher.demo.R;
-import com.usher.demo.awesome.drag.ChannelAdapter;
-
-import java.util.ArrayList;
+import com.usher.demo.awesome.smarthome.SmartSceneAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 
-public class SceneFragment extends BasePagerFragment {
+public class SmartSceneFragment extends BasePagerFragment {
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
 
-    public SceneFragment() {
+    public SmartSceneFragment() {
         super();
     }
 
-    public static SceneFragment newInstance() {
+    public static SmartSceneFragment newInstance() {
         Bundle args = new Bundle();
-        SceneFragment fragment = new SceneFragment();
+        SmartSceneFragment fragment = new SmartSceneFragment();
         fragment.setArguments(args);
 
         return fragment;
@@ -50,7 +48,7 @@ public class SceneFragment extends BasePagerFragment {
 
     @Override
     public void init() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false));
-        mRecyclerView.setAdapter(new ChannelAdapter(requireContext(), new ArrayList<>(), new ArrayList<>()));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false));
+        mRecyclerView.setAdapter(new SmartSceneAdapter(requireContext()));
     }
 }

@@ -94,7 +94,7 @@ public class SmartFragment extends BaseNavigationFragment {
                 .as(RxUtil.autoDispose(requireActivity()))
                 .subscribe(position -> {
                     for (int i = 0; i < 3; i++) {
-                        ((TextView) mSmartTabLayout.getTabAt(i)).setTextSize(i == position ? 22 : 16);
+                        ((TextView) mSmartTabLayout.getTabAt(i)).setTextSize(i == position ? 20 : 14);
                     }
                 });
     }

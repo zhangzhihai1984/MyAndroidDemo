@@ -22,9 +22,9 @@
     <dimen name="appbar_padding_top">8dp</dimen>
 
     <!-- Smart Home -->
-    <dimen name="smart_appbar_height">250dp</dimen>
+    <dimen name="smart_appbar_height">210dp</dimen>
     <dimen name="smart_toolbar_height">60dp</dimen>
-    <dimen name="smart_tab_background_height">80dp</dimen>
-    <dimen name="smart_indoor_background_height">190dp</dimen> <!-- 250 - 60 = 190 -->
+    <dimen name="smart_tab_background_height">60dp</dimen>
+    <dimen name="smart_indoor_background_height">170dp</dimen> <!-- 210 - 60 + 20(radius) = 170 -->
 
 </resources>
