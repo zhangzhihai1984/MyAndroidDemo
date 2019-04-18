@@ -58,7 +58,7 @@ public class SmartHomeActivity extends BaseActivity {
                 .as(RxUtil.autoDispose(this))
                 .subscribe(this::navigateTab);
 
-        mBottomTabView.updateTabs(Constants.TAB_TAG_SMART);
+        mBottomTabView.updateTabs(Constants.TAB_TAG_HOME);
     }
 
     private void navigateTab(String tag) {

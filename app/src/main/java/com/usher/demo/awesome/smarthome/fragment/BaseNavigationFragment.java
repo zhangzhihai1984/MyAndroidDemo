@@ -1,10 +1,16 @@
 package com.usher.demo.awesome.smarthome.fragment;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import butterknife.ButterKnife;
 
-public class BaseNavigationFragment extends Fragment {
+public abstract class BaseNavigationFragment extends Fragment {
     private Theme mTheme = Theme.UNKNOWN;
 
     public enum Theme {
@@ -32,4 +38,18 @@ public class BaseNavigationFragment extends Fragment {
     public Theme getTheme() {
         return mTheme;
     }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View fragmentView = inflater.inflate(getLayoutRes(), container, false);
+        ButterKnife.bind(this, fragmentView);
+        init();
+
+        return fragmentView;
+    }
+
+    public abstract int getLayoutRes();
+
+    public abstract void init();
 }

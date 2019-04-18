@@ -1,9 +1,6 @@
 package com.usher.demo.awesome.smarthome.fragment;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,11 +12,9 @@ import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.SmartFragmentAdapter;
 import com.usher.demo.utils.RxUtil;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SmartFragment extends BaseNavigationFragment {
     @BindView(R.id.appbarlayout)
@@ -50,27 +45,16 @@ public class SmartFragment extends BaseNavigationFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_smarthome_smart, container, false);
-        ButterKnife.bind(this, fragmentView);
         setStatusBarTheme(Theme.DARK);
-        initView();
-
-        return fragmentView;
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            setStatusBarTheme(getTheme());
-        }
+    public int getLayoutRes() {
+        return R.layout.fragment_smarthome_smart;
     }
 
-    private void initView() {
+    @Override
+    public void init() {
         int statusBarHeight = 72;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
@@ -97,5 +81,12 @@ public class SmartFragment extends BaseNavigationFragment {
                         ((TextView) mSmartTabLayout.getTabAt(i)).setTextSize(i == position ? 20 : 14);
                     }
                 });
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            setStatusBarTheme(getTheme());
+        }
     }
 }
