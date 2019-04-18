@@ -10,6 +10,7 @@ import com.jakewharton.rxbinding3.viewpager.RxViewPager;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.SmartFragmentAdapter;
+import com.usher.demo.awesome.smarthome.fragment.base.BaseNavigationFragment;
 import com.usher.demo.utils.RxUtil;
 
 import androidx.annotation.Nullable;

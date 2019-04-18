@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.SmartSceneAdapter;
+import com.usher.demo.awesome.smarthome.fragment.base.BaseLazyPagerFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 
-public class SmartSceneFragment extends BasePagerFragment {
+public class SmartSceneFragment extends BaseLazyPagerFragment {
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
 

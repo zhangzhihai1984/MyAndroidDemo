@@ -6,6 +6,7 @@ import com.twigcodes.ui.pager.LoopViewPager;
 import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.HomeBannerAdapter;
 import com.usher.demo.awesome.smarthome.entities.ADInfo;
+import com.usher.demo.awesome.smarthome.fragment.base.BaseNavigationFragment;
 
 import java.util.ArrayList;
 import java.util.List;

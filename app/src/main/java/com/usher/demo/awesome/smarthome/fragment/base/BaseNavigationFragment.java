@@ -1,4 +1,4 @@
-package com.usher.demo.awesome.smarthome.fragment;
+package com.usher.demo.awesome.smarthome.fragment.base;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.usher.demo.awesome.smarthome.fragment;
+package com.usher.demo.awesome.smarthome.fragment.base;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,13 +12,13 @@ import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
-public abstract class BasePagerFragment extends Fragment {
+public abstract class BaseLazyPagerFragment extends Fragment {
     private final PublishSubject<Boolean> mVisible$ = PublishSubject.create();
     private final PublishSubject<Boolean> mCreated$ = PublishSubject.create();
 
     private View mFragmentView;
 
-    public BasePagerFragment() {
+    public BaseLazyPagerFragment() {
         Observable.combineLatest(mVisible$, mCreated$, (visible, created) -> true)
                 .take(1)
                 .doOnComplete(this::init)

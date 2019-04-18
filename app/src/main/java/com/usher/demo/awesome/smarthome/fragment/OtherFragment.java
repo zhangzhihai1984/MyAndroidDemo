@@ -6,11 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.usher.demo.R;
+import com.usher.demo.awesome.smarthome.fragment.base.BaseLazyPagerFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class OtherFragment extends BasePagerFragment {
+public class OtherFragment extends BaseLazyPagerFragment {
 
     public OtherFragment() {
         super();
