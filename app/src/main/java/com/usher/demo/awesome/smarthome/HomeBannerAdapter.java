@@ -20,7 +20,6 @@ public class HomeBannerAdapter extends FragmentPagerAdapter {
         mList = list;
     }
 
-
     @NonNull
     @Override
     public Fragment getItem(int position) {
