@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.usher.demo.R;
+import com.usher.demo.awesome.smarthome.entities.ADInfo;
 import com.usher.demo.utils.Constants;
 
 import androidx.annotation.NonNull;
@@ -26,9 +28,9 @@ public class HomeBannerFragment extends Fragment {
 
     }
 
-    public static HomeBannerFragment newInstance(int resId) {
+    public static HomeBannerFragment newInstance(ADInfo adInfo) {
         Bundle args = new Bundle();
-        args.putInt(Constants.TAG_URL, resId);
+        args.putString(Constants.TAG_ADINFO, new Gson().toJson(adInfo));
         HomeBannerFragment fragment = new HomeBannerFragment();
         fragment.setArguments(args);
 
@@ -58,8 +60,8 @@ public class HomeBannerFragment extends Fragment {
 
     private void initView() {
         if (null != getArguments()) {
-            int resId = getArguments().getInt(Constants.TAG_URL);
-            Picasso.get().load(resId).into(mBannerImageView);
+            ADInfo adInfo = new Gson().fromJson(getArguments().getString(Constants.TAG_ADINFO), ADInfo.class);
+            Picasso.get().load(adInfo.getUrl()).into(mBannerImageView);
         }
     }
 }

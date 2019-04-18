@@ -11,5 +11,5 @@ public class Constants {
     public static final String TAB_TAG_CENTER = "TAB_TAG_CENTER";
 
 
-    public static final String TAG_URL = "TAG_URL";
+    public static final String TAG_ADINFO = "TAG_ADINFO";
 }
