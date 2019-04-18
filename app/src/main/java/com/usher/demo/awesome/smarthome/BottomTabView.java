@@ -116,7 +116,7 @@ public class BottomTabView extends LinearLayout implements INavigator {
                 nameView.setTextColor(Color.parseColor("#000000"));
             } else {
                 iconView.setImageResource(mTabDefaultIcons.get(i));
-                nameView.setTextColor(Color.parseColor("#c6c6c6"));
+                nameView.setTextColor(Color.parseColor("#9b9b9b"));
             }
         }
     }
