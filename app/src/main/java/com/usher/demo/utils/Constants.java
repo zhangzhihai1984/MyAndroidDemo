@@ -9,4 +9,7 @@ public class Constants {
     public static final String TAB_TAG_COMMUNITY = "TAB_TAG_COMMUNITY";
     public static final String TAB_TAG_PROPERTY = "TAB_TAG_PROPERTY";
     public static final String TAB_TAG_CENTER = "TAB_TAG_CENTER";
+
+
+    public static final String TAG_URL = "TAG_URL";
 }
