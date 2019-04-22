@@ -2,6 +2,8 @@ package com.usher.demo.awesome.smarthome.fragment;
 
 import android.os.Bundle;
 
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.twigcodes.ui.indicator.PageIndicatorView;
 import com.twigcodes.ui.pager.LoopViewPager;
 import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.HomeBannerAdapter;
@@ -17,6 +19,9 @@ import butterknife.BindView;
 public class HomeFragment extends BaseNavigationFragment {
     @BindView(R.id.banner_viewpager)
     LoopViewPager mBannerViewPager;
+
+    @BindView(R.id.banner_indicator)
+    SmartTabLayout mBannerIndicatorView;
 
     private HomeBannerAdapter mBannerAdapter;
 
@@ -55,6 +60,7 @@ public class HomeFragment extends BaseNavigationFragment {
 
         mBannerAdapter = new HomeBannerAdapter(requireFragmentManager(), bannerData);
         mBannerViewPager.setAdapter(mBannerAdapter);
+        mBannerIndicatorView.setViewPager(mBannerViewPager);
     }
 
     @Override

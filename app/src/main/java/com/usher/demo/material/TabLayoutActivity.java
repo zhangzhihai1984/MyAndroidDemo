@@ -81,6 +81,12 @@ public class TabLayoutActivity extends AppCompatActivity {
         SmartTabLayout smartTabLayout = findViewById(R.id.smarttablayout);
         smartTabLayout.setViewPager(mViewPager);
 
+        SmartTabLayout smartTabLayout2 = findViewById(R.id.smarttablayout2);
+        smartTabLayout2.setViewPager(mViewPager);
+
+        SmartTabLayout smartTabLayout3 = findViewById(R.id.smarttablayout3);
+        smartTabLayout3.setViewPager(mViewPager);
+
         RxViewPager.pageSelections(mViewPager)
                 .as(RxUtil.autoDispose(this))
                 .subscribe(position -> {
