@@ -2,8 +2,9 @@ package com.usher.demo.awesome.smarthome.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.twigcodes.ui.indicator.PageIndicatorView;
 import com.twigcodes.ui.pager.LoopViewPager;
 import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.HomeBannerAdapter;
@@ -13,7 +14,6 @@ import com.usher.demo.awesome.smarthome.fragment.base.BaseNavigationFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.Nullable;
 import butterknife.BindView;
 
 public class HomeFragment extends BaseNavigationFragment {
