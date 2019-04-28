@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true">
 
-                <include layout="@layout/indoor_air_quality_layout" />
+                <include layout="@layout/smarthome_indoor_air_quality" />
 
                 <View
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/smart_toolbar_height"
                     android:layout_alignParentBottom="true"
-                    app:stl_customTabTextLayoutId="@layout/smart_tab_item"
+                    app:stl_customTabTextLayoutId="@layout/smarthome_tab_item"
                     app:stl_customTabTextViewId="@id/textview"
                     app:stl_dividerColor="@android:color/transparent"
                     app:stl_indicatorColor="#3eac68"

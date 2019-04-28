@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <ImageView
+        android:id="@+id/board_imageview"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:contentDescription="@null"
+        android:src="@drawable/smart_board" />
+
+    <TextView
+        android:id="@+id/board_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_toEndOf="@id/board_imageview"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="迎接新智能物业新纪元，足不出户就可以体验物业功能，快来下载APP"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

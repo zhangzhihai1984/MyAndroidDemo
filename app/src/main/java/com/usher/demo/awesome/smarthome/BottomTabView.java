@@ -85,7 +85,7 @@ public class BottomTabView extends LinearLayout implements INavigator {
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1);
 
         for (int i = 0; i < mTabTags.size(); i++) {
-            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_tab_item, this, false);
+            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.smarthome_bottom_tab_item, this, false);
             itemView.setLayoutParams(params);
             itemView.setTag(mTabTags.get(i));
 

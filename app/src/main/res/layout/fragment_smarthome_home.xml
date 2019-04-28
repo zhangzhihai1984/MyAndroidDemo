@@ -11,49 +11,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/banner_layout"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
+        <include layout="@layout/smarthome_home_title" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp">
+        <include layout="@layout/smarthome_home_banner" />
 
-                <com.twigcodes.ui.pager.LoopViewPager
-                    android:id="@+id/banner_viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:pager_autopage_enabled="true"
-                    app:pager_autopage_interval="3000" />
-
-            </androidx.cardview.widget.CardView>
-
-            <com.ogaclejapan.smarttablayout.SmartTabLayout
-                android:id="@+id/banner_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                app:stl_clickable="false"
-                app:stl_customTabTextLayoutId="@layout/smart_tab_banner_item"
-                app:stl_dividerColor="@android:color/transparent"
-                app:stl_drawDecorationAfterTab="true"
-                app:stl_indicatorColor="#616161"
-                app:stl_indicatorCornerRadius="2dp"
-                app:stl_indicatorGravity="center"
-                app:stl_indicatorInterpolation="smart"
-                app:stl_indicatorThickness="4dp"
-                app:stl_indicatorWidth="auto"
-                app:stl_underlineColor="@android:color/transparent" />
-
-        </RelativeLayout>
+        <include layout="@layout/smarthome_home_board" />
 
     </LinearLayout>
 
