@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,10 +14,10 @@
             android:id="@+id/shortcut_imageview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/smart_shortcut_repair_background"
             android:contentDescription="@null"
             android:padding="15dp"
-            android:src="@drawable/smart_shortcut_hammer" />
+            tools:background="@drawable/smart_shortcut_repair_background"
+            tools:src="@drawable/smart_shortcut_repair" />
 
     </com.twigcodes.ui.layout.SquareLayout>
 
@@ -25,8 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="物业报修"
         android:textColor="#484848"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:text="物业报修" />
 
 </LinearLayout>
