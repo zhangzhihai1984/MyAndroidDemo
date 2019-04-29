@@ -3,11 +3,14 @@ package com.usher.demo.awesome.smarthome.fragment;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.twigcodes.ui.pager.LoopViewPager;
 import com.usher.demo.R;
 import com.usher.demo.awesome.smarthome.HomeBannerAdapter;
+import com.usher.demo.awesome.smarthome.ShortcutAdapter;
 import com.usher.demo.awesome.smarthome.entities.ADInfo;
 import com.usher.demo.awesome.smarthome.fragment.base.BaseNavigationFragment;
 
@@ -22,6 +25,9 @@ public class HomeFragment extends BaseNavigationFragment {
 
     @BindView(R.id.banner_indicator)
     SmartTabLayout mBannerIndicatorView;
+
+    @BindView(R.id.shortcut_recyclerview)
+    RecyclerView mShortcutRecyclerView;
 
     private HomeBannerAdapter mBannerAdapter;
 
@@ -61,6 +67,9 @@ public class HomeFragment extends BaseNavigationFragment {
         mBannerAdapter = new HomeBannerAdapter(requireFragmentManager(), bannerData);
         mBannerViewPager.setAdapter(mBannerAdapter);
         mBannerIndicatorView.setViewPager(mBannerViewPager);
+
+        mShortcutRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5, RecyclerView.VERTICAL, false));
+        mShortcutRecyclerView.setAdapter(new ShortcutAdapter(requireContext()));
     }
 
     @Override
