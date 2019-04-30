@@ -1,18 +1,18 @@
 package com.usher.demo.awesome.smarthome;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+
 import com.twigcodes.ui.pager.LoopViewPager;
 import com.usher.demo.awesome.smarthome.entities.ADInfo;
 import com.usher.demo.awesome.smarthome.fragment.HomeBannerFragment;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-
 public class HomeBannerAdapter extends FragmentPagerAdapter {
-    private final List<ADInfo> mList;
+    private List<ADInfo> mList;
 
     public HomeBannerAdapter(@NonNull FragmentManager fm, List<ADInfo> list) {
         super(fm);
@@ -30,5 +30,9 @@ public class HomeBannerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return mList.size();
+    }
+
+    public void setData(List<ADInfo> list) {
+        this.mList = list;
     }
 }

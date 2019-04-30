@@ -11,16 +11,19 @@
 
         <include layout="@layout/smarthome_home_title" />
 
-        <include layout="@layout/smarthome_home_banner" />
+        <com.usher.demo.awesome.smarthome.HomeBannerView
+            android:id="@+id/home_banner_view"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
 
         <include layout="@layout/smarthome_home_board" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shortcut_recyclerview"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_height="wrap_content" />
+            android:layout_marginEnd="8dp" />
 
     </LinearLayout>
 
