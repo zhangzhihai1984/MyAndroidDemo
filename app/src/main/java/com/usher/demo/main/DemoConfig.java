@@ -1,6 +1,7 @@
 package com.usher.demo.main;
 
 import com.usher.demo.awesome.smarthome.SmartHomeActivity;
+import com.usher.demo.view.ChartActivity;
 import com.usher.demo.web.AngularActivity;
 import com.usher.demo.awesome.decoration.DecorationActivity;
 import com.usher.demo.awesome.drag.ChannelActivity;
@@ -80,8 +81,8 @@ class DemoConfig {
                 new DemoItem("wave", WaveActivity.class),
                 new DemoItem("pager", PagerActivity.class),
                 new DemoItem("marquee text", MarqueeTextActivity.class),
-                new DemoItem("loading", LoadingActivity.class)
-
+                new DemoItem("loading", LoadingActivity.class),
+                new DemoItem("chart", ChartActivity.class)
         ));
 
         configMap.put(KEY_OTHER, Arrays.asList(
