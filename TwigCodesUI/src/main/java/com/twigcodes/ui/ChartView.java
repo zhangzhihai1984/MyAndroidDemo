@@ -92,19 +92,43 @@ public class ChartView extends View {
     //x轴series的数量
     private static final int X_AXIS_SERIES_COUNT_TEMPERATURE = 13;
     //y轴series的数量
-    private static int Y_AXIS_SERIES_COUNT_TEMPERATURE = 5;
+    private static final int Y_AXIS_SERIES_COUNT_TEMPERATURE = 5;
     //y轴每个series的差值 (5摄氏度)
-    private static int Y_AXIS_DELTA_VALUE_PER_SERIES_TEMPERATURE = 5;
-    //y轴显示的最大值
+    private static final int Y_AXIS_DELTA_VALUE_PER_SERIES_TEMPERATURE = 5;
+    //y轴可显示的最大值
     private static final float Y_AXIS_MAX_VALUE_TEMPERATURE = 30;
     //y轴可拖动到的最大值
     private static final float DATA_MAX_VALUE_TEMPERATURE = 30;
     //y轴可拖动到的最小值
-    private static float DATA_MIN_VALUE_TEMPERATURE = 15;
+    private static final float DATA_MIN_VALUE_TEMPERATURE = 15;
+    //tooltip文字后缀 (℃)
+    private static final String TOOLTIP_TEXT_SUFFIX_TEMPERATURE = "℃";
 
     //TODO:
     //y轴拖动可识别的最小幅度(0.5摄氏度)
     private float DATA_MIN_RANGE_TEMPERATURE = 0.5f;
+
+    /**
+     * 湿度固定配置项
+     */
+    //x轴series的数量
+    private static final int X_AXIS_SERIES_COUNT_HUMIDITY = 13;
+    //y轴series的数量
+    private static final int Y_AXIS_SERIES_COUNT_HUMIDITY = 6;
+    //y轴每个series的差值 (5摄氏度)
+    private static final int Y_AXIS_DELTA_VALUE_PER_SERIES_HUMIDITY = 10;
+    //y轴可显示的最大值
+    private static final float Y_AXIS_MAX_VALUE_HUMIDITY = 80;
+    //y轴可拖动到的最大值
+    private static final float DATA_MAX_VALUE_HUMIDITY = 80;
+    //y轴可拖动到的最小值
+    private static final float DATA_MIN_VALUE_HUMIDITY = 30;
+    //tooltip文字后缀 (%)
+    private static final String TOOLTIP_TEXT_SUFFIX_HUMIDITY = "%";
+
+    //TODO:
+    //y轴拖动可识别的最小幅度(0.5摄氏度)
+    private float DATA_MIN_RANGE_HUMIDITY = 1.0f;
 
     /**
      * 表格动态配置项
@@ -115,12 +139,14 @@ public class ChartView extends View {
     private int Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_TEMPERATURE;
     //y轴每个series的差值 (比如说温度, 一个series代表5个摄氏度)
     private int Y_AXIS_DELTA_VALUE_PER_SERIES = Y_AXIS_DELTA_VALUE_PER_SERIES_TEMPERATURE;
-    //y轴显示的最大值
+    //y轴可显示的最大值
     private float Y_AXIS_MAX_VALUE = Y_AXIS_MAX_VALUE_TEMPERATURE;
     //y轴可拖动到的最大值
     private float DATA_MAX_VALUE = DATA_MAX_VALUE_TEMPERATURE;
     //y轴可拖动到的最小值
     private float DATA_MIN_VALUE = DATA_MIN_VALUE_TEMPERATURE;
+    //tooltip文字后缀
+    private String TOOLTIP_TEXT_SUFFIX = TOOLTIP_TEXT_SUFFIX_TEMPERATURE;
 
     /**
      * 表格动态配置后计算项
@@ -292,13 +318,24 @@ public class ChartView extends View {
 
     private void updateConfigItems() {
         switch (mDataType) {
-            case TEMPERATURE:
-            default: {
+            case TEMPERATURE: {
                 X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_TEMPERATURE;
                 Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_TEMPERATURE;
+                Y_AXIS_DELTA_VALUE_PER_SERIES = Y_AXIS_DELTA_VALUE_PER_SERIES_TEMPERATURE;
                 Y_AXIS_MAX_VALUE = Y_AXIS_MAX_VALUE_TEMPERATURE;
                 DATA_MAX_VALUE = DATA_MAX_VALUE_TEMPERATURE;
                 DATA_MIN_VALUE = DATA_MIN_VALUE_TEMPERATURE;
+                TOOLTIP_TEXT_SUFFIX = TOOLTIP_TEXT_SUFFIX_TEMPERATURE;
+            }
+            case HUMIDITY:
+            default: {
+                X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_HUMIDITY;
+                Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_HUMIDITY;
+                Y_AXIS_DELTA_VALUE_PER_SERIES = Y_AXIS_DELTA_VALUE_PER_SERIES_HUMIDITY;
+                Y_AXIS_MAX_VALUE = Y_AXIS_MAX_VALUE_HUMIDITY;
+                DATA_MAX_VALUE = DATA_MAX_VALUE_HUMIDITY;
+                DATA_MIN_VALUE = DATA_MIN_VALUE_HUMIDITY;
+                TOOLTIP_TEXT_SUFFIX = TOOLTIP_TEXT_SUFFIX_HUMIDITY;
             }
             break;
         }
@@ -324,7 +361,7 @@ public class ChartView extends View {
     }
 
     /**
-     * 考虑到此时处于用户体验, tooltip和marker可能尚未消失, 为了防止其继续绘制, 需要将选中数据点的索引置为-1 {@link #drawMarkerAndTooltip(Canvas)}
+     * 考虑到此时出于用户体验, tooltip和marker可能尚未消失, 为了防止其继续绘制, 需要将选中数据点的索引置为-1 {@link #drawMarkerAndTooltip(Canvas)}
      * 同时通过subject让延时的Observable在此时takeUntil掉, 因为延时的存在已经没有意义了
      */
     private void setConfig(ChartType chartType, DataType dataType, boolean drag) {
@@ -418,9 +455,9 @@ public class ChartView extends View {
         float data;
         /*
          * rawDeltaData表示手指滑动的距离转化成的对应data的增减值.
-         * rawDeltaData = (手指按下时的Y - 当前手指的Y) / (一个series的高度 / 每个series的差值)
-         * 其中(一个series的高度 / 每个series的差值)代表的是data对应一个单位的距离.
-         * 比如温度, 一个series的高度为214.8, 这一个series的差值为5摄氏度, 那么这一个单位, 也就是说一个摄氏度的高度为42.96
+         * rawDeltaData = (手指按下时的Y - 当前手指的Y) / (每个series的高度 / 每个series的差值)
+         * 其中(每个series的高度 / 每个series的差值)代表的是data对应一个单位的距离.
+         * 以温度为例, 如果一个series的高度为214.8, 这一个series的差值为5摄氏度, 那么这一个单位, 也就是说一个摄氏度的高度为42.96
          * 如果手指向上移动了193.00134, 那么rawDeltaData就为4.4925823摄氏度
          */
         float rawDeltaData = (mTouchDownY - currentY) / (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
@@ -432,13 +469,17 @@ public class ChartView extends View {
              * 如果rawDeltaData为0.81504667, 那么我们将data调整为21.5.
              * 再比如上面的4.4925823, 它对应的调整值为4.0.
              */
-            case TEMPERATURE:
-            default: {
+            case TEMPERATURE: {
                 float deltaData = (float) Math.floor(rawDeltaData);
                 if (rawDeltaData - deltaData > DATA_MIN_RANGE_TEMPERATURE)
                     deltaData += DATA_MIN_RANGE_TEMPERATURE;
 
                 data = mTouchDownData + deltaData;
+            }
+            break;
+            case HUMIDITY:
+            default: {
+                data = mTouchDownData + Math.round(rawDeltaData);
             }
             break;
         }
@@ -462,8 +503,16 @@ public class ChartView extends View {
         drawMarkerAndTooltip(canvas);
     }
 
+
     /**
-     *
+     * 折线图打点的过程
+     * <p>
+     * TODO: x轴的公式
+     * <p>
+     * y = 首个series距离顶部边界的距离 + (可显示的最大值 - 当前data的值) * (每个series的高度 / 每个series的差值)
+     * 以温度为例，如果一个series的高度为214.8, 这一个series的差值为5摄氏度, 那么这一个单位, 也就是说一个摄氏度的高度为42.96
+     * 如果当前的data为21.0摄氏度, 可显示的最大值为35摄氏度 那么它的y就是 Y_AXIS_MARGIN_TOP + (35.0 - 21.0) * 42.96
+     * 也就是 Y_AXIS_MARGIN_TOP + 14个1摄氏度的高度
      */
     private void makeDataLinePath() {
         mDataDashLinePath.reset();
@@ -472,7 +521,7 @@ public class ChartView extends View {
         if (!mDashData.isEmpty()) {
             for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
                 float x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mDashData.get(i)) * Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES;
+                float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mDashData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
                 if (i <= 0) {
                     mDataDashLinePath.moveTo(x, y);
                     mDataDashShadowLinePath.moveTo(x, y + DATA_LINE_SHADOW_OFFSET);
@@ -488,7 +537,7 @@ public class ChartView extends View {
 
         for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
             float x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES;
+            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
             if (i <= 0) {
                 mDataSolidLinePath.moveTo(x, y);
                 mDataSolidShadowLinePath.moveTo(x, y + DATA_LINE_SHADOW_OFFSET);
@@ -507,8 +556,10 @@ public class ChartView extends View {
         }
 
         for (int i = 0; i < Y_AXIS_SERIES_COUNT; i++) {
-            canvas.drawLine(0, i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP, Y_AXIS_TICK_LENGTH, i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP, mXAxisTickPaint);
-            canvas.drawText(String.valueOf((int) Y_AXIS_MAX_VALUE - i * Y_AXIS_DELTA_VALUE_PER_SERIES), Y_AXIS_LABEL_MARGIN_START, i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP + Y_AXIS_TEXT_BASELINE_OFFSET, mYAxisLabelPaint);
+            float y = i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP;
+
+            canvas.drawLine(0, y, Y_AXIS_TICK_LENGTH, y, mXAxisTickPaint);
+            canvas.drawText(String.valueOf((int) Y_AXIS_MAX_VALUE - i * Y_AXIS_DELTA_VALUE_PER_SERIES), Y_AXIS_LABEL_MARGIN_START, y + Y_AXIS_TEXT_BASELINE_OFFSET, mYAxisLabelPaint);
         }
     }
 
@@ -527,7 +578,7 @@ public class ChartView extends View {
     private void drawMarkerAndTooltip(Canvas canvas) {
         if (mSelectedDataIndex >= 0) {
             float x = (mSelectedDataIndex + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(mSelectedDataIndex)) * Y_AXIS_SERIES_INTERVAL * 1.0f / Y_AXIS_DELTA_VALUE_PER_SERIES;
+            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(mSelectedDataIndex)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBackgroundPaint);
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBorderPaint);
             canvas.drawCircle(x, y, MARKER_INNER_RADIUS, mMarkerInnerPaint);
@@ -547,7 +598,7 @@ public class ChartView extends View {
 
             canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, TOOLTIP_CORNER_RADIUS, TOOLTIP_CORNER_RADIUS, mTooltipBackgroundPaint);
             canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, TOOLTIP_CORNER_RADIUS, TOOLTIP_CORNER_RADIUS, mTooltipBorderPaint);
-            canvas.drawText(mSolidData.get(mSelectedDataIndex) + "℃", valueTextX, y + TOOLTIP_TEXT_BASELINE_OFFSET, mTooltipTextPaint);
+            canvas.drawText(mSolidData.get(mSelectedDataIndex) + TOOLTIP_TEXT_SUFFIX, valueTextX, y + TOOLTIP_TEXT_BASELINE_OFFSET, mTooltipTextPaint);
         }
     }
 }
