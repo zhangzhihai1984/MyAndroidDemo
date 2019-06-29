@@ -51,7 +51,7 @@ public class ChartView extends View {
 
     //xy轴label文字大小
     private static final float AXIS_LABEL_SIZE = 27;
-    //有数据选中时，x轴对应的label的text size
+    //有数据选中时, x轴对应的label的text size
     private static final float AXIS_LABEL_SELECTED_SIZE = 48;
     //xy轴tick的stroke宽度
     private static final float AXIS_TICK_WIDTH = 3;
@@ -92,13 +92,19 @@ public class ChartView extends View {
     //x轴series的数量
     private static final int X_AXIS_SERIES_COUNT_TEMPERATURE = 13;
     //y轴series的数量
-    private int Y_AXIS_SERIES_COUNT_TEMPERATURE = 5;
+    private static int Y_AXIS_SERIES_COUNT_TEMPERATURE = 5;
+    //y轴每个series的差值 (5摄氏度)
+    private static int Y_AXIS_DELTA_VALUE_PER_SERIES_TEMPERATURE = 5;
     //y轴显示的最大值
     private static final float Y_AXIS_MAX_VALUE_TEMPERATURE = 30;
     //y轴可拖动到的最大值
     private static final float DATA_MAX_VALUE_TEMPERATURE = 30;
     //y轴可拖动到的最小值
-    private float DATA_MIN_VALUE_TEMPERATURE = 15;
+    private static float DATA_MIN_VALUE_TEMPERATURE = 15;
+
+    //TODO:
+    //y轴拖动可识别的最小幅度(0.5摄氏度)
+    private float DATA_MIN_RANGE_TEMPERATURE = 0.5f;
 
     /**
      * 表格动态配置项
@@ -107,6 +113,8 @@ public class ChartView extends View {
     private int X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_TEMPERATURE;
     //y轴series的数量
     private int Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_TEMPERATURE;
+    //y轴每个series的差值 (比如说温度, 一个series代表5个摄氏度)
+    private int Y_AXIS_DELTA_VALUE_PER_SERIES = Y_AXIS_DELTA_VALUE_PER_SERIES_TEMPERATURE;
     //y轴显示的最大值
     private float Y_AXIS_MAX_VALUE = Y_AXIS_MAX_VALUE_TEMPERATURE;
     //y轴可拖动到的最大值
@@ -157,14 +165,14 @@ public class ChartView extends View {
     private int mSelectedDataIndex = -1;
 
     /**
-     * 考虑到用户体验，在通过手势查看数值或拖拽曲线后，tooptip和marker会延迟消失，如果在尚未消失时点击了其他的数据点，
-     * 那么新数据点tooltip和marker可能会因为延时时间到而突然消失，因此通过这个subject让延时的Observable在此时takeUntil掉
+     * 考虑到用户体验, 在通过手势查看数值或拖拽曲线后, tooptip和marker会延迟消失, 如果在尚未消失时点击了其他的数据点,
+     * 那么新数据点tooltip和marker可能会因为延时时间到而突然消失, 因此通过这个subject让延时的Observable在此时takeUntil掉
      */
     private final PublishSubject<Unit> mTouchDownSubject = PublishSubject.create();
 
     /**
-     * 考虑到用户体验，在通过手势查看数值或拖拽曲线后，tooptip和marker会延迟消失，如果在尚未消失时切换ChartType，
-     * 比如从温度切换到湿度，由于此时已经没有数据了，应该停止继续绘制数据点的tooltip和marker
+     * 考虑到用户体验, 在通过手势查看数值或拖拽曲线后, tooptip和marker会延迟消失, 如果在尚未消失时切换ChartType,
+     * 比如从温度切换到湿度, 由于此时已经没有数据了, 应该停止继续绘制数据点的tooltip和marker
      */
     private final PublishSubject<Unit> mSetConfigSubject = PublishSubject.create();
     private float mTouchDownY;
@@ -284,15 +292,15 @@ public class ChartView extends View {
 
     private void updateConfigItems() {
         switch (mDataType) {
-            case TEMPERATURE: {
+            case TEMPERATURE:
+            default: {
                 X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_TEMPERATURE;
                 Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_TEMPERATURE;
                 Y_AXIS_MAX_VALUE = Y_AXIS_MAX_VALUE_TEMPERATURE;
                 DATA_MAX_VALUE = DATA_MAX_VALUE_TEMPERATURE;
                 DATA_MIN_VALUE = DATA_MIN_VALUE_TEMPERATURE;
             }
-            default:
-                break;
+            break;
         }
 
         if (mWidth > 0)
@@ -316,8 +324,8 @@ public class ChartView extends View {
     }
 
     /**
-     * 考虑到此时处于用户体验，tooltip和marker可能尚未消失，为了防止其继续绘制，需要将选中数据点的索引置为-1 {@link #drawMarkerAndTooltip(Canvas)}
-     * 同时通过subject让延时的Observable在此时takeUntil掉，因为延时的存在已经没有意义了
+     * 考虑到此时处于用户体验, tooltip和marker可能尚未消失, 为了防止其继续绘制, 需要将选中数据点的索引置为-1 {@link #drawMarkerAndTooltip(Canvas)}
+     * 同时通过subject让延时的Observable在此时takeUntil掉, 因为延时的存在已经没有意义了
      */
     private void setConfig(ChartType chartType, DataType dataType, boolean drag) {
         mSelectedDataIndex = -1;
@@ -345,6 +353,10 @@ public class ChartView extends View {
 
         makeDataLinePath();
         postInvalidate();
+    }
+
+    public List<Float> getData() {
+        return mSolidData;
     }
 
     @Override
@@ -375,16 +387,7 @@ public class ChartView extends View {
                     break;
 
                 if (mSelectedDataIndex >= 0) {
-                    float y = event.getY();
-
-                    float rawDeltaData = (mTouchDownY - y) / Y_AXIS_SERIES_INTERVAL * 5;
-                    float deltaData = (float) Math.floor(rawDeltaData);
-                    if (rawDeltaData - deltaData > 0.5)
-                        deltaData += 0.5;
-
-                    float data = mTouchDownData + deltaData;
-
-                    mSolidData.set(mSelectedDataIndex, Math.min(DATA_MAX_VALUE, Math.max(data, DATA_MIN_VALUE)));
+                    mSolidData.set(mSelectedDataIndex, Math.min(DATA_MAX_VALUE, Math.max(getMovingData(event.getY()), DATA_MIN_VALUE)));
                     makeDataLinePath();
                 }
 
@@ -411,6 +414,38 @@ public class ChartView extends View {
         return super.onTouchEvent(event);
     }
 
+    private float getMovingData(float currentY) {
+        float data;
+        /*
+         * rawDeltaData表示手指滑动的距离转化成的对应data的增减值.
+         * rawDeltaData = (手指按下时的Y - 当前手指的Y) / (一个series的高度 / 每个series的差值)
+         * 其中(一个series的高度 / 每个series的差值)代表的是data对应一个单位的距离.
+         * 比如温度, 一个series的高度为214.8, 这一个series的差值为5摄氏度, 那么这一个单位, 也就是说一个摄氏度的高度为42.96
+         * 如果手指向上移动了193.00134, 那么rawDeltaData就为4.4925823摄氏度
+         */
+        float rawDeltaData = (mTouchDownY - currentY) / (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
+
+        switch (mDataType) {
+            /*
+             * 温度以0.5度为一个调整幅度, 如果小数部分小于0.5, 认为小数部分为0.0, 否则为0.5.
+             * 比如当前选中的温度为21.0, rawDeltaData为0.42747343, 那么我们将data保持在21.0不变.
+             * 如果rawDeltaData为0.81504667, 那么我们将data调整为21.5.
+             * 再比如上面的4.4925823, 它对应的调整值为4.0.
+             */
+            case TEMPERATURE:
+            default: {
+                float deltaData = (float) Math.floor(rawDeltaData);
+                if (rawDeltaData - deltaData > DATA_MIN_RANGE_TEMPERATURE)
+                    deltaData += DATA_MIN_RANGE_TEMPERATURE;
+
+                data = mTouchDownData + deltaData;
+            }
+            break;
+        }
+
+        return data;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -427,6 +462,9 @@ public class ChartView extends View {
         drawMarkerAndTooltip(canvas);
     }
 
+    /**
+     *
+     */
     private void makeDataLinePath() {
         mDataDashLinePath.reset();
         mDataDashShadowLinePath.reset();
@@ -434,7 +472,7 @@ public class ChartView extends View {
         if (!mDashData.isEmpty()) {
             for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
                 float x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mDashData.get(i)) * Y_AXIS_SERIES_INTERVAL / 5;
+                float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mDashData.get(i)) * Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES;
                 if (i <= 0) {
                     mDataDashLinePath.moveTo(x, y);
                     mDataDashShadowLinePath.moveTo(x, y + DATA_LINE_SHADOW_OFFSET);
@@ -450,7 +488,7 @@ public class ChartView extends View {
 
         for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
             float x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * Y_AXIS_SERIES_INTERVAL / 5;
+            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES;
             if (i <= 0) {
                 mDataSolidLinePath.moveTo(x, y);
                 mDataSolidShadowLinePath.moveTo(x, y + DATA_LINE_SHADOW_OFFSET);
@@ -470,7 +508,7 @@ public class ChartView extends View {
 
         for (int i = 0; i < Y_AXIS_SERIES_COUNT; i++) {
             canvas.drawLine(0, i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP, Y_AXIS_TICK_LENGTH, i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP, mXAxisTickPaint);
-            canvas.drawText(String.valueOf((int) Y_AXIS_MAX_VALUE - i * 5), Y_AXIS_LABEL_MARGIN_START, i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP + Y_AXIS_TEXT_BASELINE_OFFSET, mYAxisLabelPaint);
+            canvas.drawText(String.valueOf((int) Y_AXIS_MAX_VALUE - i * Y_AXIS_DELTA_VALUE_PER_SERIES), Y_AXIS_LABEL_MARGIN_START, i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP + Y_AXIS_TEXT_BASELINE_OFFSET, mYAxisLabelPaint);
         }
     }
 
@@ -489,7 +527,7 @@ public class ChartView extends View {
     private void drawMarkerAndTooltip(Canvas canvas) {
         if (mSelectedDataIndex >= 0) {
             float x = (mSelectedDataIndex + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(mSelectedDataIndex)) * Y_AXIS_SERIES_INTERVAL * 1.0f / 5;
+            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(mSelectedDataIndex)) * Y_AXIS_SERIES_INTERVAL * 1.0f / Y_AXIS_DELTA_VALUE_PER_SERIES;
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBackgroundPaint);
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBorderPaint);
             canvas.drawCircle(x, y, MARKER_INNER_RADIUS, mMarkerInnerPaint);
