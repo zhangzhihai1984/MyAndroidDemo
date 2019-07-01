@@ -13,7 +13,6 @@ import android.graphics.Path;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -34,10 +33,12 @@ public class ChartView extends View {
     /**
      * 表格固定配置项
      */
-    //x轴首个series距离左边界的距离
-    private static final float X_AXIS_MARGIN_START = 65;
+    //x轴首个series距离左边界的原始距离 (同时用于计算每个series的宽度)
+    private static final float X_AXIS_MARGIN_START_ORIGINAL = 65;
     //x轴最后一个series距离右边界的距离
     private static final float X_AXIS_MARGIN_END = 65;
+    //x轴每个series的最小宽度 (防止因数据过多导致计算出的每个series宽度过小, 进而导致底部相邻label出现重叠等影响UI体验的现象出现)
+    private static final float X_AXIS_SERIES_MIN_INTERVAL = 30;
     //x轴文字baseline距离底部边界的距离
     private static final float X_AXIS_TEXT_BASELINE_MARGIN_BOTTOM = 48;
 
@@ -78,6 +79,8 @@ public class ChartView extends View {
     private static final float TOOLTIP_HEIGHT = 108;
     //【折线图】数据选中tooltip的中心距离marker中心(选中数据的坐标)的横向距离
     private static final float TOOLTIP_CENTER_MARGIN_TO_MARKER = 219;
+    //【折线图】数据选中tooltip矩形的left坐标距离左边界的距离
+    private static final float TOOLTIP_RECT_LEFT_MARGIN_START = 65;
 
     /**
      * 表格固定配置项 (设置Paint后计算)
@@ -149,10 +152,17 @@ public class ChartView extends View {
     //tooltip文字后缀
     private String TOOLTIP_TEXT_SUFFIX = TOOLTIP_TEXT_SUFFIX_TEMPERATURE;
 
+    //TODO: 需要配置+2 -2 的2, 也就是由于26个series, 但是24个data, 需要跳过"2"个series
+
+    /**
+     * x轴首个series距离左边界的距离 (左右滑动chart时, 动态更新, 调用{@link #setConfig(ChartType, DataType, boolean)}后恢复初始值)
+     */
+    private float X_AXIS_MARGIN_START = X_AXIS_MARGIN_START_ORIGINAL;
+
     /**
      * 表格动态配置后计算项
      */
-    //x轴每个series的长度
+    //x轴每个series的宽度
     private float X_AXIS_SERIES_INTERVAL = 0;
     //y轴每个series的高度
     private float Y_AXIS_SERIES_INTERVAL = 0;
@@ -183,13 +193,8 @@ public class ChartView extends View {
     private final Paint mMarkerBorderPaint = new Paint();
     private final Paint mMarkerInnerPaint = new Paint();
 
-    private int mWidth;
-    private int mHeight;
-
-    private List<Float> mSolidData = new ArrayList<>();
-    private List<Float> mDashData = new ArrayList<>();
-
-    private int mSelectedDataIndex = -1;
+    private final List<Float> mSolidData = new ArrayList<>();
+    private final List<Float> mDashData = new ArrayList<>();
 
     /**
      * 考虑到用户体验, 在通过手势查看数值或拖拽曲线后, tooptip和marker会延迟消失, 如果在尚未消失时点击了其他的数据点,
@@ -202,11 +207,28 @@ public class ChartView extends View {
      * 比如从温度切换到湿度, 由于此时已经没有数据了, 应该停止继续绘制数据点的tooltip和marker
      */
     private final PublishSubject<Unit> mSetConfigSubject = PublishSubject.create();
+
+    private int mWidth;
+    private int mHeight;
+
+    private int mSelectedDataIndex = -1;
+
+    private float mPreX;
+    private float mPreY;
     private float mTouchDownY;
     private float mTouchDownData;
+
     private boolean mCanDragData = false;
+
     private DataType mDataType = DataType.TEMPERATURE;
     private ChartType mChartType = ChartType.LINE;
+    private DragOrientaion mDragOrientaion = DragOrientaion.UNKNOWN;
+
+    private enum DragOrientaion {
+        UNKNOWN,
+        HORIZONTAL,
+        VERTICAL
+    }
 
     public enum DataType {
         TEMPERATURE,
@@ -318,6 +340,8 @@ public class ChartView extends View {
     }
 
     private void updateConfigItems() {
+        X_AXIS_MARGIN_START = X_AXIS_MARGIN_START_ORIGINAL;
+
         switch (mDataType) {
             case TEMPERATURE: {
                 X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_TEMPERATURE;
@@ -346,7 +370,9 @@ public class ChartView extends View {
     }
 
     private void updateExtraConfigItems() {
-        X_AXIS_SERIES_INTERVAL = (mWidth - X_AXIS_MARGIN_START - X_AXIS_MARGIN_END) / X_AXIS_SERIES_COUNT;
+        X_AXIS_SERIES_INTERVAL = (mWidth - X_AXIS_MARGIN_START_ORIGINAL - X_AXIS_MARGIN_END) / X_AXIS_SERIES_COUNT;
+        X_AXIS_SERIES_INTERVAL = Math.max(X_AXIS_SERIES_INTERVAL, X_AXIS_SERIES_MIN_INTERVAL);
+
         Y_AXIS_SERIES_INTERVAL = (mHeight - Y_AXIS_MARGIN_TOP - Y_AXIS_MARGIN_BOTTOM) / Y_AXIS_SERIES_COUNT;
 
         mYAxisTickPaint.setShader(new LinearGradient(0, 0, 0, mHeight, Color.TRANSPARENT, Color.parseColor("#4CFFFFFF"), Shader.TileMode.CLAMP));
@@ -398,11 +424,22 @@ public class ChartView extends View {
     }
 
     /**
-     * ACTION_DOWN用于判断是否有数据点被选中以及它的索引值.
-     * 对于哪个数据点是否选中, 正常来说, 我们只需要判断手指按下的点距离哪个数据点近即可.
+     * 【ACTION_DOWN】
+     * 用于判断是否有数据点被选中以及它的索引值.对于哪个数据点是否选中, 正常来说, 我们只需要判断手指按下的点距离哪个数据点近即可.
      * 但是, 我们的数据是24个, 而series是26个, 这是因为, 首个数据对应的是1点钟, 它对应的是x轴的第二个tick,
      * 也就是说前两个series是没有数据的, 首个数据是从第三个series开始打点, 因此, 我们需要对计算出的索引值减去2.
      * index = Math.round((x - 首个series距离左边界的距离) / 每个series的宽度) - 2
+     * <p>
+     * 【ACTION_MOVE】
+     * 用于判断是否支持滑动以及坐标及数据的更新
+     * 首先需要通过手指移动的横纵距离判断此时为横向或纵向移动
+     * <p>
+     * 如果为横向移动:
+     * 如果x轴每个series的宽度为限定的最小宽度, 说明series的总宽度已经超出了控件可显示的宽度, 此时支持横向滑动以显示全部数据,
+     * 进而根据移动距离更新"x轴首个series距离左边界的距离".
+     * <p>
+     * 如果为纵向移动:
+     * 如果当前为折线图且支持拖拽的情况下, 通过{@link #getMovingData(float)}获取拖拽后的数据点的y值.
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -411,8 +448,13 @@ public class ChartView extends View {
                 if (mSolidData.isEmpty())
                     break;
 
+                mPreX = event.getX();
+                mPreY = event.getY();
+
                 mTouchDownY = event.getY();
                 mTouchDownSubject.onNext(Unit.INSTANCE);
+
+                mDragOrientaion = DragOrientaion.UNKNOWN;
 
                 float x = event.getX();
 
@@ -429,19 +471,39 @@ public class ChartView extends View {
                 return true;
             }
             case MotionEvent.ACTION_MOVE: {
-                //TODO: LINE & Drag 放行
-                if (!mCanDragData)
-                    break;
+                float x = event.getX();
+                float y = event.getY();
 
-                if (mSelectedDataIndex >= 0) {
-                    mSolidData.set(mSelectedDataIndex, Math.min(DATA_MAX_VALUE, Math.max(getMovingData(event.getY()), DATA_MIN_VALUE)));
-                    makeDataLinePath();
+                switch (mDragOrientaion) {
+                    case HORIZONTAL:
+                        handleHorizontalDrag(x);
+                        break;
+                    case VERTICAL:
+                        handleVerticalDrag(y);
+                        break;
+                    case UNKNOWN:
+                    default: {
+                        if (Math.abs(x - mPreX) > 0 || Math.abs(y - mPreY) > 0) {
+                            if (Math.abs(x - mPreX) > Math.abs(y - mPreY)) {
+                                mDragOrientaion = DragOrientaion.HORIZONTAL;
+                                handleHorizontalDrag(x);
+                            } else {
+                                mDragOrientaion = DragOrientaion.VERTICAL;
+                                handleVerticalDrag(y);
+                            }
+                        }
+                    }
+                    break;
                 }
 
-                invalidate();
+                mPreX = x;
+                mPreY = y;
+
                 break;
             }
             case MotionEvent.ACTION_UP: {
+                mPreX = 0;
+                mPreY = 0;
                 mTouchDownY = 0;
 
                 Observable.timer(1000, TimeUnit.MILLISECONDS)
@@ -459,6 +521,24 @@ public class ChartView extends View {
         }
 
         return super.onTouchEvent(event);
+    }
+
+    private void handleHorizontalDrag(float x) {
+        if (X_AXIS_SERIES_INTERVAL <= X_AXIS_SERIES_MIN_INTERVAL) {
+            X_AXIS_MARGIN_START += x - mPreX;
+            makeDataLinePath();
+            invalidate();
+        }
+    }
+
+    private void handleVerticalDrag(float y) {
+        if (mChartType == ChartType.LINE && mCanDragData) {
+            if (mSelectedDataIndex >= 0) {
+                mSolidData.set(mSelectedDataIndex, Math.min(DATA_MAX_VALUE, Math.max(getMovingData(y), DATA_MIN_VALUE)));
+                makeDataLinePath();
+                invalidate();
+            }
+        }
     }
 
     private float getMovingData(float currentY) {
@@ -547,7 +627,7 @@ public class ChartView extends View {
         mDataSolidLinePath.reset();
         mDataSolidShadowLinePath.reset();
 
-        for (int i = 0; i < X_AXIS_SERIES_COUNT - 2; i++) {
+        for (int i = 0; i < X_AXIS_SERIES_COUNT - 2; i++) { //TODO: 应该换做mSolidData.size()
             float x = (i + 2) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
             float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
             if (i <= 0) {
@@ -622,7 +702,7 @@ public class ChartView extends View {
             float rectRight = x - TOOLTIP_CENTER_MARGIN_TO_MARKER + TOOLTIP_WIDTH / 2;
             float valueTextX = x - TOOLTIP_CENTER_MARGIN_TO_MARKER;
 
-            if (rectLeft <= X_AXIS_MARGIN_START) {
+            if (rectLeft <= TOOLTIP_RECT_LEFT_MARGIN_START) {
                 rectLeft = x + TOOLTIP_CENTER_MARGIN_TO_MARKER - TOOLTIP_WIDTH / 2;
                 rectRight = x + TOOLTIP_CENTER_MARGIN_TO_MARKER + TOOLTIP_WIDTH / 2;
                 valueTextX = x + TOOLTIP_CENTER_MARGIN_TO_MARKER;
