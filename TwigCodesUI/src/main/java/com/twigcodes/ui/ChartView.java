@@ -13,6 +13,7 @@ import android.graphics.Path;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -90,7 +91,7 @@ public class ChartView extends View {
      * 温度固定配置项
      */
     //x轴series的数量
-    private static final int X_AXIS_SERIES_COUNT_TEMPERATURE = 13;
+    private static final int X_AXIS_SERIES_COUNT_TEMPERATURE = 26;
     //y轴series的数量
     private static final int Y_AXIS_SERIES_COUNT_TEMPERATURE = 5;
     //y轴每个series的差值 (5摄氏度)
@@ -112,7 +113,7 @@ public class ChartView extends View {
      * 湿度固定配置项
      */
     //x轴series的数量
-    private static final int X_AXIS_SERIES_COUNT_HUMIDITY = 13;
+    private static final int X_AXIS_SERIES_COUNT_HUMIDITY = 26;
     //y轴series的数量
     private static final int Y_AXIS_SERIES_COUNT_HUMIDITY = 6;
     //y轴每个series的差值 (5摄氏度)
@@ -396,6 +397,13 @@ public class ChartView extends View {
         return mSolidData;
     }
 
+    /**
+     * ACTION_DOWN用于判断是否有数据点被选中以及它的索引值.
+     * 对于哪个数据点是否选中, 正常来说, 我们只需要判断手指按下的点距离哪个数据点近即可.
+     * 但是, 我们的数据是24个, 而series是26个, 这是因为, 首个数据对应的是1点钟, 它对应的是x轴的第二个tick,
+     * 也就是说前两个series是没有数据的, 首个数据是从第三个series开始打点, 因此, 我们需要对计算出的索引值减去2.
+     * index = Math.round((x - 首个series距离左边界的距离) / 每个series的宽度) - 2
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -408,10 +416,12 @@ public class ChartView extends View {
 
                 float x = event.getX();
 
-                if (x < X_AXIS_MARGIN_START || x >= mWidth - X_AXIS_MARGIN_START) {
+                int index = Math.round((x - X_AXIS_MARGIN_START) / X_AXIS_SERIES_INTERVAL) - 2;
+
+                if (index < 0 || index >= mSolidData.size()) {
                     mSelectedDataIndex = -1;
                 } else {
-                    mSelectedDataIndex = (int) Math.floor((x - X_AXIS_MARGIN_START) / X_AXIS_SERIES_INTERVAL);
+                    mSelectedDataIndex = index;
                     mTouchDownData = mSolidData.get(mSelectedDataIndex);
                 }
 
@@ -507,10 +517,12 @@ public class ChartView extends View {
     /**
      * 折线图打点的过程
      * <p>
-     * TODO: x轴的公式
+     * 我们的数据是24个, 而series是26个, 我们需要将[0-23]的数据点打到[2-25]的series上.
+     * <p>
+     * x = 首个series距离左边界的距离 + (i + 2) * 每个series的宽度
      * <p>
      * y = 首个series距离顶部边界的距离 + (可显示的最大值 - 当前data的值) * (每个series的高度 / 每个series的差值)
-     * 以温度为例，如果一个series的高度为214.8, 这一个series的差值为5摄氏度, 那么这一个单位, 也就是说一个摄氏度的高度为42.96
+     * 以温度为例, 如果一个series的高度为214.8, 这一个series的差值为5摄氏度, 那么这一个单位, 也就是说一个摄氏度的高度为42.96
      * 如果当前的data为21.0摄氏度, 可显示的最大值为35摄氏度 那么它的y就是 Y_AXIS_MARGIN_TOP + (35.0 - 21.0) * 42.96
      * 也就是 Y_AXIS_MARGIN_TOP + 14个1摄氏度的高度
      */
@@ -519,8 +531,8 @@ public class ChartView extends View {
         mDataDashShadowLinePath.reset();
 
         if (!mDashData.isEmpty()) {
-            for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
-                float x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+            for (int i = 0; i < X_AXIS_SERIES_COUNT - 2; i++) {
+                float x = (i + 2) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
                 float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mDashData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
                 if (i <= 0) {
                     mDataDashLinePath.moveTo(x, y);
@@ -535,8 +547,8 @@ public class ChartView extends View {
         mDataSolidLinePath.reset();
         mDataSolidShadowLinePath.reset();
 
-        for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
-            float x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+        for (int i = 0; i < X_AXIS_SERIES_COUNT - 2; i++) {
+            float x = (i + 2) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
             float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
             if (i <= 0) {
                 mDataSolidLinePath.moveTo(x, y);
@@ -548,11 +560,31 @@ public class ChartView extends View {
         }
     }
 
+    /**
+     * 横坐标分为26等分, 其中tick和label的距离为1等分, label和下一个tick的距离也为1等分.
+     * 也就是说, 视觉上, 两个tick或两个label之间的距离其实是2等分的距离.
+     * 因此, 如果当前index为偶数的话, 绘制tick, 如果为基数的话, 绘制数字.
+     * 需要注意的是, 为了提升视觉体验, 看到首尾都是数字的效果, 我们不绘制首个tick.
+     * <p>
+     * 上面提到, 如果当index为基数的话, 绘制数字. 此时的索引为[1,3...23,25]
+     * 我们需要绘制的数字为[0,2...22,24], 因此, 我们绘制的数字为 index-1.
+     * <p>
+     * 关于绘制选中数据对应的数字, 需要注意的是, 选中数据的索引为[0-23], 是比横坐标的26等分少两个的.
+     * 这是因为, 首个数据对应的是1点钟, 它对应的是x轴的第二个tick, 也就是说它需要跳过首个tick和"0"这两个等分距离.
+     * 因此, 我们需要将选中数据点索引值加上2, 变成[2-25]后再做比较.
+     * 需要注意的是, 选中数据点索引值是可能为-1的(未选中), 因此数据点索引值为-1时直接排除掉.
+     */
     private void drawAxis(Canvas canvas) {
         for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
-            if (i > 0)
-                canvas.drawLine(i * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START, 0, i * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START, mHeight, mYAxisTickPaint);
-            canvas.drawText(String.valueOf(i * 2), (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START, mHeight - X_AXIS_TEXT_BASELINE_MARGIN_BOTTOM, i == mSelectedDataIndex ? mXAxisSelectedLabelPaint : mXAxisLabelPaint);
+            float x = i * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+
+            if (i % 2 == 0) {
+                if (i > 0)
+                    canvas.drawLine(x, 0, x, mHeight, mYAxisTickPaint);
+            } else {
+                boolean textSelected = mSelectedDataIndex > 0 && i == mSelectedDataIndex + 2;
+                canvas.drawText(String.valueOf(i - 1), x, mHeight - X_AXIS_TEXT_BASELINE_MARGIN_BOTTOM, textSelected ? mXAxisSelectedLabelPaint : mXAxisLabelPaint);
+            }
         }
 
         for (int i = 0; i < Y_AXIS_SERIES_COUNT; i++) {
@@ -575,9 +607,12 @@ public class ChartView extends View {
         }
     }
 
+    /**
+     *
+     */
     private void drawMarkerAndTooltip(Canvas canvas) {
         if (mSelectedDataIndex >= 0) {
-            float x = (mSelectedDataIndex + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+            float x = (mSelectedDataIndex + 2) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
             float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(mSelectedDataIndex)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBackgroundPaint);
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBorderPaint);
