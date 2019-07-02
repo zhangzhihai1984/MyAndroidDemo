@@ -340,6 +340,7 @@ public class ChartView extends View {
     }
 
     private void updateConfigItems() {
+        //TODO:
         X_AXIS_MARGIN_START = X_AXIS_MARGIN_START_ORIGINAL;
 
         switch (mDataType) {
@@ -523,9 +524,15 @@ public class ChartView extends View {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 需要限定滑动的左右边界, 也就是限定"x轴首个series距离左边界的距离".
+     * 往右侧滑动时, 这个值是变大的, 这个值要小于等于"x轴首个series距离左边界的原始距离".
+     * 往左侧滑动时, 这个值是变小的, 这个值要大于等于 控件的宽度 - 每个series的最小宽度 * series的数量 - 最后一个series距离右边界的距离
+     */
     private void handleHorizontalDrag(float x) {
         if (X_AXIS_SERIES_INTERVAL <= X_AXIS_SERIES_MIN_INTERVAL) {
             X_AXIS_MARGIN_START += x - mPreX;
+            X_AXIS_MARGIN_START = Math.min(X_AXIS_MARGIN_START_ORIGINAL, Math.max(X_AXIS_MARGIN_START, mWidth - X_AXIS_SERIES_MIN_INTERVAL * X_AXIS_SERIES_COUNT - X_AXIS_MARGIN_END));
             makeDataLinePath();
             invalidate();
         }
@@ -588,11 +595,11 @@ public class ChartView extends View {
             updateExtraConfigItems();
         }
 
-        drawAxis(canvas);
+        drawAxisX(canvas);
         drawData(canvas);
         drawMarkerAndTooltip(canvas);
+        drawAxisY(canvas);
     }
-
 
     /**
      * 折线图打点的过程
@@ -654,7 +661,7 @@ public class ChartView extends View {
      * 因此, 我们需要将选中数据点索引值加上2, 变成[2-25]后再做比较.
      * 需要注意的是, 选中数据点索引值是可能为-1的(未选中), 因此数据点索引值为-1时直接排除掉.
      */
-    private void drawAxis(Canvas canvas) {
+    private void drawAxisX(Canvas canvas) {
         for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
             float x = i * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
 
@@ -666,7 +673,12 @@ public class ChartView extends View {
                 canvas.drawText(String.valueOf(i - 1), x, mHeight - X_AXIS_TEXT_BASELINE_MARGIN_BOTTOM, textSelected ? mXAxisSelectedLabelPaint : mXAxisLabelPaint);
             }
         }
+    }
 
+    /**
+     *
+     */
+    private void drawAxisY(Canvas canvas) {
         for (int i = 0; i < Y_AXIS_SERIES_COUNT; i++) {
             float y = i * Y_AXIS_SERIES_INTERVAL + Y_AXIS_MARGIN_TOP;
 
