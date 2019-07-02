@@ -59,11 +59,11 @@ public class ChartView extends View {
     //xy轴tick的stroke宽度
     private static final float AXIS_TICK_WIDTH = 3;
 
-    //折线的stroke宽度
+    //【折线图】折线的stroke宽度
     private static final float DATA_LINE_STROKE_WIDTH = 15;
-    //折线连接处的圆角半径
+    //【折线图】折线连接处的圆角半径
     private static final float DATA_LINE_PATH_CORNER = 12;
-    //折线阴影距离折线的距离
+    //【折线图】折线阴影距离折线的距离
     private static final float DATA_LINE_SHADOW_OFFSET = 30;
 
     //【折线图】数据选中marker的圆形半径
@@ -82,6 +82,11 @@ public class ChartView extends View {
     private static final float TOOLTIP_CENTER_MARGIN_TO_MARKER = 219;
     //【折线图】数据选中tooltip矩形的left坐标距离左边界的距离
     private static final float TOOLTIP_RECT_LEFT_MARGIN_START = 65;
+
+    //【柱状图】数据线stroke宽度
+    private static final float DATA_COLUMN_STROKE_WIDTH = 6;
+    //【柱状图】数据线距离底部边界的距离
+    private static final float DATA_COLUMN_MARGIN_BOTTOM = 110;
 
     /**
      * 表格固定配置项 (设置Paint后计算)
@@ -219,6 +224,7 @@ public class ChartView extends View {
      * 表格Paint (柱状图)
      */
     private final Paint mDataColumnPaint = new Paint();
+    private final Paint mDataColumnSelectedPaint = new Paint();
 
     private final List<Float> mSolidData = new ArrayList<>();
     private final List<Float> mDashData = new ArrayList<>();
@@ -345,7 +351,12 @@ public class ChartView extends View {
         mDataDashLinePaint.setPathEffect(new ComposePathEffect(new DashPathEffect(new float[]{30, 25}, 0), new CornerPathEffect(DATA_LINE_PATH_CORNER)));
 
         mDataColumnPaint.setAntiAlias(true);
-        mDataColumnPaint.setStrokeWidth(AXIS_TICK_WIDTH);
+        mDataColumnPaint.setStrokeWidth(DATA_COLUMN_STROKE_WIDTH);
+        mDataColumnPaint.setStrokeCap(Paint.Cap.ROUND);
+
+        mDataColumnSelectedPaint.setAntiAlias(true);
+        mDataColumnSelectedPaint.setStrokeWidth(DATA_COLUMN_STROKE_WIDTH);
+        mDataColumnSelectedPaint.setColor(Color.parseColor("#3765B5"));
 
         mMarkerBackgroundPaint.setAntiAlias(true);
         mMarkerBackgroundPaint.setColor(Color.parseColor("#66000000"));
@@ -444,7 +455,7 @@ public class ChartView extends View {
     }
 
     /**
-     * 考虑到此时出于用户体验, tooltip和marker可能尚未消失, 为了防止其继续绘制, 需要将选中数据点的索引置为-1 {@link #drawMarkerAndTooltip(Canvas)}
+     * 考虑到此时出于用户体验, tooltip和marker可能尚未消失, 为了防止其继续绘制, 需要将选中数据点的索引置为-1 {@link #drawDataLineMarkerAndTooltip(Canvas)}
      * 同时通过subject让延时的Observable在此时takeUntil掉, 因为延时的存在已经没有意义了
      */
     private void setConfig(ChartType chartType, XType xType, YType yType, boolean drag) {
@@ -668,7 +679,7 @@ public class ChartView extends View {
 
         drawAxisX(canvas);
         drawData(canvas);
-        drawMarkerAndTooltip(canvas);
+        drawDataLineMarkerAndTooltip(canvas);
         drawAxisY(canvas);
     }
 
@@ -811,6 +822,14 @@ public class ChartView extends View {
     }
 
     private void drawData(Canvas canvas) {
+        if (mChartType == ChartType.LINE) {
+            drawDataLine(canvas);
+        } else {
+            drawDataColumn(canvas);
+        }
+    }
+
+    private void drawDataLine(Canvas canvas) {
         if (!mDashData.isEmpty()) {
             canvas.drawPath(mDataDashShadowLinePath, mDataShadowLinePaint);
             canvas.drawPath(mDataDashLinePath, mDataDashLinePaint);
@@ -822,17 +841,30 @@ public class ChartView extends View {
         }
     }
 
+    private void drawDataColumn(Canvas canvas) {
+        if (!mSolidData.isEmpty()) {
+            for (int i = 0; i < mSolidData.size(); i++) {
+                float x = getDataX(i);
+                float y = getDataY(mSolidData.get(i));
+
+                canvas.drawLine(x, mHeight - DATA_COLUMN_MARGIN_BOTTOM, x, y, i == mSelectedDataIndex ? mDataColumnSelectedPaint : mDataColumnPaint);
+            }
+        }
+    }
+
     /**
      *
      */
-    private void drawMarkerAndTooltip(Canvas canvas) {
+    private void drawDataLineMarkerAndTooltip(Canvas canvas) {
         if (mSelectedDataIndex >= 0) {
             float x = getDataX(mSelectedDataIndex);
             float y = getDataY(mSolidData.get(mSelectedDataIndex));
 
-            canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBackgroundPaint);
-            canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBorderPaint);
-            canvas.drawCircle(x, y, MARKER_INNER_RADIUS, mMarkerInnerPaint);
+            if (mChartType == ChartType.LINE) {
+                canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBackgroundPaint);
+                canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBorderPaint);
+                canvas.drawCircle(x, y, MARKER_INNER_RADIUS, mMarkerInnerPaint);
+            }
 
             float rectLeft = x - TOOLTIP_CENTER_MARGIN_TO_MARKER - TOOLTIP_WIDTH / 2;
             float rectRight = x - TOOLTIP_CENTER_MARGIN_TO_MARKER + TOOLTIP_WIDTH / 2;
