@@ -215,6 +215,11 @@ public class ChartView extends View {
     private final Paint mMarkerBorderPaint = new Paint();
     private final Paint mMarkerInnerPaint = new Paint();
 
+    /**
+     * 表格Paint (柱状图)
+     */
+    private final Paint mDataColumnPaint = new Paint();
+
     private final List<Float> mSolidData = new ArrayList<>();
     private final List<Float> mDashData = new ArrayList<>();
 
@@ -339,6 +344,9 @@ public class ChartView extends View {
         mDataDashLinePaint.setStrokeCap(Paint.Cap.ROUND);
         mDataDashLinePaint.setPathEffect(new ComposePathEffect(new DashPathEffect(new float[]{30, 25}, 0), new CornerPathEffect(DATA_LINE_PATH_CORNER)));
 
+        mDataColumnPaint.setAntiAlias(true);
+        mDataColumnPaint.setStrokeWidth(AXIS_TICK_WIDTH);
+
         mMarkerBackgroundPaint.setAntiAlias(true);
         mMarkerBackgroundPaint.setColor(Color.parseColor("#66000000"));
         mMarkerBackgroundPaint.setStyle(Paint.Style.FILL);
@@ -424,6 +432,7 @@ public class ChartView extends View {
 
         mYAxisTickPaint.setShader(new LinearGradient(0, 0, 0, mHeight, Color.TRANSPARENT, Color.parseColor("#4CFFFFFF"), Shader.TileMode.CLAMP));
         mDataSolidLinePaint.setShader(new LinearGradient(0, 0, mWidth, 0, Color.parseColor("#66F8DB"), Color.parseColor("#E8FF7B"), Shader.TileMode.CLAMP));
+        mDataColumnPaint.setShader(new LinearGradient(0, 0, 0, mHeight, Color.parseColor("#E8FF7B"), Color.parseColor("#66F8DB"), Shader.TileMode.CLAMP));
     }
 
     public void setConfig(ChartType chartType, XType xType, YType yType) {
@@ -679,25 +688,11 @@ public class ChartView extends View {
         mDataDashLinePath.reset();
         mDataDashShadowLinePath.reset();
 
+
         if (!mDashData.isEmpty()) {
             for (int i = 0; i < mDashData.size(); i++) {
-                float x;
-                float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mDashData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
-
-                switch (mXType) {
-                    case WEEK:
-                    case YEAR:
-                        x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                        break;
-                    case MONTH:
-                        x = (i + X_AXIS_NO_DATA_SERIES_COUNT_MONTH) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                        break;
-                    case DAY:
-                    case CUSTOM:
-                    default:
-                        x = (i + X_AXIS_NO_DATA_SERIES_COUNT_DAY) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                        break;
-                }
+                float x = getDataX(i);
+                float y = getDataY(mDashData.get(i));
 
                 if (i <= 0) {
                     mDataDashLinePath.moveTo(x, y);
@@ -713,23 +708,8 @@ public class ChartView extends View {
         mDataSolidShadowLinePath.reset();
 
         for (int i = 0; i < mSolidData.size(); i++) {
-            float x;
-            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
-
-            switch (mXType) {
-                case WEEK:
-                case YEAR:
-                    x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                    break;
-                case MONTH:
-                    x = (i + X_AXIS_NO_DATA_SERIES_COUNT_MONTH) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                    break;
-                case DAY:
-                case CUSTOM:
-                default:
-                    x = (i + X_AXIS_NO_DATA_SERIES_COUNT_DAY) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                    break;
-            }
+            float x = getDataX(i);
+            float y = getDataY(mSolidData.get(i));
 
             if (i <= 0) {
                 mDataSolidLinePath.moveTo(x, y);
@@ -739,6 +719,30 @@ public class ChartView extends View {
                 mDataSolidShadowLinePath.lineTo(x, y + DATA_LINE_SHADOW_OFFSET);
             }
         }
+    }
+
+    private float getDataX(int index) {
+        float x;
+        switch (mXType) {
+            case WEEK:
+            case YEAR:
+                x = (index + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                break;
+            case MONTH:
+                x = (index + X_AXIS_NO_DATA_SERIES_COUNT_MONTH) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                break;
+            case DAY:
+            case CUSTOM:
+            default:
+                x = (index + X_AXIS_NO_DATA_SERIES_COUNT_DAY) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                break;
+        }
+
+        return x;
+    }
+
+    private float getDataY(float value) {
+        return Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - value) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
     }
 
     /**
@@ -823,23 +827,8 @@ public class ChartView extends View {
      */
     private void drawMarkerAndTooltip(Canvas canvas) {
         if (mSelectedDataIndex >= 0) {
-            float x;
-            float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(mSelectedDataIndex)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
-
-            switch (mXType) {
-                case WEEK:
-                case YEAR:
-                    x = (mSelectedDataIndex + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                    break;
-                case MONTH:
-                    x = (mSelectedDataIndex + X_AXIS_NO_DATA_SERIES_COUNT_MONTH) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                    break;
-                case DAY:
-                case CUSTOM:
-                default:
-                    x = (mSelectedDataIndex + X_AXIS_NO_DATA_SERIES_COUNT_DAY) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
-                    break;
-            }
+            float x = getDataX(mSelectedDataIndex);
+            float y = getDataY(mSolidData.get(mSelectedDataIndex));
 
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBackgroundPaint);
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBorderPaint);
