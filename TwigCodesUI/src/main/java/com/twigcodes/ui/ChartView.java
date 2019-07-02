@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.twigcodes.ui.util.RxUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +39,7 @@ public class ChartView extends View {
     //x轴最后一个series距离右边界的距离
     private static final float X_AXIS_MARGIN_END = 65;
     //x轴每个series的最小宽度 (防止因数据过多导致计算出的每个series宽度过小, 进而导致底部相邻label出现重叠等影响UI体验的现象出现)
-    private static final float X_AXIS_SERIES_MIN_INTERVAL = 30;
+    private static final float X_AXIS_SERIES_MIN_INTERVAL = 35;
     //x轴文字baseline距离底部边界的距离
     private static final float X_AXIS_TEXT_BASELINE_MARGIN_BOTTOM = 48;
 
@@ -91,10 +92,33 @@ public class ChartView extends View {
     private float TOOLTIP_TEXT_BASELINE_OFFSET = 0;
 
     /**
-     * 温度固定配置项
+     * 日固定配置项
+     */
+    private static final int X_AXIS_NO_DATA_SERIES_COUNT_DAY = 2;
+    //x轴series的数量
+    private static final int X_AXIS_SERIES_COUNT_DAY = 24 + X_AXIS_NO_DATA_SERIES_COUNT_DAY;
+
+    /**
+     * 周固定配置项
      */
     //x轴series的数量
-    private static final int X_AXIS_SERIES_COUNT_TEMPERATURE = 26;
+    private static final int X_AXIS_SERIES_COUNT_WEEK = 7;
+
+    /**
+     * 月固定配置项
+     */
+    private static final int X_AXIS_NO_DATA_SERIES_COUNT_MONTH = 1;
+    //x轴series的数量
+    private static final int X_AXIS_SERIES_COUNT_MONTH = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH) + X_AXIS_NO_DATA_SERIES_COUNT_MONTH;
+
+    /**
+     * 年固定配置项
+     */
+    private static final int X_AXIS_SERIES_COUNT_YEAR = 12;
+
+    /**
+     * 温度固定配置项
+     */
     //y轴series的数量
     private static final int Y_AXIS_SERIES_COUNT_TEMPERATURE = 5;
     //y轴每个series的差值 (5摄氏度)
@@ -110,14 +134,12 @@ public class ChartView extends View {
 
     //TODO:
     //y轴拖动可识别的最小幅度(0.5摄氏度)
-    private float DATA_MIN_RANGE_TEMPERATURE = 0.5f;
+    private final float DATA_MIN_RANGE_TEMPERATURE = 0.5f;
 
     /**
      * 湿度固定配置项
      */
     //x轴series的数量
-    private static final int X_AXIS_SERIES_COUNT_HUMIDITY = 26;
-    //y轴series的数量
     private static final int Y_AXIS_SERIES_COUNT_HUMIDITY = 6;
     //y轴每个series的差值 (5摄氏度)
     private static final int Y_AXIS_DELTA_VALUE_PER_SERIES_HUMIDITY = 10;
@@ -138,7 +160,9 @@ public class ChartView extends View {
      * 表格动态配置项
      */
     //x轴series的数量
-    private int X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_TEMPERATURE;
+    private int X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_DAY;
+    //x轴不显示数据的series的数量
+    private int X_AXIS_NO_DATA_SERIES_COUNT = X_AXIS_NO_DATA_SERIES_COUNT_DAY;
     //y轴series的数量
     private int Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_TEMPERATURE;
     //y轴每个series的差值 (比如说温度, 一个series代表5个摄氏度)
@@ -152,10 +176,8 @@ public class ChartView extends View {
     //tooltip文字后缀
     private String TOOLTIP_TEXT_SUFFIX = TOOLTIP_TEXT_SUFFIX_TEMPERATURE;
 
-    //TODO: 需要配置+2 -2 的2, 也就是由于26个series, 但是24个data, 需要跳过"2"个series
-
     /**
-     * x轴首个series距离左边界的距离 (左右滑动chart时, 动态更新, 调用{@link #setConfig(ChartType, DataType, boolean)}后恢复初始值)
+     * x轴首个series距离左边界的距离 (左右滑动chart时, 动态更新, 调用{@link #setConfig(ChartType, XType, YType, boolean)}后恢复初始值)
      */
     private float X_AXIS_MARGIN_START = X_AXIS_MARGIN_START_ORIGINAL;
 
@@ -220,8 +242,9 @@ public class ChartView extends View {
 
     private boolean mCanDragData = false;
 
-    private DataType mDataType = DataType.TEMPERATURE;
     private ChartType mChartType = ChartType.LINE;
+    private XType mXType = XType.DAY;
+    private YType mYType = YType.TEMPERATURE;
     private DragOrientaion mDragOrientaion = DragOrientaion.UNKNOWN;
 
     private enum DragOrientaion {
@@ -230,14 +253,22 @@ public class ChartView extends View {
         VERTICAL
     }
 
-    public enum DataType {
+    public enum ChartType {
+        LINE,
+        COLUMN
+    }
+
+    public enum YType {
         TEMPERATURE,
         HUMIDITY
     }
 
-    public enum ChartType {
-        LINE,
-        COLUMN
+    public enum XType {
+        DAY,
+        WEEK,
+        MONTH,
+        YEAR,
+        CUSTOM
     }
 
     public ChartView(Context context) {
@@ -343,9 +374,25 @@ public class ChartView extends View {
         //TODO:
         X_AXIS_MARGIN_START = X_AXIS_MARGIN_START_ORIGINAL;
 
-        switch (mDataType) {
+        switch (mXType) {
+            case WEEK:
+                X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_WEEK;
+                break;
+            case MONTH:
+                X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_MONTH;
+                break;
+            case YEAR:
+                X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_YEAR;
+                break;
+            case DAY:
+            case CUSTOM:
+            default:
+                X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_DAY;
+                break;
+        }
+
+        switch (mYType) {
             case TEMPERATURE: {
-                X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_TEMPERATURE;
                 Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_TEMPERATURE;
                 Y_AXIS_DELTA_VALUE_PER_SERIES = Y_AXIS_DELTA_VALUE_PER_SERIES_TEMPERATURE;
                 Y_AXIS_MAX_VALUE = Y_AXIS_MAX_VALUE_TEMPERATURE;
@@ -355,7 +402,6 @@ public class ChartView extends View {
             }
             case HUMIDITY:
             default: {
-                X_AXIS_SERIES_COUNT = X_AXIS_SERIES_COUNT_HUMIDITY;
                 Y_AXIS_SERIES_COUNT = Y_AXIS_SERIES_COUNT_HUMIDITY;
                 Y_AXIS_DELTA_VALUE_PER_SERIES = Y_AXIS_DELTA_VALUE_PER_SERIES_HUMIDITY;
                 Y_AXIS_MAX_VALUE = Y_AXIS_MAX_VALUE_HUMIDITY;
@@ -380,24 +426,25 @@ public class ChartView extends View {
         mDataSolidLinePaint.setShader(new LinearGradient(0, 0, mWidth, 0, Color.parseColor("#66F8DB"), Color.parseColor("#E8FF7B"), Shader.TileMode.CLAMP));
     }
 
-    public void setConfig(ChartType chartType, DataType dataType) {
-        setConfig(chartType, dataType, false);
+    public void setConfig(ChartType chartType, XType xType, YType yType) {
+        setConfig(chartType, xType, yType, false);
     }
 
-    public void setConfig(DataType dataType, boolean drag) {
-        setConfig(ChartType.LINE, dataType, drag);
+    public void setConfig(XType xType, YType yType, boolean drag) {
+        setConfig(ChartType.LINE, xType, yType, drag);
     }
 
     /**
      * 考虑到此时出于用户体验, tooltip和marker可能尚未消失, 为了防止其继续绘制, 需要将选中数据点的索引置为-1 {@link #drawMarkerAndTooltip(Canvas)}
      * 同时通过subject让延时的Observable在此时takeUntil掉, 因为延时的存在已经没有意义了
      */
-    private void setConfig(ChartType chartType, DataType dataType, boolean drag) {
+    private void setConfig(ChartType chartType, XType xType, YType yType, boolean drag) {
         mSelectedDataIndex = -1;
         mSetConfigSubject.onNext(Unit.INSTANCE);
 
         mChartType = chartType;
-        mDataType = dataType;
+        mXType = xType;
+        mYType = yType;
         mCanDragData = drag;
 
         mSolidData.clear();
@@ -459,7 +506,22 @@ public class ChartView extends View {
 
                 float x = event.getX();
 
-                int index = Math.round((x - X_AXIS_MARGIN_START) / X_AXIS_SERIES_INTERVAL) - 2;
+                int index;
+
+                switch (mXType) {
+                    case WEEK:
+                    case YEAR:
+                        index = (int) Math.floor((x - X_AXIS_MARGIN_START) / X_AXIS_SERIES_INTERVAL);
+                        break;
+                    case MONTH:
+                        index = Math.round((x - X_AXIS_MARGIN_START) / X_AXIS_SERIES_INTERVAL) - X_AXIS_NO_DATA_SERIES_COUNT_MONTH;
+                        break;
+                    case DAY:
+                    case CUSTOM:
+                    default:
+                        index = Math.round((x - X_AXIS_MARGIN_START) / X_AXIS_SERIES_INTERVAL) - X_AXIS_NO_DATA_SERIES_COUNT_DAY;
+                        break;
+                }
 
                 if (index < 0 || index >= mSolidData.size()) {
                     mSelectedDataIndex = -1;
@@ -559,7 +621,7 @@ public class ChartView extends View {
          */
         float rawDeltaData = (mTouchDownY - currentY) / (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
 
-        switch (mDataType) {
+        switch (mYType) {
             /*
              * 温度以0.5度为一个调整幅度, 如果小数部分小于0.5, 认为小数部分为0.0, 否则为0.5.
              * 比如当前选中的温度为21.0, rawDeltaData为0.42747343, 那么我们将data保持在21.0不变.
@@ -618,9 +680,25 @@ public class ChartView extends View {
         mDataDashShadowLinePath.reset();
 
         if (!mDashData.isEmpty()) {
-            for (int i = 0; i < X_AXIS_SERIES_COUNT - 2; i++) {
-                float x = (i + 2) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+            for (int i = 0; i < mDashData.size(); i++) {
+                float x;
                 float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mDashData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
+
+                switch (mXType) {
+                    case WEEK:
+                    case YEAR:
+                        x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                        break;
+                    case MONTH:
+                        x = (i + X_AXIS_NO_DATA_SERIES_COUNT_MONTH) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                        break;
+                    case DAY:
+                    case CUSTOM:
+                    default:
+                        x = (i + X_AXIS_NO_DATA_SERIES_COUNT_DAY) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                        break;
+                }
+
                 if (i <= 0) {
                     mDataDashLinePath.moveTo(x, y);
                     mDataDashShadowLinePath.moveTo(x, y + DATA_LINE_SHADOW_OFFSET);
@@ -634,9 +712,25 @@ public class ChartView extends View {
         mDataSolidLinePath.reset();
         mDataSolidShadowLinePath.reset();
 
-        for (int i = 0; i < X_AXIS_SERIES_COUNT - 2; i++) { //TODO: 应该换做mSolidData.size()
-            float x = (i + 2) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+        for (int i = 0; i < mSolidData.size(); i++) {
+            float x;
             float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(i)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
+
+            switch (mXType) {
+                case WEEK:
+                case YEAR:
+                    x = (i + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                    break;
+                case MONTH:
+                    x = (i + X_AXIS_NO_DATA_SERIES_COUNT_MONTH) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                    break;
+                case DAY:
+                case CUSTOM:
+                default:
+                    x = (i + X_AXIS_NO_DATA_SERIES_COUNT_DAY) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                    break;
+            }
+
             if (i <= 0) {
                 mDataSolidLinePath.moveTo(x, y);
                 mDataSolidShadowLinePath.moveTo(x, y + DATA_LINE_SHADOW_OFFSET);
@@ -664,13 +758,38 @@ public class ChartView extends View {
     private void drawAxisX(Canvas canvas) {
         for (int i = 0; i < X_AXIS_SERIES_COUNT; i++) {
             float x = i * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+            float textY = mHeight - X_AXIS_TEXT_BASELINE_MARGIN_BOTTOM;
 
-            if (i % 2 == 0) {
-                if (i > 0)
-                    canvas.drawLine(x, 0, x, mHeight, mYAxisTickPaint);
-            } else {
-                boolean textSelected = mSelectedDataIndex > 0 && i == mSelectedDataIndex + 2;
-                canvas.drawText(String.valueOf(i - 1), x, mHeight - X_AXIS_TEXT_BASELINE_MARGIN_BOTTOM, textSelected ? mXAxisSelectedLabelPaint : mXAxisLabelPaint);
+            switch (mXType) {
+                case WEEK:
+                case YEAR: {
+                    if (i > 0)
+                        canvas.drawLine(x, 0, x, mHeight, mYAxisTickPaint);
+                    canvas.drawText(String.valueOf(i + 1), x + 0.5f * X_AXIS_SERIES_INTERVAL, textY, i == mSelectedDataIndex ? mXAxisSelectedLabelPaint : mXAxisLabelPaint);
+                }
+                break;
+                case MONTH: {
+                    if (i % 2 == 0) {
+                        if (i > 0)
+                            canvas.drawLine(x, 0, x, mHeight, mYAxisTickPaint);
+                    } else {
+                        boolean textSelected = mSelectedDataIndex >= 0 && i == mSelectedDataIndex + X_AXIS_NO_DATA_SERIES_COUNT_MONTH;
+                        canvas.drawText(String.valueOf(i), x, textY, textSelected ? mXAxisSelectedLabelPaint : mXAxisLabelPaint);
+                    }
+                }
+                break;
+                case DAY:
+                case CUSTOM:
+                default: {
+                    if (i % 2 == 0) {
+                        if (i > 0)
+                            canvas.drawLine(x, 0, x, mHeight, mYAxisTickPaint);
+                    } else {
+                        boolean textSelected = mSelectedDataIndex >= 0 && i == mSelectedDataIndex + X_AXIS_NO_DATA_SERIES_COUNT_DAY;
+                        canvas.drawText(String.valueOf(i - 1), x, textY, textSelected ? mXAxisSelectedLabelPaint : mXAxisLabelPaint);
+                    }
+                }
+                break;
             }
         }
     }
@@ -704,8 +823,24 @@ public class ChartView extends View {
      */
     private void drawMarkerAndTooltip(Canvas canvas) {
         if (mSelectedDataIndex >= 0) {
-            float x = (mSelectedDataIndex + 2) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+            float x;
             float y = Y_AXIS_MARGIN_TOP + (Y_AXIS_MAX_VALUE - mSolidData.get(mSelectedDataIndex)) * (Y_AXIS_SERIES_INTERVAL / Y_AXIS_DELTA_VALUE_PER_SERIES);
+
+            switch (mXType) {
+                case WEEK:
+                case YEAR:
+                    x = (mSelectedDataIndex + 0.5f) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                    break;
+                case MONTH:
+                    x = (mSelectedDataIndex + X_AXIS_NO_DATA_SERIES_COUNT_MONTH) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                    break;
+                case DAY:
+                case CUSTOM:
+                default:
+                    x = (mSelectedDataIndex + X_AXIS_NO_DATA_SERIES_COUNT_DAY) * X_AXIS_SERIES_INTERVAL + X_AXIS_MARGIN_START;
+                    break;
+            }
+
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBackgroundPaint);
             canvas.drawCircle(x, y, MARKER_CIRCLE_RADIUS, mMarkerBorderPaint);
             canvas.drawCircle(x, y, MARKER_INNER_RADIUS, mMarkerInnerPaint);
