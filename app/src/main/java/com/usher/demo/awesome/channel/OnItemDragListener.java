@@ -1,4 +1,4 @@
-package com.usher.demo.awesome.drag;
+package com.usher.demo.awesome.channel;
 
 import androidx.recyclerview.widget.RecyclerView;
 

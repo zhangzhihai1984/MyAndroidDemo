@@ -1,6 +1,8 @@
 package com.usher.demo.material;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.AppBarLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,9 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.usher.demo.R;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -68,6 +73,14 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        SmartRefreshLayout smartRefreshLayout = findViewById(R.id.refreshlayout);
+        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishRefresh(true);
             }
         });
 

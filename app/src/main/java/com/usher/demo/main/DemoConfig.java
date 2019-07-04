@@ -1,28 +1,29 @@
 package com.usher.demo.main;
 
-import com.usher.demo.awesome.smarthome.SmartHomeActivity;
-import com.usher.demo.view.ChartActivity;
-import com.usher.demo.web.AngularActivity;
+import com.usher.demo.awesome.channel.ChannelActivity;
 import com.usher.demo.awesome.decoration.DecorationActivity;
-import com.usher.demo.awesome.drag.ChannelActivity;
+import com.usher.demo.awesome.drag.DragActiity;
+import com.usher.demo.awesome.selection.SelectionActivity;
+import com.usher.demo.awesome.smarthome.SmartHomeActivity;
 import com.usher.demo.image.BlurActivity;
 import com.usher.demo.image.RoundImageActivity;
-import com.usher.demo.other.launchmode.AActivity;
 import com.usher.demo.material.FitsSystemWindowActivity;
 import com.usher.demo.material.ProfileActivity;
 import com.usher.demo.material.TabLayoutActivity;
 import com.usher.demo.material.home.HomeActivity;
+import com.usher.demo.other.launchmode.AActivity;
 import com.usher.demo.other.notification.NotificationActivity;
-import com.usher.demo.view.pager.PagerActivity;
 import com.usher.demo.rx.RxExitActivity;
 import com.usher.demo.rx.RxSearchActivity;
 import com.usher.demo.rx.RxSplashActivity;
 import com.usher.demo.rx.RxSumActivity;
-import com.usher.demo.awesome.selection.SelectionActivity;
-import com.usher.demo.web.three.ThreeActivity;
+import com.usher.demo.view.ChartActivity;
 import com.usher.demo.view.MarqueeTextActivity;
 import com.usher.demo.view.WaveActivity;
 import com.usher.demo.view.loading.LoadingActivity;
+import com.usher.demo.view.pager.PagerActivity;
+import com.usher.demo.web.AngularActivity;
+import com.usher.demo.web.three.ThreeActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -94,7 +95,8 @@ class DemoConfig {
                 new DemoItem("selection", SelectionActivity.class),
                 new DemoItem("edit channel", ChannelActivity.class),
                 new DemoItem("recyclerView decoration", DecorationActivity.class),
-                new DemoItem("smart home", SmartHomeActivity.class)
+                new DemoItem("smart home", SmartHomeActivity.class),
+                new DemoItem("drag", DragActiity.class)
         ));
     }
 

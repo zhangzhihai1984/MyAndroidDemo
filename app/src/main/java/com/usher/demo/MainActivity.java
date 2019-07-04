@@ -30,7 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import com.usher.demo.awesome.decoration.DecorationActivity;
 import com.usher.demo.awesome.decoration.DecorationAdapter;
 import com.usher.demo.awesome.decoration.ItemInfo;
-import com.usher.demo.awesome.drag.ChannelActivity;
+import com.usher.demo.awesome.channel.ChannelActivity;
 import com.usher.demo.awesome.selection.SelectionActivity;
 import com.usher.demo.image.BlurActivity;
 import com.usher.demo.image.RoundImageActivity;

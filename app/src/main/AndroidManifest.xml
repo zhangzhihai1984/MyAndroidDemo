@@ -35,7 +35,7 @@
 
         <!-- Awesome Demo -->
         <activity
-            android:name=".awesome.drag.ChannelActivity"
+            android:name=".awesome.channel.ChannelActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".awesome.decoration.DecorationActivity"
@@ -45,6 +45,9 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".awesome.smarthome.SmartHomeActivity"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".awesome.drag.DragActiity"
             android:theme="@style/CommonTheme" />
 
         <!-- Image Demo -->
