@@ -45,16 +45,16 @@ android {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
 
-    configurations.all {
-        resolutionStrategy {
-            eachDependency { details ->
-                // Force all of the primary support libraries to use the same version.
-                if (details.requested.group == 'com.android.support') {
-                    details.useVersion versions.supportLibrary
-                }
-            }
-        }
-    }
+//    configurations.all {
+//        resolutionStrategy {
+//            eachDependency { details ->
+//                // Force all of the primary support libraries to use the same version.
+//                if (details.requested.group == 'com.android.support') {
+//                    details.useVersion versions.supportLibrary
+//                }
+//            }
+//        }
+//    }
 
     lintOptions {
         disable 'GoogleAppIndexingWarning'
