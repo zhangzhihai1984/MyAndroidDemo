@@ -1,17 +1,27 @@
 package com.usher.demo.awesome.drag;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jakewharton.rxbinding3.view.RxView;
 import com.usher.demo.R;
+import com.usher.demo.utils.RxUtil;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ActionAdapter extends RecyclerView.Adapter {
     private final int ITEM_VIEW_TYPE_DEVICE = 0;
@@ -19,10 +29,80 @@ public class ActionAdapter extends RecyclerView.Adapter {
 
     private final Context mContext;
     private final List<ActionInfo> mData;
+    private final SceneTouchCallback mTouchCallback;
 
-    public ActionAdapter(Context context, List<ActionInfo> data) {
+    private float mPreSwipeDx = 0;
+    private int mPreSwipePosition = -1;
+    private View mPreSwipeView;
+    private ValueAnimator mSwipeRecoverAnimator;
+
+    public ActionAdapter(Context context, List<ActionInfo> data, SceneTouchCallback touchCallback) {
         mContext = context;
         mData = data;
+        mTouchCallback = touchCallback;
+
+        init();
+    }
+
+    private void init() {
+        int mSwipeThreshold = mContext.getResources().getDimensionPixelSize(R.dimen.drag_delete_width);
+
+        mSwipeRecoverAnimator = ValueAnimator.ofFloat(-mSwipeThreshold, 0);
+        mSwipeRecoverAnimator.setDuration(150);
+        mSwipeRecoverAnimator.setInterpolator(new AccelerateInterpolator());
+        mSwipeRecoverAnimator.addUpdateListener(animation -> mPreSwipeView.setTranslationX((Float) animation.getAnimatedValue()));
+        mSwipeRecoverAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mPreSwipePosition = -1;
+            }
+        });
+
+        mTouchCallback.dragMoving()
+                .compose(RxUtil.getSchedulerComposer())
+                .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                .subscribe(dragMoving -> {
+                    int fromPos = dragMoving.from;
+                    int toPos = dragMoving.to;
+
+                    if (fromPos < toPos) {
+                        for (int i = fromPos; i < toPos; i++) {
+                            Collections.swap(mData, i, i + 1);
+                        }
+                    } else {
+                        for (int i = fromPos; i > toPos; i--) {
+                            Collections.swap(mData, i, i - 1);
+                        }
+                    }
+
+                    notifyItemMoved(dragMoving.from, dragMoving.to);
+                });
+
+        mTouchCallback.swipeMoving()
+                .compose(RxUtil.getSchedulerComposer())
+                .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                .subscribe(swipeMoving -> {
+                    View swipeLayout = ((BaseViewHolder) swipeMoving.viewHolder).swipeLayout;
+                    float translationX = Math.max(-mSwipeThreshold, swipeMoving.dX);
+
+                    if (swipeMoving.active) {
+                        //滑动
+                        //如果删除已经完全显示的情况下, 也就是说translationX已经达到了-mSwipeThreshold这个最小值, 则不再继续向左滑动
+                        mPreSwipeDx = translationX;
+                        swipeLayout.setTranslationX(translationX);
+                    } else {
+                        //松手
+                        //如果删除已经完全显示的情况下, 也就是说translationX已经达到了-mSwipeThreshold这个最小值, 松手后不会向右
+                        //滑动回去, 否则向右滑动回去
+                        if (mPreSwipeDx > -mSwipeThreshold) {
+                            mPreSwipeDx = translationX;
+                            swipeLayout.setTranslationX(translationX);
+                        } else {
+                            mPreSwipePosition = swipeMoving.position;
+                            mPreSwipeView = swipeLayout;
+                        }
+                    }
+                });
     }
 
     @NonNull
@@ -41,6 +121,8 @@ public class ActionAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ((BaseViewHolder) holder).deleteLayout.setTag(position);
+
         if (getItemViewType(position) == ITEM_VIEW_TYPE_DEVICE)
             bindDevieViewHolder((DeviceViewHolder) holder, position);
         else
@@ -65,7 +147,12 @@ public class ActionAdapter extends RecyclerView.Adapter {
         return mData.size();
     }
 
-    class DeviceViewHolder extends RecyclerView.ViewHolder {
+    public void recoverSwipeView() {
+        if (mPreSwipePosition >= 0 && !mSwipeRecoverAnimator.isRunning())
+            mSwipeRecoverAnimator.start();
+    }
+
+    class DeviceViewHolder extends BaseViewHolder {
         final TextView nameTextView;
 
         DeviceViewHolder(@NonNull View itemView) {
@@ -75,13 +162,49 @@ public class ActionAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class DelayViewHolder extends RecyclerView.ViewHolder {
+    class DelayViewHolder extends BaseViewHolder {
         final TextView delayTextView;
 
         DelayViewHolder(@NonNull View itemView) {
             super(itemView);
 
             delayTextView = itemView.findViewById(R.id.delay_textview);
+        }
+    }
+
+    class BaseViewHolder extends RecyclerView.ViewHolder {
+        final View swipeLayout;
+        final View deleteLayout;
+
+        BaseViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            swipeLayout = itemView.findViewById(R.id.swipe_layout);
+            deleteLayout = itemView.findViewById(R.id.delete_layout);
+
+//            RxView.clicks(swipeLayout)
+//                    .throttleFirst(500, TimeUnit.MILLISECONDS)
+//                    .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+//                    .subscribe(v -> {
+//                        recoverSwipeView();
+//                    });
+
+            RxView.touches(swipeLayout)
+                    .filter(motionEvent -> motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                    .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                    .subscribe(motionEvent -> {
+                        recoverSwipeView();
+                    });
+
+            RxView.clicks(deleteLayout)
+                    .throttleFirst(500, TimeUnit.MILLISECONDS)
+                    .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                    .subscribe(v -> {
+                        int position = (int) deleteLayout.getTag();
+                        mData.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, mData.size() - position);
+                    });
         }
     }
 }

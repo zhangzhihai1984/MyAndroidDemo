@@ -8,16 +8,17 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.usher.demo.R;
-
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
-public class SceneDragCallback extends ItemTouchHelper.Callback {
+public class SceneTouchCallback extends ItemTouchHelper.Callback {
     private PublishSubject<DragStart> mDragStartSubject = PublishSubject.create();
     private PublishSubject<DragMoving> mDragMovingSubject = PublishSubject.create();
     private PublishSubject<DragEnd> mDragEndSubject = PublishSubject.create();
     private PublishSubject<SwipeMoving> mSwipeMovingSubject = PublishSubject.create();
+
+    private boolean mSwipeEnabled = true;
+    private boolean mDragEnabled = true;
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -84,6 +85,24 @@ public class SceneDragCallback extends ItemTouchHelper.Callback {
     @Override
     public void onChildDrawOver(@NonNull Canvas c, @NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    }
+
+    @Override
+    public boolean isItemViewSwipeEnabled() {
+        return mSwipeEnabled;
+    }
+
+    @Override
+    public boolean isLongPressDragEnabled() {
+        return mDragEnabled;
+    }
+
+    public void setItemViewSwipeEnabled(boolean enabled) {
+        mSwipeEnabled = enabled;
+    }
+
+    public void setItemViewDragEnabled(boolean enabled) {
+        mDragEnabled = enabled;
     }
 
     public Observable<DragStart> dragStarts() {
