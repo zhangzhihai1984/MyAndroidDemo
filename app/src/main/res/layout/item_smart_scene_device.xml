@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dp"
@@ -12,13 +12,24 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/name_textview"
-        android:layout_width="wrap_content"
+        android:id="@+id/delete_textview"
+        android:layout_width="@dimen/drag_delete_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="删除"
+        android:textColor="@android:color/holo_red_dark" />
+
+    <TextView
+        android:id="@+id/name_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginStart="16dp"
+        android:background="#33000000"
+        android:gravity="center_vertical"
         android:textColor="#333333"
         android:textSize="16sp"
         tools:text="智能插座" />
 
-</LinearLayout>
+</RelativeLayout>

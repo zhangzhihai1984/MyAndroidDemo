@@ -27,4 +27,7 @@
     <dimen name="smart_tab_background_height">60dp</dimen>
     <dimen name="smart_indoor_background_height">170dp</dimen> <!-- 210 - 60 + 20(radius) = 170 -->
 
+    <!-- Drag -->
+    <dimen name="drag_delete_width">60dp</dimen>
+
 </resources>
