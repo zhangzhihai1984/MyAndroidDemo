@@ -58,6 +58,11 @@ public class ActionAdapter extends RecyclerView.Adapter {
             }
         });
 
+        mTouchCallback.dragStarts()
+                .compose(RxUtil.getSchedulerComposer())
+                .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                .subscribe(dragStart -> recoverSwipeView());
+
         mTouchCallback.dragMoving()
                 .compose(RxUtil.getSchedulerComposer())
                 .as(RxUtil.autoDispose((LifecycleOwner) mContext))
@@ -76,6 +81,10 @@ public class ActionAdapter extends RecyclerView.Adapter {
                     }
 
                     notifyItemMoved(dragMoving.from, dragMoving.to);
+//                    notifyItemRangeChanged(fromPos, 1);
+//                    notifyItemRangeChanged(toPos, 1);
+//                    notifyItemChanged(fromPos);
+//                    notifyItemChanged(toPos);
                 });
 
         mTouchCallback.swipeMoving()
@@ -121,7 +130,7 @@ public class ActionAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((BaseViewHolder) holder).deleteLayout.setTag(position);
+        ((BaseViewHolder) holder).deleteLayout.setTag(mData.get(position));
 
         if (getItemViewType(position) == ITEM_VIEW_TYPE_DEVICE)
             bindDevieViewHolder((DeviceViewHolder) holder, position);
@@ -147,7 +156,7 @@ public class ActionAdapter extends RecyclerView.Adapter {
         return mData.size();
     }
 
-    public void recoverSwipeView() {
+    private void recoverSwipeView() {
         if (mPreSwipePosition >= 0 && !mSwipeRecoverAnimator.isRunning())
             mSwipeRecoverAnimator.start();
     }
@@ -182,13 +191,6 @@ public class ActionAdapter extends RecyclerView.Adapter {
             swipeLayout = itemView.findViewById(R.id.swipe_layout);
             deleteLayout = itemView.findViewById(R.id.delete_layout);
 
-//            RxView.clicks(swipeLayout)
-//                    .throttleFirst(500, TimeUnit.MILLISECONDS)
-//                    .as(RxUtil.autoDispose((LifecycleOwner) mContext))
-//                    .subscribe(v -> {
-//                        recoverSwipeView();
-//                    });
-
             RxView.touches(swipeLayout)
                     .filter(motionEvent -> motionEvent.getAction() == MotionEvent.ACTION_DOWN)
                     .as(RxUtil.autoDispose((LifecycleOwner) mContext))
@@ -200,7 +202,8 @@ public class ActionAdapter extends RecyclerView.Adapter {
                     .throttleFirst(500, TimeUnit.MILLISECONDS)
                     .as(RxUtil.autoDispose((LifecycleOwner) mContext))
                     .subscribe(v -> {
-                        int position = (int) deleteLayout.getTag();
+                        ActionInfo info = (ActionInfo) deleteLayout.getTag();
+                        int position = mData.indexOf(info);
                         mData.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mData.size() - position);

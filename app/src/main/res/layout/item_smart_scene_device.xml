@@ -2,41 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="6dp"
-    android:background="@drawable/smart_scene_item_background"
-    android:elevation="2dp">
+    android:layout_height="92dp">
 
     <RelativeLayout
         android:id="@+id/delete_layout"
-        android:layout_width="@dimen/drag_delete_width"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true">
-
-        <TextView
-            android:id="@+id/delete_textview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="删除"
-            android:textColor="@android:color/holo_red_dark" />
+        android:layout_width="86dp"
+        android:layout_height="80dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/smart_scene_delete_backbround"
+        android:elevation="2dp">
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="80dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/smart_scene_item_background"
+        android:elevation="2dp">
 
         <TextView
             android:id="@+id/name_textview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
-            android:background="#33000000"
             android:gravity="center_vertical"
             android:textColor="#333333"
             android:textSize="16sp"

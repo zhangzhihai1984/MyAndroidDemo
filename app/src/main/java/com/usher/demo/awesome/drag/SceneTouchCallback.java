@@ -15,10 +15,14 @@ public class SceneTouchCallback extends ItemTouchHelper.Callback {
     private PublishSubject<DragStart> mDragStartSubject = PublishSubject.create();
     private PublishSubject<DragMoving> mDragMovingSubject = PublishSubject.create();
     private PublishSubject<DragEnd> mDragEndSubject = PublishSubject.create();
+    private PublishSubject<SwipeStart> mSwipeStartSubject = PublishSubject.create();
     private PublishSubject<SwipeMoving> mSwipeMovingSubject = PublishSubject.create();
+    private PublishSubject<SwipeEnd> mSwipeEndSubject = PublishSubject.create();
 
     private boolean mSwipeEnabled = true;
     private boolean mDragEnabled = true;
+
+    private int mPreActionState = ItemTouchHelper.ACTION_STATE_IDLE; // drag or swipe
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -30,13 +34,11 @@ public class SceneTouchCallback extends ItemTouchHelper.Callback {
 
     @Override
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-//        return super.getSwipeThreshold(viewHolder);
         return 10.0f;
     }
 
     @Override
     public float getSwipeEscapeVelocity(float defaultValue) {
-//        Log.i("zzh", "velocity: " + defaultValue);
         return defaultValue * 10;
     }
 
@@ -57,8 +59,15 @@ public class SceneTouchCallback extends ItemTouchHelper.Callback {
 
         Log.i("zzh", "onSelectedChanged " + actionState + " " + (null != viewHolder));
 
-        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && null != viewHolder)
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && null != viewHolder) {
+            mPreActionState = ItemTouchHelper.ACTION_STATE_DRAG;
             mDragStartSubject.onNext(new DragStart(viewHolder, viewHolder.getAdapterPosition()));
+        }
+
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && null != viewHolder) {
+            mPreActionState = ItemTouchHelper.ACTION_STATE_SWIPE;
+            mSwipeStartSubject.onNext(new SwipeStart(viewHolder, viewHolder.getAdapterPosition()));
+        }
     }
 
     @Override
@@ -66,19 +75,22 @@ public class SceneTouchCallback extends ItemTouchHelper.Callback {
         super.clearView(recyclerView, viewHolder);
 
         Log.i("zzh", "clearView");
+
+        if (mPreActionState == ItemTouchHelper.ACTION_STATE_DRAG)
+            mDragEndSubject.onNext(new DragEnd(viewHolder, viewHolder.getAdapterPosition()));
+
+        if (mPreActionState == ItemTouchHelper.ACTION_STATE_SWIPE)
+            mSwipeEndSubject.onNext(new SwipeEnd(viewHolder, viewHolder.getAdapterPosition()));
     }
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-
         Log.i("zzh", "dx: " + dX + " " + isCurrentlyActive);
+
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-//            viewHolder.itemView.setAlpha(.5f);
         } else {
             mSwipeMovingSubject.onNext(new SwipeMoving(viewHolder, viewHolder.getAdapterPosition(), dX, isCurrentlyActive));
-//            viewHolder.itemView.setAlpha(1);
         }
     }
 
@@ -117,15 +129,23 @@ public class SceneTouchCallback extends ItemTouchHelper.Callback {
         return mDragEndSubject;
     }
 
+    public Observable<SwipeStart> swipeStarts() {
+        return mSwipeStartSubject;
+    }
+
     public Observable<SwipeMoving> swipeMoving() {
         return mSwipeMovingSubject;
+    }
+
+    public Observable<SwipeEnd> swipeEnds() {
+        return mSwipeEndSubject;
     }
 
     public class DragStart {
         public RecyclerView.ViewHolder viewHolder;
         public int position;
 
-        public DragStart(RecyclerView.ViewHolder viewHolder, int position) {
+        DragStart(RecyclerView.ViewHolder viewHolder, int position) {
             this.viewHolder = viewHolder;
             this.position = position;
         }
@@ -143,7 +163,7 @@ public class SceneTouchCallback extends ItemTouchHelper.Callback {
         public RecyclerView.ViewHolder target;
         public int to;
 
-        public DragMoving(RecyclerView.ViewHolder current, int from, RecyclerView.ViewHolder target, int to) {
+        DragMoving(RecyclerView.ViewHolder current, int from, RecyclerView.ViewHolder target, int to) {
             this.current = current;
             this.from = from;
             this.target = target;
@@ -151,11 +171,23 @@ public class SceneTouchCallback extends ItemTouchHelper.Callback {
         }
     }
 
-    public class SwipeMoving extends DragStart {
+    public class SwipeStart extends DragStart {
+        SwipeStart(RecyclerView.ViewHolder viewHolder, int position) {
+            super(viewHolder, position);
+        }
+    }
+
+    public class SwipeEnd extends SwipeStart {
+        public SwipeEnd(RecyclerView.ViewHolder viewHolder, int position) {
+            super(viewHolder, position);
+        }
+    }
+
+    public class SwipeMoving extends SwipeStart {
         public float dX;
         public boolean active;
 
-        public SwipeMoving(RecyclerView.ViewHolder viewHolder, int position, float dX, boolean active) {
+        SwipeMoving(RecyclerView.ViewHolder viewHolder, int position, float dX, boolean active) {
             super(viewHolder, position);
             this.dX = dX;
             this.active = active;
