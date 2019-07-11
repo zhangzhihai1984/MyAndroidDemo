@@ -60,6 +60,10 @@ public class DragActiity extends AppCompatActivity {
         mData.add(new ActionInfo("空调"));
         mData.add(new ActionInfo(10));
         mData.add(new ActionInfo("空气盒子"));
+        mData.add(new ActionInfo("智能插座"));
+        mData.add(new ActionInfo("空调"));
+        mData.add(new ActionInfo(10));
+        mData.add(new ActionInfo("空气盒子"));
 
         mAdapter.notifyDataSetChanged();
 
