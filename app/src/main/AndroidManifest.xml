@@ -103,6 +103,9 @@
         <activity
             android:name=".view.ChartActivity"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".view.looprecycler.LoopRecyclerActivity"
+            android:theme="@style/CommonTheme" />
 
         <!-- Web Demo -->
         <activity

@@ -21,6 +21,7 @@ import com.usher.demo.view.ChartActivity;
 import com.usher.demo.view.MarqueeTextActivity;
 import com.usher.demo.view.WaveActivity;
 import com.usher.demo.view.loading.LoadingActivity;
+import com.usher.demo.view.looprecycler.LoopRecyclerActivity;
 import com.usher.demo.view.pager.PagerActivity;
 import com.usher.demo.web.AngularActivity;
 import com.usher.demo.web.three.ThreeActivity;
@@ -83,7 +84,8 @@ class DemoConfig {
                 new DemoItem("pager", PagerActivity.class),
                 new DemoItem("marquee text", MarqueeTextActivity.class),
                 new DemoItem("loading", LoadingActivity.class),
-                new DemoItem("chart", ChartActivity.class)
+                new DemoItem("chart", ChartActivity.class),
+                new DemoItem("loop reycler", LoopRecyclerActivity.class)
         ));
 
         configMap.put(KEY_OTHER, Arrays.asList(
