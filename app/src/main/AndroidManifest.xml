@@ -106,6 +106,9 @@
         <activity
             android:name=".view.looprecycler.LoopRecyclerActivity"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".view.CircleWaveActivity"
+            android:theme="@style/CommonTheme" />
 
         <!-- Web Demo -->
         <activity

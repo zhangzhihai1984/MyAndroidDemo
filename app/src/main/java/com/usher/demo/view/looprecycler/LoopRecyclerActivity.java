@@ -54,7 +54,7 @@ public class LoopRecyclerActivity extends BaseActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    int position = manager.adjustPosition();
+                    int position = manager.reviseOffset();
                     Log.i("zzh", "idle " + position);
                 }
             }
@@ -67,7 +67,7 @@ public class LoopRecyclerActivity extends BaseActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    int position = manager2.adjustPosition();
+                    int position = manager2.reviseOffset();
                     Log.i("zzh", "idle " + position);
                 }
             }

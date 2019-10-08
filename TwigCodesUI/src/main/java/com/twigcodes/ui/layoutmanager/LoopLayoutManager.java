@@ -113,49 +113,6 @@ public class LoopLayoutManager extends RecyclerView.LayoutManager {
         return dy;
     }
 
-    public int adjustPosition() {
-        if (mOrientation == Orientaion.HORIZONTAL)
-            return adjustHorizontalPosition();
-        else
-            return adjustVerticalPosition();
-    }
-
-    private int adjustHorizontalPosition() {
-        int position = -1;
-        if (null != mFirstView) {
-            position = getPosition(mFirstView);
-
-            if (mFirstView.getRight() < mFirstView.getWidth() / 2) {
-                //left -> show next
-                offsetChildrenHorizontal(-mFirstView.getRight());
-                position = position == getItemCount() - 1 ? 0 : position + 1;
-            } else {
-                //right -> show current
-                offsetChildrenHorizontal(mFirstView.getWidth() - mFirstView.getRight());
-            }
-        }
-
-        return position;
-    }
-
-    private int adjustVerticalPosition() {
-        int position = -1;
-        if (null != mFirstView) {
-            position = getPosition(mFirstView);
-
-            if (mFirstView.getBottom() < mFirstView.getHeight() / 2) {
-                //up -> show next
-                offsetChildrenVertical(-mFirstView.getBottom());
-                position = position == getItemCount() - 1 ? 0 : position + 1;
-            } else {
-                //down -> show current
-                offsetChildrenVertical(mFirstView.getHeight() - mFirstView.getBottom());
-            }
-        }
-
-        return position;
-    }
-
     /**
      * dy > 0为向上滑动
      * 如果lastView.getBottom() - dy < getHeight(), 也就是说最后一个可见的item在向上移动dy后
@@ -300,5 +257,48 @@ public class LoopLayoutManager extends RecyclerView.LayoutManager {
                 }
             }
         }
+    }
+
+    public int reviseOffset() {
+        if (mOrientation == Orientaion.HORIZONTAL)
+            return reviseHorizontalOffset();
+        else
+            return reviseVerticalOffset();
+    }
+
+    private int reviseHorizontalOffset() {
+        int position = -1;
+        if (null != mFirstView) {
+            position = getPosition(mFirstView);
+
+            if (mFirstView.getRight() < mFirstView.getWidth() / 2) {
+                //left -> show next
+                offsetChildrenHorizontal(-mFirstView.getRight());
+                position = position == getItemCount() - 1 ? 0 : position + 1;
+            } else {
+                //right -> show current
+                offsetChildrenHorizontal(mFirstView.getWidth() - mFirstView.getRight());
+            }
+        }
+
+        return position;
+    }
+
+    private int reviseVerticalOffset() {
+        int position = -1;
+        if (null != mFirstView) {
+            position = getPosition(mFirstView);
+
+            if (mFirstView.getBottom() < mFirstView.getHeight() / 2) {
+                //up -> show next
+                offsetChildrenVertical(-mFirstView.getBottom());
+                position = position == getItemCount() - 1 ? 0 : position + 1;
+            } else {
+                //down -> show current
+                offsetChildrenVertical(mFirstView.getHeight() - mFirstView.getBottom());
+            }
+        }
+
+        return position;
     }
 }

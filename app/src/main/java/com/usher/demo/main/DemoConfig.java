@@ -18,6 +18,7 @@ import com.usher.demo.rx.RxSearchActivity;
 import com.usher.demo.rx.RxSplashActivity;
 import com.usher.demo.rx.RxSumActivity;
 import com.usher.demo.view.ChartActivity;
+import com.usher.demo.view.CircleWaveActivity;
 import com.usher.demo.view.MarqueeTextActivity;
 import com.usher.demo.view.WaveActivity;
 import com.usher.demo.view.loading.LoadingActivity;
@@ -85,7 +86,8 @@ class DemoConfig {
                 new DemoItem("marquee text", MarqueeTextActivity.class),
                 new DemoItem("loading", LoadingActivity.class),
                 new DemoItem("chart", ChartActivity.class),
-                new DemoItem("loop reycler", LoopRecyclerActivity.class)
+                new DemoItem("loop reycler", LoopRecyclerActivity.class),
+                new DemoItem("circle wave", CircleWaveActivity.class)
         ));
 
         configMap.put(KEY_OTHER, Arrays.asList(
