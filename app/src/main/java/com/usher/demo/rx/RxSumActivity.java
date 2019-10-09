@@ -31,19 +31,19 @@ public class RxSumActivity extends BaseActivity {
     }
 
     private void initView() {
-        Observable<Integer> parm1$ = RxView.clicks(mParam1Button)
+        Observable<Integer> param1$ = RxView.clicks(mParam1Button)
                 .map(v -> 1)
                 .scan((acc, curr) -> acc + curr)
                 .doOnNext(v -> mParam1Button.setText(String.valueOf(v)));
 
-        Observable<Integer> parm2$ = RxView.clicks(mParam2Button)
+        Observable<Integer> param2$ = RxView.clicks(mParam2Button)
                 .map(v -> 1)
                 .scan((acc, curr) -> acc + curr)
                 .doOnNext(v -> mParam2Button.setText(String.valueOf(v)));
 
         Observable.combineLatest(
-                parm1$,
-                parm2$,
+                param1$,
+                param2$,
                 (first, second) -> first + second
         )
                 .as(RxUtil.autoDispose(this))

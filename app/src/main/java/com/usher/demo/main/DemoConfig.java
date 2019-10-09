@@ -18,6 +18,7 @@ import com.usher.demo.rx.RxExitActivity;
 import com.usher.demo.rx.RxSearchActivity;
 import com.usher.demo.rx.RxSplashActivity;
 import com.usher.demo.rx.RxSumActivity;
+import com.usher.demo.rx.RxSumKTActivity;
 import com.usher.demo.view.ChartActivity;
 import com.usher.demo.view.CircleWaveActivity;
 import com.usher.demo.view.MarqueeTextActivity;
@@ -60,7 +61,7 @@ class DemoConfig {
 
         configMap.put(KEY_RX, Arrays.asList(
                 new DemoItem("splash", RxSplashActivity.class),
-                new DemoItem("sum", RxSumActivity.class),
+                new DemoItem("sum", RxSumKTActivity.class),
                 new DemoItem("exit", RxExitActivity.class),
                 new DemoItem("search", RxSearchActivity.class)
         ));
