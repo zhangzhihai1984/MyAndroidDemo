@@ -7,6 +7,7 @@ import com.usher.demo.awesome.selection.SelectionActivity;
 import com.usher.demo.awesome.smarthome.SmartHomeActivity;
 import com.usher.demo.image.BlurActivity;
 import com.usher.demo.image.RoundImageActivity;
+import com.usher.demo.kotlin.KotlinActivity;
 import com.usher.demo.material.FitsSystemWindowActivity;
 import com.usher.demo.material.ProfileActivity;
 import com.usher.demo.material.TabLayoutActivity;
@@ -42,6 +43,7 @@ class DemoConfig {
     private static final String KEY_MATERIAL = "material";
     private static final String KEY_AWESOME = "awesome";
     private static final String KEY_OTHER = "other";
+    private static final String KEY_KOTLIN = "kotlin";
 
     static {
 
@@ -52,7 +54,8 @@ class DemoConfig {
                 new DemoItem("view", KEY_VIEW, DemoListActivity.class),
                 new DemoItem("web", KEY_WEB, DemoListActivity.class),
                 new DemoItem("other", KEY_OTHER, DemoListActivity.class),
-                new DemoItem("awesome", KEY_AWESOME, DemoListActivity.class)
+                new DemoItem("awesome", KEY_AWESOME, DemoListActivity.class),
+                new DemoItem("kotlin", KEY_KOTLIN, KotlinActivity.class)
         ));
 
         configMap.put(KEY_RX, Arrays.asList(

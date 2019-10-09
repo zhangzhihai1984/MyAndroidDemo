@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -29,10 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ListActivity"
-            android:theme="@style/CommonTheme" />
-
         <!-- Awesome Demo -->
         <activity
             android:name=".awesome.channel.ChannelActivity"
@@ -124,8 +119,7 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".other.launchmode.BActivity"
-            android:theme="@style/CommonTheme" />
-        <!-- android:launchMode="singleTask" -->
+            android:theme="@style/CommonTheme" /> <!-- android:launchMode="singleTask" -->
         <!-- android:taskAffinity="com.usher.demo.hahaha" -->
         <service
             android:name=".other.launchmode.MyService"
@@ -139,8 +133,10 @@
         <activity
             android:name=".other.notification.NotificationActivity"
             android:theme="@style/CommonTheme" />
+
+        <!-- Kotlin Demo -->
         <activity
-            android:name=".other.retrofit.RxActivity"
+            android:name=".kotlin.KotlinActivity"
             android:theme="@style/CommonTheme" />
     </application>
 
