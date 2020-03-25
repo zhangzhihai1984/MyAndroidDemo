@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" filepath="$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyAndroidDemo.iml" filepath="$PROJECT_DIR$/MyAndroidDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" filepath="$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" group="MyAndroidDemo/AnotherDemo" />
+      <module fileurl="file://$PROJECT_DIR$/MyAndroidDemo.iml" filepath="$PROJECT_DIR$/MyAndroidDemo.iml" group="MyAndroidDemo" />
       <module fileurl="file://$PROJECT_DIR$/MyApplication.iml" filepath="$PROJECT_DIR$/MyApplication.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyKotlin/MyKotlin.iml" filepath="$PROJECT_DIR$/MyKotlin/MyKotlin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" filepath="$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyKotlin/MyKotlin.iml" filepath="$PROJECT_DIR$/MyKotlin/MyKotlin.iml" group="MyAndroidDemo/MyKotlin" />
+      <module fileurl="file://$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" filepath="$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" group="MyAndroidDemo/TwigCodesUI" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="MyAndroidDemo/app" />
     </modules>
   </component>
 </project>
