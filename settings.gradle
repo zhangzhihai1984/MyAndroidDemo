@@ -1,1 +1,1 @@
-include ':app', ':TwigCodesUI', ':AnotherDemo', ':MyKotlin'
+include ':app', ':TwigCodesUI', ':AnotherDemo'
