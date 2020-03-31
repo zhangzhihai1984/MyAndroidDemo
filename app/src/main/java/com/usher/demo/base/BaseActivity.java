@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.usher.demo.utils.PermissionUtil;
 import com.usher.demo.utils.RxUtil;
@@ -37,5 +38,9 @@ public class BaseActivity extends AppCompatActivity {
                         PermissionUtil.deny();
                     }
                 });
+    }
+
+    public void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }
