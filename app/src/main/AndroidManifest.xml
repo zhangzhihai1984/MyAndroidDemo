@@ -81,9 +81,6 @@
             android:name=".rx.RxSumActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".rx.RxSumKTActivity"
-            android:theme="@style/CommonTheme" />
-        <activity
             android:name=".rx.RxExitActivity"
             android:theme="@style/CommonTheme" />
         <activity

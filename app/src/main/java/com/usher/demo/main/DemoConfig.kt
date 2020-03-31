@@ -17,7 +17,7 @@ import com.usher.demo.other.notification.NotificationActivity
 import com.usher.demo.rx.RxExitActivity
 import com.usher.demo.rx.RxSearchActivity
 import com.usher.demo.rx.RxSplashActivity
-import com.usher.demo.rx.RxSumKTActivity
+import com.usher.demo.rx.RxSumActivity
 import com.usher.demo.view.ChartActivity
 import com.usher.demo.view.CircleWaveActivity
 import com.usher.demo.view.MarqueeTextActivity
@@ -54,7 +54,7 @@ object DemoConfig {
 
         configMap[KEY_RX] = listOf(
                 DemoItem("splash", RxSplashActivity::class.java),
-                DemoItem("sum", RxSumKTActivity::class.java),
+                DemoItem("sum", RxSumActivity::class.java),
                 DemoItem("exit", RxExitActivity::class.java),
                 DemoItem("search", RxSearchActivity::class.java)
         )

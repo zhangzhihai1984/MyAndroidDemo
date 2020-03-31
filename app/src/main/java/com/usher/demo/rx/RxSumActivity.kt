@@ -8,12 +8,11 @@ import com.usher.demo.utils.RxUtil
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.activity_rx_sum.*
 
-class RxSumKTActivity : BaseActivity() {
+class RxSumActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_rx_sum)
-
         initView()
     }
 
@@ -21,12 +20,12 @@ class RxSumKTActivity : BaseActivity() {
         val param1 = param1_button.clicks()
                 .map { 1 }
                 .scan { acc, curr -> acc + curr }
-                .doOnNext { param1_button.text = it.toString() }
+                .doOnNext { param1_button.text = "$it" }
 
         val param2 = param2_button.clicks()
                 .map { 1 }
                 .scan { t1, t2 -> t1 + t2 }
-                .doOnNext { param2_button.text = it.toString() }
+                .doOnNext { param2_button.text = "$it" }
 
 //        Observable.combineLatest<Int, Int, Int>(
 //                param1,
@@ -39,6 +38,6 @@ class RxSumKTActivity : BaseActivity() {
 
         Observables.combineLatest(param1, param2) { t1, t2 -> t1 + t2 }
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { sum_button.text = it.toString() }
+                .subscribe { sum_button.text = "$it" }
     }
 }
