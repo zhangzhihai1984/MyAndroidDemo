@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 buildscript {
     ext.versions = [
-            'rxbinding'  : '3.0.0',
+            'rxbinding'  : '3.1.0',
             'autodispose': '1.4.0',
     ]
 }
