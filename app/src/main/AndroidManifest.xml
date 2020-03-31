@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.usher.demo">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.usher.demo"
+    tools:ignore="LockedOrientationActivity">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -137,6 +139,10 @@
 
         <activity
             android:name=".other.notification.NotificationActivity"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".other.LogActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/CommonTheme" />
 
         <!-- Kotlin Demo -->

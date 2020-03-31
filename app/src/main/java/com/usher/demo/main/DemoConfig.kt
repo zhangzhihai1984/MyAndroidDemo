@@ -12,6 +12,7 @@ import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
 import com.usher.demo.material.TabLayoutActivity
 import com.usher.demo.material.home.HomeActivity
+import com.usher.demo.other.LogActivity
 import com.usher.demo.other.launchmode.AActivity
 import com.usher.demo.other.notification.NotificationActivity
 import com.usher.demo.rx.RxExitActivity
@@ -88,7 +89,8 @@ object DemoConfig {
 
         configMap[KEY_OTHER] = listOf(
                 DemoItem("notification", NotificationActivity::class.java),
-                DemoItem("launch mode", AActivity::class.java)
+                DemoItem("launch mode", AActivity::class.java),
+                DemoItem("log", LogActivity::class.java)
         )
 
         configMap[KEY_AWESOME] = listOf(
