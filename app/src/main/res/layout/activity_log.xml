@@ -5,14 +5,23 @@
     android:fitsSystemWindows="true">
 
     <ScrollView
+        android:id="@+id/log_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:background="@drawable/teal_rectangle_background">
+        android:background="@drawable/teal_rectangle_background"
+        android:overScrollMode="never"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="10dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/log_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
     </ScrollView>
 
