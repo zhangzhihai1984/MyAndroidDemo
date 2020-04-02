@@ -1,18 +1,24 @@
 package com.usher.demo.utils
 
 import android.util.Log
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.io.BufferedReader
 import java.io.InputStream
 import kotlin.concurrent.thread
 
 object LogUtil {
-    private var flag = false
+    private const val TAG = "ZZH"
+    private var readLogFlag = false
     private var reader: BufferedReader? = null
     private var `in`: InputStream? = null
-    val logSubject = PublishSubject.create<String>()
+    private val readLogSubject = PublishSubject.create<String>()
 
-    private fun startLog() = thread {
+    fun log(log: String) {
+        Log.i(TAG, log)
+    }
+
+    private fun startReadLog() = thread {
         Runtime.getRuntime().exec("logcat -c")
         `in` = Runtime.getRuntime().exec("logcat -v long").inputStream
         reader = `in`?.bufferedReader()
@@ -21,27 +27,27 @@ object LogUtil {
             reader?.run {
                 while (true) {
                     readLine()?.let { log ->
-                        logSubject.onNext(log)
-                    } ?: Log.i("zzh", "LOG END")
+                        readLogSubject.onNext(log)
+                    } ?: log("read log END")
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.i("zzh", "LOG ERROR: ${e.message}")
+            readLogFlag = false
+            log("read log error: ${e.message}")
         }
     }
 
-    fun startLogIfNeeded() {
-        if (flag.not()) {
-            flag = true
-            startLog()
-        } else {
-            Log.i("zzh", "Log Has Been Started")
+    fun readLog(): Observable<String> {
+        if (readLogFlag.not()) {
+            readLogFlag = true
+            startReadLog()
         }
+        return readLogSubject
     }
 
-    fun stopLog() {
+//    fun stopLog() {
 //        reader?.close()
 //        `in`?.close()
-    }
+//    }
 }

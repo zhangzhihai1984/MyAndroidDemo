@@ -1,7 +1,6 @@
 package com.usher.demo.other
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.ScrollView
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -20,8 +19,7 @@ class LogActivity : BaseActivity() {
     }
 
     private fun initView() {
-        Observable.just(LogUtil.startLogIfNeeded())
-                .switchMap { LogUtil.logSubject }
+        LogUtil.readLog()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
@@ -34,6 +32,6 @@ class LogActivity : BaseActivity() {
                 .take(10)
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { Log.i("zzh", "LOGGGGGGGG-$it") }
+                .subscribe { LogUtil.log("log write $it") }
     }
 }
