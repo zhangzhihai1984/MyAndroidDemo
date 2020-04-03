@@ -24,4 +24,6 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
+    <attr name="page_background" format="color" />
+
 </resources>

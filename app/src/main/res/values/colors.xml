@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="black_overlay">#66000000</color>
-
     <color name="primaryTeal">#00796b</color>
+
+    <color name="page_background">#F9F9F9</color>
+    <color name="page_background_dark">#9B9B9B</color>
 </resources>

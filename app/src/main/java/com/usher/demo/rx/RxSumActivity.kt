@@ -12,6 +12,11 @@ class RxSumActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (isDarkMode)
+            setTheme(R.style.DarkTheme)
+        else
+            setTheme(R.style.LightTheme)
+
         setContentView(R.layout.activity_rx_sum)
         initView()
     }
