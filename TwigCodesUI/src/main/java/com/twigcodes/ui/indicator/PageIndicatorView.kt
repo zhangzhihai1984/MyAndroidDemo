@@ -29,8 +29,8 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mIndicatorHeight: Int = -1
     private var mInAnimatorResId: Int = -1
     private var mOutAnimatorResId: Int = -1
-    private var mIndicatorBackgroundResId = R.drawable.page_indicator_default_drawable
-    private var mIndicatorUnselectedBackgroundResId = R.drawable.page_indicator_default_drawable
+    private var mIndicatorBackgroundResId = -1
+    private var mIndicatorIdleBackgroundResId = -1
 
     private lateinit var mViewPager: ViewPager
     private lateinit var mInAnimator: Animator
@@ -47,7 +47,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         val inAnimatorResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_animator_in, -1)
         val outAnimatorResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_animator_out, -1)
         val indicatorBackgroundResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_drawable, -1)
-        val indicatorUnselectedBackgroundResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_drawable_unselected, -1)
+        val indicatorIdleBackgroundResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_idle_drawable, -1)
 
         config(
                 indicatorWidth,
@@ -56,7 +56,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
                 inAnimatorResId,
                 outAnimatorResId,
                 indicatorBackgroundResId,
-                indicatorUnselectedBackgroundResId
+                indicatorIdleBackgroundResId
         )
 
         val o = a.getInt(R.styleable.PageIndicatorView_indicator_orientation, -1)
@@ -75,7 +75,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
             @AnimatorRes inAnimatorResId: Int = -1,
             @AnimatorRes outAnimatorrResId: Int = -1,
             @DrawableRes indicatorBackgroundResId: Int = -1,
-            @DrawableRes indicatorUnselectedBackgroundResId: Int = -1
+            @DrawableRes indicatorIdleBackgroundResId: Int = -1
     ) {
         val defaultValue = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_INDICATOR_WIDTH, resources.displayMetrics).run { roundToInt() }
         mIndicatorWidth = indicatorWidth.takeIf { it > 0 } ?: defaultValue
@@ -83,10 +83,10 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         mIndicatorMargin = indicatorMargin.takeIf { it >= 0 } ?: defaultValue
         mInAnimatorResId = inAnimatorResId.takeIf { it > 0 }
                 ?: R.animator.page_indicator_default_animator
-        mOutAnimatorResId = outAnimatorrResId.takeIf { it > 0 } ?: 0
+        mOutAnimatorResId = outAnimatorrResId.takeIf { it > 0 } ?: -1
         mIndicatorBackgroundResId = indicatorBackgroundResId.takeIf { it > 0 }
                 ?: R.drawable.page_indicator_default_drawable
-        mIndicatorUnselectedBackgroundResId = indicatorUnselectedBackgroundResId.takeIf { it > 0 }
+        mIndicatorIdleBackgroundResId = indicatorIdleBackgroundResId.takeIf { it > 0 }
                 ?: mIndicatorBackgroundResId
 
         mInAnimator = createInAnimator()
@@ -134,7 +134,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
                 mOutAnimator.end()
 
             getChildAt(mCurrentPosition)?.run {
-                setBackgroundResource(mIndicatorUnselectedBackgroundResId)
+                setBackgroundResource(mIndicatorIdleBackgroundResId)
                 mOutAnimator.setTarget(this)
                 mOutAnimator.start()
             }
@@ -154,11 +154,10 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
 
         val count = mViewPager.adapter?.count ?: 0
         IntRange(0, count - 1).forEach {
-            if (mCurrentPosition == it) {
+            if (mCurrentPosition == it)
                 addIndicator(mIndicatorBackgroundResId, mImmediateInAnimator)
-            } else {
-                addIndicator(mIndicatorUnselectedBackgroundResId, mImmediateOutAnimator)
-            }
+            else
+                addIndicator(mIndicatorIdleBackgroundResId, mImmediateOutAnimator)
         }
     }
 
@@ -166,9 +165,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         if (animator.isRunning)
             animator.end()
 
-        val indicator = View(context)
-        indicator.setBackgroundResource(backgroundResId)
-
+        val indicator = View(context).apply { setBackgroundResource(backgroundResId) }
         val lp = LayoutParams(mIndicatorWidth, mIndicatorHeight).apply {
             when (orientation) {
                 HORIZONTAL -> {
