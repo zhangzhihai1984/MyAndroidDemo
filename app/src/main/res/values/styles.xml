@@ -16,11 +16,13 @@
     </style>
 
     <style name="LightTheme" parent="CommonTheme">
-        <item name="page_background">@color/page_background</item>
+        <item name="page_background">@color/page_background_light</item>
+        <item name="icon_fill_light">@color/icon_fill_light</item>
     </style>
 
     <style name="DarkTheme" parent="CommonTheme">
         <item name="page_background">@color/page_background_dark</item>
+        <item name="icon_fill_light">@color/icon_fill_dark</item>
     </style>
 
     <style name="FramelessDialog" parent="@style/Theme.AppCompat.Dialog">

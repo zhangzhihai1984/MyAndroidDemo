@@ -6,6 +6,9 @@
 
     <color name="primaryTeal">#00796b</color>
 
-    <color name="page_background">#F9F9F9</color>
-    <color name="page_background_dark">#9B9B9B</color>
+    <color name="page_background_light">#F9F9F9</color>
+    <color name="page_background_dark">@android:color/black</color>
+
+    <color name="icon_fill_light">@android:color/white</color>
+    <color name="icon_fill_dark">@android:color/black</color>
 </resources>
