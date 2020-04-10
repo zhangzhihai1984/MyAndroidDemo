@@ -9,7 +9,7 @@ import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.RxUtil
 import kotlinx.android.synthetic.main.activity_demo_list.*
 
-class DemoListActivity : BaseActivity() {
+class DemoListActivity : BaseActivity(Theme.LIGHT) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo_list)

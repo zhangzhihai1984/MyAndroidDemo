@@ -10,18 +10,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.twigcodes.ui.util.PermissionUtil
 import io.reactivex.subjects.PublishSubject
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK) : AppCompatActivity() {
     private val mActivityResultSubject = PublishSubject.create<ActivityResult>()
+    private var mIsLocalNightMode = false
 
-    enum class Theme {
-        DARK,
-        LIGHT
+    enum class Theme(val isLight: Boolean) {
+        LIGHT(true),
+        DARK(false),
     }
 
     data class ActivityResult(val requestCode: Int, val resultCode: Int, val data: Intent?)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mIsLocalNightMode = isSystemNightMode
+        updateStatusBarTheme(mIsLocalNightMode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
@@ -34,11 +38,32 @@ open class BaseActivity : AppCompatActivity() {
         mActivityResultSubject.onNext(ActivityResult(requestCode, resultCode, data))
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        val isCurrentNightMode = isSystemNightMode
+
+        if (mIsLocalNightMode != isCurrentNightMode)
+            onUIModeChanged(isCurrentNightMode)
+
+        mIsLocalNightMode = isCurrentNightMode
+    }
+
     fun activityResult() = mActivityResultSubject
 
     fun showToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 
-    var statusBarTheme = Theme.LIGHT
+    fun updateStatusBarTheme(isNightMode: Boolean) {
+        statusBarTheme = when {
+            !isNightMode -> statusBarThemeForDayMode
+            statusBarThemeForDayMode.isLight -> Theme.DARK
+            else -> Theme.LIGHT
+        }
+    }
+
+    open fun onUIModeChanged(isNightMode: Boolean) {}
+
+    private var statusBarTheme = Theme.LIGHT
         set(theme) {
             field = theme
             val decorView = window.decorView
@@ -50,5 +75,6 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
 
-    fun isDarkMode() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+    private val isSystemNightMode: Boolean
+        get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 }
