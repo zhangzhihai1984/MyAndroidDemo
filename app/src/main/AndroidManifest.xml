@@ -35,6 +35,7 @@
 
         <activity
             android:name=".main.DemoListActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
@@ -85,16 +86,19 @@
         <!-- Rx Demo -->
         <activity
             android:name=".rx.RxSplashActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
             android:theme="@style/FullScreenTheme" />
         <activity
             android:name=".rx.RxSumActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".rx.RxExitActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".rx.RxSearchActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
 
         <!-- View Demo -->
@@ -109,6 +113,7 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.pager.PagerActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.ChartActivity"

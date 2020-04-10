@@ -17,7 +17,7 @@ class DemoListActivity : BaseActivity() {
     }
 
     private fun initView() {
-        val tag = intent.getStringExtra(DemoConfig.TAG_KEY) ?: "main"
+        val tag = intent.getStringExtra(DemoConfig.TAG_KEY)
         val demoItems = DemoConfig.getDemoConfig(tag)
         val adapter = DemoAdapter(demoItems)
 

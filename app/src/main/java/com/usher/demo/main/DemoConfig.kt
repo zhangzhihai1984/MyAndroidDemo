@@ -32,6 +32,7 @@ import com.usher.demo.web.three.ThreeActivity
 object DemoConfig {
     private val configMap = hashMapOf<String, List<DemoItem>>()
     const val TAG_KEY = "TAG_KEY"
+    private const val KEY_MAIN = "main"
     private const val KEY_RX = "rx"
     private const val KEY_WEB = "web"
     private const val KEY_IMAGE = "image"
@@ -42,7 +43,7 @@ object DemoConfig {
     private const val KEY_KOTLIN = "kotlin"
 
     init {
-        configMap["main"] = listOf(
+        configMap[KEY_MAIN] = listOf(
                 DemoItem("rx", KEY_RX, DemoListActivity::class.java),
                 DemoItem("image", KEY_IMAGE, DemoListActivity::class.java),
                 DemoItem("material", KEY_MATERIAL, DemoListActivity::class.java),
@@ -102,7 +103,7 @@ object DemoConfig {
         )
     }
 
-    fun getDemoConfig(key: String): List<DemoItem> = configMap[key] ?: listOf()
+    fun getDemoConfig(key: String?): List<DemoItem> = configMap[key ?: KEY_MAIN] ?: listOf()
 }
 
 data class DemoItem(val desc: String, val key: String?, val cls: Class<*>) {
