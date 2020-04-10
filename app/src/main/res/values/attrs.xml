@@ -24,7 +24,7 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
-    <attr name="page_background" format="color" />
-    <attr name="icon_fill_light" format="color" />
+<!--    <attr name="page_background" format="color" />-->
+<!--    <attr name="icon_fill_light" format="color" />-->
 
 </resources>

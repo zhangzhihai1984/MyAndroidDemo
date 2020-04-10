@@ -10,11 +10,11 @@ open class BaseActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (isDarkMode())
-            setTheme(R.style.DarkTheme)
-        else {
-            setTheme(R.style.LightTheme)
-            statusBarTheme = Theme.LIGHT
-        }
+//        if (isDarkMode())
+//            setTheme(R.style.DarkTheme)
+//        else {
+//            setTheme(R.style.LightTheme)
+//            statusBarTheme = Theme.LIGHT
+//        }
     }
 }
