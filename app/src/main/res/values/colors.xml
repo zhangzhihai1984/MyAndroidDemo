@@ -8,5 +8,6 @@
 
     <color name="page_background">#F9F9F9</color>
     <color name="icon_fill">@android:color/white</color>
-
+    <color name="mask_background">#66000000</color>
+    <color name="pager_text">@android:color/white</color>
 </resources>
