@@ -2,10 +2,6 @@
 <resources>
     <color name="page_background">#191919</color>
     <color name="item_background">#232323</color>
-    <color name="mask_background">#66FFFFFF</color>
 
     <color name="text_main">@android:color/white</color>
-    <color name="text_white">@android:color/black</color>
-
-    <color name="icon_fill">@android:color/black</color>
 </resources>

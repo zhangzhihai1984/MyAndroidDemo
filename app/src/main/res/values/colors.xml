@@ -5,13 +5,11 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="primaryTeal">#00796b</color>
+    <color name="mask_background">#66000000</color>
 
     <color name="page_background">#EDEDED</color>
     <color name="item_background">#FFFFFF</color>
-    <color name="mask_background">#66000000</color>
 
     <color name="text_main">@android:color/black</color>
-    <color name="text_white">@android:color/white</color>
 
-    <color name="icon_fill">@android:color/white</color>
 </resources>
