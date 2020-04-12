@@ -16,15 +16,15 @@ class RxSumActivity : BaseActivity(Theme.LIGHT) {
     }
 
     private fun initView() {
-        val param1 = param1_button.clicks()
+        val param1 = param1_textview.clicks()
                 .map { 1 }
                 .scan { acc, curr -> acc + curr }
-                .doOnNext { param1_button.text = "$it" }
+                .doOnNext { param1_textview.text = "$it" }
 
-        val param2 = param2_button.clicks()
+        val param2 = param2_textview.clicks()
                 .map { 1 }
                 .scan { t1, t2 -> t1 + t2 }
-                .doOnNext { param2_button.text = "$it" }
+                .doOnNext { param2_textview.text = "$it" }
 
 //        Observable.combineLatest<Int, Int, Int>(
 //                param1,
@@ -37,6 +37,6 @@ class RxSumActivity : BaseActivity(Theme.LIGHT) {
 
         Observables.combineLatest(param1, param2) { t1, t2 -> t1 + t2 }
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { sum_button.text = "$it" }
+                .subscribe { sum_textview.text = "$it" }
     }
 }

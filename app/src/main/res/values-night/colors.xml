@@ -4,4 +4,6 @@
     <color name="item_background">#232323</color>
 
     <color name="text_main">@android:color/white</color>
+
+    <color name="icon_main">@android:color/white</color>
 </resources>

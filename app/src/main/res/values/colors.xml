@@ -12,4 +12,6 @@
 
     <color name="text_main">@android:color/black</color>
 
+    <color name="icon_main">@android:color/black</color>
+
 </resources>
