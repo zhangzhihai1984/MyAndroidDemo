@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseViewHolder
+import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.RxUtil
@@ -33,5 +35,11 @@ class DemoListActivity : BaseActivity(Theme.LIGHT) {
                         putExtra(DemoConfig.TAG_KEY, demoItem.key)
                     })
                 }
+    }
+
+    class DemoAdapter(data: List<DemoItem>) : RxBaseQuickAdapter<DemoItem, BaseViewHolder>(R.layout.demo_item_layout, data) {
+        override fun convert(helper: BaseViewHolder, demoItem: DemoItem) {
+            helper.setText(R.id.desc_textview, demoItem.desc)
+        }
     }
 }

@@ -99,7 +99,8 @@
         <activity
             android:name=".rx.RxSearchActivity"
             android:configChanges="uiMode"
-            android:theme="@style/CommonTheme" />
+            android:theme="@style/CommonTheme"
+            android:windowSoftInputMode="stateVisible" />
 
         <!-- View Demo -->
         <activity
