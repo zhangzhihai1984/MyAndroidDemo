@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorPrimaryLight">#B2DFDB</color>
+    <color name="colorAccent">#009688</color>
 
-    <color name="primaryTeal">#00796b</color>
+    <color name="colorPrimary_900">#004d3f</color>
+    <color name="colorPrimary_800">#00695b</color>
+    <color name="colorPrimary_700">#00796a</color>
+    <color name="colorPrimary_600">#00897a</color>
+    <color name="colorPrimary_500">#009687</color>
+    <color name="colorPrimary_400">#26a699</color>
+    <color name="colorPrimary_300">#4db6ab</color>
+    <color name="colorPrimary_200">#80cbc3</color>
+    <color name="colorPrimary_100">#b2dfdb</color>
+    <color name="colorPrimary_50">#e0f2f1</color>
+
     <color name="mask_background">#66000000</color>
 
     <color name="page_background">#EDEDED</color>
     <color name="item_background">#FFFFFF</color>
 
-    <color name="text_main">@android:color/black</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="divider">#BDBDBD</color>
 
-    <color name="icon_main">@android:color/black</color>
+    <color name="icon_primary">@android:color/black</color>
 
 </resources>

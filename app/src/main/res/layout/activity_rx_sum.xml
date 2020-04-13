@@ -10,10 +10,10 @@
         android:id="@+id/param1_textview"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/teal_oval_background"
+        android:background="@drawable/primary_oval_ripple_background"
         android:gravity="center"
         android:text="@string/rx_sum_init_value"
-        android:textColor="@color/text_main"
+        android:textColor="@color/text_primary"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -28,10 +28,10 @@
         android:id="@+id/param2_textview"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/teal_oval_background"
+        android:background="@drawable/primary_oval_ripple_background"
         android:gravity="center"
         android:text="@string/rx_sum_init_value"
-        android:textColor="@color/text_main"
+        android:textColor="@color/text_primary"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -46,10 +46,10 @@
         android:id="@+id/sum_textview"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/teal_oval_background"
+        android:background="@drawable/primary_oval_ripple_background"
         android:gravity="center"
         android:text="@string/rx_sum_init_value"
-        android:textColor="@color/text_main"
+        android:textColor="@color/text_primary"
         android:textSize="14sp"
         android:textStyle="bold" />
 

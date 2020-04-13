@@ -2,22 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/page_background">
 
     <ImageView
-        android:id="@+id/imageview"
+        android:id="@+id/ad_imageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0"
-        android:background="@drawable/teal_gradient_background" />
+        android:contentDescription="@null" />
 
-    <Button
-        android:id="@+id/skip_button"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/teal_rectangle_background"
+        android:max="10"
+        android:progress="10"
+        android:progressDrawable="@drawable/progress_hourglass_background" />
+
+    <TextView
+        android:id="@+id/countdown_textview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/progressbar"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/mask_circle_background"
         android:gravity="center"
-        tools:text="@string/splash_skip" />
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        tools:text="1" />
 
 </RelativeLayout>

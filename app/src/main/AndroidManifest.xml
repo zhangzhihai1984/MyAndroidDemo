@@ -86,7 +86,7 @@
         <!-- Rx Demo -->
         <activity
             android:name=".rx.RxSplashActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
+            android:configChanges="uiMode"
             android:theme="@style/FullScreenTheme" />
         <activity
             android:name=".rx.RxSumActivity"

@@ -3,7 +3,7 @@
     <color name="page_background">#191919</color>
     <color name="item_background">#232323</color>
 
-    <color name="text_main">@android:color/white</color>
+    <color name="text_primary">@android:color/white</color>
 
-    <color name="icon_main">@android:color/white</color>
+    <color name="icon_primary">@android:color/white</color>
 </resources>
