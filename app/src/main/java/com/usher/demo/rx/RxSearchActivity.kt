@@ -41,7 +41,7 @@ class RxSearchActivity : BaseActivity(Theme.LIGHT) {
                 }
     }
 
-    class SearchAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.search_item_layout, data) {
+    class SearchAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_search, data) {
         override fun convert(helper: BaseViewHolder, item: String) {
             helper.setText(R.id.name_textview, item)
         }

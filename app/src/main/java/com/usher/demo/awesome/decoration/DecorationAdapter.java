@@ -23,7 +23,7 @@ public class DecorationAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.decoration_item_layout, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_decoration, parent, false);
 
         /*RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
         params.topMargin = 5;

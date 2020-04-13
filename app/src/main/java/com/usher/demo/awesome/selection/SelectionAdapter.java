@@ -30,7 +30,7 @@ public class SelectionAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.selection_item_layout, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_selection, parent, false);
 
         return new SelectionViewHolder(view);
     }
