@@ -20,8 +20,8 @@ class PagerFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
     }
 
     override fun init() {
-        arguments?.let {
-            textview.text = "${it.getInt(Constants.TAG_DATA)}"
+        arguments?.run {
+            textview.text = "${getInt(Constants.TAG_DATA)}"
         }
 
         val color = Color.argb(255, Random().nextInt(256), Random().nextInt(256), Random().nextInt(256))

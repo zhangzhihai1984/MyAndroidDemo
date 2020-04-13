@@ -27,4 +27,6 @@
 
     <color name="icon_primary">@android:color/black</color>
 
+    <color name="image_tint">@android:color/white</color>
+
 </resources>

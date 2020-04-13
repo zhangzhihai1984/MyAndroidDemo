@@ -51,6 +51,9 @@ dependencies {
     implementation "com.uber.autodispose:autodispose-lifecycle:${versions.autodispose}"
     implementation "com.uber.autodispose:autodispose-android-archcomponents:${versions.autodispose}"
 
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    
     //RecyclerView
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45'
 

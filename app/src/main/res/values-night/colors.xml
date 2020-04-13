@@ -6,4 +6,6 @@
     <color name="text_primary">@android:color/white</color>
 
     <color name="icon_primary">@android:color/white</color>
+
+    <color name="image_tint">#888888</color>
 </resources>
