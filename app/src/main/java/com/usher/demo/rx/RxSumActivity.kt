@@ -2,9 +2,9 @@ package com.usher.demo.rx
 
 import android.os.Bundle
 import com.jakewharton.rxbinding3.view.clicks
+import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.RxUtil
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.activity_rx_sum.*
 

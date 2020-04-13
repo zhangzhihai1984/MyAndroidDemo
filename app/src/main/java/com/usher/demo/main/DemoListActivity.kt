@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
+import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.RxUtil
 import kotlinx.android.synthetic.main.activity_demo_list.*
 
 class DemoListActivity : BaseActivity(Theme.LIGHT) {

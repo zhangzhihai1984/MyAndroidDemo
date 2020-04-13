@@ -3,13 +3,12 @@ package com.usher.demo.kotlin
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.RxUtil
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.activity_kotlin.*
 import java.util.concurrent.TimeUnit
@@ -115,7 +114,7 @@ class KotlinActivity : BaseActivity() {
                 .onErrorReturn { RedApple() }
 //                .compose(getBaseComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe {  }
+                .subscribe { }
 
 
         val g = Generic2<Apple>()

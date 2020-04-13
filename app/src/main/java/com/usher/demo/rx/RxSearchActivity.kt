@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
+import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.RxUtil
 import kotlinx.android.synthetic.main.activity_rx_search.*
 import java.util.concurrent.TimeUnit
 

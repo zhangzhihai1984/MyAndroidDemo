@@ -2,10 +2,10 @@ package com.usher.demo.other
 
 import android.os.Bundle
 import android.widget.ScrollView
+import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.LogUtil
-import com.usher.demo.utils.RxUtil
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_log.*
 import java.util.concurrent.TimeUnit

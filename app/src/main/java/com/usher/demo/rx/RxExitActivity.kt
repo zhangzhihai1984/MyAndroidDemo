@@ -6,9 +6,9 @@ import android.view.KeyEvent
 import android.view.animation.Animation
 import android.view.animation.OvershootInterpolator
 import com.jakewharton.rxbinding3.view.clicks
+import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.RxUtil
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_rx_exit.*
 
