@@ -25,7 +25,7 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.demo_hardworking)
+        val resIds = listOf(R.drawable.demo_tree, R.drawable.demo_mall, R.drawable.demo_child)
 
         viewpager.adapter = ScaleTypeFragmentAdapter(supportFragmentManager, resIds)
     }
@@ -48,9 +48,13 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
 
         override fun init() {
             val scaleTypes = listOf(
-                    ImageView.ScaleType.CENTER_INSIDE,
-                    ImageView.ScaleType.CENTER_INSIDE,
-                    ImageView.ScaleType.CENTER_INSIDE,
+                    ImageView.ScaleType.MATRIX,
+                    ImageView.ScaleType.FIT_XY,
+                    ImageView.ScaleType.FIT_START,
+                    ImageView.ScaleType.FIT_CENTER,
+                    ImageView.ScaleType.FIT_END,
+                    ImageView.ScaleType.CENTER,
+                    ImageView.ScaleType.CENTER_CROP,
                     ImageView.ScaleType.CENTER_INSIDE
             )
 
@@ -61,8 +65,13 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
         }
 
         class ScaleTypeAdapter(data: List<ImageView.ScaleType>, private val resId: Int) : RxBaseQuickAdapter<ImageView.ScaleType, BaseViewHolder>(R.layout.item_image_scale_type, data) {
-            override fun convert(helper: BaseViewHolder, scaleType: ImageView.ScaleType) {
-                Picasso.get().load(resId).into(helper.getView<ImageView>(R.id.scale_type_imageview))
+            override fun convert(helper: BaseViewHolder, type: ImageView.ScaleType) {
+                helper.getView<ImageView>(R.id.scale_type_imageview).run {
+                    Picasso.get().load(resId).into(this)
+                    scaleType = type
+                }
+
+                helper.setText(R.id.textview, type.name)
             }
         }
     }
