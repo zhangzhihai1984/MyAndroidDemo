@@ -70,6 +70,7 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".image.PicassoTransformationActivity"
+            android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
 

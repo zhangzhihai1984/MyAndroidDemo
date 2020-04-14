@@ -1,10 +1,15 @@
 package com.usher.demo.image
 
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.widget.ImageView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseViewHolder
 import com.squareup.picasso.Picasso
-import com.twigcodes.ui.util.PicassoUtil.getCircleTransformation
-import com.twigcodes.ui.util.PicassoUtil.getRoundTransformation
-import com.twigcodes.ui.util.PicassoUtil.getSquareTransformation
+import com.squareup.picasso.Transformation
+import com.twigcodes.ui.adapter.RxBaseQuickAdapter
+import com.twigcodes.ui.util.PicassoUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_picasso_transformation.*
@@ -17,8 +22,26 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT) {
     }
 
     private fun initView() {
-        Picasso.get().load(R.drawable.demo_hardworking).transform(getSquareTransformation()).into(square_imageview)
-        Picasso.get().load(R.drawable.demo_hardworking).transform(getCircleTransformation()).into(circle_imageview)
-        Picasso.get().load(R.drawable.demo_hardworking).transform(getRoundTransformation()).into(round_imageview)
+        val transformations = listOf(
+                null,
+                PicassoUtil.getBlurTransformation(this),
+                PicassoUtil.getSquareTransformation(),
+                PicassoUtil.getCircleTransformation(),
+                PicassoUtil.getRoundTransformation()
+        )
+
+        recyclerview.layoutManager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
+        recyclerview.adapter = PicassoAdapter(transformations)
+    }
+
+    class PicassoAdapter(data: List<Transformation?>) : RxBaseQuickAdapter<Transformation?, BaseViewHolder>(R.layout.item_picasso_transformation, data) {
+        override fun convert(helper: BaseViewHolder, transformation: Transformation?) {
+            Picasso.get().load(R.drawable.demo_hardworking)
+                    .transform(transformation ?: object : Transformation {
+                        override fun key(): String = "NoBlurTransformation"
+
+                        override fun transform(source: Bitmap): Bitmap = source
+                    }).into(helper.getView<ImageView>(R.id.picasso_imageview))
+        }
     }
 }
