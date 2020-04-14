@@ -121,7 +121,7 @@
             android:name=".view.WaveActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".view.pager.PagerActivity"
+            android:name=".view.PagerActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />

@@ -25,7 +25,7 @@ import com.usher.demo.view.MarqueeTextActivity
 import com.usher.demo.view.WaveActivity
 import com.usher.demo.view.loading.LoadingActivity
 import com.usher.demo.view.looprecycler.LoopRecyclerActivity
-import com.usher.demo.view.pager.PagerActivity
+import com.usher.demo.view.PagerActivity
 import com.usher.demo.web.AngularActivity
 import com.usher.demo.web.three.ThreeActivity
 
