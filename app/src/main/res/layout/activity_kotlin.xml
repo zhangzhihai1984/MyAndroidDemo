@@ -8,7 +8,7 @@
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/primary_rectangle_ripple_background"
+        android:background="@drawable/common_primary_corner_ripple_background"
         android:gravity="center" />
 
 </RelativeLayout>

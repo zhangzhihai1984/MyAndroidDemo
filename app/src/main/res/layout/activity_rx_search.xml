@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_margin="20dp"
-        android:background="@drawable/primary_edit_background"
+        android:background="@drawable/edittext_primary_border_bottom_background"
         android:textColor="@color/text_primary"
-        android:textCursorDrawable="@drawable/primary_cursor_drawable"
+        android:textCursorDrawable="@drawable/edittext_cursor_primary"
         android:textSize="14sp"
         android:textStyle="bold">
 

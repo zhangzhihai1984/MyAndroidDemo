@@ -38,7 +38,7 @@ class RxSplashActivity : BaseActivity(Theme.LIGHT) {
         Observable.timer(2000, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { ad_imageview.setImageResource(R.drawable.primary_gradient_background) }
+                .subscribe { ad_imageview.setImageResource(R.drawable.common_gradient_primary_radial_background) }
 
         Observable.interval(0, 1000, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
