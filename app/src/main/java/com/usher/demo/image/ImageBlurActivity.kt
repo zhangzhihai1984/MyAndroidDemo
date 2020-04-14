@@ -13,7 +13,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.Constants
 import kotlinx.android.synthetic.main.activity_image_blur.*
-import kotlinx.android.synthetic.main.fragment_blur.*
+import kotlinx.android.synthetic.main.fragment_image_blur.*
 
 class ImageBlurActivity : BaseActivity(Theme.LIGHT) {
     companion object {
@@ -46,7 +46,7 @@ class ImageBlurActivity : BaseActivity(Theme.LIGHT) {
     class BlurFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
         companion object {
             fun newInstance(resId: Int) =
-                    BlurFragment(R.layout.fragment_blur).apply {
+                    BlurFragment(R.layout.fragment_image_blur).apply {
                         arguments = Bundle().apply {
                             putInt(Constants.TAG_DATA, resId)
                         }
