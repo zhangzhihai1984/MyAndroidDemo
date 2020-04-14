@@ -12,17 +12,17 @@ import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.Constants
-import kotlinx.android.synthetic.main.activity_blur.*
+import kotlinx.android.synthetic.main.activity_image_blur.*
 import kotlinx.android.synthetic.main.fragment_blur.*
 
-class BlurActivity : BaseActivity(Theme.LIGHT) {
+class ImageBlurActivity : BaseActivity(Theme.LIGHT) {
     companion object {
         private val RES_IDS = listOf(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4, R.drawable.banner5)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_blur)
+        setContentView(R.layout.activity_image_blur)
         initView()
     }
 

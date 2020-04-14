@@ -5,8 +5,9 @@ import com.usher.demo.awesome.decoration.DecorationActivity
 import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.selection.SelectionActivity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
-import com.usher.demo.image.BlurActivity
+import com.usher.demo.image.ImageBlurActivity
 import com.usher.demo.image.PicassoTransformationActivity
+import com.usher.demo.image.ImageScaleTypeActivity
 import com.usher.demo.kotlin.KotlinActivity
 import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
@@ -19,13 +20,9 @@ import com.usher.demo.rx.RxExitActivity
 import com.usher.demo.rx.RxSearchActivity
 import com.usher.demo.rx.RxSplashActivity
 import com.usher.demo.rx.RxSumActivity
-import com.usher.demo.view.ChartActivity
-import com.usher.demo.view.CircleWaveActivity
-import com.usher.demo.view.MarqueeTextActivity
-import com.usher.demo.view.WaveActivity
+import com.usher.demo.view.*
 import com.usher.demo.view.loading.LoadingActivity
 import com.usher.demo.view.looprecycler.LoopRecyclerActivity
-import com.usher.demo.view.PagerActivity
 import com.usher.demo.web.AngularActivity
 import com.usher.demo.web.three.ThreeActivity
 
@@ -62,7 +59,8 @@ object DemoConfig {
         )
 
         configMap[KEY_IMAGE] = listOf(
-                DemoItem("blur", BlurActivity::class.java),
+                DemoItem("blur", ImageBlurActivity::class.java),
+                DemoItem("scale type", ImageScaleTypeActivity::class.java),
                 DemoItem("picasso transform", PicassoTransformationActivity::class.java)
         )
 

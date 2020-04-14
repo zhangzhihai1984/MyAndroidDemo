@@ -64,12 +64,17 @@
 
         <!-- Image Demo -->
         <activity
-            android:name=".image.BlurActivity"
+            android:name=".image.ImageBlurActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".image.PicassoTransformationActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".image.ImageScaleTypeActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
