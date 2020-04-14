@@ -73,14 +73,14 @@ object PicassoUtil {
                 override fun key(): String = "CircleTransformation"
             }
 
-    fun getRoundTransformation(): Transformation =
+    fun getRoundTransformation(radius: Float = 50f): Transformation =
             object : Transformation {
                 override fun transform(source: Bitmap): Bitmap {
                     val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
                     val canvas = Canvas(bitmap)
                     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-                    canvas.drawRoundRect(0f, 0f, source.width.toFloat(), source.height.toFloat(), 50f, 50f, paint)
+                    canvas.drawRoundRect(0f, 0f, source.width.toFloat(), source.height.toFloat(), radius, radius, paint)
                     canvas.drawBitmap(source, 0f, 0f, paint.apply {
                         xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
                     })

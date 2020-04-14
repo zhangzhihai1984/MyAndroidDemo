@@ -27,7 +27,7 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT) {
                 PicassoUtil.getBlurTransformation(this),
                 PicassoUtil.getSquareTransformation(),
                 PicassoUtil.getCircleTransformation(),
-                PicassoUtil.getRoundTransformation()
+                PicassoUtil.getRoundTransformation(200f)
         )
 
         recyclerview.layoutManager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
