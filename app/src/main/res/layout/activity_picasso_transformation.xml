@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@mipmap/homework"
+            android:src="@drawable/demo_hardworking"
             tools:ignore="contentDescription" />
 
         <ImageView

@@ -69,7 +69,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.RoundImageActivity"
+            android:name=".image.PicassoTransformationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
 

@@ -6,7 +6,7 @@ import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.selection.SelectionActivity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
 import com.usher.demo.image.BlurActivity
-import com.usher.demo.image.RoundImageActivity
+import com.usher.demo.image.PicassoTransformationActivity
 import com.usher.demo.kotlin.KotlinActivity
 import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
@@ -63,7 +63,7 @@ object DemoConfig {
 
         configMap[KEY_IMAGE] = listOf(
                 DemoItem("blur", BlurActivity::class.java),
-                DemoItem("picasso transform", RoundImageActivity::class.java)
+                DemoItem("picasso transform", PicassoTransformationActivity::class.java)
         )
 
         configMap[KEY_WEB] = listOf(
