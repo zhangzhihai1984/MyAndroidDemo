@@ -40,6 +40,20 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
         override fun getCount(): Int = mResIds.size
     }
 
+    companion object {
+        fun getScaleTypeDesc(type: ImageView.ScaleType) =
+                when (type) {
+                    ImageView.ScaleType.CENTER -> "No scaling of the image, just centering it and keeping its aspect ratio. This means that if it is larger than the display, it will be cropped, if smaller it will padded with background color"
+                    ImageView.ScaleType.CENTER_CROP -> "Centers the image in the display and keeps its aspect ratio. Image is scaled up or down to fit its shorter side to the display. The longer side of the image is cropped."
+                    ImageView.ScaleType.CENTER_INSIDE -> "Centers the image inside the display, and keeps its aspect ratio. It fits its longer side and pads the shorter side with an equal amount of background colored pixels. If the image's long side is smaller than the display this does the same as CENTER"
+                    ImageView.ScaleType.FIT_CENTER -> "Behaves like CENTER_INSIDE, expect for the case when the image's longer side is smaller than the display, when it will scale up the image in order to fit its longer side to the display"
+                    ImageView.ScaleType.FIT_START -> "Behaves like FIT_CENTER, but does not center the image. Instead its top left corner is aligned with the display's top left corner"
+                    ImageView.ScaleType.FIT_END -> "Behaves like FIT_CENTER, but does not center the image. Instead its bottom right corner is aligned with the display's bottom right corner"
+                    ImageView.ScaleType.FIT_XY -> "The only one that unlocks aspect ratio and will fit the image to the size of the display, which may cause some distortion, so be careful with this one"
+                    ImageView.ScaleType.MATRIX -> "If none of the other 7 works for you, you can always use this one and provide your own scaling by assigning the output of a Matrix class transformation (Rotate, Scale, Skew, etc.) using a .setImageMatrix() method call."
+                }
+    }
+
     class ScaleTypeFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
         companion object {
             fun newInstance(resId: Int) =
@@ -52,14 +66,14 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
 
         override fun init() {
             val scaleTypes = listOf(
-                    ImageView.ScaleType.MATRIX,
-                    ImageView.ScaleType.FIT_XY,
-                    ImageView.ScaleType.FIT_START,
-                    ImageView.ScaleType.FIT_CENTER,
-                    ImageView.ScaleType.FIT_END,
                     ImageView.ScaleType.CENTER,
                     ImageView.ScaleType.CENTER_CROP,
-                    ImageView.ScaleType.CENTER_INSIDE
+                    ImageView.ScaleType.CENTER_INSIDE,
+                    ImageView.ScaleType.FIT_CENTER,
+                    ImageView.ScaleType.FIT_START,
+                    ImageView.ScaleType.FIT_END,
+                    ImageView.ScaleType.FIT_XY,
+                    ImageView.ScaleType.MATRIX
             )
 
             arguments?.run {
@@ -71,8 +85,8 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
                 scaleTypeAdapter.itemClicks()
                         .switchMap {
                             CommonDialog(context as Context)
-//                                    .withTitle("Title")
-                                    .withContent("This is the content for the dialog")
+                                    .withTitle(scaleTypes[it].name)
+                                    .withContent(getScaleTypeDesc(scaleTypes[it]))
                                     .withDialogType(CommonDialog.ButtonType.SINGLE)
                                     .clicks()
                         }
