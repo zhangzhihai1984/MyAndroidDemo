@@ -18,11 +18,11 @@
     <style name="FramelessDialog" parent="@style/Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <!--<item name="android:backgroundDimEnabled">true</item>-->
-        <!--<item name="android:backgroundDimAmount">0.6</item>-->
-        <!--<item name="android:alpha">0.8</item>-->
+        <!--        <item name="android:windowFrame">@null</item>-->
+        <!--        <item name="android:windowIsFloating">true</item>-->
+        <!--        <item name="android:backgroundDimEnabled">true</item>-->
+        <!--        <item name="android:backgroundDimAmount">0.6</item>-->
+        <!--        <item name="android:alpha">0.8</item>-->
     </style>
 
     <style name="FullScreenDialog">

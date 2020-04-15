@@ -1,19 +1,23 @@
 package com.usher.demo.image
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.squareup.picasso.Picasso
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.fragment.BasePagerFragment
+import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.Constants
+import com.usher.demo.widget.CommonDialog
 import kotlinx.android.synthetic.main.activity_image_scale_type.*
 import kotlinx.android.synthetic.main.fragment_image_scale_type.*
 
@@ -59,8 +63,21 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
             )
 
             arguments?.run {
+                val scaleTypeAdapter = ScaleTypeAdapter(scaleTypes, getInt(Constants.TAG_DATA))
+
                 recyclerview.layoutManager = GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
-                recyclerview.adapter = ScaleTypeAdapter(scaleTypes, getInt(Constants.TAG_DATA))
+                recyclerview.adapter = scaleTypeAdapter
+
+                scaleTypeAdapter.itemClicks()
+                        .switchMap {
+                            CommonDialog(context as Context)
+//                                    .withTitle("Title")
+                                    .withContent("This is the content for the dialog")
+                                    .withDialogType(CommonDialog.ButtonType.SINGLE)
+                                    .clicks()
+                        }
+                        .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                        .subscribe { }
             }
         }
 
