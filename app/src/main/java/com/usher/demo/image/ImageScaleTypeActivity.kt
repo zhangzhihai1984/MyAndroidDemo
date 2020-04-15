@@ -32,6 +32,7 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
         val resIds = listOf(R.drawable.demo_tree, R.drawable.demo_mall, R.drawable.demo_child)
 
         viewpager.adapter = ScaleTypeFragmentAdapter(supportFragmentManager, resIds)
+        indicatorview.setViewPager(viewpager)
     }
 
     class ScaleTypeFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>) : FragmentStatePagerAdapter(fm) {
