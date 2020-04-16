@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- WaveView -->
-    <declare-styleable name="WaveView">
-        <attr name="wave_above_color" format="color" />
-        <attr name="wave_below_color" format="color" />
-        <attr name="progress" format="integer" />
-        <attr name="wave_length_multiple" format="float" />
-        <attr name="wave_height" format="dimension" />
-        <attr name="wave_hz" format="float" />
-    </declare-styleable>
-
 </resources>

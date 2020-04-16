@@ -123,10 +123,8 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         private var mWaveMultiple = 0f
         private var mWaveLength = 0f
         private var mWaveHeight = 0
-        private var mMaxRight = 0f
         private var mWaveHz = 0f
 
-        // wave animation
         private val mLeft = 0f
         private var mRight = 0f
         private var mBottom = 0f
@@ -139,7 +137,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         private var mBackPhi = Math.PI * 0.5
 
         init {
-            setLayerType(LAYER_TYPE_SOFTWARE, null)
+//            setLayerType(LAYER_TYPE_SOFTWARE, null)
 
             globalLayouts()
                     .take(1)
@@ -148,7 +146,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                         mWaveLength = width.toFloat()
                         mRight = width.toFloat()
                         mBottom = height.toFloat()
-                        mMaxRight = mRight + X_INTERVAL
                         omega = PI2 / mWaveLength
 
                         startWave()
@@ -180,22 +177,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             mStopSubject.onNext(Unit)
         }
 
-        private fun updatePath(path: Path, phi: Double) {
-            path.reset()
-            path.moveTo(mLeft, mBottom)
-
-            var x = 0f
-            var y: Float
-
-            while (x <= mMaxRight) {
-                y = (mWaveHeight * sin(omega * x + phi) + mWaveHeight).toFloat()
-                path.lineTo(x, y)
-                x += X_INTERVAL
-            }
-
-            path.lineTo(mRight, mBottom)
-        }
-
         private fun updatePhi() {
             mFrontPhi += mWaveHz
             if (mFrontPhi >= PI2)
@@ -205,6 +186,23 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (mBackPhi >= PI2)
                 mBackPhi -= PI2
         }
+
+        private fun updatePath(path: Path, phi: Double) {
+            path.reset()
+            path.moveTo(mLeft, mBottom)
+
+            var x = 0f
+
+            while (x < mRight) {
+                path.lineTo(x, getY(x, phi))
+                x += X_INTERVAL
+            }
+
+            path.lineTo(mRight, getY(mRight, phi))
+            path.lineTo(mRight, mBottom)
+        }
+
+        private fun getY(x: Float, phi: Double) = (mWaveHeight * sin(omega * x + phi) + mWaveHeight).toFloat()
 
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
