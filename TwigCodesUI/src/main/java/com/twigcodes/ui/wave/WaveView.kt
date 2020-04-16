@@ -122,8 +122,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         private var mWaveHz = 0f
 
         // wave animation
-        private var mFrontOffset = 0.0f
-        private var mBackOffset = (Math.PI * 0.5f).toFloat()
         private var mRefreshProgressRunnable: RefreshProgressRunnable? = null
         private var mLeft = 0
         private var mRight = 0
@@ -131,6 +129,10 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         // ω
         private var omega = 0.0
+
+        //φ
+        private var mFrontPhi = 0.0
+        private var mBackPhi = Math.PI * 0.5
 
         init {
             setLayerType(LAYER_TYPE_SOFTWARE, null)
@@ -177,13 +179,14 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         private fun calculatePath() {
             mFrontWavePath.reset()
             mBackWavePath.reset()
-            waveOffset
+
+            updatePhi()
             var y: Float
             mFrontWavePath.moveTo(mLeft.toFloat(), mBottom.toFloat())
             run {
                 var x = 0f
                 while (x <= mMaxRight) {
-                    y = (mWaveHeight * Math.sin(omega * x + mFrontOffset) + mWaveHeight).toFloat()
+                    y = (mWaveHeight * Math.sin(omega * x + mFrontPhi) + mWaveHeight).toFloat()
                     mFrontWavePath.lineTo(x, y)
                     x += Companion.X_INTERVAL
                 }
@@ -192,26 +195,22 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             mBackWavePath.moveTo(mLeft.toFloat(), mBottom.toFloat())
             var x = 0f
             while (x <= mMaxRight) {
-                y = (mWaveHeight * Math.sin(omega * x + mBackOffset) + mWaveHeight).toFloat()
+                y = (mWaveHeight * Math.sin(omega * x + mBackPhi) + mWaveHeight).toFloat()
                 mBackWavePath.lineTo(x, y)
-                x += Companion.X_INTERVAL
+                x += X_INTERVAL
             }
             mBackWavePath.lineTo(mRight.toFloat(), mBottom.toFloat())
         }
 
-        private val waveOffset: Unit
-            private get() {
-                if (mBackOffset > Companion.PI2) {
-                    mBackOffset = 0f
-                } else {
-                    mBackOffset += mWaveHz
-                }
-                if (mFrontOffset > Companion.PI2) {
-                    mFrontOffset = 0f
-                } else {
-                    mFrontOffset += mWaveHz
-                }
-            }
+        private fun updatePhi() {
+            mFrontPhi += mWaveHz
+            if (mFrontPhi >= PI2)
+                mFrontPhi -= PI2.toFloat()
+
+            mBackPhi += mWaveHz
+            if (mBackPhi >= PI2)
+                mBackPhi -= PI2.toFloat()
+        }
 
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
