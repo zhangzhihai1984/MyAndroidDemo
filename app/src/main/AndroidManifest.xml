@@ -126,6 +126,7 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.WaveActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.PagerActivity"

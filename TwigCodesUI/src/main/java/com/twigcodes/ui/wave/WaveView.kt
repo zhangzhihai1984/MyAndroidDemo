@@ -10,6 +10,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import kotlin.math.sin
 
 class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
@@ -112,6 +115,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             private const val PI2 = 2 * Math.PI
         }
 
+        private val mStopSubject = PublishSubject.create<Unit>()
         private val mFrontWavePath = Path()
         private val mBackWavePath = Path()
         private var mFrontWavePaint = Paint()
@@ -123,7 +127,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         private var mWaveHz = 0f
 
         // wave animation
-        private var mRefreshProgressRunnable: RefreshProgressRunnable? = null
         private val mLeft = 0f
         private var mRight = 0f
         private var mBottom = 0f
@@ -161,16 +164,20 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
 
         fun startWave() {
-            if (null == mRefreshProgressRunnable) {
-                mRefreshProgressRunnable = RefreshProgressRunnable()
-            } else {
-                removeCallbacks(mRefreshProgressRunnable)
-            }
-            postDelayed(mRefreshProgressRunnable, 100)
+            Observable.interval(25, TimeUnit.MILLISECONDS)
+                    .takeUntil(mStopSubject)
+                    .compose(RxUtil.getSchedulerComposer())
+                    .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                    .subscribe {
+                        updatePhi()
+                        updatePath(mFrontWavePath, mFrontPhi)
+                        updatePath(mBackWavePath, mBackPhi)
+                        postInvalidate()
+                    }
         }
 
         fun stopWave() {
-            removeCallbacks(mRefreshProgressRunnable)
+            mStopSubject.onNext(Unit)
         }
 
         private fun updatePath(path: Path, phi: Double) {
@@ -203,18 +210,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             super.onDraw(canvas)
             canvas.drawPath(mBackWavePath, mBackWavePaint)
             canvas.drawPath(mFrontWavePath, mFrontWavePaint)
-        }
-
-        private inner class RefreshProgressRunnable : Runnable {
-            override fun run() {
-                synchronized(this) {
-                    updatePhi()
-                    updatePath(mFrontWavePath, mFrontPhi)
-                    updatePath(mBackWavePath, mBackPhi)
-                    invalidate()
-                    postDelayed(this, 25)
-                }
-            }
         }
     }
 
