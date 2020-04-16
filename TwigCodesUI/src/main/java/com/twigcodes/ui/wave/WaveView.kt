@@ -1,15 +1,15 @@
 package com.twigcodes.ui.wave
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.lifecycle.LifecycleOwner
+import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.R
+import com.twigcodes.ui.util.RxUtil
 
 class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -106,6 +106,11 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      * y=Asin(ωx+φ)+k
      */
     private class Wave @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : View(context, attrs, defStyle) {
+        companion object {
+            private const val X_INTERVAL = 20f
+            private const val PI2 = 2 * Math.PI
+        }
+
         private val mFrontWavePath = Path()
         private val mBackWavePath = Path()
         private var mFrontWavePaint = Paint()
@@ -127,6 +132,24 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         // ω
         private var omega = 0.0
 
+        init {
+            setLayerType(LAYER_TYPE_SOFTWARE, null)
+
+            globalLayouts()
+                    .take(1)
+                    .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                    .subscribe {
+                        mWaveLength = width.toFloat()
+                        mLeft = 0
+                        mRight = width
+                        mBottom = height
+                        mMaxRight = mRight + X_INTERVAL
+                        omega = PI2 / mWaveLength
+
+                        startWave()
+                    }
+        }
+
         fun config(waveMultiple: Float, waveHeight: Int, waveHz: Float, frontPaint: Paint, backPaint: Paint) {
             mWaveMultiple = waveMultiple
             mWaveHeight = waveHeight
@@ -136,22 +159,12 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
 
         fun startWave() {
-            if (width != 0) {
-                if (mWaveLength == 0f) {
-                    mWaveLength = width * mWaveMultiple
-                    mLeft = 0
-                    mRight = width
-                    mBottom = height
-                    mMaxRight = mRight + Companion.X_SPACE
-                    omega = Companion.PI2 / mWaveLength
-                }
-                if (null == mRefreshProgressRunnable) {
-                    mRefreshProgressRunnable = RefreshProgressRunnable()
-                } else {
-                    removeCallbacks(mRefreshProgressRunnable)
-                }
-                postDelayed(mRefreshProgressRunnable, 100)
+            if (null == mRefreshProgressRunnable) {
+                mRefreshProgressRunnable = RefreshProgressRunnable()
+            } else {
+                removeCallbacks(mRefreshProgressRunnable)
             }
+            postDelayed(mRefreshProgressRunnable, 100)
         }
 
         fun stopWave() {
@@ -172,7 +185,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 while (x <= mMaxRight) {
                     y = (mWaveHeight * Math.sin(omega * x + mFrontOffset) + mWaveHeight).toFloat()
                     mFrontWavePath.lineTo(x, y)
-                    x += Companion.X_SPACE
+                    x += Companion.X_INTERVAL
                 }
             }
             mFrontWavePath.lineTo(mRight.toFloat(), mBottom.toFloat())
@@ -181,7 +194,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             while (x <= mMaxRight) {
                 y = (mWaveHeight * Math.sin(omega * x + mBackOffset) + mWaveHeight).toFloat()
                 mBackWavePath.lineTo(x, y)
-                x += Companion.X_SPACE
+                x += Companion.X_INTERVAL
             }
             mBackWavePath.lineTo(mRight.toFloat(), mBottom.toFloat())
         }
@@ -200,15 +213,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }
             }
 
-        override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
-            super.onWindowFocusChanged(hasWindowFocus)
-            if (hasWindowFocus) {
-                if (mWaveLength == 0f) {
-                    startWave()
-                }
-            }
-        }
-
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
             canvas.drawPath(mBackWavePath, mBackWavePaint)
@@ -224,20 +228,19 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }
             }
         }
-
-        companion object {
-            private const val X_SPACE = 20f
-            private const val PI2 = 2 * Math.PI
-        }
-
-        init {
-            setLayerType(LAYER_TYPE_SOFTWARE, null)
-        }
     }
 
-    private class Solid @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
+    private class Solid(context: Context) : View(context, null, 0) {
+        private var mRect: Rect? = null
         private var mFrontWavePaint = Paint()
         private var mBackWavePaint = Paint()
+
+        init {
+            globalLayouts()
+                    .take(1)
+                    .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                    .subscribe { mRect = Rect(0, 0, width, height) }
+        }
 
         fun config(frontPaint: Paint, backPaint: Paint) {
             mFrontWavePaint = frontPaint
@@ -246,8 +249,11 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), mBackWavePaint)
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), mFrontWavePaint)
+
+            mRect?.run {
+                canvas.drawRect(this, mBackWavePaint)
+                canvas.drawRect(this, mFrontWavePaint)
+            }
         }
     }
 }
