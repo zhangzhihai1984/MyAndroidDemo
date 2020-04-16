@@ -119,6 +119,7 @@
         <!-- View Demo -->
         <activity
             android:name=".view.MarqueeTextActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.loading.LoadingActivity"
