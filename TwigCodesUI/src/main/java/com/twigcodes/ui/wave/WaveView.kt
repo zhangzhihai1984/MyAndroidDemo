@@ -19,8 +19,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     companion object {
         private const val DEFAULT_FRONT_WAVE_COLOR = Color.WHITE
         private const val DEFAULT_BACK_WAVE_COLOR = Color.WHITE
-        private const val DEFAULT_FRONT_WAVE_ALPHA = 255
-        private const val DEFAULT_BACK_WAVE_ALPHA = 255
         private const val DEFAULT_WAVE_HEIGHT = 20
         private const val DEFAULT_PROGRESS = 100
         private const val DEFAULT_WAVE_LENGTH_MULTIPLE = 1.0f
@@ -34,7 +32,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private val mWaveLengthMultiple: Float
     private val mWaveHz: Float
     private lateinit var mWave: Wave
-    private lateinit var mSolid: Solid
 
     init {
         orientation = VERTICAL
@@ -53,29 +50,24 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initView() {
-        val frontWavePaint = Paint().apply {
+        val frontWavePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = mFrontWaveColor
-            alpha = DEFAULT_FRONT_WAVE_ALPHA
             style = Paint.Style.FILL
-            isAntiAlias = true
         }
 
-        val backWavePaint = Paint().apply {
+        val backWavePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = mBackWaveColor
-            alpha = DEFAULT_BACK_WAVE_ALPHA
             style = Paint.Style.FILL
-            isAntiAlias = true
         }
 
         mWave = Wave(context).apply { config(mWaveLengthMultiple, mWaveHeight, mWaveHz, frontWavePaint, backWavePaint) }
-        mSolid = Solid(context).apply { config(frontWavePaint, backWavePaint) }
 
+        val foundation = Foundation(context).apply { config(frontWavePaint, backWavePaint) }
         val waveParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mWaveHeight * 2)
-        val soldParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
-        soldParams.weight = 1f
+        val foundationParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply { weight = 1f }
 
         addView(mWave, waveParams)
-        addView(mSolid, soldParams)
+        addView(foundation, foundationParams)
     }
 
     fun setProgress(progress: Int) {
@@ -211,7 +203,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private class Solid(context: Context) : View(context, null, 0) {
+    private class Foundation(context: Context) : View(context, null, 0) {
         private var mRect: Rect? = null
         private var mFrontWavePaint = Paint()
         private var mBackWavePaint = Paint()
