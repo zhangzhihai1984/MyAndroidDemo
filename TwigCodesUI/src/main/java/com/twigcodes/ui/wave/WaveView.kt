@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import kotlin.math.sin
 
 class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -105,7 +106,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     /**
      * y=Asin(ωx+φ)+k
      */
-    private class Wave @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : View(context, attrs, defStyle) {
+    private class Wave(context: Context) : View(context, null, 0) {
         companion object {
             private const val X_INTERVAL = 20f
             private const val PI2 = 2 * Math.PI
@@ -123,9 +124,9 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         // wave animation
         private var mRefreshProgressRunnable: RefreshProgressRunnable? = null
-        private var mLeft = 0
-        private var mRight = 0
-        private var mBottom = 0
+        private val mLeft = 0f
+        private var mRight = 0f
+        private var mBottom = 0f
 
         // ω
         private var omega = 0.0
@@ -142,9 +143,8 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                     .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                     .subscribe {
                         mWaveLength = width.toFloat()
-                        mLeft = 0
-                        mRight = width
-                        mBottom = height
+                        mRight = width.toFloat()
+                        mBottom = height.toFloat()
                         mMaxRight = mRight + X_INTERVAL
                         omega = PI2 / mWaveLength
 
@@ -173,43 +173,30 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             removeCallbacks(mRefreshProgressRunnable)
         }
 
-        /**
-         * calculate wave track
-         */
-        private fun calculatePath() {
-            mFrontWavePath.reset()
-            mBackWavePath.reset()
+        private fun updatePath(path: Path, phi: Double) {
+            path.reset()
+            path.moveTo(mLeft, mBottom)
 
-            updatePhi()
-            var y: Float
-            mFrontWavePath.moveTo(mLeft.toFloat(), mBottom.toFloat())
-            run {
-                var x = 0f
-                while (x <= mMaxRight) {
-                    y = (mWaveHeight * Math.sin(omega * x + mFrontPhi) + mWaveHeight).toFloat()
-                    mFrontWavePath.lineTo(x, y)
-                    x += Companion.X_INTERVAL
-                }
-            }
-            mFrontWavePath.lineTo(mRight.toFloat(), mBottom.toFloat())
-            mBackWavePath.moveTo(mLeft.toFloat(), mBottom.toFloat())
             var x = 0f
+            var y: Float
+
             while (x <= mMaxRight) {
-                y = (mWaveHeight * Math.sin(omega * x + mBackPhi) + mWaveHeight).toFloat()
-                mBackWavePath.lineTo(x, y)
+                y = (mWaveHeight * sin(omega * x + phi) + mWaveHeight).toFloat()
+                path.lineTo(x, y)
                 x += X_INTERVAL
             }
-            mBackWavePath.lineTo(mRight.toFloat(), mBottom.toFloat())
+
+            path.lineTo(mRight, mBottom)
         }
 
         private fun updatePhi() {
             mFrontPhi += mWaveHz
             if (mFrontPhi >= PI2)
-                mFrontPhi -= PI2.toFloat()
+                mFrontPhi -= PI2
 
             mBackPhi += mWaveHz
             if (mBackPhi >= PI2)
-                mBackPhi -= PI2.toFloat()
+                mBackPhi -= PI2
         }
 
         override fun onDraw(canvas: Canvas) {
@@ -221,7 +208,9 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         private inner class RefreshProgressRunnable : Runnable {
             override fun run() {
                 synchronized(this) {
-                    calculatePath()
+                    updatePhi()
+                    updatePath(mFrontWavePath, mFrontPhi)
+                    updatePath(mBackWavePath, mBackPhi)
                     invalidate()
                     postDelayed(this, 25)
                 }
