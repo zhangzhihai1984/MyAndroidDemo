@@ -13,6 +13,7 @@ import com.twigcodes.ui.util.RxUtil
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 import kotlin.math.sin
 
 class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
@@ -46,7 +47,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         a.recycle()
 
         initView()
-        setProgress(mProgress)
     }
 
     private fun initView() {
@@ -68,11 +68,21 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         addView(mWave, waveParams)
         addView(foundation, foundationParams)
+
+        globalLayouts()
+                .take(1)
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    setProgress(mProgress)
+                }
     }
 
     fun setProgress(progress: Int) {
-        mProgress = if (progress > 100) 100 else progress
-        computeWaveToTop()
+        mProgress = min(progress, 100)
+
+        mWave.layoutParams = (mWave.layoutParams as MarginLayoutParams).apply {
+            topMargin = (getHeight() * (1 - mProgress / 100f)).toInt()
+        }
     }
 
     fun startWave() {
@@ -81,21 +91,6 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     fun stopWave() {
         mWave.stopWave()
-    }
-
-    override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
-        super.onWindowFocusChanged(hasWindowFocus)
-        if (hasWindowFocus) {
-            computeWaveToTop()
-        }
-    }
-
-    private fun computeWaveToTop() {
-        val params = mWave.layoutParams
-        if (params != null) {
-            (params as LayoutParams).topMargin = (height * (1f - mProgress / 100f)).toInt()
-        }
-        mWave.layoutParams = params
     }
 
     /**
@@ -135,7 +130,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                     .take(1)
                     .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                     .subscribe {
-                        mWaveLength = width.toFloat()
+                        mWaveLength = width.toFloat() * mWaveMultiple
                         mRight = width.toFloat()
                         mBottom = height.toFloat()
                         omega = PI2 / mWaveLength
@@ -169,6 +164,9 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             mStopSubject.onNext(Unit)
         }
 
+        /**
+         * φ取值范围为[0, 2π)
+         */
         private fun updatePhi() {
             mFrontPhi += mWaveHz
             if (mFrontPhi >= PI2)
@@ -179,6 +177,12 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 mBackPhi -= PI2
         }
 
+        /**
+         * 1. reset
+         * 2. 以左下角为起点
+         * 3. x的取值范围为[0, width), 以[X_INTERVAL]作为取点的间隔, 逐个进行打点
+         * 4. x+[X_INTERVAL]的值可能为>=width, 因此最后再打一个x为width的点
+         */
         private fun updatePath(path: Path, phi: Double) {
             path.reset()
             path.moveTo(mLeft, mBottom)
@@ -186,15 +190,15 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             var x = 0f
 
             while (x < mRight) {
-                path.lineTo(x, getY(x, phi))
+                path.lineTo(x, getPathY(x, phi))
                 x += X_INTERVAL
             }
 
-            path.lineTo(mRight, getY(mRight, phi))
+            path.lineTo(mRight, getPathY(mRight, phi))
             path.lineTo(mRight, mBottom)
         }
 
-        private fun getY(x: Float, phi: Double) = (mWaveHeight * sin(omega * x + phi) + mWaveHeight).toFloat()
+        private fun getPathY(x: Float, phi: Double) = (mWaveHeight * sin(omega * x + phi) + mWaveHeight).toFloat()
 
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
