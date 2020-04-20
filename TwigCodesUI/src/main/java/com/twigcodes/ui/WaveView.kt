@@ -1,4 +1,4 @@
-package com.twigcodes.ui.wave
+package com.twigcodes.ui
 
 import android.content.Context
 import android.graphics.*
@@ -10,7 +10,6 @@ import androidx.core.view.setPadding
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
-import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject

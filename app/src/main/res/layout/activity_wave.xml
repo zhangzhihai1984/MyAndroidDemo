@@ -14,7 +14,7 @@
         android:elevation="10dp"
         app:cardCornerRadius="10dp">
 
-        <com.twigcodes.ui.wave.WaveView
+        <com.twigcodes.ui.WaveView
             android:id="@+id/wave_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
