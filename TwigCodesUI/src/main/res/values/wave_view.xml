@@ -6,6 +6,6 @@
         <attr name="progress" format="integer" />
         <attr name="wave_length_multiple" format="float" />
         <attr name="wave_height" format="dimension" />
-        <attr name="wave_hz" format="float" />
+        <attr name="wave_duration" format="integer" />
     </declare-styleable>
 </resources>
