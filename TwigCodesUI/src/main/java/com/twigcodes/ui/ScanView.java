@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
-public class CircleWaveView extends View {
+public class ScanView extends View {
     private static final long WAVE_DURATION = 2000;
     private static final int WAVE_COUNT = 5;
 
@@ -37,19 +37,19 @@ public class CircleWaveView extends View {
     private int mCenterX;
     private int mCenterY;
 
-    public CircleWaveView(Context context) {
+    public ScanView(Context context) {
         this(context, null);
     }
 
-    public CircleWaveView(Context context, @Nullable AttributeSet attrs) {
+    public ScanView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CircleWaveView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ScanView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public CircleWaveView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ScanView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
         mContext = context;

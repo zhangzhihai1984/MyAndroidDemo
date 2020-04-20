@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/smart_gradient_background">
 
-    <com.twigcodes.ui.CircleWaveView
-        android:id="@+id/circlewaveview"
+    <com.twigcodes.ui.ScanView
+        android:id="@+id/scanview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

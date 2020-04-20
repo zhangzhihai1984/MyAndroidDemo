@@ -140,7 +140,8 @@
             android:name=".view.looprecycler.LoopRecyclerActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".view.CircleWaveActivity"
+            android:name=".view.ScanActivity"
+            android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
 
         <!-- Web Demo -->
