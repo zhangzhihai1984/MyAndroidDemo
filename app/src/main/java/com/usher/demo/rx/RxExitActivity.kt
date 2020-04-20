@@ -3,7 +3,6 @@ package com.usher.demo.rx
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.animation.Animation
 import android.view.animation.OvershootInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.twigcodes.ui.util.RxUtil
@@ -29,7 +28,7 @@ class RxExitActivity : BaseActivity(Theme.LIGHT) {
         ValueAnimator.ofFloat(1f, 1.1f, 1f).apply {
             duration = 1000
             interpolator = OvershootInterpolator()
-            repeatCount = Animation.INFINITE
+            repeatCount = ValueAnimator.INFINITE
             addUpdateListener {
                 exit_imageview.scaleX = it.animatedValue as Float
                 exit_imageview.scaleY = it.animatedValue as Float

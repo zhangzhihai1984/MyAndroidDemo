@@ -3,7 +3,6 @@ package com.usher.demo.rx
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.animation.Animation
 import android.view.animation.OvershootInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.twigcodes.ui.util.RxUtil
@@ -28,7 +27,7 @@ class RxSplashActivity : BaseActivity(Theme.LIGHT) {
         ValueAnimator.ofFloat(1f, 1.1f, 1f).apply {
             duration = 1000
             interpolator = OvershootInterpolator()
-            repeatCount = Animation.INFINITE
+            repeatCount = ValueAnimator.INFINITE
             addUpdateListener {
                 countdown_textview.scaleX = it.animatedValue as Float
                 countdown_textview.scaleY = it.animatedValue as Float
