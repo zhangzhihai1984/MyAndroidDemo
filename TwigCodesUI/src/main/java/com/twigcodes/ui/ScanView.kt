@@ -15,9 +15,14 @@ import kotlin.math.max
 
 class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
+        private const val DEFAULT_CENTER_COLOR = Color.BLACK
+        private const val DEFAULT_EDGE_COLOR = Color.BLACK
         private const val ANIMATION_DURATION = 2000L
         private const val CIRCLE_COUNT = 5
     }
+
+    private val mCenterColor: Int
+    private val mEdgeColor: Int
 
     private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mRatios = FloatArray(CIRCLE_COUNT)
@@ -27,6 +32,15 @@ class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var mCenterY = 0f
 
     init {
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ScanView, defStyleAttr, defStyleRes)
+        mCenterColor = a.getColor(R.styleable.ScanView_centerColor, DEFAULT_CENTER_COLOR)
+        mEdgeColor = a.getColor(R.styleable.ScanView_edgeColor, DEFAULT_EDGE_COLOR)
+        a.recycle()
+
+        initView()
+    }
+
+    private fun initView() {
         mAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             interpolator = LinearInterpolator()
             duration = ANIMATION_DURATION
@@ -72,7 +86,7 @@ class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                     mRadius = max(width, height) / 2f
                     mCenterX = width / 2f
                     mCenterY = height / 2f
-                    mPaint.shader = RadialGradient(mCenterX, mCenterY, mRadius, Color.parseColor("#1F2D49"), Color.parseColor("#4C77DA"), Shader.TileMode.CLAMP)
+                    mPaint.shader = RadialGradient(mCenterX, mCenterY, mRadius, mCenterColor, mEdgeColor, Shader.TileMode.CLAMP)
 
                     startScan()
                 }
