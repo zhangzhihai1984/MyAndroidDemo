@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.LifecycleOwner
+import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
@@ -64,7 +65,17 @@ class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             }
         }
 
-        startScan()
+        globalLayouts()
+                .take(1)
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    mRadius = max(width, height) / 2f
+                    mCenterX = width / 2f
+                    mCenterY = height / 2f
+                    mPaint.shader = RadialGradient(mCenterX, mCenterY, mRadius, Color.parseColor("#1F2D49"), Color.parseColor("#4C77DA"), Shader.TileMode.CLAMP)
+
+                    startScan()
+                }
     }
 
     private fun startScan() {
@@ -106,13 +117,6 @@ class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        if (mRadius <= 0) {
-            mRadius = max(width, height) / 2f
-            mCenterX = width / 2f
-            mCenterY = height / 2f
-            mPaint.shader = RadialGradient(mCenterX, mCenterY, mRadius, Color.parseColor("#1F2D49"), Color.parseColor("#4C77DA"), Shader.TileMode.CLAMP)
-        }
 
         mRatios.forEach { ratio ->
             mPaint.alpha = (255 * (1 - ratio)).toInt()
