@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PresentationAdapter extends RecyclerView.Adapter {
-    private final List<SelectionInfo> mList;
+    private final List<SelectionActivity.Seat> mList;
     private final Context mContext;
 
-    PresentationAdapter(Context context, List<SelectionInfo> list) {
+    PresentationAdapter(Context context, List<SelectionActivity.Seat> list) {
         mContext = context;
         mList = list;
     }
@@ -42,7 +42,7 @@ public class PresentationAdapter extends RecyclerView.Adapter {
             case DISABLED:
                 holder.itemView.setBackgroundResource(R.drawable.selection_disabled_background);
                 break;
-            case DEFAULT:
+            case IDLE:
                 holder.itemView.setBackgroundResource(R.drawable.selection_default_background);
                 break;
         }
