@@ -5,7 +5,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_scan.*
 
-class ScanActivity : BaseActivity(Theme.LIGHT_ONLY) {
+class ScanActivity : BaseActivity(Theme.DARK_ONLY) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
