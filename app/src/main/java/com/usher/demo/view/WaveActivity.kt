@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_wave.*
 import java.util.concurrent.TimeUnit
 
-class WaveActivity : BaseActivity(Theme.LIGHT) {
+class WaveActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wave)

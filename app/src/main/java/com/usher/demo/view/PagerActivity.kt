@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_pager.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 import kotlin.math.max
 
-class PagerActivity : BaseActivity(Theme.LIGHT) {
+class PagerActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pager)

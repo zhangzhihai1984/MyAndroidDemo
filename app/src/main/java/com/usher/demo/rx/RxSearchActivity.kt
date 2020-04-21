@@ -12,7 +12,7 @@ import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_rx_search.*
 import java.util.concurrent.TimeUnit
 
-class RxSearchActivity : BaseActivity(Theme.LIGHT) {
+class RxSearchActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rx_search)

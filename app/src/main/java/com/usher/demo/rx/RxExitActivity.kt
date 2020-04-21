@@ -11,7 +11,7 @@ import com.usher.demo.base.BaseActivity
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_rx_exit.*
 
-class RxExitActivity : BaseActivity(Theme.LIGHT) {
+class RxExitActivity : BaseActivity(Theme.LIGHT_AUTO) {
     companion object {
         private const val EXIT_DURATION = 500
     }

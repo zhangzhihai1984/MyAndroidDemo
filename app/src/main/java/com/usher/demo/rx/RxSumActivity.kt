@@ -8,7 +8,7 @@ import com.usher.demo.base.BaseActivity
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.activity_rx_sum.*
 
-class RxSumActivity : BaseActivity(Theme.LIGHT) {
+class RxSumActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rx_sum)

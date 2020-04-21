@@ -21,7 +21,7 @@ import com.usher.demo.widget.CommonDialog
 import kotlinx.android.synthetic.main.activity_image_scale_type.*
 import kotlinx.android.synthetic.main.fragment_image_scale_type.*
 
-class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT) {
+class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_scale_type)

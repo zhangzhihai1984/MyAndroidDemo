@@ -15,7 +15,7 @@ import com.usher.demo.utils.Constants
 import kotlinx.android.synthetic.main.activity_image_blur.*
 import kotlinx.android.synthetic.main.fragment_image_blur.*
 
-class ImageBlurActivity : BaseActivity(Theme.LIGHT) {
+class ImageBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
     companion object {
         private val RES_IDS = listOf(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4, R.drawable.banner5)
     }

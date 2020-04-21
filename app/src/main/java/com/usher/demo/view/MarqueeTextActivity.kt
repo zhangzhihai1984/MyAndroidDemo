@@ -5,7 +5,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_marquee_text.*
 
-class MarqueeTextActivity : BaseActivity(Theme.LIGHT) {
+class MarqueeTextActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_marquee_text)
