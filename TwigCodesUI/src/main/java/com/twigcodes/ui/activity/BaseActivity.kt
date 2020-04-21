@@ -14,6 +14,21 @@ open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK
     private val mActivityResultSubject = PublishSubject.create<ActivityResult>()
     private var mIsLocalNightMode = false
 
+    private var lightStatusBarTheme = true
+        set(isLight) {
+            field = isLight
+            val decorView = window.decorView
+            val visibility = decorView.systemUiVisibility
+
+            decorView.systemUiVisibility = when (isLight) {
+                true -> visibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                false -> visibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            }
+        }
+
+    private val isSystemNightMode: Boolean
+        get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
     enum class Theme(val isLight: Boolean, val isAuto: Boolean) {
         LIGHT_AUTO(true, true),
         DARK_AUTO(false, true),
@@ -73,19 +88,4 @@ open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK
     }
 
     open fun onUIModeChanged(isNightMode: Boolean) {}
-
-    private var lightStatusBarTheme = true
-        set(theme) {
-            field = theme
-            val decorView = window.decorView
-            val visibility = decorView.systemUiVisibility
-
-            decorView.systemUiVisibility = when (theme) {
-                true -> visibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                false -> visibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-            }
-        }
-
-    private val isSystemNightMode: Boolean
-        get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 }
