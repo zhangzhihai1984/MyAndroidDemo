@@ -15,15 +15,15 @@ class SelectionActivity : AppCompatActivity() {
         private const val SELECTION_SIZE = 8
     }
 
-    private val mBehindList = arrayListOf(
+    private val mFrontList = arrayListOf(
             SeatStatus.SELECTED, SeatStatus.SELECTED,
             SeatStatus.DISABLED,
             SeatStatus.IDLE, SeatStatus.IDLE, SeatStatus.IDLE,
             SeatStatus.DISABLED, SeatStatus.DISABLED
     )
-    private val mFrontList = arrayListOf<Seat>()
-    private lateinit var mAdapter: BehindAdapter
-    private lateinit var mAdapter2: PresentationAdapter
+    private val mBehindList = arrayListOf<Seat>()
+    private lateinit var mFrontAdapter: FrontAdapter
+    private lateinit var mAdapter2: BehindAdapter
 
     enum class SeatStatus {
         IDLE,
@@ -41,12 +41,12 @@ class SelectionActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        mAdapter = BehindAdapter(mBehindList)
-        mAdapter.itemClicks()
+        mFrontAdapter = FrontAdapter(mFrontList)
+        mFrontAdapter.itemClicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { position ->
-                    mBehindList[position] = when (mBehindList[position]) {
+                    mFrontList[position] = when (mFrontList[position]) {
                         SeatStatus.IDLE -> SeatStatus.SELECTED
                         SeatStatus.SELECTED -> SeatStatus.IDLE
                         else -> SeatStatus.DISABLED
@@ -55,14 +55,14 @@ class SelectionActivity : AppCompatActivity() {
                     updatePresentationList()
                 }
 
-        mAdapter2 = PresentationAdapter(this, mFrontList)
+        mAdapter2 = BehindAdapter(mBehindList)
     }
 
     private fun initView() {
         val mRecyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val mGridLayoutManager = GridLayoutManager(this, SELECTION_SIZE, RecyclerView.VERTICAL, false)
         mRecyclerView.layoutManager = mGridLayoutManager
-        mRecyclerView.adapter = mAdapter
+        mRecyclerView.adapter = mFrontAdapter
         mRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val params = mRecyclerView.layoutParams
@@ -73,11 +73,12 @@ class SelectionActivity : AppCompatActivity() {
         })
         val mRecyclerView2 = findViewById<RecyclerView>(R.id.recyclerview2)
         val mGridLayoutManager2 = GridLayoutManager(this, SELECTION_SIZE, RecyclerView.VERTICAL, false)
-        mGridLayoutManager2.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return mFrontList[position].spanSize
-            }
-        }
+//        mGridLayoutManager2.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//            override fun getSpanSize(position: Int): Int {
+//                return mBehindList[position].spanSize
+//            }
+//        }
+        mAdapter2.setSpanSizeLookup { _, i -> mBehindList[i].spanSize }
         mRecyclerView2.layoutManager = mGridLayoutManager2
         mRecyclerView2.adapter = mAdapter2
         mRecyclerView2.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
@@ -91,32 +92,44 @@ class SelectionActivity : AppCompatActivity() {
         updatePresentationList()
     }
 
-    private class BehindAdapter(data: List<SeatStatus>) : RxBaseQuickAdapter<SeatStatus, BaseViewHolder>(R.layout.item_selection, data) {
+    private class FrontAdapter(data: List<SeatStatus>) : RxBaseQuickAdapter<SeatStatus, BaseViewHolder>(R.layout.item_selection, data) {
         override fun convert(helper: BaseViewHolder, item: SeatStatus) {
         }
 
     }
 
+    private class BehindAdapter(data: List<Seat>) : RxBaseQuickAdapter<Seat, BaseViewHolder>(R.layout.item_selection, data) {
+        override fun convert(helper: BaseViewHolder, seat: Seat) {
+            val res = when (seat.status) {
+                SeatStatus.IDLE -> R.drawable.selection_default_background
+                SeatStatus.SELECTED -> R.drawable.selection_selected_background
+                else -> R.drawable.selection_disabled_background
+            }
+            helper.itemView.setBackgroundResource(res)
+        }
+
+    }
+
     private fun updatePresentationList() {
-        mFrontList.clear()
+        mBehindList.clear()
         var spanSize: Int
         var j: Int
         var i = 0
-        while (i < mBehindList.size) {
+        while (i < mFrontList.size) {
             spanSize = 1
-            val status = mBehindList[i]
+            val status = mFrontList[i]
             j = i + 1
-            while (j < mBehindList.size) {
-                spanSize += if (mBehindList[j] == status) {
+            while (j < mFrontList.size) {
+                spanSize += if (mFrontList[j] == status) {
                     1
                 } else {
-                    mFrontList.add(Seat(status, spanSize))
+                    mBehindList.add(Seat(status, spanSize))
                     break
                 }
                 j++
             }
-            if (j == mBehindList.size) {
-                mFrontList.add(Seat(status, spanSize))
+            if (j == mFrontList.size) {
+                mBehindList.add(Seat(status, spanSize))
             }
             i += spanSize
         }
