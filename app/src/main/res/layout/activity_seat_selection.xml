@@ -5,13 +5,13 @@
     android:background="#172b3f">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/behind_recyclerview"
+        android:id="@+id/span_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/front_recyclerview"
+        android:id="@+id/seat_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true" />
