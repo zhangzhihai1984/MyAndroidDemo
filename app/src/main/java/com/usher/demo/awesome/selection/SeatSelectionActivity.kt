@@ -10,11 +10,11 @@ import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
-import kotlinx.android.synthetic.main.activity_selection.*
+import kotlinx.android.synthetic.main.activity_seat_selection.*
 
-class SelectionActivity : AppCompatActivity() {
+class SeatSelectionActivity : AppCompatActivity() {
     companion object {
-        private const val SELECTION_SIZE = 8
+        private const val SEAT_COUNT = 8
     }
 
     private val mFrontList = arrayListOf(
@@ -37,7 +37,7 @@ class SelectionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_selection)
+        setContentView(R.layout.activity_seat_selection)
         initView()
     }
 
@@ -57,38 +57,38 @@ class SelectionActivity : AppCompatActivity() {
                 }
 
 
-        front_recyclerview.layoutManager = GridLayoutManager(this, SELECTION_SIZE, RecyclerView.VERTICAL, false)
+        front_recyclerview.layoutManager = GridLayoutManager(this, SEAT_COUNT, RecyclerView.VERTICAL, false)
         front_recyclerview.adapter = mFrontAdapter
         front_recyclerview.globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    front_recyclerview.updateLayoutParams { height = front_recyclerview.width / SELECTION_SIZE - resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 }
+                    front_recyclerview.updateLayoutParams { height = front_recyclerview.width / SEAT_COUNT - resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 }
                 }
 
         mBehindAdapter = BehindAdapter(mBehindList)
         mBehindAdapter.setSpanSizeLookup { _, i -> mBehindList[i].spanSize }
 
 
-        behind_recyclerview.layoutManager = GridLayoutManager(this, SELECTION_SIZE, RecyclerView.VERTICAL, false)
+        behind_recyclerview.layoutManager = GridLayoutManager(this, SEAT_COUNT, RecyclerView.VERTICAL, false)
         behind_recyclerview.adapter = mBehindAdapter
         behind_recyclerview.globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    behind_recyclerview.updateLayoutParams { height = behind_recyclerview.width / SELECTION_SIZE - resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 }
+                    behind_recyclerview.updateLayoutParams { height = behind_recyclerview.width / SEAT_COUNT - resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 }
                 }
 
         updatePresentationList()
     }
 
-    private class FrontAdapter(data: List<SeatStatus>) : RxBaseQuickAdapter<SeatStatus, BaseViewHolder>(R.layout.item_selection, data) {
+    private class FrontAdapter(data: List<SeatStatus>) : RxBaseQuickAdapter<SeatStatus, BaseViewHolder>(R.layout.item_seat_selection_behind, data) {
         override fun convert(helper: BaseViewHolder, item: SeatStatus) {
         }
 
     }
 
-    private class BehindAdapter(data: List<Seat>) : RxBaseQuickAdapter<Seat, BaseViewHolder>(R.layout.item_selection, data) {
+    private class BehindAdapter(data: List<Seat>) : RxBaseQuickAdapter<Seat, BaseViewHolder>(R.layout.item_seat_selection_behind, data) {
         override fun convert(helper: BaseViewHolder, seat: Seat) {
             val res = when (seat.status) {
                 SeatStatus.IDLE -> R.drawable.selection_default_background

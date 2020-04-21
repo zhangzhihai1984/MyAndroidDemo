@@ -53,7 +53,7 @@
             android:name=".awesome.decoration.DecorationActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".awesome.selection.SelectionActivity"
+            android:name=".awesome.selection.SeatSelectionActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".awesome.smarthome.SmartHomeActivity"

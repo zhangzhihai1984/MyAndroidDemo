@@ -3,7 +3,7 @@ package com.usher.demo.main
 import com.usher.demo.awesome.channel.ChannelActivity
 import com.usher.demo.awesome.decoration.DecorationActivity
 import com.usher.demo.awesome.drag.DragActiity
-import com.usher.demo.awesome.selection.SelectionActivity
+import com.usher.demo.awesome.selection.SeatSelectionActivity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
 import com.usher.demo.image.ImageBlurActivity
 import com.usher.demo.image.PicassoTransformationActivity
@@ -93,7 +93,7 @@ object DemoConfig {
         )
 
         configMap[KEY_AWESOME] = listOf(
-                DemoItem("selection", SelectionActivity::class.java),
+                DemoItem("selection", SeatSelectionActivity::class.java),
                 DemoItem("edit channel", ChannelActivity::class.java),
                 DemoItem("recyclerView decoration", DecorationActivity::class.java),
                 DemoItem("smart home", SmartHomeActivity::class.java),
