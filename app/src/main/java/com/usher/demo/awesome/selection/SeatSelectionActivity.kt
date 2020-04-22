@@ -35,11 +35,17 @@ class SeatSelectionActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        val seatStatusLists = listOf(arrayListOf(
-                Status.SELECTED, Status.SELECTED,
-                Status.DISABLED,
-                Status.IDLE, Status.IDLE, Status.IDLE,
-                Status.DISABLED, Status.DISABLED))
+        val seatStatusLists = listOf(
+                arrayListOf(
+                        Status.SELECTED, Status.SELECTED,
+                        Status.DISABLED,
+                        Status.IDLE, Status.IDLE, Status.IDLE,
+                        Status.DISABLED, Status.DISABLED),
+                arrayListOf(
+                        Status.DISABLED, Status.SELECTED,
+                        Status.DISABLED,
+                        Status.SELECTED, Status.DISABLED, Status.IDLE)
+        )
 
         val rowAdapter = RowAdapter(seatStatusLists)
 
@@ -59,10 +65,7 @@ class SeatSelectionActivity : AppCompatActivity() {
         recyclerview.adapter = rowAdapter
     }
 
-    private class RowAdapter(data: List<List<Status>>) : RxBaseQuickAdapter<List<Status>, RowAdapter.RowViewHolder>(R.layout.item_seat_selection_row, data) {
-        companion object {
-            private const val SEAT_COUNT_PER_ROW = 8
-        }
+    private class RowAdapter(data: List<List<Status>>, private val COLUMN_COUNT: Int = 8) : RxBaseQuickAdapter<List<Status>, RowAdapter.RowViewHolder>(R.layout.item_seat_selection_row, data) {
 
         private val mClickSubject = PublishSubject.create<SeatClick>()
 
@@ -109,21 +112,21 @@ class SeatSelectionActivity : AppCompatActivity() {
 
             init {
                 view.findViewById<RecyclerView>(R.id.seat_recyclerview).run {
-                    layoutManager = GridLayoutManager(mContext, SEAT_COUNT_PER_ROW, RecyclerView.VERTICAL, false)
+                    layoutManager = GridLayoutManager(mContext, COLUMN_COUNT, RecyclerView.VERTICAL, false)
                     adapter = seatAdapter
                     globalLayouts()
                             .take(1)
                             .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
-                            .subscribe { updateLayoutParams { height = getWidth() / SEAT_COUNT_PER_ROW - mContext.resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 } }
+                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT - mContext.resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 } }
                 }
 
                 view.findViewById<RecyclerView>(R.id.span_recyclerview).run {
-                    layoutManager = GridLayoutManager(mContext, SEAT_COUNT_PER_ROW, RecyclerView.VERTICAL, false)
+                    layoutManager = GridLayoutManager(mContext, COLUMN_COUNT, RecyclerView.VERTICAL, false)
                     adapter = spanAdapter
                     globalLayouts()
                             .take(1)
                             .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
-                            .subscribe { updateLayoutParams { height = getWidth() / SEAT_COUNT_PER_ROW - mContext.resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 } }
+                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT - mContext.resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 } }
                 }
 
                 seatAdapter.itemClicks()
@@ -149,12 +152,11 @@ class SeatSelectionActivity : AppCompatActivity() {
 
         override fun convert(helper: BaseViewHolder, seat: Seat) {
             val res = when (seat.status) {
-                Status.IDLE -> R.drawable.selection_default_background
-                Status.SELECTED -> R.drawable.selection_selected_background
-                else -> R.drawable.selection_disabled_background
+                Status.IDLE -> R.drawable.seat_selection_idle_background
+                Status.SELECTED -> R.drawable.seat_selection_selected_background
+                else -> R.drawable.seat_selection_disabled_background
             }
             helper.itemView.setBackgroundResource(res)
         }
-
     }
 }
