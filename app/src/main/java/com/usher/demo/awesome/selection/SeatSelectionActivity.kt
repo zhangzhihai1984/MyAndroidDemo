@@ -18,10 +18,11 @@ import kotlinx.android.synthetic.main.activity_seat_selection.*
 
 class SeatSelectionActivity : AppCompatActivity() {
 
-    enum class Status {
-        IDLE,
-        SELECTED,
-        DISABLED
+    enum class Status(var value: String) {
+        IDLE("unsold"),
+        SELECTED("sold"),
+        DISABLED("disabled"),
+        PENDING("pending")
     }
 
     data class Seat(var status: Status, var spanSize: Int = 1)
@@ -35,28 +36,42 @@ class SeatSelectionActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        val seatStatusLists = listOf(
-                arrayListOf(
-                        Status.SELECTED, Status.SELECTED,
-                        Status.DISABLED,
-                        Status.IDLE, Status.IDLE, Status.IDLE,
-                        Status.DISABLED, Status.DISABLED),
-                arrayListOf(
-                        Status.DISABLED, Status.SELECTED,
-                        Status.DISABLED,
-                        Status.SELECTED, Status.DISABLED, Status.IDLE)
-        )
+        val row = 5
+        val column = 16
+        val mockData = Array(row) {
+            Array(column) {
+                when ((0..6).random()) {
+                    in 0..3 -> "unsold"
+                    4, 5 -> "sold"
+                    else -> "disabled"
+                }
+            }.toList()
+        }.toList()
 
-        val rowAdapter = RowAdapter(seatStatusLists)
+        var allStatus = mockData.map {
+            it.map { name ->
+                when (name) {
+                    Status.IDLE.value -> Status.IDLE
+                    Status.SELECTED.value -> Status.SELECTED
+                    else -> Status.DISABLED
+                }
+            }
+        }
+
+        allStatus = ArrayList(allStatus.map { ArrayList(it) })
+
+        val rowAdapter = RowAdapter(allStatus)
 
         rowAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { click ->
-                    seatStatusLists[click.rowPosition][click.columnPosition] = when (seatStatusLists[click.rowPosition][click.columnPosition]) {
-                        Status.IDLE -> Status.SELECTED
-                        Status.SELECTED -> Status.IDLE
-                        else -> Status.DISABLED
+                    allStatus[click.rowPosition][click.columnPosition] = allStatus[click.rowPosition][click.columnPosition].let { status ->
+                        when (status) {
+                            Status.IDLE -> Status.PENDING
+                            Status.PENDING -> Status.IDLE
+                            else -> status
+                        }
                     }
                     rowAdapter.notifyDataSetChanged()
                 }
@@ -65,7 +80,7 @@ class SeatSelectionActivity : AppCompatActivity() {
         recyclerview.adapter = rowAdapter
     }
 
-    private class RowAdapter(data: List<List<Status>>, private val COLUMN_COUNT: Int = 8) : RxBaseQuickAdapter<List<Status>, RowAdapter.RowViewHolder>(R.layout.item_seat_selection_row, data) {
+    private class RowAdapter(data: List<List<Status>>, private val COLUMN_COUNT: Int = 16) : RxBaseQuickAdapter<List<Status>, RowAdapter.RowViewHolder>(R.layout.item_seat_selection_row, data) {
 
         private val mClickSubject = PublishSubject.create<SeatClick>()
 
@@ -117,7 +132,7 @@ class SeatSelectionActivity : AppCompatActivity() {
                     globalLayouts()
                             .take(1)
                             .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
-                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT - mContext.resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 } }
+                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT } }
                 }
 
                 view.findViewById<RecyclerView>(R.id.span_recyclerview).run {
@@ -126,7 +141,7 @@ class SeatSelectionActivity : AppCompatActivity() {
                     globalLayouts()
                             .take(1)
                             .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
-                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT - mContext.resources.getDimensionPixelSize(R.dimen.selection_item_margin) * 2 } }
+                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT } }
                 }
 
                 seatAdapter.itemClicks()
@@ -140,9 +155,12 @@ class SeatSelectionActivity : AppCompatActivity() {
     }
 
     private class SeatAdapter(data: List<Status>) : RxBaseQuickAdapter<Status, BaseViewHolder>(R.layout.item_seat_selection_icon, data) {
-        override fun convert(helper: BaseViewHolder, item: Status) {
+        override fun convert(helper: BaseViewHolder, status: Status) {
+            helper.itemView.visibility = when (status) {
+                Status.DISABLED -> View.INVISIBLE
+                else -> View.VISIBLE
+            }
         }
-
     }
 
     private class SpanAdapter(data: List<Seat>) : RxBaseQuickAdapter<Seat, BaseViewHolder>(R.layout.item_seat_selection_span, data) {
@@ -154,7 +172,8 @@ class SeatSelectionActivity : AppCompatActivity() {
             val res = when (seat.status) {
                 Status.IDLE -> R.drawable.seat_selection_idle_background
                 Status.SELECTED -> R.drawable.seat_selection_selected_background
-                else -> R.drawable.seat_selection_disabled_background
+                Status.DISABLED -> R.drawable.seat_selection_disabled_background
+                Status.PENDING -> R.drawable.seat_selection_pending_background
             }
             helper.itemView.setBackgroundResource(res)
         }
