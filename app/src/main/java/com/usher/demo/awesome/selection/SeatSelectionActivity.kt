@@ -22,6 +22,8 @@ class SeatSelectionActivity : AppCompatActivity() {
         private const val COLUMN_COUNT = 16
     }
 
+    private lateinit var mSeatData: ArrayList<ArrayList<Status>>
+
     enum class Status(var value: String) {
         IDLE("unsold"),
         SELECTED("sold"),
@@ -36,11 +38,12 @@ class SeatSelectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_seat_selection)
+        initData()
         initView()
     }
 
-    private fun initView() {
-        val mockData = Array(ROW_COUNT) {
+    private fun initData() {
+        val mockServerData = Array(ROW_COUNT) {
             Array(COLUMN_COUNT) {
                 when ((0..6).random()) {
                     in 0..3 -> "unsold"
@@ -50,25 +53,32 @@ class SeatSelectionActivity : AppCompatActivity() {
             }.toList()
         }.toList()
 
-        var allStatus = mockData.map {
-            it.map { name ->
-                when (name) {
-                    Status.IDLE.value -> Status.IDLE
-                    Status.SELECTED.value -> Status.SELECTED
-                    else -> Status.DISABLED
-                }
-            }
-        }
+        /*
+        * 1. 把mockServerData[i][j]数据由服务器定义的字段转为客户端定义的枚举
+        * 2. 把mockServerData内部的List转为ArrayList
+        * 3. 把mockServerData这个List转为ArrayList
+        */
+        mSeatData = ArrayList(
+                mockServerData.map { row ->
+                    row.map { column ->
+                        when (column) {
+                            Status.IDLE.value -> Status.IDLE
+                            Status.SELECTED.value -> Status.SELECTED
+                            else -> Status.DISABLED
+                        }
+                    }
+                }.map { row -> ArrayList(row) }
+        )
+    }
 
-        allStatus = ArrayList(allStatus.map { ArrayList(it) })
-
-        val rowAdapter = RowAdapter(allStatus, COLUMN_COUNT)
+    private fun initView() {
+        val rowAdapter = RowAdapter(mSeatData, COLUMN_COUNT)
 
         rowAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { click ->
-                    allStatus[click.rowPosition][click.columnPosition] = allStatus[click.rowPosition][click.columnPosition].let { status ->
+                    mSeatData[click.rowPosition][click.columnPosition] = mSeatData[click.rowPosition][click.columnPosition].let { status ->
                         when (status) {
                             Status.IDLE -> Status.PENDING
                             Status.PENDING -> Status.IDLE
