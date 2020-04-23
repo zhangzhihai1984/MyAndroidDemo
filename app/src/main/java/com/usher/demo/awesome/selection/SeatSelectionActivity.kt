@@ -2,6 +2,7 @@ package com.usher.demo.awesome.selection
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
@@ -9,7 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
+import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
@@ -89,12 +92,26 @@ class SeatSelectionActivity : AppCompatActivity() {
                 }
 
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        number_recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
         recyclerview.globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
                     recyclerview.adapter = rowAdapter.apply { itemHeight = recyclerview.width / COLUMN_COUNT }
+                    number_recyclerview.adapter = NumberAdapter(List(ROW_COUNT) { "${it + 1}" }).apply { itemHeight = recyclerview.width / COLUMN_COUNT }
                 }
+
+        //滑动座位区域的同时对座位排号做相应距离的滚动, 同时禁止手动滑动座位排号
+        recyclerview.scrollEvents()
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    number_recyclerview.scrollBy(0, it.dy)
+                }
+
+        number_recyclerview.touches { true }
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe()
     }
 
     private class RowAdapter(data: List<List<Status>>, private val COLUMN_COUNT: Int, var itemHeight: Int = 100) : RxBaseQuickAdapter<List<Status>, RowAdapter.RowViewHolder>(R.layout.item_seat_selection_row, data) {
@@ -186,6 +203,13 @@ class SeatSelectionActivity : AppCompatActivity() {
                 Status.PENDING -> R.drawable.seat_selection_pending_background
             }
             helper.itemView.setBackgroundResource(res)
+        }
+    }
+
+    private class NumberAdapter(data: List<String>, var itemHeight: Int = 100) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_seat_selection_number, data) {
+        override fun convert(helper: BaseViewHolder, number: String) {
+            helper.itemView.updateLayoutParams { height = itemHeight }
+            (helper.itemView as TextView).text = number
         }
     }
 }
