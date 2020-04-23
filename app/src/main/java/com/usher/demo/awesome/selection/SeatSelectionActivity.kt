@@ -17,6 +17,10 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_seat_selection.*
 
 class SeatSelectionActivity : AppCompatActivity() {
+    companion object {
+        private const val ROW_COUNT = 8
+        private const val COLUMN_COUNT = 16
+    }
 
     enum class Status(var value: String) {
         IDLE("unsold"),
@@ -36,10 +40,8 @@ class SeatSelectionActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        val row = 5
-        val column = 16
-        val mockData = Array(row) {
-            Array(column) {
+        val mockData = Array(ROW_COUNT) {
+            Array(COLUMN_COUNT) {
                 when ((0..6).random()) {
                     in 0..3 -> "unsold"
                     4, 5 -> "sold"
@@ -60,7 +62,7 @@ class SeatSelectionActivity : AppCompatActivity() {
 
         allStatus = ArrayList(allStatus.map { ArrayList(it) })
 
-        val rowAdapter = RowAdapter(allStatus)
+        val rowAdapter = RowAdapter(allStatus, COLUMN_COUNT)
 
         rowAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
@@ -77,15 +79,21 @@ class SeatSelectionActivity : AppCompatActivity() {
                 }
 
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerview.adapter = rowAdapter
+        recyclerview.globalLayouts()
+                .take(1)
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    recyclerview.adapter = rowAdapter.apply { itemHeight = recyclerview.width / COLUMN_COUNT }
+                }
     }
 
-    private class RowAdapter(data: List<List<Status>>, private val COLUMN_COUNT: Int = 16) : RxBaseQuickAdapter<List<Status>, RowAdapter.RowViewHolder>(R.layout.item_seat_selection_row, data) {
+    private class RowAdapter(data: List<List<Status>>, private val COLUMN_COUNT: Int, var itemHeight: Int = 100) : RxBaseQuickAdapter<List<Status>, RowAdapter.RowViewHolder>(R.layout.item_seat_selection_row, data) {
 
         private val mClickSubject = PublishSubject.create<SeatClick>()
 
         override fun convert(helper: RowViewHolder, statusList: List<Status>) {
             helper.itemView.tag = helper.layoutPosition
+            helper.itemView.updateLayoutParams { height = itemHeight }
             helper.seatAdapter.setNewData(statusList)
             helper.spanAdapter.setNewData(getSpanList(statusList))
         }
@@ -129,19 +137,11 @@ class SeatSelectionActivity : AppCompatActivity() {
                 view.findViewById<RecyclerView>(R.id.seat_recyclerview).run {
                     layoutManager = GridLayoutManager(mContext, COLUMN_COUNT, RecyclerView.VERTICAL, false)
                     adapter = seatAdapter
-                    globalLayouts()
-                            .take(1)
-                            .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
-                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT } }
                 }
 
                 view.findViewById<RecyclerView>(R.id.span_recyclerview).run {
                     layoutManager = GridLayoutManager(mContext, COLUMN_COUNT, RecyclerView.VERTICAL, false)
                     adapter = spanAdapter
-                    globalLayouts()
-                            .take(1)
-                            .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
-                            .subscribe { updateLayoutParams { height = getWidth() / COLUMN_COUNT } }
                 }
 
                 seatAdapter.itemClicks()
