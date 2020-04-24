@@ -22,12 +22,10 @@ import kotlinx.android.synthetic.main.seat_selection_layout.view.*
 
 class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
-        private const val DEFAULT_ROW_COUNT = 8
         private const val DEFAULT_COLUMN_COUNT = 16
     }
 
     private val mDataChangeSubject = PublishSubject.create<Unit>()
-    private var mRowCount: Int = 0
     private var mColumnCount: Int
     private var mSelectionData: ArrayList<ArrayList<Status>> = arrayListOf()
     private lateinit var mSelectionAdapter: SelectionAdapter
@@ -81,7 +79,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     selection_recyclerview.adapter = mSelectionAdapter.apply { itemHeight = selection_recyclerview.width / mColumnCount }
-                    index_recyclerview.adapter = IndexAdapter(List(mRowCount) { it }).apply { itemHeight = selection_recyclerview.width / mColumnCount }
+                    index_recyclerview.adapter = IndexAdapter(List(mSelectionData.size) { it }).apply { itemHeight = selection_recyclerview.width / mColumnCount }
                 }
 
         //滑动座位区域的同时对座位排号做相应距离的滚动, 同时禁止手动滑动座位排号
@@ -97,7 +95,6 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     fun setData(data: List<ArrayList<Status>>, columnCount: Int = mColumnCount) {
-        mRowCount = data.size
         mColumnCount = columnCount
         mSelectionData.clear()
         mSelectionData.addAll(data)
@@ -208,7 +205,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         override fun convert(helper: BaseViewHolder, index: Int) {
             helper.itemView.updateLayoutParams { height = itemHeight }
 
-            val str = "$index + 1"
+            val str = "${index + 1}"
             (helper.itemView as TextView).text = str
         }
     }
