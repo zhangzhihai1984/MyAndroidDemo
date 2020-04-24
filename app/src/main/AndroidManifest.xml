@@ -58,6 +58,11 @@
             android:screenOrientation="landscape"
             android:theme="@style/CommonTheme" />
         <activity
+            android:name=".awesome.selection.SeatSelection2Activity"
+            android:configChanges="uiMode"
+            android:screenOrientation="landscape"
+            android:theme="@style/CommonTheme" />
+        <activity
             android:name=".awesome.smarthome.SmartHomeActivity"
             android:theme="@style/CommonTheme" />
         <activity
