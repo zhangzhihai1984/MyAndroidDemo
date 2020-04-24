@@ -1,25 +1,29 @@
 package com.usher.demo.awesome.selection
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
+import com.jakewharton.rxbinding3.recyclerview.dataChanges
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
+import com.usher.demo.base.BaseActivity
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_seat_selection.*
 
-class SeatSelectionActivity : AppCompatActivity() {
+class SeatSelectionActivity : BaseActivity(Theme.DARK_ONLY) {
     companion object {
         private const val ROW_COUNT = 8
         private const val COLUMN_COUNT = 16
@@ -75,6 +79,15 @@ class SeatSelectionActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        val countAnimator = ValueAnimator.ofFloat(1f, 1.5f, 1f).apply {
+            duration = 1000
+            interpolator = OvershootInterpolator()
+            addUpdateListener {
+                count_textview.scaleX = animatedValue as Float
+                count_textview.scaleY = animatedValue as Float
+            }
+        }
+
         val rowAdapter = RowAdapter(mSeatData, COLUMN_COUNT)
 
         rowAdapter.seatClicks()
@@ -89,6 +102,14 @@ class SeatSelectionActivity : AppCompatActivity() {
                         }
                     }
                     rowAdapter.notifyDataSetChanged()
+                }
+
+        rowAdapter.dataChanges()
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    val count = mSeatData.flatten().filter { status -> status == Status.PENDING }.size
+                    count_textview.text = "$count"
+                    countAnimator.start()
                 }
 
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

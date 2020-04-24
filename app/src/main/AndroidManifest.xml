@@ -54,6 +54,7 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".awesome.selection.SeatSelectionActivity"
+            android:configChanges="uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/CommonTheme" />
         <activity
