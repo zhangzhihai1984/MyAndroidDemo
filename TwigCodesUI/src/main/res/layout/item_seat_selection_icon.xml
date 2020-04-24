@@ -4,4 +4,4 @@
     android:layout_height="match_parent"
     android:layout_margin="5dp"
     android:contentDescription="@null"
-    android:src="@drawable/ic_seat_white" />
+    android:src="@drawable/seat_selection_icon" />
