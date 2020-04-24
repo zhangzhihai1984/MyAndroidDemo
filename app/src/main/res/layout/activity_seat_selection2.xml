@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#455A64"
     android:fitsSystemWindows="true">
 
-    <com.twigcodes.ui.SeatSelectionView
-        android:id="@+id/seatselectionview"
+    <com.twigcodes.ui.SeatSelectionView2
+        android:id="@+id/seatselectionview2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="40dp"
-        app:columnCount="16"
-        app:rowCount="8" />
+        android:layout_marginBottom="40dp" />
 
     <TextView
         android:id="@+id/count_textview"

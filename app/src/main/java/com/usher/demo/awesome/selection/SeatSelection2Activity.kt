@@ -3,7 +3,7 @@ package com.usher.demo.awesome.selection
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.animation.OvershootInterpolator
-import com.twigcodes.ui.SeatSelectionView
+import com.twigcodes.ui.SeatSelectionView2
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -15,11 +15,11 @@ class SeatSelection2Activity : BaseActivity(Theme.DARK_ONLY) {
         private const val COLUMN_COUNT = 16
     }
 
-    private lateinit var mSeatData: ArrayList<ArrayList<SeatSelectionView.Status>>
+    private lateinit var mSeatData: ArrayList<ArrayList<SeatSelectionView2.Status>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_seat_selection)
+        setContentView(R.layout.activity_seat_selection2)
         initData()
         initView()
     }
@@ -44,9 +44,9 @@ class SeatSelection2Activity : BaseActivity(Theme.DARK_ONLY) {
                 mockServerData.map { row ->
                     row.map { column ->
                         when (column) {
-                            "unsold" -> SeatSelectionView.Status.IDLE
-                            "sold" -> SeatSelectionView.Status.SELECTED
-                            else -> SeatSelectionView.Status.DISABLED
+                            "unsold" -> SeatSelectionView2.Status.IDLE
+                            "sold" -> SeatSelectionView2.Status.SELECTED
+                            else -> SeatSelectionView2.Status.DISABLED
                         }
                     }
                 }.map { row -> ArrayList(row) }
@@ -63,14 +63,14 @@ class SeatSelection2Activity : BaseActivity(Theme.DARK_ONLY) {
             }
         }
 
-        seatselectionview.dataChanges()
+        seatselectionview2.dataChanges()
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val count = mSeatData.flatten().filter { status -> status == SeatSelectionView.Status.PENDING }.size
+                    val count = mSeatData.flatten().filter { status -> status == SeatSelectionView2.Status.PENDING }.size
                     count_textview.text = "$count"
                     countAnimator.start()
                 }
 
-        seatselectionview.setData(mSeatData, ROW_COUNT, COLUMN_COUNT)
+        seatselectionview2.setData(mSeatData, ROW_COUNT, COLUMN_COUNT)
     }
 }
