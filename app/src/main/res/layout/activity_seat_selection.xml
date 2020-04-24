@@ -11,8 +11,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="40dp"
-        android:orientation="vertical"/>
+        android:layout_marginBottom="40dp" />
 
     <TextView
         android:id="@+id/count_textview"

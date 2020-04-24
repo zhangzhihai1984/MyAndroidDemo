@@ -44,8 +44,8 @@ class SeatSelectionActivity : BaseActivity(Theme.DARK_ONLY) {
                 mockServerData.map { row ->
                     row.map { column ->
                         when (column) {
-                            SeatSelectionView.Status.IDLE.value -> SeatSelectionView.Status.IDLE
-                            SeatSelectionView.Status.SELECTED.value -> SeatSelectionView.Status.SELECTED
+                            "unsold" -> SeatSelectionView.Status.IDLE
+                            "sold" -> SeatSelectionView.Status.SELECTED
                             else -> SeatSelectionView.Status.DISABLED
                         }
                     }

@@ -30,11 +30,11 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mSeatData: ArrayList<ArrayList<Status>> = arrayListOf()
     private lateinit var mRowAdapter: RowAdapter
 
-    enum class Status(var value: String) {
-        IDLE("unsold"),
-        SELECTED("sold"),
-        DISABLED("disabled"),
-        PENDING("pending")
+    enum class Status {
+        IDLE,
+        SELECTED,
+        DISABLED,
+        PENDING
     }
 
     data class Seat(var status: Status, var spanSize: Int = 1)
@@ -160,7 +160,12 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                         .compose(RxUtil.getSchedulerComposer())
                         .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
                         .subscribe { position ->
-                            mClickSubject.onNext(SeatClick(view.tag as Int, position))
+                            val seatClick = SeatClick(view.tag as Int, position)
+                            when (data[seatClick.rowPosition][seatClick.columnPosition]) {
+                                Status.IDLE, Status.PENDING -> mClickSubject.onNext(seatClick)
+                                else -> {
+                                }
+                            }
                         }
             }
         }

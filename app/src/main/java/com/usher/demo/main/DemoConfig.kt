@@ -6,8 +6,8 @@ import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.selection.SeatSelectionActivity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
 import com.usher.demo.image.ImageBlurActivity
-import com.usher.demo.image.PicassoTransformationActivity
 import com.usher.demo.image.ImageScaleTypeActivity
+import com.usher.demo.image.PicassoTransformationActivity
 import com.usher.demo.kotlin.KotlinActivity
 import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
@@ -93,7 +93,7 @@ object DemoConfig {
         )
 
         configMap[KEY_AWESOME] = listOf(
-                DemoItem("selection", SeatSelectionActivity::class.java),
+                DemoItem("seat selection", SeatSelectionActivity::class.java),
                 DemoItem("edit channel", ChannelActivity::class.java),
                 DemoItem("recyclerView decoration", DecorationActivity::class.java),
                 DemoItem("smart home", SmartHomeActivity::class.java),
