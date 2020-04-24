@@ -38,7 +38,7 @@
             android:overScrollMode="never" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/number_recyclerview"
+            android:id="@+id/index_recyclerview"
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:background="@drawable/seat_selection_number_background"
