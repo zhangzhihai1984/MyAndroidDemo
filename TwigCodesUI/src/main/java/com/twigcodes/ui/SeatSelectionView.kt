@@ -27,7 +27,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     private val mDataChangeSubject = PublishSubject.create<Unit>()
-    private var mRowCount: Int
+    private var mRowCount: Int = 0
     private var mColumnCount: Int
     private var mSelectionData: ArrayList<ArrayList<Status>> = arrayListOf()
     private lateinit var mSelectionAdapter: SelectionAdapter
@@ -48,7 +48,6 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         View.inflate(context, R.layout.seat_selection_layout, this)
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.SeatSelectionView, defStyleAttr, defStyleRes)
-        mRowCount = a.getInteger(R.styleable.SeatSelectionView_rowCount, DEFAULT_ROW_COUNT)
         mColumnCount = a.getInteger(R.styleable.SeatSelectionView_columnCount, DEFAULT_COLUMN_COUNT)
         a.recycle()
     }
@@ -97,8 +96,8 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                 .subscribe()
     }
 
-    fun setData(data: List<ArrayList<Status>>, rowCount: Int = mRowCount, columnCount: Int = mColumnCount) {
-        mRowCount = rowCount
+    fun setData(data: List<ArrayList<Status>>, columnCount: Int = mColumnCount) {
+        mRowCount = data.size
         mColumnCount = columnCount
         mSelectionData.clear()
         mSelectionData.addAll(data)
@@ -208,7 +207,9 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
     private class IndexAdapter(data: List<Int>, var itemHeight: Int = 100) : RxBaseQuickAdapter<Int, BaseViewHolder>(R.layout.item_seat_selection_index, data) {
         override fun convert(helper: BaseViewHolder, index: Int) {
             helper.itemView.updateLayoutParams { height = itemHeight }
-            (helper.itemView as TextView).text = "${index + 1}"
+
+            val str = "$index + 1"
+            (helper.itemView as TextView).text = str
         }
     }
 }

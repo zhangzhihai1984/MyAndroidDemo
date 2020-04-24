@@ -71,6 +71,6 @@ class SeatSelectionActivity : BaseActivity(Theme.DARK_ONLY) {
                     countAnimator.start()
                 }
 
-        seatselectionview.setData(mSeatData, ROW_COUNT, COLUMN_COUNT)
+        seatselectionview.setData(mSeatData, COLUMN_COUNT)
     }
 }

@@ -13,8 +13,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="40dp"
-        app:columnCount="16"
-        app:rowCount="8" />
+        app:columnCount="16" />
 
     <TextView
         android:id="@+id/count_textview"
