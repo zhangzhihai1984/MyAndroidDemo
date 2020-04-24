@@ -5,61 +5,14 @@
     android:background="#455A64"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <com.twigcodes.ui.SeatSelectionView
+        android:id="@+id/seatselectionview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="40dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:background="@drawable/seat_selection_screen_background" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:overScrollMode="never" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/number_recyclerview"
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/seat_selection_number_background"
-                android:overScrollMode="never" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
+        android:orientation="vertical"/>
 
     <TextView
         android:id="@+id/count_textview"
