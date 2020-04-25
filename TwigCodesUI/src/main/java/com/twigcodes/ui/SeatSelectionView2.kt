@@ -35,7 +35,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
 
     init {
         orientation = VERTICAL
-        View.inflate(context, R.layout.seat_selection_layout, this)
+        View.inflate(context, R.layout.seat_selection2_layout, this)
     }
 
     private fun initView() {
