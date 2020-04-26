@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.jakewharton.rxbinding3.recyclerview.dataChanges
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
-import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
@@ -22,7 +21,9 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
 
     private val mDataChangeSubject = PublishSubject.create<Unit>()
     private var mSelectionData: ArrayList<ArrayList<Status>> = arrayListOf()
+    private var mIndexData: ArrayList<Int> = arrayListOf()
     private lateinit var mSelectionAdapter: SelectionAdapter
+    private lateinit var mIndexAdapter: IndexAdapter
 
     enum class Status {
         IDLE,
@@ -36,11 +37,11 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
     init {
         orientation = VERTICAL
         View.inflate(context, R.layout.seat_selection2_layout, this)
+        initView()
     }
 
     private fun initView() {
         mSelectionAdapter = SelectionAdapter(mSelectionData)
-
         mSelectionAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -54,22 +55,12 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                     }
                     mSelectionAdapter.notifyDataSetChanged()
                 }
-
         mSelectionAdapter.dataChanges()
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { mDataChangeSubject.onNext(Unit) }
 
         selection_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-
-        selection_recyclerview.globalLayouts()
-                .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe {
-                    selection_recyclerview.adapter = mSelectionAdapter
-                    index_recyclerview.adapter = IndexAdapter(List(mSelectionData.size) { it })
-                }
-
+        selection_recyclerview.adapter = mSelectionAdapter
         //滑动座位区域的同时对座位排号做相应距离的滚动, 同时禁止手动滑动座位排号
         selection_recyclerview.scrollEvents()
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -77,6 +68,9 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                     index_recyclerview.scrollBy(0, it.dy)
                 }
 
+        mIndexAdapter = IndexAdapter(mIndexData)
+        index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        index_recyclerview.adapter = mIndexAdapter
         index_recyclerview.touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe()
@@ -85,8 +79,11 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
     fun setData(data: List<ArrayList<Status>>) {
         mSelectionData.clear()
         mSelectionData.addAll(data)
-        initView()
-//        mSelectionAdapter.notifyDataSetChanged()
+        mSelectionAdapter.notifyDataSetChanged()
+
+        mIndexData.clear()
+        mIndexData.addAll(List(data.size) { it })
+        mIndexAdapter.notifyDataSetChanged()
     }
 
     fun dataChanges() = mDataChangeSubject

@@ -52,7 +52,6 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
 
     private fun initView() {
         mSelectionAdapter = SelectionAdapter(mSelectionData, mColumnCount)
-
         mSelectionAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -66,14 +65,11 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                     }
                     mSelectionAdapter.notifyDataSetChanged()
                 }
-
         mSelectionAdapter.dataChanges()
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { mDataChangeSubject.onNext(Unit) }
 
         selection_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-
         selection_recyclerview.globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -81,7 +77,6 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                     selection_recyclerview.adapter = mSelectionAdapter.apply { itemHeight = selection_recyclerview.width / mColumnCount }
                     index_recyclerview.adapter = IndexAdapter(List(mSelectionData.size) { it }).apply { itemHeight = selection_recyclerview.width / mColumnCount }
                 }
-
         //滑动座位区域的同时对座位排号做相应距离的滚动, 同时禁止手动滑动座位排号
         selection_recyclerview.scrollEvents()
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -89,6 +84,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                     index_recyclerview.scrollBy(0, it.dy)
                 }
 
+        index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         index_recyclerview.touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe()
