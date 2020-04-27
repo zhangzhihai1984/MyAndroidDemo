@@ -5,17 +5,20 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.jakewharton.rxbinding3.recyclerview.dataChanges
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
+import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding3.view.scrollChangeEvents
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.seat_selection_layout.view.*
+import kotlinx.android.synthetic.main.seat_selection2_layout.view.*
 
 class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
@@ -61,17 +64,24 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
 
         selection_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         selection_recyclerview.adapter = mSelectionAdapter
-        //滑动座位区域的同时对座位排号做相应距离的滚动, 同时禁止手动滑动座位排号
+        //纵向滑动座位区域的同时对座位排号做相应的纵向滚动, 同时禁止手动滑动座位排号
         selection_recyclerview.scrollEvents()
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe {
-                    index_recyclerview.scrollBy(0, it.dy)
-                }
+                .subscribe { index_recyclerview.scrollBy(0, it.dy) }
 
         mIndexAdapter = IndexAdapter(mIndexData)
         index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         index_recyclerview.adapter = mIndexAdapter
         index_recyclerview.touches { true }
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe()
+
+        //横向滑动座位区域的同时对屏幕区域做相应的横向滚动, 同时禁止手动滑动屏幕区域
+        selection_scrollview.scrollChangeEvents()
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe { screen_scrollview.scrollTo(it.scrollX, 0) }
+
+        screen_scrollview.touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe()
     }
@@ -84,6 +94,14 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
         mIndexData.clear()
         mIndexData.addAll(List(data.size) { it })
         mIndexAdapter.notifyDataSetChanged()
+
+        selection_recyclerview.globalLayouts()
+                .take(1)
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    screen_layout.updateLayoutParams { width = selection_layout.width }
+                    screen_view.updateLayoutParams { width = selection_layout.width * 2 / 3 }
+                }
     }
 
     fun dataChanges() = mDataChangeSubject

@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <HorizontalScrollView
+        android:id="@+id/screen_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        <RelativeLayout
+            android:id="@+id/screen_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:background="@drawable/seat_selection_screen_background" />
+            <View
+                android:id="@+id/screen_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/seat_selection_screen_background" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        </RelativeLayout>
 
-    </LinearLayout>
+    </HorizontalScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,7 +40,7 @@
             android:overScrollMode="never" />
 
         <HorizontalScrollView
-            android:id="@+id/scrollView"
+            android:id="@+id/selection_scrollview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -47,6 +48,7 @@
             android:scrollbars="none">
 
             <RelativeLayout
+                android:id="@+id/selection_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
