@@ -18,7 +18,7 @@ import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.seat_selection2_layout.view.*
+import kotlinx.android.synthetic.main.seat_selection_layout2.view.*
 
 class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
@@ -39,7 +39,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
 
     init {
         orientation = VERTICAL
-        View.inflate(context, R.layout.seat_selection2_layout, this)
+        View.inflate(context, R.layout.seat_selection_layout2, this)
         initView()
     }
 

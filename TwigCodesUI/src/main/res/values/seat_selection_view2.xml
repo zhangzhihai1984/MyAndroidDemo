@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="seatWidth" format="dimension" />
+    <attr name="seatHeight" format="dimension" />
+</resources>
