@@ -23,12 +23,15 @@ import kotlinx.android.synthetic.main.seat_selection_layout.view.*
 class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private const val DEFAULT_COLUMN_COUNT = 16
+        private const val DEFAULT_SEAT_HEIGHT = 120
     }
 
     private val mDataChangeSubject = PublishSubject.create<Unit>()
     private var mColumnCount: Int
     private var mSelectionData: ArrayList<ArrayList<Status>> = arrayListOf()
+    private var mIndexData: ArrayList<Int> = arrayListOf()
     private lateinit var mSelectionAdapter: SelectionAdapter
+    private lateinit var mIndexAdapter: IndexAdapter
 
     enum class Status {
         IDLE,
@@ -48,10 +51,11 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.SeatSelectionView, defStyleAttr, defStyleRes)
         mColumnCount = a.getInteger(R.styleable.SeatSelectionView_columnCount, DEFAULT_COLUMN_COUNT)
         a.recycle()
+        initView()
     }
 
     private fun initView() {
-        mSelectionAdapter = SelectionAdapter(mSelectionData, mColumnCount)
+        mSelectionAdapter = SelectionAdapter(mSelectionData, mColumnCount, DEFAULT_SEAT_HEIGHT)
         mSelectionAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -70,13 +74,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                 .subscribe { mDataChangeSubject.onNext(Unit) }
 
         selection_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        selection_recyclerview.globalLayouts()
-                .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe {
-                    selection_recyclerview.adapter = mSelectionAdapter.apply { itemHeight = selection_recyclerview.width / mColumnCount }
-                    index_recyclerview.adapter = IndexAdapter(List(mSelectionData.size) { it }).apply { itemHeight = selection_recyclerview.width / mColumnCount }
-                }
+        selection_recyclerview.adapter = mSelectionAdapter
         //滑动座位区域的同时对座位排号做相应距离的滚动, 同时禁止手动滑动座位排号
         selection_recyclerview.scrollEvents()
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -84,7 +82,9 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                     index_recyclerview.scrollBy(0, it.dy)
                 }
 
+        mIndexAdapter = IndexAdapter(mIndexData, DEFAULT_SEAT_HEIGHT)
         index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        index_recyclerview.adapter = mIndexAdapter
         index_recyclerview.touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe()
@@ -94,24 +94,49 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         mColumnCount = columnCount
         mSelectionData.clear()
         mSelectionData.addAll(data)
-        initView()
-//        mSelectionAdapter.notifyDataSetChanged()
+        mSelectionAdapter.columnCount = columnCount
+        mSelectionAdapter.notifyDataSetChanged()
+
+        mIndexData.clear()
+        mIndexData.addAll(List(data.size) { it })
+
+        selection_recyclerview.globalLayouts()
+                .take(1)
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    mSelectionAdapter.itemHeight = selection_recyclerview.width / columnCount
+                    mSelectionAdapter.notifyDataSetChanged()
+                    mIndexAdapter.itemHeight = selection_recyclerview.width / columnCount
+                    mIndexAdapter.notifyDataSetChanged()
+                }
     }
 
     fun dataChanges() = mDataChangeSubject
 
-    private class SelectionAdapter(data: List<List<Status>>, private val COLUMN_COUNT: Int, var itemHeight: Int = 100) : RxBaseQuickAdapter<List<Status>, SelectionAdapter.SelectionViewHolder>(R.layout.item_seat_selection, data) {
+    private class SelectionAdapter(data: List<List<Status>>, var columnCount: Int, var itemHeight: Int) : RxBaseQuickAdapter<List<Status>, SelectionAdapter.SelectionViewHolder>(R.layout.item_seat_selection, data) {
 
         private val mClickSubject = PublishSubject.create<SeatClick>()
 
         override fun convert(helper: SelectionViewHolder, statusList: List<Status>) {
+            val seatList = getSeatList(statusList)
+
             helper.itemView.tag = helper.layoutPosition
             helper.itemView.updateLayoutParams { height = itemHeight }
+
+            helper.seatRecyclerView.layoutManager = GridLayoutManager(mContext, columnCount, RecyclerView.VERTICAL, false)
+            helper.statusRecyclerView.layoutManager = GridLayoutManager(mContext, columnCount, RecyclerView.VERTICAL, false).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return seatList[position].spanSize
+                    }
+                }
+            }
+
             helper.seatAdapter.setNewData(statusList)
-            helper.statusAdapter.setNewData(getStatusList(statusList))
+            helper.statusAdapter.setNewData(seatList)
         }
 
-        private fun getStatusList(statusList: List<Status>): List<Seat> {
+        private fun getSeatList(statusList: List<Status>): List<Seat> {
             val seatList = arrayListOf<Seat>()
 
             var spanSize: Int
@@ -143,17 +168,19 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         fun seatClicks() = mClickSubject
 
         private inner class SelectionViewHolder(view: View) : BaseViewHolder(view) {
+            val seatRecyclerView: RecyclerView = view.findViewById(R.id.seat_recyclerview)
+            val statusRecyclerView: RecyclerView = view.findViewById(R.id.status_recyclerview)
             val seatAdapter = SeatAdapter(listOf())
             val statusAdapter = StatusAdapter(listOf())
 
             init {
-                view.findViewById<RecyclerView>(R.id.seat_recyclerview).run {
-                    layoutManager = GridLayoutManager(mContext, COLUMN_COUNT, RecyclerView.VERTICAL, false)
+                seatRecyclerView.run {
+                    layoutManager = GridLayoutManager(mContext, columnCount, RecyclerView.VERTICAL, false)
                     adapter = seatAdapter
                 }
 
-                view.findViewById<RecyclerView>(R.id.status_recyclerview).run {
-                    layoutManager = GridLayoutManager(mContext, COLUMN_COUNT, RecyclerView.VERTICAL, false)
+                statusRecyclerView.run {
+                    layoutManager = GridLayoutManager(mContext, columnCount, RecyclerView.VERTICAL, false)
                     adapter = statusAdapter
                 }
 
@@ -182,10 +209,6 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     private class StatusAdapter(data: List<Seat>) : RxBaseQuickAdapter<Seat, BaseViewHolder>(R.layout.item_seat_selection_status, data) {
-        init {
-            setSpanSizeLookup { _, i -> mData[i].spanSize }
-        }
-
         override fun convert(helper: BaseViewHolder, seat: Seat) {
             val res = when (seat.status) {
                 Status.IDLE -> R.drawable.seat_selection_idle_background
@@ -197,10 +220,9 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    private class IndexAdapter(data: List<Int>, var itemHeight: Int = 100) : RxBaseQuickAdapter<Int, BaseViewHolder>(R.layout.item_seat_selection_index, data) {
+    private class IndexAdapter(data: List<Int>, var itemHeight: Int) : RxBaseQuickAdapter<Int, BaseViewHolder>(R.layout.item_seat_selection_index, data) {
         override fun convert(helper: BaseViewHolder, index: Int) {
             helper.itemView.updateLayoutParams { height = itemHeight }
-
             val str = "${index + 1}"
             (helper.itemView as TextView).text = str
         }
