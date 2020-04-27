@@ -21,8 +21,14 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.seat_selection_layout2.view.*
 
 class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+    companion object {
+        private const val DEFAULT_SEAT_WIDTH = 120
+        private const val DEFAULT_SEAT_HEIGHT = 120
+    }
 
     private val mDataChangeSubject = PublishSubject.create<Unit>()
+    private var mSeatWidth: Int
+    private var mSeatHeight: Int
     private var mSelectionData: ArrayList<ArrayList<Status>> = arrayListOf()
     private var mIndexData: ArrayList<Int> = arrayListOf()
     private lateinit var mSelectionAdapter: SelectionAdapter
@@ -38,13 +44,18 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
     data class SeatClick(var rowPosition: Int, var columnPosition: Int)
 
     init {
+        val a = context.obtainStyledAttributes(attrs, R.styleable.SeatSelectionView2)
+        mSeatWidth = a.getDimensionPixelSize(R.styleable.SeatSelectionView2_seatWidth, DEFAULT_SEAT_WIDTH)
+        mSeatHeight = a.getDimensionPixelSize(R.styleable.SeatSelectionView2_seatHeight, DEFAULT_SEAT_HEIGHT)
+        a.recycle()
+
         orientation = VERTICAL
         View.inflate(context, R.layout.seat_selection_layout2, this)
         initView()
     }
 
     private fun initView() {
-        mSelectionAdapter = SelectionAdapter(mSelectionData)
+        mSelectionAdapter = SelectionAdapter(mSelectionData, mSeatWidth, mSeatHeight)
         mSelectionAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
@@ -69,7 +80,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { index_recyclerview.scrollBy(0, it.dy) }
 
-        mIndexAdapter = IndexAdapter(mIndexData)
+        mIndexAdapter = IndexAdapter(mIndexData, mSeatHeight)
         index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         index_recyclerview.adapter = mIndexAdapter
         index_recyclerview.touches { true }
@@ -86,13 +97,19 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                 .subscribe()
     }
 
-    fun setData(data: List<ArrayList<Status>>) {
+    fun setData(data: List<ArrayList<Status>>, itemWidth: Int = mSeatWidth, itemHeight: Int = mSeatHeight) {
+        mSeatWidth = itemWidth
+        mSeatHeight = itemHeight
+
         mSelectionData.clear()
         mSelectionData.addAll(data)
+        mSelectionAdapter.itemWidth = mSeatWidth
+        mSelectionAdapter.itemHeight = mSeatHeight
         mSelectionAdapter.notifyDataSetChanged()
 
         mIndexData.clear()
         mIndexData.addAll(List(data.size) { it })
+        mIndexAdapter.itemHeight = itemHeight
         mIndexAdapter.notifyDataSetChanged()
 
         selection_recyclerview.globalLayouts()
@@ -106,19 +123,21 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
 
     fun dataChanges() = mDataChangeSubject
 
-    private class SelectionAdapter(data: List<List<Status>>) : RxBaseQuickAdapter<List<Status>, SelectionAdapter.SelectionViewHolder>(R.layout.item_seat_selection2, data) {
+    private class SelectionAdapter(data: List<List<Status>>, var itemWidth: Int, var itemHeight: Int) : RxBaseQuickAdapter<List<Status>, SelectionAdapter.SelectionViewHolder>(R.layout.item_seat_selection2, data) {
 
         private val mClickSubject = PublishSubject.create<SeatClick>()
 
         override fun convert(helper: SelectionViewHolder, statusList: List<Status>) {
             helper.itemView.tag = helper.layoutPosition
+            helper.statusAdapter.itemWidth = itemWidth
+            helper.statusAdapter.itemHeight = itemHeight
             helper.statusAdapter.setNewData(statusList)
         }
 
         fun seatClicks() = mClickSubject
 
         private inner class SelectionViewHolder(view: View) : BaseViewHolder(view) {
-            val statusAdapter = StatusAdapter(listOf())
+            val statusAdapter = StatusAdapter(listOf(), itemWidth, itemHeight)
 
             init {
                 (view as RecyclerView).run {
@@ -141,9 +160,13 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 
-    private class StatusAdapter(data: List<Status>) : RxBaseQuickAdapter<Status, BaseViewHolder>(R.layout.item_seat_selection2_status, data) {
+    private class StatusAdapter(data: List<Status>, var itemWidth: Int, var itemHeight: Int) : RxBaseQuickAdapter<Status, BaseViewHolder>(R.layout.item_seat_selection2_status, data) {
 
         override fun convert(helper: BaseViewHolder, status: Status) {
+            helper.itemView.updateLayoutParams {
+                width = itemWidth
+                height = itemHeight
+            }
             helper.setVisible(R.id.seat_imageview, true)
             val res = when (status) {
                 Status.IDLE -> R.drawable.seat_selection_idle_background
@@ -158,8 +181,9 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 
-    private class IndexAdapter(data: List<Int>) : RxBaseQuickAdapter<Int, BaseViewHolder>(R.layout.item_seat_selection2_index, data) {
+    private class IndexAdapter(data: List<Int>, var itemHeight: Int) : RxBaseQuickAdapter<Int, BaseViewHolder>(R.layout.item_seat_selection2_index, data) {
         override fun convert(helper: BaseViewHolder, index: Int) {
+            helper.itemView.updateLayoutParams { height = itemHeight }
             val str = "${index + 1}"
             (helper.itemView as TextView).text = str
         }

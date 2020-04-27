@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#455A64"
@@ -11,7 +12,9 @@
         android:layout_height="match_parent"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="40dp" />
+        android:layout_marginBottom="40dp"
+        app:seatHeight="40dp"
+        app:seatWidth="40dp" />
 
     <TextView
         android:id="@+id/count_textview"
