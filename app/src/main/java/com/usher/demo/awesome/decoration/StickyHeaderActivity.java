@@ -2,17 +2,18 @@ package com.usher.demo.awesome.decoration;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.usher.demo.R;
+import com.usher.demo.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DecorationActivity extends AppCompatActivity {
+public class StickyHeaderActivity extends BaseActivity {
     private final List<ItemInfo> mList = new ArrayList<>();
 
     private Context mContext;
@@ -20,7 +21,7 @@ public class DecorationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_decoration);
+        setContentView(R.layout.activity_sticky_header);
 
         mContext = this;
 

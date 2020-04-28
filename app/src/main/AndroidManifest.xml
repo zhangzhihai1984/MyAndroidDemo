@@ -50,7 +50,9 @@
             android:name=".awesome.channel.ChannelActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".awesome.decoration.DecorationActivity"
+            android:name=".awesome.decoration.StickyHeaderActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".awesome.smarthome.SmartHomeActivity"
