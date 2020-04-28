@@ -3,6 +3,8 @@ package com.usher.demo.awesome.decoration
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseViewHolder
+import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_sticky_header.*
@@ -28,9 +30,14 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
             list.map { content -> ItemInfo("$i", "GROUP $i", content) }
         }.flatten()
 
-        val mAdapter = DecorationAdapter(this, data)
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerview.addItemDecoration(StickyItemDecoration(this, data))
-        recyclerview.adapter = mAdapter
+        recyclerview.adapter = StickyHeaderAdapter(data)
+    }
+
+    private class StickyHeaderAdapter(data: List<ItemInfo>) : RxBaseQuickAdapter<ItemInfo, BaseViewHolder>(R.layout.item_sticky_header, data) {
+        override fun convert(helper: BaseViewHolder, item: ItemInfo) {
+            helper.setText(R.id.content_textview, item.content)
+        }
     }
 }
