@@ -118,6 +118,10 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                 .subscribe {
                     screen_layout.updateLayoutParams { width = selection_layout.width }
                     screen_view.updateLayoutParams { width = selection_layout.width * 2 / 3 }
+
+                    selection_scrollview.scrollTo(0, 0)
+                    selection_recyclerview.layoutManager?.scrollToPosition(0)
+                    index_recyclerview.layoutManager?.scrollToPosition(0)
                 }
     }
 
