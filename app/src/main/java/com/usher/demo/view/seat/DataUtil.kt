@@ -1,4 +1,4 @@
-package com.usher.demo.awesome.selection
+package com.usher.demo.view.seat
 
 import com.twigcodes.ui.SeatSelectionView
 import com.twigcodes.ui.SeatSelectionView2

@@ -3,8 +3,6 @@ package com.usher.demo.main
 import com.usher.demo.awesome.channel.ChannelActivity
 import com.usher.demo.awesome.decoration.DecorationActivity
 import com.usher.demo.awesome.drag.DragActiity
-import com.usher.demo.awesome.selection.SeatSelection2Activity
-import com.usher.demo.awesome.selection.SeatSelectionActivity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
 import com.usher.demo.image.ImageBlurActivity
 import com.usher.demo.image.ImageScaleTypeActivity
@@ -24,6 +22,8 @@ import com.usher.demo.rx.RxSumActivity
 import com.usher.demo.view.*
 import com.usher.demo.view.loading.LoadingActivity
 import com.usher.demo.view.looprecycler.LoopRecyclerActivity
+import com.usher.demo.view.seat.SeatSelection2Activity
+import com.usher.demo.view.seat.SeatSelectionActivity
 import com.usher.demo.web.AngularActivity
 import com.usher.demo.web.three.ThreeActivity
 
@@ -78,9 +78,11 @@ object DemoConfig {
         )
 
         configMap[KEY_VIEW] = listOf(
+                DemoItem("marquee text", MarqueeTextActivity::class.java),
                 DemoItem("wave", WaveActivity::class.java),
                 DemoItem("pager", PagerActivity::class.java),
-                DemoItem("marquee text", MarqueeTextActivity::class.java),
+                DemoItem("seat selection", SeatSelectionActivity::class.java),
+                DemoItem("seat selection2", SeatSelection2Activity::class.java),
                 DemoItem("loading", LoadingActivity::class.java),
                 DemoItem("chart", ChartActivity::class.java),
                 DemoItem("loop reycler", LoopRecyclerActivity::class.java),
@@ -94,8 +96,6 @@ object DemoConfig {
         )
 
         configMap[KEY_AWESOME] = listOf(
-                DemoItem("seat selection", SeatSelectionActivity::class.java),
-                DemoItem("seat selection2", SeatSelection2Activity::class.java),
                 DemoItem("edit channel", ChannelActivity::class.java),
                 DemoItem("recyclerView decoration", DecorationActivity::class.java),
                 DemoItem("smart home", SmartHomeActivity::class.java),

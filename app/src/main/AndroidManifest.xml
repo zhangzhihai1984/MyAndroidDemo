@@ -53,16 +53,6 @@
             android:name=".awesome.decoration.DecorationActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".awesome.selection.SeatSelectionActivity"
-            android:configChanges="uiMode"
-            android:screenOrientation="landscape"
-            android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".awesome.selection.SeatSelection2Activity"
-            android:configChanges="uiMode"
-            android:screenOrientation="landscape"
-            android:theme="@style/CommonTheme" />
-        <activity
             android:name=".awesome.smarthome.SmartHomeActivity"
             android:theme="@style/CommonTheme" />
         <activity
@@ -149,6 +139,16 @@
         <activity
             android:name=".view.ScanActivity"
             android:configChanges="uiMode"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".view.seat.SeatSelectionActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="landscape"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".view.seat.SeatSelection2Activity"
+            android:configChanges="uiMode"
+            android:screenOrientation="landscape"
             android:theme="@style/CommonTheme" />
 
         <!-- Web Demo -->

@@ -1,25 +1,25 @@
-package com.usher.demo.awesome.selection
+package com.usher.demo.view.seat
 
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.animation.OvershootInterpolator
 import com.jakewharton.rxbinding3.view.clicks
-import com.twigcodes.ui.SeatSelectionView2
+import com.twigcodes.ui.SeatSelectionView
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_seat_selection2.*
+import kotlinx.android.synthetic.main.activity_seat_selection.*
 
-class SeatSelection2Activity : BaseActivity(Theme.DARK_ONLY) {
+class SeatSelectionActivity : BaseActivity(Theme.DARK_ONLY) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_seat_selection2)
+        setContentView(R.layout.activity_seat_selection)
         initView()
     }
 
     private fun initView() {
-        var seatData: ArrayList<ArrayList<SeatSelectionView2.Status>> = arrayListOf()
+        var seatData: ArrayList<ArrayList<SeatSelectionView.Status>> = arrayListOf()
 
         val countAnimator = ValueAnimator.ofFloat(1f, 1.5f, 1f).apply {
             duration = 1000
@@ -30,10 +30,10 @@ class SeatSelection2Activity : BaseActivity(Theme.DARK_ONLY) {
             }
         }
 
-        seatselectionview2.dataChanges()
+        seatselectionview.dataChanges()
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val count = seatData.flatten().filter { status -> status == SeatSelectionView2.Status.PENDING }.size
+                    val count = seatData.flatten().filter { status -> status == SeatSelectionView.Status.PENDING }.size
                     count_textview.text = "$count"
                     countAnimator.start()
                 }
@@ -43,8 +43,9 @@ class SeatSelection2Activity : BaseActivity(Theme.DARK_ONLY) {
                 .compose(RxUtil.singleClick())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    seatData = DataUtil.makeSeatData()
-                    seatselectionview2.setData(seatData, (90..180).random(), (90..180).random())
+                    val config = DataUtil.makeSeatConfig()
+                    seatData = config.data
+                    seatselectionview.setData(seatData, config.columnCount)
                 }
     }
 }
