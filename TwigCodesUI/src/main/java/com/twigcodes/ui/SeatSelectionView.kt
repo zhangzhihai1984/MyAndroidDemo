@@ -108,6 +108,9 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                     mSelectionAdapter.notifyDataSetChanged()
                     mIndexAdapter.itemHeight = selection_recyclerview.width / columnCount
                     mIndexAdapter.notifyDataSetChanged()
+
+                    selection_recyclerview.layoutManager?.scrollToPosition(0)
+                    index_recyclerview.layoutManager?.scrollToPosition(0)
                 }
     }
 
