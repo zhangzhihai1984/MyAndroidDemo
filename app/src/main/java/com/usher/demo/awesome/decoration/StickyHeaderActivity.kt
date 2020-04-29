@@ -70,6 +70,7 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
 
         private val mHeaderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = context.getColor(R.color.colorPrimary)
+            alpha = 0x66
             style = Paint.Style.FILL
         }
 
@@ -106,27 +107,43 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
         }
 
         override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-            var top = 0
-            var bottom = 0
-            val left = parent.paddingStart
-            val right = parent.width - parent.paddingEnd
+            val headerRect = Rect(parent.paddingStart, 0, parent.width - parent.paddingEnd, 0)
 
             parent.forEachIndexed { i, view ->
+                //第一个可见的item
                 if (i == 0) {
-                    top = parent.paddingTop
-                    bottom = top + HEADER_HEIGHT
+                    //固定在顶部
+                    headerRect.run {
+                        top = parent.paddingTop
+                        bottom = parent.paddingTop + HEADER_HEIGHT
+                    }
 
-                    val rect = Rect(left, top, right, bottom)
+                    /*
+                    * 如果当前为第一个可见且为组内最后一个item时, 以向上滑动为例, 当item的bottom等于固定在顶部的header的bottom时,
+                    * 说明此时item已完全被该header遮挡, 同时, 下一组的header也已"顶到了"该header, 如果继续向上滑动,
+                    * 也就是说item的bottom小于该header的bottom, 那么该header不应该再固定在顶部, 而是随着item向上滑动,
+                    * 直至滑出可见范围, 造成一种被下一组header顶出去的效果, 最后下一组的header固定在顶部
+                    */
+                    if (isLastViewInGroup(parent.getChildAdapterPosition(view))) {
+                        val lastItemBottom = view.bottom
 
-                    drawHeader(c, rect, parent.getChildAdapterPosition(view))
+                        if (headerRect.bottom > lastItemBottom) {
+                            headerRect.run {
+                                top = lastItemBottom - HEADER_HEIGHT
+                                bottom = lastItemBottom
+                            }
+                        }
+                    }
+
+                    drawHeader(c, headerRect, parent.getChildAdapterPosition(view))
 
                 } else if (isFirstViewInGroup(parent.getChildAdapterPosition(view))) {
-                    top = view.top - HEADER_HEIGHT
-                    bottom = view.top
+                    headerRect.run {
+                        top = view.top - HEADER_HEIGHT
+                        bottom = view.top
+                    }
 
-                    val rect = Rect(left, top, right, bottom)
-
-                    drawHeader(c, rect, parent.getChildAdapterPosition(view))
+                    drawHeader(c, headerRect, parent.getChildAdapterPosition(view))
                 }
             }
         }
