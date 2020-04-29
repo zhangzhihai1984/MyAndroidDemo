@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.forEach
+import androidx.core.view.forEachIndexed
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
+import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_sticky_header.*
@@ -23,6 +26,8 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
     }
 
     private fun initView() {
+        statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@StickyHeaderActivity) }
+
         val data = listOf(
                 listOf(*resources.getStringArray(R.array.sticky_list1)),
                 listOf(*resources.getStringArray(R.array.sticky_list2)),
@@ -101,13 +106,23 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
         }
 
         override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-            parent.forEach { view ->
+            var top = 0
+            var bottom = 0
+            val left = parent.paddingStart
+            val right = parent.width - parent.paddingEnd
 
-                if (isFirstViewInGroup(parent.getChildAdapterPosition(view))) {
-                    val top = view.top - HEADER_HEIGHT
-                    val bottom = view.top
-                    val left = parent.paddingStart
-                    val right = parent.width - parent.paddingEnd
+            parent.forEachIndexed { i, view ->
+                if (i == 0) {
+                    top = parent.paddingTop
+                    bottom = top + HEADER_HEIGHT
+
+                    val rect = Rect(left, top, right, bottom)
+
+                    drawHeader(c, rect, parent.getChildAdapterPosition(view))
+
+                } else if (isFirstViewInGroup(parent.getChildAdapterPosition(view))) {
+                    top = view.top - HEADER_HEIGHT
+                    bottom = view.top
 
                     val rect = Rect(left, top, right, bottom)
 
