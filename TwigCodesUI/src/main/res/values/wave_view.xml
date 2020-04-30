@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="WaveView">
-        <attr name="frontColor" format="color" />
-        <attr name="backColor" format="color" />
+        <attr name="frontColor" format="reference|color" />
+        <attr name="backColor" format="reference|color" />
         <attr name="progress" format="integer" />
         <attr name="wave_length_multiple" format="float" />
         <attr name="wave_height" format="dimension" />

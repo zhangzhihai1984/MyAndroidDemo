@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ScanView">
-        <attr name="centerColor" format="color" />
-        <attr name="edgeColor" format="color" />
+        <attr name="centerColor" format="reference|color" />
+        <attr name="edgeColor" format="reference|color" />
     </declare-styleable>
 </resources>
