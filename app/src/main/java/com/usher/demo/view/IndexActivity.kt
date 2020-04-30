@@ -5,12 +5,11 @@ import android.graphics.*
 import android.os.Bundle
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.forEach
-import androidx.core.view.forEachIndexed
-import androidx.core.view.updateLayoutParams
+import androidx.core.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
+import com.twigcodes.ui.IndexView
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
@@ -44,7 +43,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerview.adapter = StickyHeaderAdapter(data.flatten())
-        recyclerview.addItemDecoration(StickyHeaderDecoration(this, decorationData))
+        recyclerview.addItemDecoration(StickyHeaderDecoration(this, indexview, decorationData))
 
         indexview.setData(data.mapIndexed { i, _ -> "${i + 1}" })
         indexview.indexChanges()
@@ -63,7 +62,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
     }
 
-    private class StickyHeaderDecoration(private val context: Context, private val data: List<Pair<Int, String>>) : RecyclerView.ItemDecoration() {
+    private class StickyHeaderDecoration(private val context: Context, private val indexView: IndexView, private val data: List<Pair<Int, String>>) : RecyclerView.ItemDecoration() {
         companion object {
             private const val DIVIDER_HEIGHT = 3 * 3
             private const val HEADER_HEIGHT = 30 * 3
@@ -91,7 +90,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-//            outRect.top = DIVIDER_HEIGHT.takeIf { parent.getChildAdapterPosition(view) > 0 } ?: 0
             outRect.top = HEADER_HEIGHT.takeIf { isFirstViewInGroup(parent.getChildAdapterPosition(view)) }
                     ?: DIVIDER_HEIGHT
             outRect.left = OFFSET_LEFT
@@ -155,6 +153,11 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
                     drawHeader(c, headerRect, parent.getChildAdapterPosition(view))
                 }
+            }
+
+            if (parent.isNotEmpty()) {
+                val index = data[parent.getChildAdapterPosition(parent[0])].first
+                indexView.changeIndex(index)
             }
         }
 

@@ -81,7 +81,6 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
         }
 
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-//            outRect.top = DIVIDER_HEIGHT.takeIf { parent.getChildAdapterPosition(view) > 0 } ?: 0
             outRect.top = HEADER_HEIGHT.takeIf { isFirstViewInGroup(parent.getChildAdapterPosition(view)) }
                     ?: DIVIDER_HEIGHT
             outRect.left = OFFSET_LEFT

@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
@@ -44,7 +43,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var mData = listOf<String>()
 
     private var mItemHeight = 0f
-    private var mCurrentPosition = -1
+    private var mCurrentIndex = -1
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.IndexView, defStyleAttr, defStyleRes)
@@ -79,12 +78,19 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     fun indexChanges() = mIndexChangeSubject
 
+    fun changeIndex(index: Int) {
+        if (mCurrentIndex != index) {
+            mCurrentIndex = index
+            invalidate()
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                mCurrentPosition = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
-                mIndexChangeSubject.onNext(mCurrentPosition)
+                mCurrentIndex = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
+                mIndexChangeSubject.onNext(mCurrentIndex)
                 invalidate()
             }
             MotionEvent.ACTION_UP -> {
@@ -101,7 +107,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
             val metrics = mTextPaint.fontMetrics
             canvas.drawText(text, width.toFloat() / 2, (i + 0.5f) * mItemHeight - metrics.top / 2 - metrics.bottom / 2, mTextPaint.apply {
-                color = if (i == mCurrentPosition) mIndexedColor else mIdleColor
+                color = if (i == mCurrentIndex) mIndexedColor else mIdleColor
             })
         }
     }
