@@ -6,11 +6,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.subjects.PublishSubject
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -21,6 +23,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         private const val DEFAULT_IDLE_COLOR = Color.GRAY
         private const val DEFAULT_INDEXED_COLOR = Color.BLACK
     }
+
+    private val mIndexChangeSubject = PublishSubject.create<Int>()
 
     private val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
@@ -35,8 +39,9 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var mIndexedColor: Int
     private var mTextSize: Float
 
-    private val mData = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
-            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#")
+    //    private var mData = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+//            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#")
+    private var mData = listOf<String>()
 
     private var mItemHeight = 0f
     private var mCurrentPosition = -1
@@ -56,19 +61,30 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private fun initView() {
+    }
+
+    fun setData(data: List<String>) {
+        mData = data
+
+        requestLayout()
+
         globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mItemHeight = height.toFloat() / mData.size
+                    invalidate()
                 }
     }
+
+    fun indexChanges() = mIndexChangeSubject
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
                 mCurrentPosition = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
+                mIndexChangeSubject.onNext(mCurrentPosition)
                 invalidate()
             }
             MotionEvent.ACTION_UP -> {
