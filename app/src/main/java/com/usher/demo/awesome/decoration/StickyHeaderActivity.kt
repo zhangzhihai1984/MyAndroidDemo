@@ -39,7 +39,7 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
         )
 
         val decorationData = data.mapIndexed { i, list ->
-            list.map { i to "Header $i" }
+            list.map { i to "Header ${i + 1}" }
         }.flatten()
 
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
