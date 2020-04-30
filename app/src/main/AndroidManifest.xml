@@ -152,6 +152,11 @@
             android:configChanges="uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".view.IndexActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
 
         <!-- Web Demo -->
         <activity

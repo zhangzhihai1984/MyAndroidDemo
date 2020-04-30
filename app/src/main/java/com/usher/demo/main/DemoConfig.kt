@@ -86,7 +86,8 @@ object DemoConfig {
                 DemoItem("loading", LoadingActivity::class.java),
                 DemoItem("chart", ChartActivity::class.java),
                 DemoItem("loop reycler", LoopRecyclerActivity::class.java),
-                DemoItem("scan", ScanActivity::class.java)
+                DemoItem("scan", ScanActivity::class.java),
+                DemoItem("index", IndexActivity::class.java)
         )
 
         configMap[KEY_OTHER] = listOf(
