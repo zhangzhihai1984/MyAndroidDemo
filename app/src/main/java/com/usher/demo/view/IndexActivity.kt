@@ -46,12 +46,15 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         recyclerview.adapter = StickyHeaderAdapter(data.flatten())
         recyclerview.addItemDecoration(StickyHeaderDecoration(this, decorationData))
 
-        indexview.setData(data.mapIndexed { i, _ -> "$i" })
+        indexview.setData(data.mapIndexed { i, _ -> "${i + 1}" })
         indexview.indexChanges()
                 .distinctUntilChanged()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { }
+                .subscribe { index ->
+                    val position = decorationData.indexOfFirst { it.first == index }
+                    (recyclerview.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+                }
     }
 
     private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_sticky_header, data) {
