@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,6 +54,10 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe { index ->
                     val position = decorationData.indexOfFirst { it.first == index }
                     (recyclerview.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+
+                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - bubble_textview.height * 0.5f + indexview.top
+                    bubble_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
+                    bubble_textview.text = "${index + 1}"
                 }
     }
 

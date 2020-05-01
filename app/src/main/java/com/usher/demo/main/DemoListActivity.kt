@@ -27,6 +27,7 @@ class DemoListActivity : BaseActivity(Theme.LIGHT_AUTO) {
         recyclerview.adapter = adapter
 
         adapter.itemClicks()
+                .compose(RxUtil.singleClick())
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { position ->

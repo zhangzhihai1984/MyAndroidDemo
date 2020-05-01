@@ -55,11 +55,6 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         mTextPaint.run {
             textSize = mTextSize
         }
-
-        initView()
-    }
-
-    private fun initView() {
     }
 
     fun setData(data: List<String>) {

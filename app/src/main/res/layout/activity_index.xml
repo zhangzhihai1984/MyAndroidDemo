@@ -26,14 +26,24 @@
         <com.twigcodes.ui.IndexView
             android:id="@+id/indexview"
             android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_height="300dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="50dp"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="50dp"
             app:idleColor="#888888"
             app:indexedColor="@color/colorPrimary"
             app:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/bubble_textview"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="80dp"
+            android:background="@drawable/ic_index_bubble"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
