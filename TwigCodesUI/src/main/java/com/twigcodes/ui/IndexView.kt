@@ -1,6 +1,5 @@
 package com.twigcodes.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.subjects.PublishSubject
 import kotlin.math.floor
@@ -55,6 +55,30 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         mTextPaint.run {
             textSize = mTextSize
         }
+
+        initView()
+    }
+
+    private fun initView() {
+        touches { event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                    val index = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
+                    if (mCurrentIndex != index) {
+                        mCurrentIndex = index
+                        mIndexChangeSubject.onNext(mCurrentIndex)
+                    }
+
+                    invalidate()
+                }
+                MotionEvent.ACTION_UP -> {
+                }
+            }
+
+            true
+        }
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe { }
     }
 
     fun setData(data: List<String>) {
@@ -78,20 +102,6 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             mCurrentIndex = index
             invalidate()
         }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                mCurrentIndex = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
-                mIndexChangeSubject.onNext(mCurrentIndex)
-                invalidate()
-            }
-            MotionEvent.ACTION_UP -> {
-            }
-        }
-        return true
     }
 
     override fun onDraw(canvas: Canvas) {
