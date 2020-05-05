@@ -10,12 +10,12 @@ import androidx.core.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.twigcodes.ui.IndexView
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_index.*
 
 class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
@@ -42,9 +42,11 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             list.map { i to "Header ${i + 1}" }
         }.flatten()
 
+        val stickyHeaderDecoration = StickyHeaderDecoration(this, decorationData)
+
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerview.adapter = StickyHeaderAdapter(data.flatten())
-        recyclerview.addItemDecoration(StickyHeaderDecoration(this, indexview, decorationData))
+        recyclerview.addItemDecoration(stickyHeaderDecoration)
 
         indexview.setData(data.mapIndexed { i, _ -> "${i + 1}" })
         /*
@@ -71,6 +73,18 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val content = "${index + 1}"
                     bubble_textview.text = content
                 }
+
+        stickyHeaderDecoration.indexChanges()
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe { index ->
+                    indexview.changeIndex(index)
+
+                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - bubble_textview.height * 0.5f + indexview.top
+                    bubble_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
+                    val content = "${index + 1}"
+                    bubble_textview.text = content
+                }
     }
 
     private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_sticky_header, data) {
@@ -79,7 +93,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
     }
 
-    private class StickyHeaderDecoration(private val context: Context, private val indexView: IndexView, private val data: List<Pair<Int, String>>) : RecyclerView.ItemDecoration() {
+    private class StickyHeaderDecoration(private val context: Context, private val data: List<Pair<Int, String>>) : RecyclerView.ItemDecoration() {
         companion object {
             private const val DIVIDER_HEIGHT = 3 * 3
             private const val HEADER_HEIGHT = 30 * 3
@@ -87,6 +101,8 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             private const val SIDE_LENGTH = 30 * 3
             private const val CIRCLE_RADIUS = 15 * 3f
         }
+
+        private val mIndexChangeSubject = PublishSubject.create<Int>()
 
         private val mStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = context.getColor(R.color.colorPrimary)
@@ -184,7 +200,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
             if (parent.isNotEmpty()) {
                 val index = data[parent.getChildAdapterPosition(parent[0])].first
-                indexView.changeIndex(index)
+                mIndexChangeSubject.onNext(index)
             }
         }
 
@@ -201,5 +217,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         private fun isLastViewInGroup(position: Int) =
                 position == data.size - 1 || data[position].first != data[position + 1].first
 
+        fun indexChanges() = mIndexChangeSubject
     }
 }
