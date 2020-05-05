@@ -64,6 +64,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             when (event.action) {
                 MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
                     val index = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
+
+                    //为了避免滑动过程中不断emit相同的值, 只有index发生变化了之后再emit
                     if (mCurrentIndex != index) {
                         mCurrentIndex = index
                         mIndexChangeSubject.onNext(mCurrentIndex)

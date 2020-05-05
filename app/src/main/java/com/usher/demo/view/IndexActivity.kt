@@ -49,12 +49,17 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indexview.setData(data.mapIndexed { i, _ -> "${i + 1}" })
         /*
         * 当滑动IndexView引发索引发生变化时:
-        * 1. 找到该组的第一个数据对应的索引值, 然后将该item滑动至顶部, 由于该item是组内的第一个item, 因此header自然会出现在顶部
+        * 1. 找到该组的第一个数据对应的索引值, 然后将该item滑动至顶部, 由于该item是组内的第一个item,
+        * 因此header自然会出现在顶部.
         * 2. 将bubble的margin top调整至IndexView对应索引所在的位置, 该值为:
         * indexview_item高度*i + indexview_item高度/2 - bubble高度/2 + indexview.top
+        *
+        * 注意, 不要使用distinctUntilChanged:
+        * 1. IndexView已经做了处理, 当index没有发生变化时是不会emit的
+        * 2. IndexView的indexChanges是滑动IndexView时被动接收index的变化, 同时也可以滑动RecyclerView主动调用
+        * IndexView的changeIndex, 因此, 如果两次接收到了相同的index, 这只能说明.
         */
         indexview.indexChanges()
-                .distinctUntilChanged()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { index ->
