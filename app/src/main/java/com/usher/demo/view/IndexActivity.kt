@@ -47,6 +47,12 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         recyclerview.addItemDecoration(StickyHeaderDecoration(this, indexview, decorationData))
 
         indexview.setData(data.mapIndexed { i, _ -> "${i + 1}" })
+        /*
+        * 当滑动IndexView引发索引发生变化时:
+        * 1. 找到该组的第一个数据对应的索引值, 然后将该item滑动至顶部, 由于该item是组内的第一个item, 因此header自然会出现在顶部
+        * 2. 将bubble的margin top调整至IndexView对应索引所在的位置, 该值为:
+        * indexview_item高度*i + indexview_item高度/2 - bubble高度/2 + indexview.top
+        */
         indexview.indexChanges()
                 .distinctUntilChanged()
                 .compose(RxUtil.getSchedulerComposer())
@@ -57,7 +63,8 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
                     val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - bubble_textview.height * 0.5f + indexview.top
                     bubble_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
-                    bubble_textview.text = "${index + 1}"
+                    val content = "${index + 1}"
+                    bubble_textview.text = content
                 }
     }
 
@@ -120,15 +127,16 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         /**
-         * 我们首先需要做的是遍历[RecyclerView]的item view, 需要注意的是, [RecyclerView]的item view是复用的, 所以我们得到的索引值是可见item view的索引值,
-         * 如果要获取该item view所对应的"真正的"索引值的话, 需要调用[RecyclerView.getChildAdapterPosition]获取.
+         * 我们首先需要做的是遍历[RecyclerView]的item view, 需要注意的是, [RecyclerView]的item view是复用的,
+         * 所以我们得到的索引值是可见item view的索引值, 如果要获取该item view所对应的"真正的"索引值的话, 需要调用
+         * [RecyclerView.getChildAdapterPosition]获取.
          *
          * 我们对header的绘制从普遍到特殊分三步进行处理:
          * 1. 在[getItemOffsets]中我们已经在每组item顶部将header的位置预留出来, 首先需要做的
          * 就是把header绘制在给他们预留的应地方. 此时看到的效果就是所有的header和item的滑动是同步的.
-         * 2. 考虑到sticky header的效果, 我们需要将[RecyclerView]顶部item(第一个可见的, 即索引为0的item)所在组的header固定绘制在
-         * [RecyclerView]的顶部, 不随着item的滑动而滑动.此时已经有sticky header的效果了, 但是随着滑动
-         * 的继续, 下一组header会覆盖在上一组header的上面, 而不是有一种"推上去"的效果.
+         * 2. 考虑到sticky header的效果, 我们需要将[RecyclerView]顶部item(第一个可见的, 即索引为0的item)
+         * 所在组的header固定绘制在[RecyclerView]的顶部, 不随着item的滑动而滑动. 此时已经有sticky header的效果了,
+         * 但是随着滑动的继续, 下一组header会覆盖在上一组header的上面, 而不是有一种"推上去"的效果.
          * 3. 为了实现"下一个header将上一个header推上去"的效果, 当固定在顶部的header的bottom与组内最后
          * 一个item的bottom重合时, 也就是下一组的header已经"顶到了"固定在顶部的header时, 那么该header
          * 便不再固定在顶部, 而是随着最后一个item一起滑走.
