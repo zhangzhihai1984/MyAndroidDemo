@@ -35,12 +35,12 @@
             app:textSize="12sp" />
 
         <TextView
-            android:id="@+id/bubble_textview"
+            android:id="@+id/indicator_textview"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="80dp"
-            android:background="@drawable/ic_index_bubble"
+            android:background="@drawable/ic_index_indicator"
             android:gravity="center"
             android:textSize="14sp"
             android:textStyle="bold" />

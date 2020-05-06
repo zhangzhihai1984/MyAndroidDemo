@@ -49,15 +49,25 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         recyclerview.addItemDecoration(stickyHeaderDecoration)
 
         indexview.setData(data.mapIndexed { i, _ -> "${i + 1}" })
+
+        /**
+         * TODO: 当滑动IndexView时, 如果该索引没有数据如何处理?
+         * TODO: 当滑动IndexView时, 如果该索引如法滑动到顶端如何处理?
+         *
+         * 当滑动IndexView时, 会出现对应的索引所在的组没有数据(比如说联系人中没有以U或V开头的数据)或是所在组的数据不足
+         * 导致该组header无法固定在顶部(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header其实是X组的).
+         * 但是这不妨碍
+         */
+
         /*
         * 当滑动IndexView引发索引发生变化时:
-        * 1. 找到该组的第一个数据对应的索引值, 然后将该item滑动至顶部, 由于该item是组内的第一个item,
-        * 因此header自然会出现在顶部.
-        * 2. 将bubble的margin top调整至IndexView对应索引所在的位置, 该值为:
-        * indexview_item高度*i + indexview_item高度/2 - bubble高度/2 + indexview.top
+        * 1. 找到该组的第一个数据对应的索引值, 然后将该item滑动至顶部, 由于该item是组内的第一个item, 因此header自然
+        * 会出现在顶部.
+        * 2. 将indicator的margin top调整至IndexView对应索引所在的位置, 该值为:
+        * indexview_item高度*i + indexview_item高度/2 - indicator高度/2 + indexview.top
         *
         * 注意, 不要使用distinctUntilChanged:
-        * 1. IndexView已经做了处理, 当index没有发生变化时是不会emit的
+        * 1. IndexView已经做了处理, 当index没有发生变化时是不会emit的.
         * 2. IndexView的indexChanges是滑动IndexView时被动接收index的变化, 同时也可以滑动RecyclerView主动调用
         * IndexView的changeIndex, 因此, 如果两次接收到了相同的index, 这只能说明.
         */
@@ -68,10 +78,10 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val position = decorationData.indexOfFirst { it.first == index }
                     (recyclerview.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
 
-                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - bubble_textview.height * 0.5f + indexview.top
-                    bubble_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
+                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - indicator_textview.height * 0.5f + indexview.top
+                    indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
                     val content = "${index + 1}"
-                    bubble_textview.text = content
+                    indicator_textview.text = content
                 }
 
         stickyHeaderDecoration.indexChanges()
@@ -80,10 +90,10 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe { index ->
                     indexview.changeIndex(index)
 
-                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - bubble_textview.height * 0.5f + indexview.top
-                    bubble_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
+                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - indicator_textview.height * 0.5f + indexview.top
+                    indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
                     val content = "${index + 1}"
-                    bubble_textview.text = content
+                    indicator_textview.text = content
                 }
     }
 
