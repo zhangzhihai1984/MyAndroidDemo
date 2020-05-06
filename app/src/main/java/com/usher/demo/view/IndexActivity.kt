@@ -1,12 +1,17 @@
 package com.usher.demo.view
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.*
+import android.widget.TextView
+import androidx.core.view.forEachIndexed
+import androidx.core.view.get
+import androidx.core.view.isNotEmpty
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
@@ -134,64 +139,35 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
     }
 
-    private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_sticky_header, data) {
+    private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_index, data) {
         override fun convert(helper: BaseViewHolder, content: String) {
-            helper.setText(R.id.content_textview, content)
+            (helper.itemView as TextView).text = content
         }
     }
 
     private class StickyHeaderDecoration(private val context: Context, private val data: List<Pair<Int, String>>) : RecyclerView.ItemDecoration() {
         companion object {
-            private const val DIVIDER_HEIGHT = 3 * 3
-            private const val HEADER_HEIGHT = 30 * 3
-            private const val OFFSET_LEFT = 45 * 3
-            private const val SIDE_LENGTH = 30 * 3
-            private const val CIRCLE_RADIUS = 15 * 3f
+            private const val DIVIDER_HEIGHT = 1 * 3
+            private const val HEADER_HEIGHT = 45 * 3
+            private const val HEADER_LEFT = 20 * 3
         }
 
         private val mScrollSubject = PublishSubject.create<Unit>()
 
-        private val mStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = context.getColor(R.color.colorPrimary)
-            style = Paint.Style.STROKE
-            strokeWidth = 6f
-        }
-
         private val mHeaderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = context.getColor(R.color.colorPrimary)
-            alpha = 0x66
+            color = context.getColor(R.color.item_background)
             style = Paint.Style.FILL
         }
 
         private val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FAKE_BOLD_TEXT_FLAG).apply {
-            color = Color.WHITE
-            textAlign = Paint.Align.CENTER
+            color = context.getColor(R.color.text_secondary)
+            textAlign = Paint.Align.LEFT
             textSize = 40f
         }
 
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-            outRect.top = HEADER_HEIGHT.takeIf { isFirstViewInGroup(parent.getChildAdapterPosition(view)) }
-                    ?: DIVIDER_HEIGHT
-            outRect.left = OFFSET_LEFT
-        }
-
-        override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-            parent.forEach { view ->
-                val centerX = (parent.paddingStart + OFFSET_LEFT / 2).toFloat()
-                val centerY = (view.top + view.height / 2).toFloat()
-
-                val bitmap = context.resources.getDrawable(R.drawable.ic_face_primary, null).toBitmap()
-                val dst = RectF()
-                dst.top = centerY - SIDE_LENGTH / 2
-                dst.bottom = centerY + SIDE_LENGTH / 2
-                dst.left = centerX - SIDE_LENGTH / 2
-                dst.right = centerX + SIDE_LENGTH / 2
-
-                c.drawBitmap(bitmap, null, dst, null)
-                c.drawCircle(centerX, centerY, CIRCLE_RADIUS, mStrokePaint)
-                c.drawLine(centerX, centerY - CIRCLE_RADIUS, centerX, view.top.toFloat() /*- DIVIDER_HEIGHT*/, mStrokePaint)
-                c.drawLine(centerX, centerY + CIRCLE_RADIUS, centerX, view.bottom.toFloat(), mStrokePaint)
-            }
+            outRect.top = if (isFirstViewInGroup(parent.getChildAdapterPosition(view))) HEADER_HEIGHT else 0
+            outRect.bottom = if (isLastViewInGroup(parent.getChildAdapterPosition(view))) DIVIDER_HEIGHT else 0
         }
 
         /**
@@ -248,7 +224,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             c.drawRect(rect, mHeaderPaint)
 
             val metrics = mTextPaint.fontMetrics
-            c.drawText(data[position].second, rect.exactCenterX(), rect.exactCenterY() - metrics.top / 2 - metrics.bottom / 2, mTextPaint)
+            c.drawText(data[position].second, HEADER_LEFT.toFloat(), rect.exactCenterY() - metrics.top / 2 - metrics.bottom / 2, mTextPaint)
         }
 
         private fun isFirstViewInGroup(position: Int) =

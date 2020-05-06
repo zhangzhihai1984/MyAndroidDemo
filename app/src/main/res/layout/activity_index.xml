@@ -10,7 +10,7 @@
         android:id="@+id/statusbar_view"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:background="@color/colorPrimary" />
+        android:background="@color/item_background" />
 
     <RelativeLayout
         android:layout_width="match_parent"
