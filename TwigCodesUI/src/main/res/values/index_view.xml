@@ -4,5 +4,6 @@
         <attr name="idleColor" format="reference|color" />
         <attr name="indexedColor" format="reference|color" />
         <attr name="textSize" format="dimension" />
+        <attr name="debug" format="boolean" />
     </declare-styleable>
 </resources>

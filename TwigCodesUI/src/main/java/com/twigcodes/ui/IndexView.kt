@@ -37,6 +37,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var mIdleColor: Int
     private var mIndexedColor: Int
     private var mTextSize: Float
+    private var mIsDebug = false
 
     private var mData = listOf<String>()
 
@@ -48,6 +49,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         mIdleColor = a.getColor(R.styleable.IndexView_idleColor, DEFAULT_IDLE_COLOR)
         mIndexedColor = a.getColor(R.styleable.IndexView_indexedColor, DEFAULT_INDEXED_COLOR)
         mTextSize = a.getDimensionPixelSize(R.styleable.IndexView_textSize, DEFAULT_TEXT_SIZE).toFloat()
+        mIsDebug = a.getBoolean(R.styleable.IndexView_debug, false)
         a.recycle()
 
         mTextPaint.run {
@@ -108,7 +110,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         super.onDraw(canvas)
 
         mData.forEachIndexed { i, text ->
-            canvas.drawLine(0f, i * mItemHeight, width.toFloat(), i * mItemHeight, mDividerPaint)
+            if (mIsDebug)
+                canvas.drawLine(0f, i * mItemHeight, width.toFloat(), i * mItemHeight, mDividerPaint)
 
             val metrics = mTextPaint.fontMetrics
             canvas.drawText(text, width.toFloat() / 2, (i + 0.5f) * mItemHeight - metrics.top / 2 - metrics.bottom / 2, mTextPaint.apply {
