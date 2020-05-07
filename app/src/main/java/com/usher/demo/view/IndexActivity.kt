@@ -65,12 +65,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indexview.setData(indexData)
 
         /**
-         * TODO: 当滑动IndexView时, 如果该索引没有数据如何处理?
-         * TODO: 当滑动IndexView时, 如果该索引如法滑动到顶端如何处理?
-         *
-         */
-
-        /**
          * 当滑动IndexView导致索引发生变化时:
          * 1. 找到属于该组的数据, 进而找到将组内第一个数据对应的索引, 然后将对应的item滑动至顶部, 由于该item是组内的
          * 第一个item, 因此该组的header自然会出现在顶部.
@@ -88,6 +82,12 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 2. 当滑动IndexView时, 会出现对应的索引所在的组没有数据(比如说联系人中没有以U或V开头的数据)或是所在组的数据
          * 不足导致该组header无法固定在顶部(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header其实是Y组的).
          * 但是这不妨碍indicator"对准"IndexView对应索引的位置.
+         * (1) 如果所在组没有数据: position为-1, [LinearLayoutManager.scrollToPositionWithOffset]中对
+         * position的要求是"starting at 0", 尽管不会导致任何滑动, 但是我们依然要调用该方法, 因为这样会触发
+         * [RecyclerView.requestLayout], 于是我们可以在[RecyclerView.ItemDecoration.onDrawOver]时
+         * 对IndexView的索引进行"纠错"操作.
+         * (2) 如果所在组数据不足无法滑动到顶端: 与上面类似, 只不过RecyclerView没有滑动到预期的位置, 我们依然需要对
+         * IndexView的索引进行"纠错"操作.
          */
         indexview.indexChanges()
                 .compose(RxUtil.getSchedulerComposer())

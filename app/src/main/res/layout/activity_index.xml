@@ -43,7 +43,10 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="60dp"
             android:background="@drawable/ic_index_indicator"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@android:color/white"
             android:textSize="14sp"
             android:textStyle="bold" />
 
