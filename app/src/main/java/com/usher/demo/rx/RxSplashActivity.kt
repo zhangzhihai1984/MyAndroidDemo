@@ -29,8 +29,8 @@ class RxSplashActivity : BaseActivity(Theme.LIGHT_AUTO) {
             interpolator = OvershootInterpolator()
             repeatCount = ValueAnimator.INFINITE
             addUpdateListener {
-                countdown_textview.scaleX = it.animatedValue as Float
-                countdown_textview.scaleY = it.animatedValue as Float
+                countdown_textview.scaleX = animatedValue as Float
+                countdown_textview.scaleY = animatedValue as Float
             }
         }.start()
 

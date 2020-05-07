@@ -30,8 +30,8 @@ class RxExitActivity : BaseActivity(Theme.LIGHT_AUTO) {
             interpolator = OvershootInterpolator()
             repeatCount = ValueAnimator.INFINITE
             addUpdateListener {
-                exit_imageview.scaleX = it.animatedValue as Float
-                exit_imageview.scaleY = it.animatedValue as Float
+                exit_imageview.scaleX = animatedValue as Float
+                exit_imageview.scaleY = animatedValue as Float
             }
         }.start()
 

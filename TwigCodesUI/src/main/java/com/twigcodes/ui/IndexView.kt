@@ -24,6 +24,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private val mIndexChangeSubject = PublishSubject.create<Int>()
+    private val mTouchSubject = PublishSubject.create<Int>()
 
     private val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
@@ -73,9 +74,9 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
                     invalidate()
                 }
-                MotionEvent.ACTION_UP -> {
-                }
             }
+
+            mTouchSubject.onNext(event.action)
 
             true
         }
@@ -98,6 +99,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     fun indexChanges() = mIndexChangeSubject
+
+    fun touches() = mTouchSubject
 
     fun changeIndex(index: Int) {
         if (mCurrentIndex != index) {

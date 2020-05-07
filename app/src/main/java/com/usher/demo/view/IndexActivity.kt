@@ -1,12 +1,15 @@
 package com.usher.demo.view
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.core.view.forEachIndexed
 import androidx.core.view.get
@@ -64,6 +67,27 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         indexview.setData(indexData)
 
+        val showAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 100
+            interpolator = LinearInterpolator()
+            addUpdateListener {
+                indicator_textview.pivotX = indicator_textview.width.toFloat()
+                indicator_textview.scaleX = animatedValue as Float
+                indicator_textview.scaleY = animatedValue as Float
+            }
+        }
+
+        val hideAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
+            duration = 100
+            startDelay = 500
+            interpolator = LinearInterpolator()
+            addUpdateListener {
+                indicator_textview.pivotX = indicator_textview.width.toFloat()
+                indicator_textview.scaleX = animatedValue as Float
+                indicator_textview.scaleY = animatedValue as Float
+            }
+        }
+
         /**
          * 当滑动IndexView导致索引发生变化时:
          * 1. 找到属于该组的数据, 进而找到将组内第一个数据对应的索引, 然后将对应的item滑动至顶部, 由于该item是组内的
@@ -100,6 +124,34 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
                     indicator_textview.text = value
+                }
+
+        /**
+         * indicator动画处理:
+         * 1. MOVE: 不处理, 也就是说让indicator一直显示.
+         * 2. UP: 开始indicator"消失"动画.
+         * 3. DOWN: 正常情况下开始indicator"显示"动画. 但是要考虑一种情况, 就是刚刚经历了UP, 此时的"消失"动画刚刚
+         * 开始, 也就是说indicator并没有消失, 此时如果开始indicator"显示"动画, 那么会让已经出现的indicator重新
+         * 再出现一遍, 如果频繁的进行索引切换操作的话, 用户体验就变得非常糟糕. 在这种情况下我们需要做的是, 结束"消失"
+         * 动画, 让indicator继续显示. 考虑到[ValueAnimator.end]会让indicator的scale直接变为动画结尾的状态,
+         * 也就是0, 因此我们需要将indicator的scale调整至1.
+         */
+        indexview.touches()
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe { action ->
+                    when (action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            if (hideAnimator.isStarted) {
+                                hideAnimator.end()
+                                indicator_textview.scaleX = 1f
+                                indicator_textview.scaleY = 1f
+                            } else {
+                                showAnimator.start()
+                            }
+                        }
+                        MotionEvent.ACTION_UP -> hideAnimator.start()
+                    }
                 }
 
         /**
