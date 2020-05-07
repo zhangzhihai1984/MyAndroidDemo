@@ -34,27 +34,35 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
     private fun initView() {
         statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@IndexActivity) }
 
-        val data = listOf(
-                listOf(*resources.getStringArray(R.array.sticky_list1)),
-                listOf(*resources.getStringArray(R.array.sticky_list2)),
-                listOf(*resources.getStringArray(R.array.sticky_list3)),
-                listOf(*resources.getStringArray(R.array.sticky_list4)),
-                listOf(*resources.getStringArray(R.array.sticky_list5)),
-                listOf(*resources.getStringArray(R.array.sticky_list6)),
-                listOf(*resources.getStringArray(R.array.sticky_list7))
+        val serverData = listOf(
+                "A" to listOf(*resources.getStringArray(R.array.sticky_a)),
+                "B" to listOf(*resources.getStringArray(R.array.sticky_b)),
+                "C" to listOf(*resources.getStringArray(R.array.sticky_c)),
+                "D" to listOf(*resources.getStringArray(R.array.sticky_d)),
+                "E" to listOf(*resources.getStringArray(R.array.sticky_e)),
+                "H" to listOf(*resources.getStringArray(R.array.sticky_h)),
+                "W" to listOf(*resources.getStringArray(R.array.sticky_w)),
+                "Z" to listOf(*resources.getStringArray(R.array.sticky_z))
         )
 
-        val decorationData = data.mapIndexed { i, list ->
-            list.map { i to "Header ${i + 1}" }
+        val decorationData = serverData.map { pair ->
+            pair.second.map { pair.first }
         }.flatten()
+
+        val adapterData = serverData.map { pair ->
+            pair.second
+        }.flatten()
+
+        val indexData = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+                "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#")
 
         val stickyHeaderDecoration = StickyHeaderDecoration(this, decorationData)
 
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerview.adapter = StickyHeaderAdapter(data.flatten())
+        recyclerview.adapter = StickyHeaderAdapter(adapterData)
         recyclerview.addItemDecoration(stickyHeaderDecoration)
 
-        indexview.setData(data.mapIndexed { i, _ -> "${i + 1}" })
+        indexview.setData(indexData)
 
         /**
          * TODO: 当滑动IndexView时, 如果该索引没有数据如何处理?
@@ -85,13 +93,13 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { index ->
-                    val position = decorationData.indexOfFirst { it.first == index }
+                    val value = indexData[index]
+                    val position = decorationData.indexOfFirst { it == value }
                     (recyclerview.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
 
-                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - indicator_textview.height * 0.5f + indexview.top
+                    val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
-                    val content = "${index + 1}"
-                    indicator_textview.text = content
+                    indicator_textview.text = value
                 }
 
         /**
@@ -108,13 +116,13 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { recyclerview.isNotEmpty() }
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val index = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])].first
+                    val value = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])]
+                    val index = indexData.indexOf(value)
                     indexview.changeIndex(index)
 
-                    val top = (index + 0.5) * (indexview.height.toFloat() / data.size) - indicator_textview.height * 0.5f + indexview.top
+                    val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
-                    val content = "${index + 1}"
-                    indicator_textview.text = content
+                    indicator_textview.text = value
                 }
 
         /**
@@ -134,7 +142,8 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val index = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])].first
+                    val value = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])]
+                    val index = indexData.indexOf(value)
                     indexview.changeIndex(index)
                 }
     }
@@ -145,7 +154,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
     }
 
-    private class StickyHeaderDecoration(private val context: Context, private val data: List<Pair<Int, String>>) : RecyclerView.ItemDecoration() {
+    private class StickyHeaderDecoration(private val context: Context, private val data: List<String>) : RecyclerView.ItemDecoration() {
         companion object {
             private const val DIVIDER_HEIGHT = 1 * 3
             private const val HEADER_HEIGHT = 45 * 3
@@ -224,14 +233,14 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             c.drawRect(rect, mHeaderPaint)
 
             val metrics = mTextPaint.fontMetrics
-            c.drawText(data[position].second, HEADER_LEFT.toFloat(), rect.exactCenterY() - metrics.top / 2 - metrics.bottom / 2, mTextPaint)
+            c.drawText(data[position], HEADER_LEFT.toFloat(), rect.exactCenterY() - metrics.top / 2 - metrics.bottom / 2, mTextPaint)
         }
 
         private fun isFirstViewInGroup(position: Int) =
-                position == 0 || data[position].first != data[position - 1].first
+                position == 0 || data[position] != data[position - 1]
 
         private fun isLastViewInGroup(position: Int) =
-                position == data.size - 1 || data[position].first != data[position + 1].first
+                position == data.size - 1 || data[position] != data[position + 1]
 
         fun scrolls() = mScrollSubject
     }

@@ -38,8 +38,6 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var mIndexedColor: Int
     private var mTextSize: Float
 
-    //    private var mData = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
-//            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#")
     private var mData = listOf<String>()
 
     private var mItemHeight = 0f
