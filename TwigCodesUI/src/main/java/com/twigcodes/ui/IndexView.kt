@@ -43,7 +43,16 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var mData = listOf<String>()
 
     private var mItemHeight = 0f
-    private var mCurrentIndex = -1
+    private var _currentIndex = -1
+
+    var index: Int
+        get() = _currentIndex
+        set(value) {
+            if (_currentIndex != value) {
+                _currentIndex = value
+                invalidate()
+            }
+        }
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.IndexView, defStyleAttr, defStyleRes)
@@ -64,13 +73,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         touches { event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                    val index = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
-
-                    //为了避免滑动过程中不断emit相同的值, 只有index发生变化了之后再emit
-                    if (mCurrentIndex != index) {
-                        mCurrentIndex = index
-                        mIndexChangeSubject.onNext(mCurrentIndex)
-                    }
+                    index = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
+                    mIndexChangeSubject.onNext(_currentIndex)
 
                     invalidate()
                 }
@@ -102,13 +106,6 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     fun touches() = mTouchSubject
 
-    fun changeIndex(index: Int) {
-        if (mCurrentIndex != index) {
-            mCurrentIndex = index
-            invalidate()
-        }
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -118,7 +115,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
             val metrics = mTextPaint.fontMetrics
             canvas.drawText(text, width.toFloat() / 2, (i + 0.5f) * mItemHeight - metrics.top / 2 - metrics.bottom / 2, mTextPaint.apply {
-                color = if (i == mCurrentIndex) mIndexedColor else mIdleColor
+                color = if (i == _currentIndex) mIndexedColor else mIdleColor
             })
         }
     }

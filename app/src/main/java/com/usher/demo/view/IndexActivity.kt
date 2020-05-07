@@ -170,7 +170,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe {
                     val value = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])]
                     val index = indexData.indexOf(value)
-                    indexview.changeIndex(index)
+                    indexview.index = index
 
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
@@ -196,7 +196,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe {
                     val value = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])]
                     val index = indexData.indexOf(value)
-                    indexview.changeIndex(index)
+                    indexview.index = index
                 }
     }
 
