@@ -89,25 +89,26 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         /**
-         * 索引处理:
+         * 滑动IndexView处理
+         *
+         * 位置处理:
          * 1. 根据IndexView当前的index, 找到组内首个数据的position, 然后将对应位置的item滑动至顶部, 由于该item
          * 是组内的首个item, 因此该组的header自然会出现在顶部.
          * 2. 将indicator对准IndexView当前index对应位置的item. 调整后的margin top值为:
          * indexview_item高度*i + indexview_item高度/2 - indicator高度/2 + indexview.top
          *
          * 注意:
-         * 1. 当滑动IndexView时, 会出现对应的索引所在的组没有数据(比如说联系人中没有以U或V开头的数据)或是所在组的数据
-         * 不足导致该组header无法固定在顶部(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header其实是Y组的).
-         * 但是这不妨碍indicator"对准"IndexView对应索引的位置.
+         * 1. 当滑动IndexView时, 会出现对应的索引所在组没有数据(比如说联系人中没有以U或V开头的数据)或是所在组及之后
+         * 所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header其实是Y组的, Z组的header
+         * 无法固定在顶部), 但是这不妨碍indicator"对准"IndexView对应索引的位置.
          * (1) 如果所在组没有数据: position为-1, [LinearLayoutManager.scrollToPositionWithOffset]中对
-         * position的要求是"starting at 0", 尽管不会导致任何滑动, 但是我们依然要调用该方法, 因为这样会触发
-         * [RecyclerView.requestLayout], 于是我们可以在[RecyclerView.ItemDecoration.onDrawOver]时
-         * 对IndexView的索引进行"纠错"操作.
-         * (2) 如果所在组数据不足无法滑动到顶端: 与上面类似, 只不过RecyclerView没有滑动到预期的位置, 我们依然需要对
-         * IndexView的索引进行"纠错"操作.
+         * position的要求是"starting at 0", 尽管不会看到任何滑动发生, 但是我们依然要调用该方法, 因为这样会触发
+         * [RecyclerView.requestLayout], 进而触发[RecyclerView.ItemDecoration.onDrawOver], 这样我们才有
+         * 机会对IndexView当前的index进行"纠错".
+         * (2) 如果所在组数据不足无法滑动到顶端: 与上面类似, 虽然RecyclerView发生了滑动, 但是没有滑动到预期的位置,
+         * 我们依然需要对IndexView当前的index进行"纠错".
          *
-         *
-         * indicator动画处理:
+         * 动画处理:
          * 1. MOVE: 不处理, 也就是说让indicator一直显示.
          * 2. UP: 开始indicator"消失"动画.
          * 3. DOWN: 正常情况下开始indicator"显示"动画. 但是要考虑一种情况, 就是刚刚经历了UP, 此时的"消失"动画刚刚
@@ -144,20 +145,21 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
 
         /**
-         * 当滑动RecyclerView时:
-         * 1. 调用IndexView的changeIndex
-         * 2. 将indicator的margin top调整至IndexView对应索引所在的位置(参见对IndexView.indexChanges的处理)
+         * 滑动RecyclerView处理
+         * 1. 更新IndexView当前的index.
+         * 2. 将indicator对准IndexView当前index对应位置的item(参见对IndexView.touches的处理).
          *
          * 注意:
-         * 在滑动IndexView的过程中如果索引发生变化, 会调用[LinearLayoutManager.scrollToPositionWithOffset],
-         * 也就是说RecyclerView会滑动, 但这是"被动"滑动, 与"主动"滑动的区别在于, "被动"滑动的dy为0.
+         * 在处理IndexView.touches的过程中会调用[LinearLayoutManager.scrollToPositionWithOffset],
+         * 但这是"被动"滑动, 与"主动"滑动的区别在于, "被动"滑动的dy为0, 这样我们就可以将"被动"滑动filter掉.
          */
         recyclerview.scrollEvents()
                 .filter { it.dy != 0 }
                 .filter { recyclerview.isNotEmpty() }
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val value = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])]
+                    val position = recyclerview.getChildAdapterPosition(recyclerview[0])
+                    val value = decorationData[position]
                     val index = indexData.indexOf(value)
                     indexview.index = index
 
@@ -167,23 +169,28 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
 
         /**
-         * 当滑动IndexView时, 会出现对应的索引所在的组的数据不足导致该组header无法固定在顶部(比如联系人中以Z开头的数据
-         * 只有两三个, 那么固定在顶部的header其实是Y组的), 这时候需要一个"纠错"的操作.
+         * "纠错"处理
+         *
+         * 当滑动IndexView时, 会出现对应的索引所在组及之后所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个,
+         * 那么固定在顶部的header其实是Y组的, Z组的header无法固定在顶部), 这时需要对IndexView当前的index进行"纠错".
          *
          * 过程如下:
-         * 1. 索引变化: 滑动IndexView至"Z"时, 触发indexChanges.
-         * 2. RecyclerView滑动: 将"Z"组第一个数据对应的item滑动至recyclerview的顶部, 但由于数据不足, 固定在顶部的
-         * header其实是Y组的, 顶部item的数据也是Y组的.
-         * 3. Decoration反馈: RecyclerView的滑动触发了[RecyclerView.ItemDecoration.onDrawOver],
-         * Decoration将该事件emit出来.
-         * 4. 索引纠错: RecyclerView顶部item数据所在的组为"Y", 将该索引重新赋给IndexView
+         * 1. 滑动IndexView: 滑动IndexView至"Z"时, IndexView当前index变为"Z".
+         * 2. RecyclerView滑动: 处理IndexView.touches, 调用[LinearLayoutManager.scrollToPositionWithOffset].
+         * 3. Decoration反馈: RecyclerView的滑动触发了[RecyclerView.requestLayout], 进而触发
+         * [RecyclerView.ItemDecoration.onDrawOver], Decoration将该事件emit出来.
+         * 4. 索引纠错: RecyclerView顶部item数据所在的组为"Y", 将该索引重新赋给IndexView.
+         *
+         * 注意: 虽然是"纠错", 一般来说只有在数据"缺失"的情况下才真正需要该操作, 即便IndexView当前的index没有错,
+         * 更新一次也不会有任何副作用. Just in case.
          */
         stickyHeaderDecoration.scrolls()
                 .filter { recyclerview.isNotEmpty() }
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val value = decorationData[recyclerview.getChildAdapterPosition(recyclerview[0])]
+                    val position = recyclerview.getChildAdapterPosition(recyclerview[0])
+                    val value = decorationData[position]
                     val index = indexData.indexOf(value)
                     indexview.index = index
                 }
@@ -224,7 +231,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 我们对header的绘制从普遍到特殊分三步进行处理:
          * 1. 在[getItemOffsets]中我们已经在每组item顶部将header的位置预留出来, 首先需要做的
          * 就是把header绘制在给他们预留的应地方. 此时看到的效果就是所有的header和item的滑动是同步的.
-         * 2. 考虑到sticky header的效果, 我们需要将[RecyclerView]顶部item(第一个可见的, 即索引为0的item)
+         * 2. 考虑到sticky header的效果, 我们需要将[RecyclerView]顶部item(首个可见的, 即索引为0的item)
          * 所在组的header固定绘制在[RecyclerView]的顶部, 不随着item的滑动而滑动. 此时已经有sticky header的效果了,
          * 但是随着滑动的继续, 下一组header会覆盖在上一组header的上面, 而不是有一种"推上去"的效果.
          * 3. 为了实现"下一个header将上一个header推上去"的效果, 当固定在顶部的header的bottom与组内最后
