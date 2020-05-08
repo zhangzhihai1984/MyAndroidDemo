@@ -46,7 +46,9 @@
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible"
+            tools:visibility="visible" />
 
     </RelativeLayout>
 

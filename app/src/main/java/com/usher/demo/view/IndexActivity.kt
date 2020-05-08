@@ -6,11 +6,12 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.view.forEachIndexed
 import androidx.core.view.get
 import androidx.core.view.isNotEmpty
@@ -24,8 +25,9 @@ import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_index.*
+import java.util.concurrent.TimeUnit
 
 class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,17 +77,19 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 indicator_textview.scaleX = animatedValue as Float
                 indicator_textview.scaleY = animatedValue as Float
             }
+            doOnStart { indicator_textview.visibility = View.VISIBLE }
         }
 
         val hideAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
             duration = 100
-            startDelay = 500
+            startDelay = 0
             interpolator = LinearInterpolator()
             addUpdateListener {
                 indicator_textview.pivotX = indicator_textview.width.toFloat()
                 indicator_textview.scaleX = animatedValue as Float
                 indicator_textview.scaleY = animatedValue as Float
             }
+            doOnEnd { indicator_textview.visibility = View.INVISIBLE }
         }
 
         /**
@@ -120,20 +124,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indexview.touches()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { action ->
-                    when (action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            if (hideAnimator.isStarted) {
-                                hideAnimator.end()
-                                indicator_textview.scaleX = 1f
-                                indicator_textview.scaleY = 1f
-                            } else {
-                                showAnimator.start()
-                            }
-                        }
-                        MotionEvent.ACTION_UP -> hideAnimator.start()
-                    }
-
+                .subscribe {
                     val index = indexview.index
                     val value = indexData[index]
                     val position = decorationData.indexOfFirst { it == value }
@@ -142,6 +133,23 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
                     indicator_textview.text = value
+                }
+
+        indexview.touches()
+                .doOnNext {
+                    if (indicator_textview.visibility != View.VISIBLE)
+                        showAnimator.start()
+                }
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    val position = recyclerview.getChildAdapterPosition(recyclerview[0])
+                    val value = decorationData[position]
+                    val index = indexData.indexOf(value)
+                    indexview.index = index
+
+                    hideAnimator.start()
                 }
 
         /**
@@ -168,6 +176,18 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     indicator_textview.text = value
                 }
 
+        recyclerview.scrollEvents()
+                .filter { it.dy != 0 }
+                .filter { recyclerview.isNotEmpty() }
+                .doOnNext {
+                    if (indicator_textview.visibility != View.VISIBLE)
+                        showAnimator.start()
+                }
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe { hideAnimator.start() }
+
         /**
          * "纠错"处理
          *
@@ -184,16 +204,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 注意: 虽然是"纠错", 一般来说只有在数据"缺失"的情况下才真正需要该操作, 即便IndexView当前的index没有错,
          * 更新一次也不会有任何副作用. Just in case.
          */
-        stickyHeaderDecoration.scrolls()
-                .filter { recyclerview.isNotEmpty() }
-                .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
-                .subscribe {
-                    val position = recyclerview.getChildAdapterPosition(recyclerview[0])
-                    val value = decorationData[position]
-                    val index = indexData.indexOf(value)
-                    indexview.index = index
-                }
     }
 
     private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_index, data) {
@@ -208,8 +218,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             private const val HEADER_HEIGHT = 45 * 3
             private const val HEADER_LEFT = 20 * 3
         }
-
-        private val mScrollSubject = PublishSubject.create<Unit>()
 
         private val mHeaderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = context.getColor(R.color.item_background)
@@ -242,8 +250,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 如果要获取该item view所对应的"真正的"索引的话, 需要调用[RecyclerView.getChildAdapterPosition]获取.
          */
         override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-            mScrollSubject.onNext(Unit)
-
             val headerRect = Rect(parent.paddingStart, 0, parent.width - parent.paddingEnd, 0)
 
             parent.forEachIndexed { i, view ->
@@ -289,7 +295,5 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         private fun isLastViewInGroup(position: Int) =
                 position == data.size - 1 || data[position] != data[position + 1]
-
-        fun scrolls() = mScrollSubject
     }
 }
