@@ -23,7 +23,6 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         private const val DEFAULT_INDEXED_COLOR = Color.BLACK
     }
 
-    private val mIndexChangeSubject = PublishSubject.create<Int>()
     private val mTouchSubject = PublishSubject.create<Int>()
 
     private val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -72,11 +71,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private fun initView() {
         touches { event ->
             when (event.action) {
-                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
                     index = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
-                    mIndexChangeSubject.onNext(_currentIndex)
-
-                    invalidate()
                 }
             }
 
@@ -101,8 +97,6 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     invalidate()
                 }
     }
-
-    fun indexChanges() = mIndexChangeSubject
 
     fun touches() = mTouchSubject
 

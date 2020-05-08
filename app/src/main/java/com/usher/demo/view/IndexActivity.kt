@@ -89,21 +89,14 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         /**
-         * 当滑动IndexView导致索引发生变化时:
-         * 1. 找到属于该组的数据, 进而找到将组内第一个数据对应的索引, 然后将对应的item滑动至顶部, 由于该item是组内的
-         * 第一个item, 因此该组的header自然会出现在顶部.
-         * 2. 将indicator的margin top调整至IndexView对应索引所在的位置, 该值为:
+         * 索引处理:
+         * 1. 根据IndexView当前的index, 找到组内首个数据的position, 然后将对应位置的item滑动至顶部, 由于该item
+         * 是组内的首个item, 因此该组的header自然会出现在顶部.
+         * 2. 将indicator对准IndexView当前index对应位置的item. 调整后的margin top值为:
          * indexview_item高度*i + indexview_item高度/2 - indicator高度/2 + indexview.top
          *
          * 注意:
-         * 1. 不要使用distinctUntilChanged:
-         * (1) IndexView已经做了处理, 当index没有发生变化时是不会emit的.
-         * (2) IndexView的indexChanges是滑动IndexView时被动接收index的变化, 同时也可以滑动RecyclerView主动调用
-         * IndexView的changeIndex, 因此, 如果两次接收到了相同的index, 这只能说是特定手顺操作带来的结果(比如通过滑动
-         * IndexView让当前的索引指向"B", 然后向下滑动一下RecyclerView, 这时索引指向了"A", 然后再滑动IndexView,
-         * 将索引重新指向"B", 这时indexChanges两次接收的索引均为"B", 但是索引确实发生了B->A->B的变化)
-         *
-         * 2. 当滑动IndexView时, 会出现对应的索引所在的组没有数据(比如说联系人中没有以U或V开头的数据)或是所在组的数据
+         * 1. 当滑动IndexView时, 会出现对应的索引所在的组没有数据(比如说联系人中没有以U或V开头的数据)或是所在组的数据
          * 不足导致该组header无法固定在顶部(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header其实是Y组的).
          * 但是这不妨碍indicator"对准"IndexView对应索引的位置.
          * (1) 如果所在组没有数据: position为-1, [LinearLayoutManager.scrollToPositionWithOffset]中对
@@ -112,21 +105,8 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 对IndexView的索引进行"纠错"操作.
          * (2) 如果所在组数据不足无法滑动到顶端: 与上面类似, 只不过RecyclerView没有滑动到预期的位置, 我们依然需要对
          * IndexView的索引进行"纠错"操作.
-         */
-        indexview.indexChanges()
-                .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
-                .subscribe { index ->
-                    val value = indexData[index]
-                    val position = decorationData.indexOfFirst { it == value }
-                    (recyclerview.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
-
-                    val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
-                    indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
-                    indicator_textview.text = value
-                }
-
-        /**
+         *
+         *
          * indicator动画处理:
          * 1. MOVE: 不处理, 也就是说让indicator一直显示.
          * 2. UP: 开始indicator"消失"动画.
@@ -152,6 +132,15 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         }
                         MotionEvent.ACTION_UP -> hideAnimator.start()
                     }
+
+                    val index = indexview.index
+                    val value = indexData[index]
+                    val position = decorationData.indexOfFirst { it == value }
+                    (recyclerview.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+
+                    val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
+                    indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
+                    indicator_textview.text = value
                 }
 
         /**
