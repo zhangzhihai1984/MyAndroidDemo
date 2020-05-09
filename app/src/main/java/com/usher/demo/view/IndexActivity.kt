@@ -107,27 +107,58 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         /**
          * 滑动IndexView处理
          *
-         * 1. 根据IndexView当前的index, 找到组内首个数据的position, 然后将对应位置的item滑动至顶部, 由于该item
-         * 是组内的首个item, 因此该组的header自然会出现在顶部.
+         * 1. 根据IndexView当前的index, 找到组内首个数据的position(如果该组没有数据, 找到距离最近的组), 然后将对应
+         * 位置的item滑动至顶部.
          * 2. 将indicator对准IndexView当前index对应位置的item. 调整后的margin top值为:
          * indexview_item高度*i + indexview_item高度/2 - indicator高度/2 + indexview.top
          * 3. 如果indicator未显示, 显示indicator.
          * 4. 如果超过500ms未滑动:
          * (1) 隐藏indicator.
-         * (2) 修正IndexView当前的index. 当滑动IndexView时, 有可能会出现对应的索引所在组没有数据(比如说联系人中没有以U或
-         * V开头的数据)或是所在组及之后所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header
-         * 其实是Y组的, Z组的header无法固定在顶部)的情况, 这时需要对IndexView当前的index进行"修正".
+         * (2) 修正IndexView当前的index. 当滑动IndexView时, 有可能会出现对应的索引所在组没有数据(比如说联系人中没有
+         * 以U或V开头的数据)或是所在组及之后所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的
+         * header其实是Y组的)的情况, 这时需要对IndexView当前的index进行"修正".
          */
         indexview.touches()
                 .doOnNext {
                     val index = indexview.index
-                    val value = indexData[index]
-                    val position = decorationData.indexOfFirst { it == value }
+                    val data = indexData[index]
+                    var position = decorationData.indexOfFirst { it == data }
+
+                    if (position < 0) {
+                        var latestBackwardIndex = -1
+                        var latestForwardIndex = -1
+                        var latestBackwardPosition = -1
+                        var latestForwardPosition = -1
+
+                        for (i in index - 1 downTo 0) {
+                            latestBackwardPosition = decorationData.indexOfFirst { it == indexData[i] }
+                            if (latestBackwardPosition >= 0) {
+                                latestBackwardIndex = i
+                                break
+                            }
+                        }
+
+                        for (i in index + 1 until indexData.size) {
+                            latestForwardPosition = decorationData.indexOfFirst { it == indexData[i] }
+                            if (latestForwardPosition >= 0) {
+                                latestForwardIndex = i
+                                break
+                            }
+                        }
+
+                        position = when {
+                            latestBackwardIndex >= 0 && latestForwardIndex >= 0 -> if (index - latestBackwardIndex < latestForwardIndex - index) latestBackwardPosition else latestForwardPosition
+                            latestBackwardIndex >= 0 && latestForwardIndex < 0 -> latestBackwardIndex
+                            latestBackwardIndex < 0 && latestForwardIndex >= 0 -> latestForwardIndex
+                            else -> -1
+                        }
+                    }
+
                     (recyclerview.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
 
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
-                    indicator_textview.text = value
+                    indicator_textview.text = data
 
                     if (indicator_textview.visibility != View.VISIBLE)
                         showAnimatorSet.start()
@@ -137,8 +168,8 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
                     val position = recyclerview.getChildAdapterPosition(recyclerview[0])
-                    val value = decorationData[position]
-                    val index = indexData.indexOf(value)
+                    val data = decorationData[position]
+                    val index = indexData.indexOf(data)
                     indexview.index = index
 
                     hideAnimatorSet.start()
@@ -161,13 +192,13 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { recyclerview.isNotEmpty() }
                 .doOnNext {
                     val position = recyclerview.getChildAdapterPosition(recyclerview[0])
-                    val value = decorationData[position]
-                    val index = indexData.indexOf(value)
+                    val data = decorationData[position]
+                    val index = indexData.indexOf(data)
                     indexview.index = index
 
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
-                    indicator_textview.text = value
+                    indicator_textview.text = data
 
                     if (indicator_textview.visibility != View.VISIBLE)
                         showAnimatorSet.start()
