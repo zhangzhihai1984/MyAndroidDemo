@@ -26,7 +26,7 @@
 
         <com.twigcodes.ui.IndexView
             android:id="@+id/indexview"
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="100dp"
@@ -41,7 +41,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="60dp"
+            android:layout_marginEnd="50dp"
             android:background="@drawable/ic_index_indicator"
             android:gravity="center"
             android:textColor="@android:color/white"

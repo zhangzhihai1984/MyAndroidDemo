@@ -1,5 +1,6 @@
 package com.usher.demo.view
 
+import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -61,34 +62,45 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         val indexData = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
                 "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#")
 
-        val stickyHeaderDecoration = StickyHeaderDecoration(this, decorationData)
-
         recyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerview.adapter = StickyHeaderAdapter(adapterData)
-        recyclerview.addItemDecoration(stickyHeaderDecoration)
+        recyclerview.addItemDecoration(StickyHeaderDecoration(this, decorationData))
 
         indexview.setData(indexData)
 
-        val showAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = 100
-            interpolator = LinearInterpolator()
+        val showScaleAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             addUpdateListener {
-                indicator_textview.pivotX = indicator_textview.width.toFloat()
                 indicator_textview.scaleX = animatedValue as Float
                 indicator_textview.scaleY = animatedValue as Float
             }
+        }
+
+        val showTranslationAnimator = ValueAnimator.ofFloat(150f, 0f).apply {
+            addUpdateListener { indicator_textview.translationX = animatedValue as Float }
+        }
+
+        val showAnimatorSet = AnimatorSet().apply {
+            duration = 100
+            interpolator = LinearInterpolator()
+            playTogether(showScaleAnimator, showTranslationAnimator)
             doOnStart { indicator_textview.visibility = View.VISIBLE }
         }
 
-        val hideAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
-            duration = 100
-            startDelay = 0
-            interpolator = LinearInterpolator()
+        val hideScaleAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
             addUpdateListener {
-                indicator_textview.pivotX = indicator_textview.width.toFloat()
                 indicator_textview.scaleX = animatedValue as Float
                 indicator_textview.scaleY = animatedValue as Float
             }
+        }
+
+        val hideTranslationAnimator = ValueAnimator.ofFloat(0f, 150f).apply {
+            addUpdateListener { indicator_textview.translationX = animatedValue as Float }
+        }
+
+        val hideAnimatorSet = AnimatorSet().apply {
+            duration = 100
+            interpolator = LinearInterpolator()
+            playTogether(hideScaleAnimator, hideTranslationAnimator)
             doOnEnd { indicator_textview.visibility = View.INVISIBLE }
         }
 
@@ -132,7 +144,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indexview.touches()
                 .doOnNext {
                     if (indicator_textview.visibility != View.VISIBLE)
-                        showAnimator.start()
+                        showAnimatorSet.start()
                 }
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
@@ -143,7 +155,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val index = indexData.indexOf(value)
                     indexview.index = index
 
-                    hideAnimator.start()
+                    hideAnimatorSet.start()
                 }
 
         /**
@@ -181,12 +193,12 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { recyclerview.isNotEmpty() }
                 .doOnNext {
                     if (indicator_textview.visibility != View.VISIBLE)
-                        showAnimator.start()
+                        showAnimatorSet.start()
                 }
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { hideAnimator.start() }
+                .subscribe { hideAnimatorSet.start() }
     }
 
     private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_index, data) {
