@@ -111,16 +111,15 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 是组内的首个item, 因此该组的header自然会出现在顶部.
          * 2. 将indicator对准IndexView当前index对应位置的item. 调整后的margin top值为:
          * indexview_item高度*i + indexview_item高度/2 - indicator高度/2 + indexview.top
-         *
-         * 注意:
-         * 1. 当滑动IndexView时, 会出现对应的索引所在组没有数据(比如说联系人中没有以U或V开头的数据)或是所在组及之后
-         * 所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header其实是Y组的, Z组的header
-         * 无法固定在顶部), 但是这不妨碍indicator"对准"IndexView对应索引的位置.
+         * 3. 如果indicator未显示, 显示indicator.
+         * 4. 如果超过500ms未滑动:
+         * (1) 隐藏indicator.
+         * (2) 修正IndexView当前的index. 当滑动IndexView时, 有可能会出现对应的索引所在组没有数据(比如说联系人中没有以U或
+         * V开头的数据)或是所在组及之后所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header
+         * 其实是Y组的, Z组的header无法固定在顶部)的情况, 这时需要对IndexView当前的index进行"修正".
          */
         indexview.touches()
-                .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
-                .subscribe {
+                .doOnNext {
                     val index = indexview.index
                     val value = indexData[index]
                     val position = decorationData.indexOfFirst { it == value }
@@ -129,20 +128,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
                     indicator_textview.text = value
-                }
 
-        /**
-         * 滑动IndexView处理
-         *
-         * 1. 如果indicator未显示, 显示indicator.
-         * 2. 如果超过500ms未滑动:
-         * (1) 隐藏indicator.
-         * (2) 修正IndexView当前的index. 当滑动IndexView时, 会出现对应的索引所在组没有数据(比如说联系人中没有以U或
-         * V开头的数据)或是所在组及之后所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的header
-         * 其实是Y组的, Z组的header无法固定在顶部), 这时需要对IndexView当前的index进行"修正".
-         */
-        indexview.touches()
-                .doOnNext {
                     if (indicator_textview.visibility != View.VISIBLE)
                         showAnimatorSet.start()
                 }
@@ -160,18 +146,20 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         /**
          * 滑动RecyclerView处理
+         *
          * 1. 更新IndexView当前的index.
          * 2. 将indicator对准IndexView当前index对应位置的item(参见对IndexView.touches的处理).
+         * 3. 如果indicator未显示, 显示indicator.
+         * 4. 如果超过500ms未滑动, 隐藏indicator.
          *
          * 注意:
          * 在处理IndexView.touches的过程中会调用[LinearLayoutManager.scrollToPositionWithOffset],
-         * 但这是"被动"滑动, 与"主动"滑动的区别在于, "被动"滑动的dy为0, 这样我们就可以将"被动"滑动filter掉.
+         * 但这是"被动"滑动, 与"主动"滑动的区别在于, "被动"滑动的dy为0, 这样我们就可以将"被动"滑动过滤掉.
          */
         recyclerview.scrollEvents()
                 .filter { it.dy != 0 }
                 .filter { recyclerview.isNotEmpty() }
-                .`as`(RxUtil.autoDispose(this))
-                .subscribe {
+                .doOnNext {
                     val position = recyclerview.getChildAdapterPosition(recyclerview[0])
                     val value = decorationData[position]
                     val index = indexData.indexOf(value)
@@ -180,18 +168,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
                     indicator_textview.text = value
-                }
 
-        /**
-         * 滑动RecyclerView处理
-         *
-         * 1. 如果indicator未显示, 显示indicator.
-         * 2. 如果超过500ms未滑动, 隐藏indicator.
-         */
-        recyclerview.scrollEvents()
-                .filter { it.dy != 0 }
-                .filter { recyclerview.isNotEmpty() }
-                .doOnNext {
                     if (indicator_textview.visibility != View.VISIBLE)
                         showAnimatorSet.start()
                 }
