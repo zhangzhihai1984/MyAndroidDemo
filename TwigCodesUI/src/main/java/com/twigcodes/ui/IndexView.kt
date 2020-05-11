@@ -14,8 +14,6 @@ import com.twigcodes.ui.util.RxUtil
 import io.reactivex.subjects.PublishSubject
 import kotlin.math.abs
 import kotlin.math.floor
-import kotlin.math.max
-import kotlin.math.min
 
 class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -76,7 +74,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     private fun initView() {
         /**
-         * event.y在[i*itemHeight, (i+1)*itemHeight)范围内均可认为落入了第i个item的区间
+         * event.y在[i*itemHeight, (i+1)*itemHeight)范围内均可认为落入了第i个item的区间.
          *
          * 对于第i个item, 当event.y处于item中间位置时, offset达到最大值, 随着event.y向两侧移动,
          * offset逐渐减小, 当到达item顶部或底部时, offset达到最小值.
@@ -84,8 +82,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
          * dy与offset的对照为: [0, itemHeight/2] -> [max, min]
          * offset = min + (max-min) * (1 - dy/(itemHeight/2))
          *
-         * 对于上面的第i-1, i-2个item, 当event.y处于item顶部时, offset达到最大值, 随着event.y
-         * 向下移动, offset逐渐减小, 当到达item底部时, offset达到最小值.
+         * 对于上面的第i-1, i-2个item, 当event.y处于item顶部时, offset达到最大值, 随着event.y向下移动,
+         * offset逐渐减小, 当到达item底部时, offset达到最小值.
          * dy = event.y - i*itemHeight
          * dy与offset的对照为: [0, itemHeight) -> [max, min)
          * offset = min + (max-min) * (1 - dy/itemHeight)
@@ -98,29 +96,31 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         touches { event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
-                    val intevalIndex = min(max(floor((event.y / mItemHeight)).toInt(), 0), mData.size - 1)
+                    val intervalIndex = floor((event.y / mItemHeight)).toInt()
 
-                    val centerY = (intevalIndex + 0.5f) * mItemHeight
-                    val centerDeltaY = abs(event.y - centerY)
-                    val centerRatio = 1 - centerDeltaY / (mItemHeight / 2)
+                    if (intervalIndex >= 0 && intervalIndex <= mData.size - 1) {
+                        val centerY = (intervalIndex + 0.5f) * mItemHeight
+                        val centerDeltaY = abs(event.y - centerY)
+                        val centerRatio = 1 - centerDeltaY / (mItemHeight / 2)
 
-                    val topY = intevalIndex * mItemHeight
-                    val topDeltaY = event.y - topY
-                    val topRatio = 1 - topDeltaY / mItemHeight
-                    val bottomRatio = topDeltaY / mItemHeight
+                        val topY = intervalIndex * mItemHeight
+                        val topDeltaY = event.y - topY
+                        val topRatio = 1 - topDeltaY / mItemHeight
+                        val bottomRatio = topDeltaY / mItemHeight
 
-                    mTextOffsets = mTextOffsets.mapIndexed { i, _ ->
-                        when (i) {
-                            intevalIndex -> CENTER_TEXT_OFFSET_MIN + (CENTER_TEXT_OFFSET_MAX - CENTER_TEXT_OFFSET_MIN) * centerRatio
-                            intevalIndex - 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * topRatio
-                            intevalIndex + 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * bottomRatio
-                            intevalIndex - 2 -> THIRD_TEXT_OFFSET_MAX * topRatio
-                            intevalIndex + 2 -> THIRD_TEXT_OFFSET_MAX * bottomRatio
-                            else -> 0f
+                        mTextOffsets = mTextOffsets.mapIndexed { i, _ ->
+                            when (i) {
+                                intervalIndex -> CENTER_TEXT_OFFSET_MIN + (CENTER_TEXT_OFFSET_MAX - CENTER_TEXT_OFFSET_MIN) * centerRatio
+                                intervalIndex - 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * topRatio
+                                intervalIndex + 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * bottomRatio
+                                intervalIndex - 2 -> THIRD_TEXT_OFFSET_MAX * topRatio
+                                intervalIndex + 2 -> THIRD_TEXT_OFFSET_MAX * bottomRatio
+                                else -> 0f
+                            }
                         }
-                    }
 
-                    index = intevalIndex
+                        index = intervalIndex
+                    }
                 }
             }
 
