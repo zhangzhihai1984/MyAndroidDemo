@@ -11,9 +11,12 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.floor
+import kotlin.math.max
 
 class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -128,8 +131,16 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
             true
         }
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .switchMap {
+                    Observable.interval(20, TimeUnit.MILLISECONDS)
+                            .takeUntil { mTextOffsets.indexOfFirst { it > 0f } < 0 }
+                }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe { }
+                .subscribe {
+                    mTextOffsets = mTextOffsets.map { max(it - 10, 0f) }
+                    invalidate()
+                }
     }
 
     fun setData(data: List<String>) {
