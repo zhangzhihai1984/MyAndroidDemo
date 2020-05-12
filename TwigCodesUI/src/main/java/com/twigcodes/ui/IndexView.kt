@@ -32,6 +32,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private val mTouchSubject = PublishSubject.create<Int>()
+    private val mResetOffsetSubject = PublishSubject.create<Unit>()
 
     private val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
@@ -96,42 +97,46 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
          * dy与offset的对照为: [0, itemHeight) -> [min, max)
          * offset = min + (max-min) * (dy/itemHeight)
          */
-        touches { event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
-                    val intervalIndex = floor((event.y / mItemHeight)).toInt()
-
-                    if (intervalIndex >= 0 && intervalIndex <= mData.size - 1) {
-                        val centerY = (intervalIndex + 0.5f) * mItemHeight
-                        val centerDeltaY = abs(event.y - centerY)
-                        val centerRatio = 1 - centerDeltaY / (mItemHeight / 2)
-
-                        val topY = intervalIndex * mItemHeight
-                        val topDeltaY = event.y - topY
-                        val topRatio = 1 - topDeltaY / mItemHeight
-                        val bottomRatio = topDeltaY / mItemHeight
-
-                        mTextOffsets = mTextOffsets.mapIndexed { i, _ ->
-                            when (i) {
-                                intervalIndex -> CENTER_TEXT_OFFSET_MIN + (CENTER_TEXT_OFFSET_MAX - CENTER_TEXT_OFFSET_MIN) * centerRatio
-                                intervalIndex - 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * topRatio
-                                intervalIndex + 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * bottomRatio
-                                intervalIndex - 2 -> THIRD_TEXT_OFFSET_MAX * topRatio
-                                intervalIndex + 2 -> THIRD_TEXT_OFFSET_MAX * bottomRatio
-                                else -> 0f
-                            }
-                        }
-
-                        index = intervalIndex
-                    }
-                }
-            }
-
-            mTouchSubject.onNext(event.action)
-
+        touches {
             true
         }
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe { event ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
+                            val intervalIndex = floor((event.y / mItemHeight)).toInt()
+
+                            if (intervalIndex >= 0 && intervalIndex <= mData.size - 1) {
+                                val centerY = (intervalIndex + 0.5f) * mItemHeight
+                                val centerDeltaY = abs(event.y - centerY)
+                                val centerRatio = 1 - centerDeltaY / (mItemHeight / 2)
+
+                                val topY = intervalIndex * mItemHeight
+                                val topDeltaY = event.y - topY
+                                val topRatio = 1 - topDeltaY / mItemHeight
+                                val bottomRatio = topDeltaY / mItemHeight
+
+                                mTextOffsets = mTextOffsets.mapIndexed { i, _ ->
+                                    when (i) {
+                                        intervalIndex -> CENTER_TEXT_OFFSET_MIN + (CENTER_TEXT_OFFSET_MAX - CENTER_TEXT_OFFSET_MIN) * centerRatio
+                                        intervalIndex - 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * topRatio
+                                        intervalIndex + 1 -> SECOND_TEXT_OFFSET_MIN + (SECOND_TEXT_OFFSET_MAX - SECOND_TEXT_OFFSET_MIN) * bottomRatio
+                                        intervalIndex - 2 -> THIRD_TEXT_OFFSET_MAX * topRatio
+                                        intervalIndex + 2 -> THIRD_TEXT_OFFSET_MAX * bottomRatio
+                                        else -> 0f
+                                    }
+                                }
+
+                                index = intervalIndex
+                            }
+                        }
+                    }
+
+                    mTouchSubject.onNext(event.action)
+                    mResetOffsetSubject.onNext(Unit)
+                }
+
+        mResetOffsetSubject.debounce(500, TimeUnit.MILLISECONDS)
                 .switchMap {
                     Observable.interval(20, TimeUnit.MILLISECONDS)
                             .takeUntil { mTextOffsets.indexOfFirst { it > 0f } < 0 }
@@ -141,6 +146,28 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     mTextOffsets = mTextOffsets.map { max(it - 10, 0f) }
                     invalidate()
                 }
+    }
+
+    fun changeIndex(index: Int) {
+        if (index == _currentIndex)
+            return
+        this._currentIndex = index
+        invalidate()
+
+//        Observable.interval(20, TimeUnit.MILLISECONDS)
+//                .takeUntil { mTextOffsets[_currentIndex] >= CENTER_TEXT_OFFSET_MAX }
+//                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+//                .subscribe {
+//                    mTextOffsets = mTextOffsets.mapIndexed { i, offset ->
+//                        when (i) {
+//                            _currentIndex -> min(offset + 10, CENTER_TEXT_OFFSET_MAX)
+//                            _currentIndex - 1, _currentIndex + 1 -> min(offset + 10, SECOND_TEXT_OFFSET_MAX)
+//                            _currentIndex - 2, _currentIndex + 2 -> min(offset + 10, THIRD_TEXT_OFFSET_MAX)
+//                            else -> 0f
+//                        }
+//                    }
+//                    invalidate()
+//                }
     }
 
     fun setData(data: List<String>) {
