@@ -76,7 +76,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
-        val showTranslationAnimator = ValueAnimator.ofFloat(180f, 0f).apply {
+        val showTranslationAnimator = ValueAnimator.ofFloat(160f, 0f).apply {
             addUpdateListener { indicator_textview.translationX = animatedValue as Float }
         }
 
@@ -94,7 +94,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
-        val hideTranslationAnimator = ValueAnimator.ofFloat(0f, 180f).apply {
+        val hideTranslationAnimator = ValueAnimator.ofFloat(0f, 160f).apply {
             addUpdateListener { indicator_textview.translationX = animatedValue as Float }
         }
 
@@ -171,7 +171,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val position = recyclerview.getChildAdapterPosition(recyclerview[0])
                     val data = decorationData[position]
                     val index = indexData.indexOf(data)
-                    indexview.index = index
+                    indexview.changeIndex(index)
 
                     hideAnimatorSet.start()
                 }
@@ -195,7 +195,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val position = recyclerview.getChildAdapterPosition(recyclerview[0])
                     val data = decorationData[position]
                     val index = indexData.indexOf(data)
-//                    indexview.index = index
                     indexview.changeIndex(index, true)
 
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top

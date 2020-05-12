@@ -56,7 +56,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     var index: Int
         get() = _currentIndex
-        set(value) {
+        private set(value) {
             _currentIndex = value
             invalidate()
         }
@@ -151,8 +151,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     fun changeIndex(index: Int, showOffset: Boolean = false) {
-        _currentIndex = index
-        invalidate()
+        this.index = index
 
         if (showOffset) {
             mTextOffsets = mTextOffsets.mapIndexed { i, _ ->
