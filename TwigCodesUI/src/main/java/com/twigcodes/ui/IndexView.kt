@@ -32,7 +32,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private val mTouchSubject = PublishSubject.create<Int>()
-    private val mResetOffsetSubject = PublishSubject.create<Unit>()
+    private val mChangeIndexSubject = PublishSubject.create<Unit>()
 
     private val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
@@ -133,13 +133,15 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     }
 
                     mTouchSubject.onNext(event.action)
-                    mResetOffsetSubject.onNext(Unit)
                 }
 
-        mResetOffsetSubject.debounce(500, TimeUnit.MILLISECONDS)
+        Observable.merge(mTouchSubject.map { Unit }, mChangeIndexSubject)
+                .debounce(300, TimeUnit.MILLISECONDS)
                 .switchMap {
                     Observable.interval(20, TimeUnit.MILLISECONDS)
                             .takeUntil { mTextOffsets.indexOfFirst { it > 0f } < 0 }
+                            .takeUntil(mTouchSubject)
+                            .takeUntil(mChangeIndexSubject)
                 }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
@@ -148,31 +150,31 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 }
     }
 
-    fun changeIndex(index: Int) {
-        if (index == _currentIndex)
-            return
-        this._currentIndex = index
+    fun changeIndex(index: Int, showOffset: Boolean = false) {
+        _currentIndex = index
         invalidate()
 
-//        Observable.interval(20, TimeUnit.MILLISECONDS)
-//                .takeUntil { mTextOffsets[_currentIndex] >= CENTER_TEXT_OFFSET_MAX }
-//                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-//                .subscribe {
-//                    mTextOffsets = mTextOffsets.mapIndexed { i, offset ->
-//                        when (i) {
-//                            _currentIndex -> min(offset + 10, CENTER_TEXT_OFFSET_MAX)
-//                            _currentIndex - 1, _currentIndex + 1 -> min(offset + 10, SECOND_TEXT_OFFSET_MAX)
-//                            _currentIndex - 2, _currentIndex + 2 -> min(offset + 10, THIRD_TEXT_OFFSET_MAX)
-//                            else -> 0f
-//                        }
-//                    }
-//                    invalidate()
-//                }
+        if (showOffset) {
+            mTextOffsets = mTextOffsets.mapIndexed { i, _ ->
+                when (i) {
+                    _currentIndex -> CENTER_TEXT_OFFSET_MAX
+                    _currentIndex - 1, _currentIndex + 1 -> SECOND_TEXT_OFFSET_MAX
+                    _currentIndex - 2, _currentIndex + 2 -> THIRD_TEXT_OFFSET_MAX
+                    else -> 0f
+                }
+            }
+
+            invalidate()
+
+            mChangeIndexSubject.onNext(Unit)
+        }
     }
 
     fun setData(data: List<String>) {
         mData = data
         mTextOffsets = data.map { 0f }
+
+        //TODO: index = -1
 
         requestLayout()
 

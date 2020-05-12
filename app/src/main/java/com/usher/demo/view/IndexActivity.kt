@@ -9,6 +9,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
@@ -75,7 +76,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
-        val showTranslationAnimator = ValueAnimator.ofFloat(150f, 0f).apply {
+        val showTranslationAnimator = ValueAnimator.ofFloat(180f, 0f).apply {
             addUpdateListener { indicator_textview.translationX = animatedValue as Float }
         }
 
@@ -93,13 +94,13 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
-        val hideTranslationAnimator = ValueAnimator.ofFloat(0f, 150f).apply {
+        val hideTranslationAnimator = ValueAnimator.ofFloat(0f, 180f).apply {
             addUpdateListener { indicator_textview.translationX = animatedValue as Float }
         }
 
         val hideAnimatorSet = AnimatorSet().apply {
             duration = 100
-            interpolator = LinearInterpolator()
+            interpolator = AccelerateInterpolator()
             playTogether(hideScaleAnimator, hideTranslationAnimator)
             doOnEnd { indicator_textview.visibility = View.INVISIBLE }
         }
@@ -112,7 +113,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 2. 将indicator对准IndexView当前index对应位置的item. 调整后的margin top值为:
          * indexview_item高度*i + indexview_item高度/2 - indicator高度/2 + indexview.top
          * 3. 如果indicator未显示, 显示indicator.
-         * 4. 如果超过500ms未滑动:
+         * 4. 如果超过300ms未滑动:
          * (1) 隐藏indicator.
          * (2) 修正IndexView当前的index. 当滑动IndexView时, 有可能会出现对应的索引所在组没有数据(比如说联系人中没有
          * 以U或V开头的数据)或是所在组及之后所有组的数据不足一屏(比如联系人中以Z开头的数据只有两三个, 那么固定在顶部的
@@ -163,7 +164,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     if (indicator_textview.visibility != View.VISIBLE)
                         showAnimatorSet.start()
                 }
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(300, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
@@ -181,7 +182,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
          * 1. 更新IndexView当前的index.
          * 2. 将indicator对准IndexView当前index对应位置的item(参见对IndexView.touches的处理).
          * 3. 如果indicator未显示, 显示indicator.
-         * 4. 如果超过500ms未滑动, 隐藏indicator.
+         * 4. 如果超过300ms未滑动, 隐藏indicator.
          *
          * 注意:
          * 在处理IndexView.touches的过程中会调用[LinearLayoutManager.scrollToPositionWithOffset],
@@ -194,7 +195,8 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     val position = recyclerview.getChildAdapterPosition(recyclerview[0])
                     val data = decorationData[position]
                     val index = indexData.indexOf(data)
-                    indexview.index = index
+//                    indexview.index = index
+                    indexview.changeIndex(index, true)
 
                     val top = (index + 0.5f) * (indexview.height.toFloat() / indexData.size) - indicator_textview.height * 0.5f + indexview.top
                     indicator_textview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = top.toInt() }
@@ -203,7 +205,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     if (indicator_textview.visibility != View.VISIBLE)
                         showAnimatorSet.start()
                 }
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { hideAnimatorSet.start() }
