@@ -23,6 +23,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         private const val DEFAULT_TEXT_SIZE = 40
         private const val DEFAULT_IDLE_COLOR = Color.GRAY
         private const val DEFAULT_INDEXED_COLOR = Color.BLACK
+        private const val DEFAULT_DEBOUNCE_TIME = 300
 
         private const val CENTER_TEXT_OFFSET_MAX = 60f
         private const val CENTER_TEXT_OFFSET_MIN = 40f
@@ -46,6 +47,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var mIdleColor: Int
     private var mIndexedColor: Int
     private var mTextSize: Float
+    private var mDebounceTime: Long
     private var mIsDebug = false
 
     private var mData = listOf<String>()
@@ -66,6 +68,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         mIdleColor = a.getColor(R.styleable.IndexView_idleColor, DEFAULT_IDLE_COLOR)
         mIndexedColor = a.getColor(R.styleable.IndexView_indexedColor, DEFAULT_INDEXED_COLOR)
         mTextSize = a.getDimensionPixelSize(R.styleable.IndexView_textSize, DEFAULT_TEXT_SIZE).toFloat()
+        mDebounceTime = a.getInteger(R.styleable.IndexView_debounceTime, DEFAULT_DEBOUNCE_TIME).toLong()
         mIsDebug = a.getBoolean(R.styleable.IndexView_debug, false)
         a.recycle()
 
@@ -135,8 +138,12 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     mTouchSubject.onNext(event.action)
                 }
 
+        /**
+         * 对IndexView的滑动或外部滑动调用[changeIndex]均会让text产生offset, 如果两个subject超过
+         * [mDebounceTime]ms均未emit, 则让text的offset归零.
+         */
         Observable.merge(mTouchSubject.map { Unit }, mChangeIndexSubject)
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(mDebounceTime, TimeUnit.MILLISECONDS)
                 .switchMap {
                     Observable.interval(20, TimeUnit.MILLISECONDS)
                             .takeUntil { mTextOffsets.indexOfFirst { it > 0f } < 0 }
@@ -172,8 +179,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     fun setData(data: List<String>) {
         mData = data
         mTextOffsets = data.map { 0f }
-
-        //TODO: index = -1
+        _currentIndex = -1
 
         requestLayout()
 
