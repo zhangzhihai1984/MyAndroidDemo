@@ -55,6 +55,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
+            android:name=".awesome.decoration.ContactsActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+        <activity
             android:name=".awesome.smarthome.SmartHomeActivity"
             android:theme="@style/CommonTheme" />
         <activity
@@ -151,11 +156,6 @@
             android:name=".view.seat.SeatSelection2Activity"
             android:configChanges="uiMode"
             android:screenOrientation="landscape"
-            android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".view.IndexActivity"
-            android:configChanges="uiMode"
-            android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
 
         <!-- Web Demo -->

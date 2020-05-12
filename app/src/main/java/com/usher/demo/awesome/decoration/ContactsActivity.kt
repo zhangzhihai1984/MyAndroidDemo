@@ -1,4 +1,4 @@
-package com.usher.demo.view
+package com.usher.demo.awesome.decoration
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
@@ -28,18 +28,18 @@ import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_index.*
+import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.concurrent.TimeUnit
 
-class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class ContactsActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_index)
+        setContentView(R.layout.activity_contacts)
         initView()
     }
 
     private fun initView() {
-        statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@IndexActivity) }
+        statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ContactsActivity) }
 
         val serverData = listOf(
                 "A" to listOf(*resources.getStringArray(R.array.sticky_a)),
@@ -210,7 +210,7 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe { hideAnimatorSet.start() }
     }
 
-    private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_index, data) {
+    private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_contacts, data) {
         override fun convert(helper: BaseViewHolder, content: String) {
             (helper.itemView as TextView).text = content
         }

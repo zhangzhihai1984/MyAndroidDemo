@@ -1,6 +1,7 @@
 package com.usher.demo.main
 
 import com.usher.demo.awesome.channel.ChannelActivity
+import com.usher.demo.awesome.decoration.ContactsActivity
 import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
@@ -86,8 +87,7 @@ object DemoConfig {
                 DemoItem("loading", LoadingActivity::class.java),
                 DemoItem("chart", ChartActivity::class.java),
                 DemoItem("loop reycler", LoopRecyclerActivity::class.java),
-                DemoItem("scan", ScanActivity::class.java),
-                DemoItem("index", IndexActivity::class.java)
+                DemoItem("scan", ScanActivity::class.java)
         )
 
         configMap[KEY_OTHER] = listOf(
@@ -99,6 +99,7 @@ object DemoConfig {
         configMap[KEY_AWESOME] = listOf(
                 DemoItem("edit channel", ChannelActivity::class.java),
                 DemoItem("sticky header", StickyHeaderActivity::class.java),
+                DemoItem("contacts", ContactsActivity::class.java),
                 DemoItem("smart home", SmartHomeActivity::class.java),
                 DemoItem("drag", DragActiity::class.java)
         )

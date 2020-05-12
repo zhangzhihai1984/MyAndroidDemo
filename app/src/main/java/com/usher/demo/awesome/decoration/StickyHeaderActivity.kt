@@ -105,24 +105,30 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
             }
         }
 
+        /**
+         * 我们对header的绘制从普遍到特殊分三步进行处理:
+         * 1. 在[getItemOffsets]中我们已经在每组item顶部将header的位置预留出来, 首先需要做的
+         * 就是把header绘制在给他们预留的应地方. 此时看到的效果就是所有的header和item的滑动是同步的.
+         * 2. 考虑到sticky header的效果, 我们需要将[RecyclerView]顶部item(首个可见的, 即索引为0的item)
+         * 所在组的header固定绘制在[RecyclerView]的顶部, 不随着item的滑动而滑动. 此时已经有sticky header的效果了,
+         * 但是随着滑动的继续, 下一组header会覆盖在上一组header的上面, 而不是有一种"推上去"的效果.
+         * 3. 为了实现"下一个header将上一个header推上去"的效果, 当固定在顶部的header的bottom与组内最后
+         * 一个item的bottom重合时, 也就是下一组的header已经"顶到了"固定在顶部的header时, 那么该header
+         * 便不再固定在顶部, 而是随着最后一个item一起滑走.
+         *
+         * 需要注意的是, [RecyclerView]的item view是复用的, 所以我们进行遍历得到的索引是可见item view的索引,
+         * 如果要获取该item view所对应的"真正的"索引的话, 需要调用[RecyclerView.getChildAdapterPosition]获取.
+         */
         override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
             val headerRect = Rect(parent.paddingStart, 0, parent.width - parent.paddingEnd, 0)
 
             parent.forEachIndexed { i, view ->
-                //第一个可见的item
                 if (i == 0) {
-                    //固定在顶部
                     headerRect.run {
                         top = parent.paddingTop
                         bottom = parent.paddingTop + HEADER_HEIGHT
                     }
 
-                    /*
-                    * 如果当前为第一个可见且为组内最后一个item时, 以向上滑动为例, 当item的bottom等于固定在顶部的header的bottom时,
-                    * 说明此时item已完全被该header遮挡, 同时, 下一组的header也已"顶到了"该header, 如果继续向上滑动,
-                    * 也就是说item的bottom小于该header的bottom, 那么该header不应该再固定在顶部, 而是随着item向上滑动,
-                    * 直至滑出可见范围, 造成一种被下一组header顶出去的效果, 最后下一组的header固定在顶部
-                    */
                     if (isLastViewInGroup(parent.getChildAdapterPosition(view))) {
                         val lastItemBottom = view.bottom
 
@@ -159,6 +165,5 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
 
         private fun isLastViewInGroup(position: Int) =
                 position == data.size - 1 || data[position].first != data[position + 1].first
-
     }
 }
