@@ -7,8 +7,11 @@ import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
+import androidx.core.animation.doOnEnd
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +21,6 @@ import kotlinx.android.synthetic.main.activity_channel.*
 
 class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
-    private var mMoveAnimatorSet: AnimatorSet? = null
-    private var mCacheAnimatorSet: AnimatorSet? = null
     private var mMoveStartLocation = IntArray(2)
     private var mMoveEndLocation = IntArray(2)
     private var mCacheStartLocation = IntArray(2)
@@ -32,19 +33,44 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val mSelectedChannelList = arrayListOf(*resources.getStringArray(R.array.selected_channels))
-        val mRecommendedChannelList = arrayListOf(*resources.getStringArray(R.array.recommended_channels))
+        val selectedChannels = arrayListOf(*resources.getStringArray(R.array.selected_channels))
+        val recommendedChannels = arrayListOf(*resources.getStringArray(R.array.recommended_channels))
 
-        val mAdapter = ChannelAdapter(this, mSelectedChannelList, mRecommendedChannelList)
+        val mMoveAnimatorSet = AnimatorSet().apply {
+            interpolator = LinearInterpolator()
+            duration = 200
+            doOnEnd {
+                mMoveStartLocation = mMoveEndLocation
+                placeholder_imageview.run {
+                    updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                        leftMargin += translationX.toInt()
+                        topMargin += translationY.toInt()
+                    }
+                    translationX = 0f
+                    translationY = 0f
+                }
+            }
+        }
+
+        val mCacheAnimatorSet = AnimatorSet()
+        mCacheAnimatorSet.interpolator = LinearInterpolator()
+        mCacheAnimatorSet.duration = 300
+        mCacheAnimatorSet.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                cache_imageview.setVisibility(View.INVISIBLE)
+            }
+        })
+
+        val mAdapter = ChannelAdapter(this, selectedChannels, recommendedChannels)
 
         val mGridLayoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
         mGridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (position == 0) {
                     4
-                } else if (position <= mSelectedChannelList.size) {
+                } else if (position <= selectedChannels.size) {
                     1
-                } else if (position == mSelectedChannelList.size + 1) {
+                } else if (position == selectedChannels.size + 1) {
                     4
                 } else {
                     1
@@ -77,8 +103,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 xAnimator.addUpdateListener { animation -> placeholder_imageview.setTranslationX((animation.animatedValue as Float)) }
                 val yAnimator = ValueAnimator.ofFloat(0f, mMoveEndLocation[1] - mMoveStartLocation[1].toFloat())
                 yAnimator.addUpdateListener { animation -> placeholder_imageview.setTranslationY((animation.animatedValue as Float)) }
-                mMoveAnimatorSet!!.playTogether(xAnimator, yAnimator)
-                mMoveAnimatorSet!!.start()
+                mMoveAnimatorSet.playTogether(xAnimator, yAnimator)
+                mMoveAnimatorSet.start()
             }
 
             override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, position: Int) {
@@ -86,7 +112,7 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         })
         mAdapter.setOnChannelRemoveListener { view, location, isAdd ->
-            val targetView = mGridLayoutManager.findViewByPosition(if (isAdd) mSelectedChannelList.size else mSelectedChannelList.size + 2)
+            val targetView = mGridLayoutManager.findViewByPosition(if (isAdd) selectedChannels.size else selectedChannels.size + 2)
             cache_imageview.setVisibility(View.VISIBLE)
             cache_imageview.setImageBitmap(getCacheBitmap(view))
             val params = cache_imageview.getLayoutParams() as RelativeLayout.LayoutParams
@@ -104,31 +130,9 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             xAnimator.addUpdateListener { animation -> cache_imageview.setTranslationX((animation.animatedValue as Float)) }
             val yAnimator = ValueAnimator.ofFloat(0f, mCacheEndLocation[1] - mCacheStartLocation[1].toFloat())
             yAnimator.addUpdateListener { animation -> cache_imageview.setTranslationY((animation.animatedValue as Float)) }
-            mCacheAnimatorSet!!.playTogether(xAnimator, yAnimator)
-            mCacheAnimatorSet!!.start()
+            mCacheAnimatorSet.playTogether(xAnimator, yAnimator)
+            mCacheAnimatorSet.start()
         }
-        mMoveAnimatorSet = AnimatorSet()
-        mMoveAnimatorSet!!.interpolator = LinearInterpolator()
-        mMoveAnimatorSet!!.duration = 200
-        mMoveAnimatorSet!!.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                mMoveStartLocation = mMoveEndLocation
-                val params = placeholder_imageview.getLayoutParams() as RelativeLayout.LayoutParams
-                params.leftMargin += placeholder_imageview.getTranslationX().toInt()
-                params.topMargin += placeholder_imageview.getTranslationY().toInt()
-                placeholder_imageview.setLayoutParams(params)
-                placeholder_imageview.setTranslationX(0f)
-                placeholder_imageview.setTranslationY(0f)
-            }
-        })
-        mCacheAnimatorSet = AnimatorSet()
-        mCacheAnimatorSet!!.interpolator = LinearInterpolator()
-        mCacheAnimatorSet!!.duration = 300
-        mCacheAnimatorSet!!.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                cache_imageview.setVisibility(View.INVISIBLE)
-            }
-        })
     }
 
     private fun getLocation(view: View?): IntArray {
