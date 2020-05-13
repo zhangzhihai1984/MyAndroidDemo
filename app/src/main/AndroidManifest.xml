@@ -48,6 +48,8 @@
         <!-- Awesome Demo -->
         <activity
             android:name=".awesome.channel.ChannelActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".awesome.decoration.StickyHeaderActivity"
