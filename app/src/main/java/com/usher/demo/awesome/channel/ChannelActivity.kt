@@ -1,7 +1,5 @@
 package com.usher.demo.awesome.channel
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.graphics.Bitmap
@@ -36,7 +34,7 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         val selectedChannels = arrayListOf(*resources.getStringArray(R.array.selected_channels))
         val recommendedChannels = arrayListOf(*resources.getStringArray(R.array.recommended_channels))
 
-        val mMoveAnimatorSet = AnimatorSet().apply {
+        val dragAnimatorSet = AnimatorSet().apply {
             interpolator = LinearInterpolator()
             duration = 200
             doOnEnd {
@@ -52,14 +50,11 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
-        val mCacheAnimatorSet = AnimatorSet()
-        mCacheAnimatorSet.interpolator = LinearInterpolator()
-        mCacheAnimatorSet.duration = 300
-        mCacheAnimatorSet.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                cache_imageview.setVisibility(View.INVISIBLE)
-            }
-        })
+        val removeAnimatorSet = AnimatorSet().apply {
+            interpolator = LinearInterpolator()
+            duration = 300
+            doOnEnd { cache_imageview.visibility = View.INVISIBLE }
+        }
 
         val mAdapter = ChannelAdapter(this, selectedChannels, recommendedChannels)
 
@@ -103,8 +98,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 xAnimator.addUpdateListener { animation -> placeholder_imageview.setTranslationX((animation.animatedValue as Float)) }
                 val yAnimator = ValueAnimator.ofFloat(0f, mMoveEndLocation[1] - mMoveStartLocation[1].toFloat())
                 yAnimator.addUpdateListener { animation -> placeholder_imageview.setTranslationY((animation.animatedValue as Float)) }
-                mMoveAnimatorSet.playTogether(xAnimator, yAnimator)
-                mMoveAnimatorSet.start()
+                dragAnimatorSet.playTogether(xAnimator, yAnimator)
+                dragAnimatorSet.start()
             }
 
             override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, position: Int) {
@@ -130,8 +125,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             xAnimator.addUpdateListener { animation -> cache_imageview.setTranslationX((animation.animatedValue as Float)) }
             val yAnimator = ValueAnimator.ofFloat(0f, mCacheEndLocation[1] - mCacheStartLocation[1].toFloat())
             yAnimator.addUpdateListener { animation -> cache_imageview.setTranslationY((animation.animatedValue as Float)) }
-            mCacheAnimatorSet.playTogether(xAnimator, yAnimator)
-            mCacheAnimatorSet.start()
+            removeAnimatorSet.playTogether(xAnimator, yAnimator)
+            removeAnimatorSet.start()
         }
     }
 
