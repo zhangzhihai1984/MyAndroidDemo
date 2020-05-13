@@ -58,22 +58,15 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         val mAdapter = ChannelAdapter(this, selectedChannels, recommendedChannels)
 
-        val mGridLayoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
-        mGridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0) {
-                    4
-                } else if (position <= selectedChannels.size) {
-                    1
-                } else if (position == selectedChannels.size + 1) {
-                    4
-                } else {
-                    1
-                }
+        recyclerview.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int =
+                        when (position) {
+                            0, selectedChannels.size + 1 -> 4
+                            else -> 1
+                        }
             }
         }
-
-        recyclerview.layoutManager = mGridLayoutManager
         recyclerview.adapter = mAdapter
         //        mRecyclerView.setNestedScrollingEnabled(false);
 
@@ -107,7 +100,7 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         })
         mAdapter.setOnChannelRemoveListener { view, location, isAdd ->
-            val targetView = mGridLayoutManager.findViewByPosition(if (isAdd) selectedChannels.size else selectedChannels.size + 2)
+            val targetView = (recyclerview.layoutManager as GridLayoutManager).findViewByPosition(if (isAdd) selectedChannels.size else selectedChannels.size + 2)
             cache_imageview.setVisibility(View.VISIBLE)
             cache_imageview.setImageBitmap(getCacheBitmap(view))
             val params = cache_imageview.getLayoutParams() as RelativeLayout.LayoutParams
