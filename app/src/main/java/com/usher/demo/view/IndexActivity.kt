@@ -17,5 +17,6 @@ class IndexActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#")
 
         indexview.setData(indexData)
+        indexview2.setData(indexData)
     }
 }

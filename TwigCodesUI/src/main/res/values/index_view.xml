@@ -6,9 +6,9 @@
         <attr name="textSize" format="dimension" />
         <attr name="debounceTime" format="integer" />
         <attr name="debug" format="boolean" />
-        <attr name="textOffsetDirection" format="enum">
-            <enum name="left" value="true" />
-            <enum name="right" value="false" />
+        <attr name="OffsetDirection" format="enum">
+            <enum name="left" value="-1" />
+            <enum name="right" value="1" />
         </attr>
     </declare-styleable>
 </resources>

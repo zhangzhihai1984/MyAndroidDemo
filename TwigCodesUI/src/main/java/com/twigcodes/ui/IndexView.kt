@@ -24,6 +24,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         private const val DEFAULT_IDLE_COLOR = Color.GRAY
         private const val DEFAULT_INDEXED_COLOR = Color.BLACK
         private const val DEFAULT_DEBOUNCE_TIME = 300
+        private const val DEFAULT_TEXT_OFFSET_DIRECTION = -1
 
         private const val CENTER_TEXT_OFFSET_MAX = 60f
         private const val CENTER_TEXT_OFFSET_MIN = 40f
@@ -48,6 +49,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var mIndexedColor: Int
     private var mTextSize: Float
     private var mDebounceTime: Long
+    //text offset方向, 默认向左(-1)
+    private var mTextOffsetDirection: Int
     private var mIsDebug = false
 
     private var mData = listOf<String>()
@@ -69,6 +72,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         mIndexedColor = a.getColor(R.styleable.IndexView_indexedColor, DEFAULT_INDEXED_COLOR)
         mTextSize = a.getDimensionPixelSize(R.styleable.IndexView_textSize, DEFAULT_TEXT_SIZE).toFloat()
         mDebounceTime = a.getInteger(R.styleable.IndexView_debounceTime, DEFAULT_DEBOUNCE_TIME).toLong()
+        mTextOffsetDirection = a.getInteger(R.styleable.IndexView_OffsetDirection, DEFAULT_TEXT_OFFSET_DIRECTION)
         mIsDebug = a.getBoolean(R.styleable.IndexView_debug, false)
         a.recycle()
 
@@ -203,7 +207,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
             val metrics = mTextPaint.fontMetrics
 
-            canvas.drawText(text, width.toFloat() / 2 - mTextOffsets[i], (i + 0.5f) * mItemHeight - metrics.top / 2 - metrics.bottom / 2, mTextPaint.apply {
+            canvas.drawText(text, width.toFloat() / 2 + mTextOffsets[i] * mTextOffsetDirection, (i + 0.5f) * mItemHeight - metrics.top / 2 - metrics.bottom / 2, mTextPaint.apply {
                 color = if (i == _currentIndex) mIndexedColor else mIdleColor
             })
         }
