@@ -29,7 +29,8 @@
         android:layout_below="@id/title_layout"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:elevation="1dp" />
+        android:elevation="1dp"
+        android:overScrollMode="never" />
 
     <ImageView
         android:id="@+id/cache_imageview"

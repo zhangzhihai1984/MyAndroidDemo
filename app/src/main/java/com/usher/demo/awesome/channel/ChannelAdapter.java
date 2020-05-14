@@ -64,7 +64,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (viewType) {
             case ITEM_VIEW_TYPE_SELECTED_TITLE:
             case ITEM_VIEW_TYPE_RECOMMENDED_TITLE:
-                view = LayoutInflater.from(mContext).inflate(R.layout.item_title, parent, false);
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_channel_header, parent, false);
                 return new TitleViewHolder(view);
             case ITEM_VIEW_TYPE_SELECTED_CHANNEL:
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_channel, parent, false);
