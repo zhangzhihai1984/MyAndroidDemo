@@ -145,12 +145,14 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private class ChannelTouchCallback : ItemTouchHelper.Callback() {
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-            val swipeFlags = 0
-
-            return makeMovementFlags(dragFlags, swipeFlags)
-        }
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
+                when (viewHolder.itemViewType) {
+                    ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL -> {
+                        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                        makeMovementFlags(dragFlags, 0)
+                    }
+                    else -> makeMovementFlags(0, 0)
+                }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
             return true
