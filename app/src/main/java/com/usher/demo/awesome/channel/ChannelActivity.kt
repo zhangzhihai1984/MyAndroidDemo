@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_channel.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
@@ -144,24 +145,6 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         return bitmap
     }
 
-    private class ChannelTouchCallback : ItemTouchHelper.Callback() {
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
-                when (viewHolder.itemViewType) {
-                    ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL -> {
-                        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                        makeMovementFlags(dragFlags, 0)
-                    }
-                    else -> makeMovementFlags(0, 0)
-                }
-
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        }
-    }
-
     private class ChannelAdapter(private val context: Context, private val data: List<Pair<String, Int>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         companion object {
             const val ITEM_VIEW_TYPE_SELECTED_HEADER = 0
@@ -227,5 +210,54 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         private inner class RecommendedChannelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         }
+    }
+
+    private class ChannelTouchCallback : ItemTouchHelper.Callback() {
+        private val mDragStartSubject = PublishSubject.create<DragStart>()
+        private val mDragMovingSubject = PublishSubject.create<DragMoving>()
+        private val mDragEndSubject = PublishSubject.create<DragEnd>()
+
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
+                when (viewHolder.itemViewType) {
+                    ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL -> {
+                        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                        makeMovementFlags(dragFlags, 0)
+                    }
+                    else -> makeMovementFlags(0, 0)
+                }
+
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            mDragMovingSubject.onNext(DragMoving(viewHolder, viewHolder.adapterPosition, target, target.adapterPosition))
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+
+        override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+            super.onSelectedChanged(viewHolder, actionState)
+
+            viewHolder?.run {
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG)
+                    mDragStartSubject.onNext(DragStart(viewHolder, viewHolder.adapterPosition))
+            }
+        }
+
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+            super.clearView(recyclerView, viewHolder)
+            mDragEndSubject.onNext(DragEnd(viewHolder, viewHolder.adapterPosition))
+        }
+
+        override fun canDropOver(recyclerView: RecyclerView, current: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean =
+                current.itemViewType == target.itemViewType
+
+        fun dragStarts() = mDragStartSubject
+
+        fun dragMoving() = mDragMovingSubject
+
+        fun dragEnds() = mDragEndSubject
+
+        data class DragStart(val viewHolder: RecyclerView.ViewHolder, val position: Int)
+        data class DragEnd(val viewHolder: RecyclerView.ViewHolder, val position: Int)
+        data class DragMoving(val current: RecyclerView.ViewHolder, val from: Int, val target: RecyclerView.ViewHolder, val to: Int)
     }
 }
