@@ -20,6 +20,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_channel.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
+import java.util.*
 
 class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
@@ -83,6 +84,13 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
                     mAdapter.onDragStart(it.viewHolder)
+                }
+
+        touchCallback.dragMoving()
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    mAdapter.onDragMoving(it.from, it.to)
                 }
 
         touchCallback.dragEnds()
@@ -218,6 +226,18 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 name_textview.elevation = 10f
                 delete_imageview.visibility = View.INVISIBLE
             }
+        }
+
+        fun onDragMoving(from: Int, to: Int) {
+            if (from < to) {
+                for (i in from until to)
+                    Collections.swap(data, i, i + 1)
+            } else {
+                for (i in from downTo to + 1)
+                    Collections.swap(data, i, i - 1)
+            }
+
+            notifyItemMoved(from, to)
         }
 
         fun onDragEnd(holder: RecyclerView.ViewHolder) {
