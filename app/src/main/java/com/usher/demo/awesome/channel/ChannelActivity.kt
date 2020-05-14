@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import com.usher.demo.utils.RxUtil
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_channel.*
 import kotlinx.android.synthetic.main.item_channel.view.*
@@ -61,8 +62,6 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             doOnEnd { cache_imageview.visibility = View.INVISIBLE }
         }
 
-        val touchCallback = ChannelTouchCallback()
-
         val mAdapter = ChannelAdapter(this, data)
 
         recyclerview.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false).apply {
@@ -75,9 +74,24 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
         recyclerview.adapter = mAdapter
-        //        mRecyclerView.setNestedScrollingEnabled(false);
 
+        val touchCallback = ChannelTouchCallback()
         ItemTouchHelper(touchCallback).attachToRecyclerView(recyclerview)
+
+        touchCallback.dragStarts()
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    mAdapter.onDragStart(it.viewHolder)
+                }
+
+        touchCallback.dragEnds()
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    mAdapter.onDragEnd(it.viewHolder)
+                }
+
 //        val mItemTouchHelper = ItemTouchHelper(ItemDragHelperCallback(mAdapter))
 //        mItemTouchHelper.attachToRecyclerView(recyclerview)
 
@@ -196,6 +210,20 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         name_textview.setTextColor(context.getColor(R.color.text_primary))
                         delete_imageview.visibility = View.GONE
                     }
+            }
+        }
+
+        fun onDragStart(holder: RecyclerView.ViewHolder) {
+            holder.itemView.run {
+                name_textview.elevation = 10f
+                delete_imageview.visibility = View.INVISIBLE
+            }
+        }
+
+        fun onDragEnd(holder: RecyclerView.ViewHolder) {
+            holder.itemView.run {
+                name_textview.elevation = 0f
+                delete_imageview.visibility = View.VISIBLE
             }
         }
 
