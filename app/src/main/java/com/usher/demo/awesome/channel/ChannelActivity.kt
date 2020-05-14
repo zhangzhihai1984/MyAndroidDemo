@@ -33,9 +33,10 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val fixedChannels = listOf("关注", "推荐")
-        val selectedChannels = arrayListOf(*resources.getStringArray(R.array.selected_channels))
-        val recommendedChannels = arrayListOf(*resources.getStringArray(R.array.recommended_channels))
+        val fixedChannels = listOf("关注", "推荐").map { it to ChannelAdapter.ITEM_VIEW_TYPE_FIXED_CHANNEL }
+        val selectedChannels = listOf(*resources.getStringArray(R.array.selected_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL }
+        val recommendedChannels = listOf(*resources.getStringArray(R.array.recommended_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL }
+        val data = listOf(listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_HEADER), fixedChannels, selectedChannels, listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_HEADER), recommendedChannels).flatten()
 
         val dragAnimatorSet = AnimatorSet().apply {
             interpolator = LinearInterpolator()
@@ -61,7 +62,7 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         val touchCallback = ChannelTouchCallback()
 
-        val mAdapter = ChannelAdapter(this, fixedChannels, selectedChannels, recommendedChannels)
+        val mAdapter = ChannelAdapter(this, data)
 
         recyclerview.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -159,37 +160,28 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
     }
 
-    private class ChannelAdapter(private val context: Context, private val fixedChannels: List<String>, private val selectedChannels: ArrayList<String>, private val recommendedChannels: ArrayList<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class ChannelAdapter(private val context: Context, private val data: List<Pair<String, Int>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         companion object {
-            private const val ITEM_VIEW_TYPE_SELECTED_HEADER = 0
-            private const val ITEM_VIEW_TYPE__FIXED_CHANNEL = 1
-            private const val ITEM_VIEW_TYPE_SELECTED_CHANNEL = 2
-            private const val ITEM_VIEW_TYPE_RECOMMENDED_HEADER = 3
-            private const val ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL = 4
+            const val ITEM_VIEW_TYPE_SELECTED_HEADER = 0
+            const val ITEM_VIEW_TYPE_FIXED_CHANNEL = 1
+            const val ITEM_VIEW_TYPE_SELECTED_CHANNEL = 2
+            const val ITEM_VIEW_TYPE_RECOMMENDED_HEADER = 3
+            const val ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL = 4
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
                 when (viewType) {
-                    ITEM_VIEW_TYPE__FIXED_CHANNEL -> LayoutInflater.from(context).inflate(R.layout.item_channel, parent, false).run { FixedChannelViewHolder(this) }
+                    ITEM_VIEW_TYPE_FIXED_CHANNEL -> LayoutInflater.from(context).inflate(R.layout.item_channel, parent, false).run { FixedChannelViewHolder(this) }
                     ITEM_VIEW_TYPE_SELECTED_CHANNEL -> LayoutInflater.from(context).inflate(R.layout.item_channel, parent, false).run { SelectedChannelViewHolder(this) }
                     ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL -> LayoutInflater.from(context).inflate(R.layout.item_channel, parent, false).run { RecommendedChannelViewHolder(this) }
                     else -> LayoutInflater.from(context).inflate(R.layout.item_channel_header, parent, false).run { HeaderViewHolder(this) }
                 }
 
-        override fun getItemCount(): Int = fixedChannels.size + selectedChannels.size + recommendedChannels.size + 2
+        override fun getItemCount(): Int = data.size
 
-        override fun getItemViewType(position: Int): Int =
-                when (position) {
-                    0 -> ITEM_VIEW_TYPE_SELECTED_HEADER
-                    in 1..fixedChannels.size -> ITEM_VIEW_TYPE__FIXED_CHANNEL
-                    in fixedChannels.size + 1..fixedChannels.size + selectedChannels.size -> ITEM_VIEW_TYPE_SELECTED_CHANNEL
-                    fixedChannels.size + selectedChannels.size + 1 -> ITEM_VIEW_TYPE_RECOMMENDED_HEADER
-                    else -> ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL
-                }
-
+        override fun getItemViewType(position: Int): Int = data[position].second
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            holder.itemId
             when (holder.itemViewType) {
                 ITEM_VIEW_TYPE_SELECTED_HEADER ->
                     holder.itemView.run {
@@ -201,24 +193,21 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         title_textview.text = "推荐频道"
                         desc_textview.text = "点击添加频道"
                     }
-                ITEM_VIEW_TYPE__FIXED_CHANNEL ->
+                ITEM_VIEW_TYPE_FIXED_CHANNEL ->
                     holder.itemView.run {
-                        val pos = position - 1
-                        name_textview.text = fixedChannels[pos]
+                        name_textview.text = data[position].first
                         name_textview.setTextColor(context.getColor(R.color.text_secondary))
                         delete_imageview.visibility = View.GONE
                     }
                 ITEM_VIEW_TYPE_SELECTED_CHANNEL ->
                     holder.itemView.run {
-                        val pos = position - fixedChannels.size - 1
-                        name_textview.text = selectedChannels[pos]
+                        name_textview.text = data[position].first
                         name_textview.setTextColor(context.getColor(R.color.text_primary))
                         delete_imageview.visibility = View.VISIBLE
                     }
                 ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL ->
                     holder.itemView.run {
-                        val pos = position - fixedChannels.size - selectedChannels.size - 2
-                        name_textview.text = recommendedChannels[pos]
+                        name_textview.text = data[position].first
                         name_textview.setTextColor(context.getColor(R.color.text_primary))
                         delete_imageview.visibility = View.GONE
                     }
