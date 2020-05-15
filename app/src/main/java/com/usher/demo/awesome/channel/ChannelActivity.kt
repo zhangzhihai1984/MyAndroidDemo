@@ -1,6 +1,7 @@
 package com.usher.demo.awesome.channel
 
 import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -13,6 +14,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.RxUtil
@@ -36,26 +38,12 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
+        statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ChannelActivity) }
+
         val fixedChannels = listOf("关注", "推荐").map { it to ChannelAdapter.ITEM_VIEW_TYPE_FIXED_CHANNEL }
         val selectedChannels = listOf(*resources.getStringArray(R.array.selected_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL }
         val recommendedChannels = listOf(*resources.getStringArray(R.array.recommended_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL }
         val data = listOf(listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_HEADER), fixedChannels, selectedChannels, listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_HEADER), recommendedChannels).flatten()
-
-        val dragAnimatorSet = AnimatorSet().apply {
-            interpolator = LinearInterpolator()
-            duration = 200
-            doOnEnd {
-                mMoveStartLocation = mMoveEndLocation
-                placeholder_imageview.run {
-                    updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                        leftMargin += translationX.toInt()
-                        topMargin += translationY.toInt()
-                    }
-                    translationX = 0f
-                    translationY = 0f
-                }
-            }
-        }
 
         val removeAnimatorSet = AnimatorSet().apply {
             interpolator = LinearInterpolator()
@@ -80,16 +68,17 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         ItemTouchHelper(touchCallback).attachToRecyclerView(recyclerview)
 
         touchCallback.dragStarts()
+                .map { it.viewHolder.itemView }
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe {
-                    mAdapter.onDragStart(it.viewHolder)
+                .subscribe { itemView ->
+                    mAdapter.onDragStart(itemView)
 
                     placeholder_imageview.visibility = View.VISIBLE
                     placeholder_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                        width = it.viewHolder.itemView.width
-                        topMargin = it.viewHolder.itemView.top
-                        leftMargin = it.viewHolder.itemView.left
+                        width = itemView.width
+                        topMargin = itemView.top
+                        leftMargin = itemView.left
                     }
                 }
 
@@ -98,43 +87,35 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
                     mAdapter.onDragMoving(it.from, it.to)
+
+                    val leftAnimator = ValueAnimator.ofInt(it.current.itemView.left, it.target.itemView.left).apply {
+                        addUpdateListener {
+                            placeholder_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { leftMargin = animatedValue as Int }
+                        }
+                    }
+                    val topAnimator = ValueAnimator.ofInt(it.current.itemView.top, it.target.itemView.top).apply {
+                        addUpdateListener {
+                            placeholder_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = animatedValue as Int }
+                        }
+                    }
+
+                    AnimatorSet().run {
+                        interpolator = LinearInterpolator()
+                        duration = 200
+                        playTogether(leftAnimator, topAnimator)
+                        start()
+                    }
                 }
 
         touchCallback.dragEnds()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    mAdapter.onDragEnd(it.viewHolder)
+                    mAdapter.onDragEnd(it.viewHolder.itemView)
 
                     placeholder_imageview.visibility = View.INVISIBLE
                 }
 
-//        mAdapter.setOnItemDragListener(object : OnItemDragListener {
-//            override fun onItemDragStart(viewHolder: RecyclerView.ViewHolder, position: Int) {
-//                placeholder_imageview.visibility = View.VISIBLE
-//                val params = placeholder_imageview.getLayoutParams() as RelativeLayout.LayoutParams
-//                params.width = viewHolder.itemView.width
-//                mMoveStartLocation = getLocation(viewHolder.itemView)
-//                val parentLocation = getLocation(root_layout)
-//                params.leftMargin = mMoveStartLocation[0] //parent's margin left is 0
-//                params.topMargin = mMoveStartLocation[1] - parentLocation[1]
-//                placeholder_imageview.setLayoutParams(params)
-//            }
-//
-//            override fun onItemDragMoving(current: RecyclerView.ViewHolder, from: Int, target: RecyclerView.ViewHolder, to: Int) {
-//                mMoveEndLocation = getLocation(target.itemView)
-//                val xAnimator = ValueAnimator.ofFloat(0f, mMoveEndLocation[0] - mMoveStartLocation[0].toFloat())
-//                xAnimator.addUpdateListener { animation -> placeholder_imageview.setTranslationX((animation.animatedValue as Float)) }
-//                val yAnimator = ValueAnimator.ofFloat(0f, mMoveEndLocation[1] - mMoveStartLocation[1].toFloat())
-//                yAnimator.addUpdateListener { animation -> placeholder_imageview.setTranslationY((animation.animatedValue as Float)) }
-//                dragAnimatorSet.playTogether(xAnimator, yAnimator)
-//                dragAnimatorSet.start()
-//            }
-//
-//            override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, position: Int) {
-//                placeholder_imageview.setVisibility(View.INVISIBLE)
-//            }
-//        })
 //        mAdapter.setOnChannelRemoveListener { view, location, isAdd ->
 //            val targetView = (recyclerview.layoutManager as GridLayoutManager).findViewByPosition(if (isAdd) selectedChannels.size else selectedChannels.size + 2)
 //            cache_imageview.setVisibility(View.VISIBLE)
@@ -223,8 +204,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
-        fun onDragStart(holder: RecyclerView.ViewHolder) {
-            holder.itemView.run {
+        fun onDragStart(itemView: View) {
+            itemView.run {
                 name_textview.elevation = 10f
                 delete_imageview.visibility = View.INVISIBLE
             }
@@ -242,8 +223,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             notifyItemMoved(from, to)
         }
 
-        fun onDragEnd(holder: RecyclerView.ViewHolder) {
-            holder.itemView.run {
+        fun onDragEnd(itemView: View) {
+            itemView.run {
                 name_textview.elevation = 0f
                 delete_imageview.visibility = View.VISIBLE
             }
