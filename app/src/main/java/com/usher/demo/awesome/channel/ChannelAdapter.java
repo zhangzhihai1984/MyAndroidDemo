@@ -115,7 +115,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int position) {
-        ((SelectedChannelViewHolder) viewHolder).mNameTextView.setBackground(mContext.getDrawable(R.drawable.channel_item_selected_background));
+//        ((SelectedChannelViewHolder) viewHolder).mNameTextView.setBackground(mContext.getDrawable(R.drawable.channel_item_selected_background));
         ((SelectedChannelViewHolder) viewHolder).mNameTextView.setElevation(10);
         ((SelectedChannelViewHolder) viewHolder).mDeleteImageView.setVisibility(View.INVISIBLE);
 

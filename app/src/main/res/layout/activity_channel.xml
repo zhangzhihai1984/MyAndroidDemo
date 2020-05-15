@@ -49,7 +49,7 @@
             android:layout_height="50dp"
             android:contentDescription="@null"
             android:padding="5dp"
-            android:src="@drawable/channel_item_placeholder_background"
+            android:src="@drawable/channel_placeholder_background"
             android:visibility="invisible" />
 
     </RelativeLayout>
