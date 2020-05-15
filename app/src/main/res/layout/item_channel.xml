@@ -13,7 +13,8 @@
         android:background="@drawable/channel_item_background"
         android:gravity="center"
         android:textColor="@color/text_primary"
-        android:textSize="15sp"
+        android:textSize="14sp"
+        android:textStyle="bold"
         tools:text="hello" />
 
     <ImageView
@@ -21,6 +22,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentEnd="true"
+        android:contentDescription="@null"
         android:scaleType="fitXY"
         android:src="@mipmap/delete_item" />
 
