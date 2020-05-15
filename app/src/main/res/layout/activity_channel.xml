@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_layout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background">
+    android:background="@color/page_background"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/statusbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/item_background" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/item_background"
+        android:gravity="center"
+        android:text="频道定制"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <RelativeLayout
-        android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/white"
-        android:elevation="5dp">
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="频道定制"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:elevation="1dp"
+            android:overScrollMode="never" />
+
+        <ImageView
+            android:id="@+id/cache_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:contentDescription="@null"
+            android:elevation="1dp"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/placeholder_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:contentDescription="@null"
+            android:padding="5dp"
+            android:src="@drawable/channel_item_placeholder_background"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title_layout"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:elevation="1dp"
-        android:overScrollMode="never" />
-
-    <ImageView
-        android:id="@+id/cache_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:contentDescription="@null"
-        android:elevation="1dp"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/placeholder_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:contentDescription="@null"
-        android:padding="5dp"
-        android:src="@drawable/channel_item_placeholder_background"
-        android:visibility="invisible" />
-
-</RelativeLayout>
+</LinearLayout>

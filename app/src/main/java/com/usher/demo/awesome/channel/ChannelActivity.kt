@@ -84,6 +84,13 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
                     mAdapter.onDragStart(it.viewHolder)
+
+                    placeholder_imageview.visibility = View.VISIBLE
+                    placeholder_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                        width = it.viewHolder.itemView.width
+                        topMargin = it.viewHolder.itemView.top
+                        leftMargin = it.viewHolder.itemView.left
+                    }
                 }
 
         touchCallback.dragMoving()
@@ -98,10 +105,9 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
                     mAdapter.onDragEnd(it.viewHolder)
-                }
 
-//        val mItemTouchHelper = ItemTouchHelper(ItemDragHelperCallback(mAdapter))
-//        mItemTouchHelper.attachToRecyclerView(recyclerview)
+                    placeholder_imageview.visibility = View.INVISIBLE
+                }
 
 //        mAdapter.setOnItemDragListener(object : OnItemDragListener {
 //            override fun onItemDragStart(viewHolder: RecyclerView.ViewHolder, position: Int) {
@@ -153,11 +159,7 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 //        }
     }
 
-    private fun getLocation(view: View?): IntArray {
-        val location = IntArray(2)
-        view!!.getLocationOnScreen(location)
-        return location
-    }
+    private fun getLocation(view: View): IntArray = IntArray(2).apply { view.getLocationOnScreen(this) }
 
     private fun getCacheBitmap(view: View): Bitmap {
         view.destroyDrawingCache()
