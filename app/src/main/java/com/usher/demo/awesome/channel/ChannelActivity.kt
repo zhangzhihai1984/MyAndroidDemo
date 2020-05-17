@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.clicks
+import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
@@ -117,6 +118,19 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     placeholder_imageview.visibility = View.INVISIBLE
                 }
 
+        mAdapter.removes()
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+                    val b = ImageUtil.getViewBitmap(it.view)
+                    cache_imageview.setImageBitmap(b)
+                    cache_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                        width = it.view.width
+                        topMargin = it.view.top
+                        leftMargin = it.view.left
+                    }
+                }
+
 //        mAdapter.setOnChannelRemoveListener { view, location, isAdd ->
 //            val targetView = (recyclerview.layoutManager as GridLayoutManager).findViewByPosition(if (isAdd) selectedChannels.size else selectedChannels.size + 2)
 //            cache_imageview.setVisibility(View.VISIBLE)
@@ -159,6 +173,10 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             const val ITEM_VIEW_TYPE_RECOMMENDED_HEADER = 3
             const val ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL = 4
         }
+
+        data class Remove(val view: View, val to: Int)
+
+        private val mRemoveSubject = PublishSubject.create<Remove>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
                 when (viewType) {
@@ -232,6 +250,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
+        fun removes() = mRemoveSubject
+
         private inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
         private inner class FixedChannelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -251,6 +271,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
                             data.add(to, data.removeAt(from))
                             notifyItemMoved(from, to)
+
+                            mRemoveSubject.onNext(Remove(itemView, to))
                         }
             }
         }
@@ -266,6 +288,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                             data[from] = data[from].first to ITEM_VIEW_TYPE_SELECTED_CHANNEL
                             data.add(to, data.removeAt(from))
                             notifyItemMoved(from, to)
+
+                            mRemoveSubject.onNext(Remove(itemView, to))
                         }
             }
         }

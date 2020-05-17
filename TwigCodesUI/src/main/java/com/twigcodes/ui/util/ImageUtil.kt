@@ -6,11 +6,12 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import android.view.View
 import com.squareup.picasso.Transformation
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-object PicassoUtil {
+object ImageUtil {
     fun getBlurTransformation(context: Context): Transformation =
             object : Transformation {
                 override fun transform(source: Bitmap): Bitmap {
@@ -92,4 +93,12 @@ object PicassoUtil {
 
                 override fun key(): String = "RoundTransformation"
             }
+
+    fun getViewBitmap(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+
+        return bitmap
+    }
 }

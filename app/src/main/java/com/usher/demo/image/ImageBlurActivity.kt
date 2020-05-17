@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.jakewharton.rxbinding3.viewpager.pageSelections
 import com.squareup.picasso.Picasso
 import com.twigcodes.ui.fragment.BasePagerFragment
-import com.twigcodes.ui.util.PicassoUtil
+import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -31,7 +31,7 @@ class ImageBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
         viewpager.pageSelections()
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe { position ->
-                    Picasso.get().load(RES_IDS[position]).transform(PicassoUtil.getBlurTransformation(this)).into(blur_imageview)
+                    Picasso.get().load(RES_IDS[position]).transform(ImageUtil.getBlurTransformation(this)).into(blur_imageview)
                 }
 
         indicatorview.setViewPager(viewpager)
