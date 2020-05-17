@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
@@ -64,8 +65,8 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe { itemView ->
                     mAdapter.onDragStart(itemView)
 
-                    placeholder_imageview.visibility = View.VISIBLE
-                    placeholder_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    item_outline_imageview.visibility = View.VISIBLE
+                    item_outline_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                         width = itemView.width
                         topMargin = itemView.top
                         leftMargin = itemView.left
@@ -80,12 +81,12 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
                     val leftAnimator = ValueAnimator.ofInt(it.current.itemView.left, it.target.itemView.left).apply {
                         addUpdateListener {
-                            placeholder_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { leftMargin = animatedValue as Int }
+                            item_outline_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { leftMargin = animatedValue as Int }
                         }
                     }
                     val topAnimator = ValueAnimator.ofInt(it.current.itemView.top, it.target.itemView.top).apply {
                         addUpdateListener {
-                            placeholder_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = animatedValue as Int }
+                            item_outline_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = animatedValue as Int }
                         }
                     }
 
@@ -103,45 +104,41 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe {
                     mAdapter.onDragEnd(it.viewHolder.itemView)
 
-                    placeholder_imageview.visibility = View.INVISIBLE
+                    item_outline_imageview.visibility = View.INVISIBLE
                 }
 
         mAdapter.removes()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe {
-                    cache_imageview.visibility = View.VISIBLE
-                    cache_imageview.setImageBitmap(ImageUtil.getViewBitmap(it.view))
-                    cache_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                        width = it.view.width
-                        topMargin = it.view.top
-                        leftMargin = it.view.left
-                    }
+                .subscribe { (view, to) ->
+                    item_capture_imageview.setImageBitmap(ImageUtil.getViewBitmap(view))
+                    item_capture_imageview.updateLayoutParams { width = view.width }
 
-                    (recyclerview.layoutManager as GridLayoutManager).findViewByPosition(it.to)?.let { target ->
-                        val leftAnimator = ValueAnimator.ofInt(it.view.left, target.left).apply {
+                    (recyclerview.layoutManager as GridLayoutManager).findViewByPosition(to)?.let { target ->
+                        val leftAnimator = ValueAnimator.ofInt(view.left, target.left).apply {
                             addUpdateListener {
-                                cache_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { leftMargin = animatedValue as Int }
+                                item_capture_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { leftMargin = animatedValue as Int }
                             }
                         }
-                        val topAnimator = ValueAnimator.ofInt(it.view.top, target.top).apply {
+                        val topAnimator = ValueAnimator.ofInt(view.top, target.top).apply {
                             addUpdateListener {
-                                cache_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = animatedValue as Int }
+                                item_capture_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = animatedValue as Int }
                             }
                         }
 
                         val alphaAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
                             addUpdateListener {
-                                cache_imageview.alpha = animatedValue as Float
+                                item_capture_imageview.alpha = animatedValue as Float
                             }
                         }
 
                         AnimatorSet().run {
                             interpolator = LinearInterpolator()
                             duration = 300
+                            doOnStart { item_capture_imageview.visibility = View.VISIBLE }
+                            doOnEnd { item_capture_imageview.visibility = View.INVISIBLE }
                             playTogether(leftAnimator, topAnimator, alphaAnimator)
                             start()
-                            doOnEnd { cache_imageview.visibility = View.INVISIBLE }
                         }
                     }
                 }

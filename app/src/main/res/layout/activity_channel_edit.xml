@@ -36,7 +36,7 @@
             android:overScrollMode="never" />
 
         <ImageView
-            android:id="@+id/cache_imageview"
+            android:id="@+id/item_capture_imageview"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:contentDescription="@null"
@@ -44,12 +44,12 @@
             android:visibility="invisible" />
 
         <ImageView
-            android:id="@+id/placeholder_imageview"
+            android:id="@+id/item_outline_imageview"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:contentDescription="@null"
             android:padding="5dp"
-            android:src="@drawable/channel_placeholder_background"
+            android:src="@drawable/channel_item_outline_background"
             android:visibility="invisible" />
 
     </RelativeLayout>
