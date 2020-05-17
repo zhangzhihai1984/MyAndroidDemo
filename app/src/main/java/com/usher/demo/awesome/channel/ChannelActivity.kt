@@ -3,7 +3,6 @@ package com.usher.demo.awesome.channel
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,11 +27,6 @@ import kotlinx.android.synthetic.main.item_channel_header.view.*
 
 class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
-    private var mMoveStartLocation = IntArray(2)
-    private var mMoveEndLocation = IntArray(2)
-    private var mCacheStartLocation = IntArray(2)
-    private var mCacheEndLocation = IntArray(2)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_channel)
@@ -46,12 +40,6 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         val selectedChannels = listOf(*resources.getStringArray(R.array.selected_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL }
         val recommendedChannels = listOf(*resources.getStringArray(R.array.recommended_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL }
         val data = ArrayList(listOf(listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_HEADER), fixedChannels, selectedChannels, listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_HEADER), recommendedChannels).flatten())
-
-        val removeAnimatorSet = AnimatorSet().apply {
-            interpolator = LinearInterpolator()
-            duration = 300
-            doOnEnd { cache_imageview.visibility = View.INVISIBLE }
-        }
 
         val mAdapter = ChannelAdapter(this, data)
 
@@ -122,47 +110,41 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val b = ImageUtil.getViewBitmap(it.view)
-                    cache_imageview.setImageBitmap(b)
+                    cache_imageview.visibility = View.VISIBLE
+                    cache_imageview.setImageBitmap(ImageUtil.getViewBitmap(it.view))
                     cache_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                         width = it.view.width
                         topMargin = it.view.top
                         leftMargin = it.view.left
                     }
+
+                    (recyclerview.layoutManager as GridLayoutManager).findViewByPosition(it.to)?.let { target ->
+                        val leftAnimator = ValueAnimator.ofInt(it.view.left, target.left).apply {
+                            addUpdateListener {
+                                cache_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { leftMargin = animatedValue as Int }
+                            }
+                        }
+                        val topAnimator = ValueAnimator.ofInt(it.view.top, target.top).apply {
+                            addUpdateListener {
+                                cache_imageview.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = animatedValue as Int }
+                            }
+                        }
+
+                        val alphaAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
+                            addUpdateListener {
+                                cache_imageview.alpha = animatedValue as Float
+                            }
+                        }
+
+                        AnimatorSet().run {
+                            interpolator = LinearInterpolator()
+                            duration = 300
+                            playTogether(leftAnimator, topAnimator, alphaAnimator)
+                            start()
+                            doOnEnd { cache_imageview.visibility = View.INVISIBLE }
+                        }
+                    }
                 }
-
-//        mAdapter.setOnChannelRemoveListener { view, location, isAdd ->
-//            val targetView = (recyclerview.layoutManager as GridLayoutManager).findViewByPosition(if (isAdd) selectedChannels.size else selectedChannels.size + 2)
-//            cache_imageview.setVisibility(View.VISIBLE)
-//            cache_imageview.setImageBitmap(getCacheBitmap(view))
-//            val params = cache_imageview.getLayoutParams() as RelativeLayout.LayoutParams
-//            params.width = view.width
-//
-//            //Now the view's locaiton is [0, 0], so we should use the location which recorded in advance.
-////                mCacheStartLocation = getLocation(view);
-//            mCacheStartLocation = location
-//            mCacheEndLocation = getLocation(targetView)
-//            val parentLocation = getLocation(root_layout)
-//            params.leftMargin = mCacheStartLocation[0]
-//            params.topMargin = mCacheStartLocation[1] - parentLocation[1]
-//            cache_imageview.setLayoutParams(params)
-//            val xAnimator = ValueAnimator.ofFloat(0f, mCacheEndLocation[0] - mCacheStartLocation[0].toFloat())
-//            xAnimator.addUpdateListener { animation -> cache_imageview.setTranslationX((animation.animatedValue as Float)) }
-//            val yAnimator = ValueAnimator.ofFloat(0f, mCacheEndLocation[1] - mCacheStartLocation[1].toFloat())
-//            yAnimator.addUpdateListener { animation -> cache_imageview.setTranslationY((animation.animatedValue as Float)) }
-//            removeAnimatorSet.playTogether(xAnimator, yAnimator)
-//            removeAnimatorSet.start()
-//        }
-    }
-
-    private fun getLocation(view: View): IntArray = IntArray(2).apply { view.getLocationOnScreen(this) }
-
-    private fun getCacheBitmap(view: View): Bitmap {
-        view.destroyDrawingCache()
-        view.isDrawingCacheEnabled = true
-        val bitmap = Bitmap.createBitmap(view.drawingCache)
-        view.isDrawingCacheEnabled = false
-        return bitmap
     }
 
     private class ChannelAdapter(private val context: Context, private val data: ArrayList<Pair<String, Int>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
