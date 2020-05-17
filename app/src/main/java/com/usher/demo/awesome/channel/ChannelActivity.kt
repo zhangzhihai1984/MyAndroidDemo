@@ -24,8 +24,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_channel.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
@@ -215,13 +213,14 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         fun onDragMoving(from: Int, to: Int) {
-            if (from < to) {
-                for (i in from until to)
-                    Collections.swap(data, i, i + 1)
-            } else {
-                for (i in from downTo to + 1)
-                    Collections.swap(data, i, i - 1)
-            }
+            data.add(to, data.removeAt(from))
+//            if (from < to) {
+//                for (i in from until to)
+//                    Collections.swap(data, i, i + 1)
+//            } else {
+//                for (i in from downTo to + 1)
+//                    Collections.swap(data, i, i - 1)
+//            }
 
             notifyItemMoved(from, to)
         }
@@ -247,8 +246,10 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                             val to = data.indexOfFirst { it.second == ITEM_VIEW_TYPE_RECOMMENDED_HEADER }
                             data[from] = data[from].first to ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL
 
-                            for (i in from until to)
-                                Collections.swap(data, i, i + 1)
+//                            for (i in from until to)
+//                                Collections.swap(data, i, i + 1)
+
+                            data.add(to, data.removeAt(from))
                             notifyItemMoved(from, to)
                         }
             }
@@ -259,7 +260,13 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 itemView.clicks()
                         .compose(RxUtil.singleClick())
                         .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-                        .subscribe { }
+                        .subscribe {
+                            val from = adapterPosition
+                            val to = data.indexOfFirst { it.second == ITEM_VIEW_TYPE_RECOMMENDED_HEADER }
+                            data[from] = data[from].first to ITEM_VIEW_TYPE_SELECTED_CHANNEL
+                            data.add(to, data.removeAt(from))
+                            notifyItemMoved(from, to)
+                        }
             }
         }
     }
