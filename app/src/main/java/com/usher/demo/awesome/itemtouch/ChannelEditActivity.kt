@@ -1,4 +1,4 @@
-package com.usher.demo.awesome.channel
+package com.usher.demo.awesome.itemtouch
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
@@ -21,20 +21,20 @@ import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.activity_channel.*
+import kotlinx.android.synthetic.main.activity_channel_edit.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
 
-class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_channel)
+        setContentView(R.layout.activity_channel_edit)
         initView()
     }
 
     private fun initView() {
-        statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ChannelActivity) }
+        statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ChannelEditActivity) }
 
         val fixedChannels = listOf("关注", "推荐").map { it to ChannelAdapter.ITEM_VIEW_TYPE_FIXED_CHANNEL }
         val selectedChannels = listOf(*resources.getStringArray(R.array.selected_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL }

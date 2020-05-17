@@ -47,7 +47,7 @@
         </activity>
         <!-- Awesome Demo -->
         <activity
-            android:name=".awesome.channel.ChannelActivity"
+            android:name=".awesome.itemtouch.ChannelEditActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
