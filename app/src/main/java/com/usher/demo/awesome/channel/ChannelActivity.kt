@@ -11,18 +11,21 @@ import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding3.view.clicks
+import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.RxUtil
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_channel.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
@@ -43,7 +46,7 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         val fixedChannels = listOf("关注", "推荐").map { it to ChannelAdapter.ITEM_VIEW_TYPE_FIXED_CHANNEL }
         val selectedChannels = listOf(*resources.getStringArray(R.array.selected_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_CHANNEL }
         val recommendedChannels = listOf(*resources.getStringArray(R.array.recommended_channels)).map { it to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL }
-        val data = listOf(listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_HEADER), fixedChannels, selectedChannels, listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_HEADER), recommendedChannels).flatten()
+        val data = ArrayList(listOf(listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_HEADER), fixedChannels, selectedChannels, listOf("" to ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_HEADER), recommendedChannels).flatten())
 
         val removeAnimatorSet = AnimatorSet().apply {
             interpolator = LinearInterpolator()
@@ -56,8 +59,8 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         recyclerview.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int =
-                        when (position) {
-                            0, fixedChannels.size + selectedChannels.size + 1 -> 4
+                        when (data[position].second) {
+                            ChannelAdapter.ITEM_VIEW_TYPE_SELECTED_HEADER, ChannelAdapter.ITEM_VIEW_TYPE_RECOMMENDED_HEADER -> 4
                             else -> 1
                         }
             }
@@ -150,7 +153,7 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         return bitmap
     }
 
-    private class ChannelAdapter(private val context: Context, private val data: List<Pair<String, Int>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private class ChannelAdapter(private val context: Context, private val data: ArrayList<Pair<String, Int>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         companion object {
             const val ITEM_VIEW_TYPE_SELECTED_HEADER = 0
             const val ITEM_VIEW_TYPE_FIXED_CHANNEL = 1
@@ -235,11 +238,29 @@ class ChannelActivity : BaseActivity(Theme.LIGHT_AUTO) {
         private inner class FixedChannelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
         private inner class SelectedChannelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            init {
+                itemView.clicks()
+                        .compose(RxUtil.singleClick())
+                        .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                        .subscribe {
+                            val from = adapterPosition
+                            val to = data.indexOfFirst { it.second == ITEM_VIEW_TYPE_RECOMMENDED_HEADER }
+                            data[from] = data[from].first to ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL
 
+                            for (i in from until to)
+                                Collections.swap(data, i, i + 1)
+                            notifyItemMoved(from, to)
+                        }
+            }
         }
 
         private inner class RecommendedChannelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+            init {
+                itemView.clicks()
+                        .compose(RxUtil.singleClick())
+                        .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                        .subscribe { }
+            }
         }
     }
 
