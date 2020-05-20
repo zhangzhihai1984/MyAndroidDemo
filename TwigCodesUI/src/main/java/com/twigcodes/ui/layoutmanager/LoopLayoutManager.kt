@@ -40,11 +40,11 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
      * 1. [RecyclerView]的padding.
      * 2. [RecyclerView.ItemDecoration.getItemOffsets]的left/top/right/bottom.
      * 3. itemView的margin.
-     * 也就是说child.measureWidth/Height得到的是"真实"的宽度或高度.
+     * 也就是说child.measuredWidth/Height得到的是"真实"的宽度或高度.
      *
      * 注: 以下将Decoration Offsets简称为insets.
-     * [getDecoratedMeasuredWidth]得到的是child.measureWidth + insets.left + insets.right
-     * [getDecoratedMeasuredHeight]得到的是child.measureHeight + insets.top + insets.bottom
+     * [getDecoratedMeasuredWidth]得到的是child.measuredWidth + insets.left + insets.right
+     * [getDecoratedMeasuredHeight]得到的是child.measuredHeight + insets.top + insets.bottom
      *
      * [layoutDecorated]
      * child.layout(
@@ -52,6 +52,22 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
      * top - insets.top,
      * right - insets.right,
      * bottom - insets.bottom)
+     *
+     * left = paddingStart + lp.leftMargin
+     * top = top(初始值为paddingTop) + lp.topMargin
+     * right = left + getDecoratedMeasuredWidth
+     *       = paddingStart + child.measuredWidth + insets.left + insets.right + lp.leftMargin
+     * bottom = top + getDecoratedMeasuredHeight
+     *        = top + child.measuredHeight + insets.top + insets.bottom
+     * ⬇
+     * child.layout(
+     * paddingStart + insets.left + lp.leftMargin,
+     * top + insets.top,
+     * paddingStart + insets.left + lp.leftMargin + child.measuredWidth,
+     * top + insets.top + child.measuredHeight)
+     * ⬇
+     * top = getDecoratedBottom + lp.bottomMargin
+     *     = child.bottom + insets.bottom + lp.bottomMargin
      *
      * [layoutDecoratedWithMargins]
      * child.layout(
@@ -61,17 +77,17 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
      * bottom - insets.bottom - lp.bottomMargin)
      *
      * left = paddingStart
-     * top = paddingTop (初始值)
+     * top = top(初始值为paddingTop)
      * right = left + getDecoratedMeasuredWidth + lp.leftMargin + lp.rightMargin
-     *       = paddingLeft + child.measureWidth + insets.left + insets.right + lp.leftMargin + lp.rightMargin
+     *       = paddingStart + child.measuredWidth + insets.left + insets.right + lp.leftMargin + lp.rightMargin
      * bottom = top + getDecoratedMeasuredHeight + lp.topMargin + lp.bottomMargin
-     *        = lastBottom + child.measureHeight + insets.top + insets.bottom + lp.topMargin + lp.bottomMargin
+     *        = top + child.measuredHeight + insets.top + insets.bottom + lp.topMargin + lp.bottomMargin
      * ⬇
      * child.layout(
      * paddingStart + insets.left + lp.leftMargin
      * top + insets.top + lp.topMargin
-     * paddingStart + insets.left + lp.leftMargin + measureWidth
-     * top + insets.top + lp.topMargin + measureHeight
+     * paddingStart + insets.left + lp.leftMargin + child.measuredWidth
+     * top + insets.top + lp.topMargin + child.measuredHeight)
      * ⬇
      * top = getDecoratedBottom + lp.bottomMargin
      *     = child.bottom + insets.bottom + lp.bottomMargin
@@ -85,6 +101,16 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
             measureChildWithMargins(itemView, 0, 0)
 
             val params = itemView.layoutParams as RecyclerView.LayoutParams
+
+            /*
+            val left = paddingStart + params.leftMargin
+            top += params.topMargin
+            val right = left + getDecoratedMeasuredWidth(itemView)
+            val bottom = top + getDecoratedMeasuredHeight(itemView)
+
+            layoutDecorated(itemView, left, top, right, bottom)
+             */
+
             val left = paddingStart
             val right = left + getDecoratedMeasuredWidth(itemView) + params.leftMargin + params.rightMargin
             val bottom = top + getDecoratedMeasuredHeight(itemView) + params.topMargin + params.bottomMargin
