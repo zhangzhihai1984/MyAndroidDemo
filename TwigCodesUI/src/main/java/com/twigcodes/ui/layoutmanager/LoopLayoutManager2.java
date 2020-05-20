@@ -74,21 +74,20 @@ public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
     }
 
     private void layoutVerticalChildren(RecyclerView.Recycler recycler) {
-        int actualHeight = 0;
+        int top = getPaddingTop();
         for (int i = 0; i < getItemCount(); i++) {
             View itemView = recycler.getViewForPosition(i);
             addView(itemView);
 
             measureChildWithMargins(itemView, 0, 0);
-//            int width = getDecoratedMeasuredWidth(itemView);
-            int height = getDecoratedMeasuredHeight(itemView);
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
             int left = getPaddingStart();
             int right = left + getDecoratedMeasuredWidth(itemView) + params.leftMargin + params.rightMargin;
-            layoutDecoratedWithMargins(itemView, left, actualHeight, right, actualHeight + height);
+            int bottom = top + getDecoratedMeasuredHeight(itemView) + params.topMargin + params.bottomMargin;
+            layoutDecoratedWithMargins(itemView, left, top, right, bottom);
 
-            actualHeight += height;
-            if (actualHeight > getHeight()) {
+            top = getDecoratedBottom(itemView) + params.bottomMargin;
+            if (top > getHeight()) {
                 break;
             }
         }
