@@ -32,7 +32,22 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
     }
 
     private fun layoutHorizontalChildren(recycler: RecyclerView.Recycler) {
+        var left = paddingStart
+        for (i in 0 until itemCount) {
+            val itemView = recycler.getViewForPosition(i)
+            addView(itemView)
 
+            measureChildWithMargins(itemView, 0, 0)
+
+            val params = itemView.layoutParams as RecyclerView.LayoutParams
+
+            val right = left + getDecoratedMeasuredWidth(itemView) + params.leftMargin + params.rightMargin
+            val top = paddingTop
+            val bottom = top + getDecoratedMeasuredHeight(itemView) + params.topMargin + params.bottomMargin
+            layoutDecoratedWithMargins(itemView, left, top, right, bottom)
+
+            left = getDecoratedRight(itemView) + params.rightMargin
+        }
     }
 
     /**

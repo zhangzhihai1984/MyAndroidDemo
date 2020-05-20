@@ -56,18 +56,21 @@ public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
     }
 
     private void layoutHorizontalChildren(RecyclerView.Recycler recycler) {
-        int actualWidth = 0;
+        int left = getPaddingStart();
         for (int i = 0; i < getItemCount(); i++) {
             View itemView = recycler.getViewForPosition(i);
             addView(itemView);
 
             measureChildWithMargins(itemView, 0, 0);
-            int width = getDecoratedMeasuredWidth(itemView);
-            int height = getDecoratedMeasuredHeight(itemView);
-            layoutDecorated(itemView, actualWidth, 0, actualWidth + width, height);
 
-            actualWidth += width;
-            if (actualWidth > getWidth()) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+            int right = left + getDecoratedMeasuredWidth(itemView) + params.leftMargin + params.rightMargin;
+            int top = getPaddingTop();
+            int bottom = top + getDecoratedMeasuredHeight(itemView) + params.topMargin + params.bottomMargin;
+            layoutDecoratedWithMargins(itemView, left, top, right, bottom);
+
+            left = getDecoratedRight(itemView) + params.rightMargin;
+            if (left > getWidth()) {
                 break;
             }
         }
@@ -80,6 +83,7 @@ public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
             addView(itemView);
 
             measureChildWithMargins(itemView, 0, 0);
+
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
             int left = getPaddingStart();
             int right = left + getDecoratedMeasuredWidth(itemView) + params.leftMargin + params.rightMargin;
