@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.twigcodes.ui.layoutmanager.LoopLayoutManager;
+import com.twigcodes.ui.layoutmanager.LoopLayoutManager2;
 import com.usher.demo.R;
 import com.usher.demo.base.BaseActivity;
 
@@ -46,7 +46,7 @@ public class LoopRecyclerActivity extends BaseActivity {
     }
 
     private void initView() {
-        LoopLayoutManager manager = new LoopLayoutManager();
+        LoopLayoutManager2 manager = new LoopLayoutManager2();
 
         mVerticalRecyclerView.setLayoutManager(manager);
         mVerticalRecyclerView.setAdapter(new VerticalAdapter(mData));
@@ -60,7 +60,7 @@ public class LoopRecyclerActivity extends BaseActivity {
             }
         });
 
-        LoopLayoutManager manager2 = new LoopLayoutManager(LoopLayoutManager.Orientaion.HORIZONTAL);
+        LoopLayoutManager2 manager2 = new LoopLayoutManager2(LoopLayoutManager2.Orientaion.HORIZONTAL);
         mHorizontalRecyclerView.setLayoutManager(manager2);
         mHorizontalRecyclerView.setAdapter(new HorizontalAdapter(mData));
         mHorizontalRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

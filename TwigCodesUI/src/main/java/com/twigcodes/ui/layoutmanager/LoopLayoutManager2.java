@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class LoopLayoutManager extends RecyclerView.LayoutManager {
+public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
     private View mFirstView;
     private Orientaion mOrientation;
 
@@ -14,11 +14,11 @@ public class LoopLayoutManager extends RecyclerView.LayoutManager {
         HORIZONTAL
     }
 
-    public LoopLayoutManager() {
+    public LoopLayoutManager2() {
         mOrientation = Orientaion.VERTICAL;
     }
 
-    public LoopLayoutManager(Orientaion orientation) {
+    public LoopLayoutManager2(Orientaion orientation) {
         mOrientation = orientation;
     }
 
@@ -80,9 +80,12 @@ public class LoopLayoutManager extends RecyclerView.LayoutManager {
             addView(itemView);
 
             measureChildWithMargins(itemView, 0, 0);
-            int width = getDecoratedMeasuredWidth(itemView);
+//            int width = getDecoratedMeasuredWidth(itemView);
             int height = getDecoratedMeasuredHeight(itemView);
-            layoutDecorated(itemView, 0, actualHeight, width, actualHeight + height);
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+            int left = getPaddingStart();
+            int right = left + getDecoratedMeasuredWidth(itemView) + params.leftMargin + params.rightMargin;
+            layoutDecoratedWithMargins(itemView, left, actualHeight, right, actualHeight + height);
 
             actualHeight += height;
             if (actualHeight > getHeight()) {
