@@ -22,7 +22,7 @@ import com.usher.demo.rx.RxSplashActivity
 import com.usher.demo.rx.RxSumActivity
 import com.usher.demo.view.*
 import com.usher.demo.view.loading.LoadingActivity
-import com.usher.demo.view.looprecycler.LoopRecyclerActivity
+import com.usher.demo.view.LoopRecyclerActivity
 import com.usher.demo.view.seat.SeatSelection2Activity
 import com.usher.demo.view.seat.SeatSelectionActivity
 import com.usher.demo.web.AngularActivity
@@ -86,7 +86,7 @@ object DemoConfig {
                 DemoItem("seat selection2", SeatSelection2Activity::class.java),
                 DemoItem("loading", LoadingActivity::class.java),
                 DemoItem("chart", ChartActivity::class.java),
-                DemoItem("loop reycler", LoopRecyclerActivity::class.java),
+                DemoItem("loop recycler", LoopRecyclerActivity::class.java),
                 DemoItem("scan", ScanActivity::class.java),
                 DemoItem("index", IndexActivity::class.java)
         )

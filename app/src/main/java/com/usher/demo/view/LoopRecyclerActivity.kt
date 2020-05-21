@@ -1,4 +1,4 @@
-package com.usher.demo.view.looprecycler
+package com.usher.demo.view
 
 import android.os.Bundle
 import android.util.Log

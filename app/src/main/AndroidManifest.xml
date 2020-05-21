@@ -143,7 +143,7 @@
             android:name=".view.ChartActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".view.looprecycler.LoopRecyclerActivity"
+            android:name=".view.LoopRecyclerActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.ScanActivity"
