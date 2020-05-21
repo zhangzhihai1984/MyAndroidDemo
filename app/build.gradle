@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 buildscript {
     ext.versions = [
-            'retrofit2'  : '2.8.1',
+            'retrofit2'  : '2.9.0',
             'autodispose': '1.4.0',
             'butterknife': '10.2.1',
             'rxbinding'  : '3.1.0',
