@@ -159,8 +159,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         if (dy > 0) {
             val lastView = getChildAt(childCount - 1) ?: return
 
-            val lastViewBottom = getDecoratedBottom(lastView) + (lastView.layoutParams as RecyclerView.LayoutParams).bottomMargin
-            if (lastViewBottom - dy < height) {
+            val lastViewEnd = getDecoratedBottom(lastView) + (lastView.layoutParams as RecyclerView.LayoutParams).bottomMargin
+            if (lastViewEnd - dy < height) {
                 val lastViewPosition = getPosition(lastView)
                 val scrap = recycler.getViewForPosition(if (lastViewPosition == itemCount - 1) 0 else lastViewPosition + 1)
                 addView(scrap)
@@ -169,13 +169,30 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
 
                 val params = scrap.layoutParams as RecyclerView.LayoutParams
                 val left = paddingStart
-                val top = lastViewBottom
                 val right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin
+                val top = lastViewEnd
                 val bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin
                 layoutDecoratedWithMargins(scrap, left, top, right, bottom)
             }
         } else {
+            val firstView = getChildAt(0) ?: return
 
+            val firstViewStart = getDecoratedTop(firstView) - (firstView.layoutParams as RecyclerView.LayoutParams).topMargin
+            if (firstViewStart - dy > 0) {
+                val firstViewPosition = getPosition(firstView)
+                val scrap = recycler.getViewForPosition(if (firstViewPosition == 0) itemCount - 1 else firstViewPosition - 1)
+                addView(scrap, 0)
+
+                measureChildWithMargins(scrap, 0, 0)
+
+                val params = scrap.layoutParams as RecyclerView.LayoutParams
+                val left = paddingStart
+                val right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin
+                val bottom = firstViewStart
+                val top = bottom - getDecoratedMeasuredHeight(scrap) - params.topMargin - params.bottomMargin
+                // top = bottom - child.measuredHeight - marginBottom - insetsBottom - marginTop - insetsTop
+                layoutDecoratedWithMargins(scrap, left, top, right, bottom)
+            }
         }
     }
 }
