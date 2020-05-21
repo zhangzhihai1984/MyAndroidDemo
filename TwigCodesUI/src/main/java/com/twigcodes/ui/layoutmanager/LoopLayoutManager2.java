@@ -1,5 +1,6 @@
 package com.twigcodes.ui.layoutmanager;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -128,12 +129,14 @@ public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
      * dy < 0为向下滑动
      */
     private void fillVertical(int dy, RecyclerView.Recycler recycler) {
+        Log.i("zzh", "dy:" + dy + " " + getChildCount());
         if (dy > 0) {
             View lastView = getChildAt(getChildCount() - 1);
             if (null == lastView)
                 return;
 
-            if (lastView.getBottom() - dy < getHeight()) {
+            int lastViewBottom = getDecoratedBottom(lastView) + ((RecyclerView.LayoutParams)lastView.getLayoutParams()).bottomMargin;
+            if (lastViewBottom - dy < getHeight()) {
                 int lastPos = getPosition(lastView);
                 View scrap;
 
@@ -145,9 +148,13 @@ public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
 
                 addView(scrap);
                 measureChildWithMargins(scrap, 0, 0);
-                int width = getDecoratedMeasuredWidth(scrap);
-                int height = getDecoratedMeasuredHeight(scrap);
-                layoutDecorated(scrap, 0, lastView.getBottom(), width, lastView.getBottom() + height);
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) scrap.getLayoutParams();
+                int left = getPaddingStart();
+                int top = lastViewBottom;
+                int right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin;
+                int bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin;
+
+                layoutDecoratedWithMargins(scrap, left, top, right, bottom);
             }
         } else {
             View firstView = getChildAt(0);
