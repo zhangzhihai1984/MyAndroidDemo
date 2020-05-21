@@ -1,6 +1,5 @@
 package com.twigcodes.ui.layoutmanager;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -129,58 +128,66 @@ public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
      * dy < 0为向下滑动
      */
     private void fillVertical(int dy, RecyclerView.Recycler recycler) {
-        Log.i("zzh", "dy:" + dy + " " + getChildCount());
         if (dy > 0) {
-            View lastView = getChildAt(getChildCount() - 1);
-            if (null == lastView)
-                return;
+            while (true) {
+                View lastView = getChildAt(getChildCount() - 1);
+                if (null == lastView)
+                    return;
 
-            int lastViewEnd = getDecoratedBottom(lastView) + ((RecyclerView.LayoutParams) lastView.getLayoutParams()).bottomMargin;
-            if (lastViewEnd - dy < getHeight()) {
-                int lastPos = getPosition(lastView);
-                View scrap;
+                int lastViewEnd = getDecoratedBottom(lastView) + ((RecyclerView.LayoutParams) lastView.getLayoutParams()).bottomMargin;
+                if (lastViewEnd - dy < getHeight()) {
+                    int lastPos = getPosition(lastView);
+                    View scrap;
 
-                if (lastPos == getItemCount() - 1) {
-                    scrap = recycler.getViewForPosition(0);
+                    if (lastPos == getItemCount() - 1) {
+                        scrap = recycler.getViewForPosition(0);
+                    } else {
+                        scrap = recycler.getViewForPosition(lastPos + 1);
+                    }
+
+                    addView(scrap);
+                    measureChildWithMargins(scrap, 0, 0);
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) scrap.getLayoutParams();
+                    int left = getPaddingStart();
+                    int top = lastViewEnd;
+                    int right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin;
+                    int bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin;
+
+                    layoutDecoratedWithMargins(scrap, left, top, right, bottom);
                 } else {
-                    scrap = recycler.getViewForPosition(lastPos + 1);
+                    break;
                 }
-
-                addView(scrap);
-                measureChildWithMargins(scrap, 0, 0);
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) scrap.getLayoutParams();
-                int left = getPaddingStart();
-                int top = lastViewEnd;
-                int right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin;
-                int bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin;
-
-                layoutDecoratedWithMargins(scrap, left, top, right, bottom);
             }
+
         } else {
-            View firstView = getChildAt(0);
-            if (null == firstView)
-                return;
+            while (true) {
+                View firstView = getChildAt(0);
+                if (null == firstView)
+                    return;
 
-            int firstViewStart = getDecoratedTop(firstView) - ((RecyclerView.LayoutParams) firstView.getLayoutParams()).topMargin;
-            if (firstViewStart - dy > 0) {
-                int firstPos = getPosition(firstView);
-                View scrap;
+                int firstViewStart = getDecoratedTop(firstView) - ((RecyclerView.LayoutParams) firstView.getLayoutParams()).topMargin;
+                if (firstViewStart - dy > 0) {
+                    int firstPos = getPosition(firstView);
+                    View scrap;
 
-                if (firstPos == 0) {
-                    scrap = recycler.getViewForPosition(getItemCount() - 1);
+                    if (firstPos == 0) {
+                        scrap = recycler.getViewForPosition(getItemCount() - 1);
+                    } else {
+                        scrap = recycler.getViewForPosition(firstPos - 1);
+                    }
+
+                    addView(scrap, 0);
+                    measureChildWithMargins(scrap, 0, 0);
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) scrap.getLayoutParams();
+                    int left = getPaddingStart();
+                    int right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin;
+                    int bottom = firstViewStart;
+                    int top = bottom - getDecoratedMeasuredHeight(scrap) - params.topMargin - params.bottomMargin;
+
+                    layoutDecoratedWithMargins(scrap, left, top, right, bottom);
                 } else {
-                    scrap = recycler.getViewForPosition(firstPos - 1);
+                    break;
                 }
-
-                addView(scrap, 0);
-                measureChildWithMargins(scrap, 0, 0);
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) scrap.getLayoutParams();
-                int left = getPaddingStart();
-                int right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin;
-                int bottom = firstViewStart;
-                int top = bottom - getDecoratedMeasuredHeight(scrap) - params.topMargin - params.bottomMargin;
-
-                layoutDecoratedWithMargins(scrap, left, top, right, bottom);
             }
         }
     }
@@ -264,12 +271,14 @@ public class LoopLayoutManager2 extends RecyclerView.LayoutManager {
             if (null == view)
                 continue;
 
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+
             if (dy > 0) {
-                if (view.getBottom() < 0) {
+                if (getDecoratedBottom(view) + params.bottomMargin < 0) {
                     removeAndRecycleView(view, recycler);
                 }
             } else {
-                if (view.getTop() > getHeight()) {
+                if (getDecoratedTop(view) - params.topMargin > getHeight()) {
                     removeAndRecycleView(view, recycler);
                 }
             }
