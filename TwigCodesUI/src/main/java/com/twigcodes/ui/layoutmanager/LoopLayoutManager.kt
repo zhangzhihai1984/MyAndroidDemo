@@ -36,8 +36,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
 
         for (i in 0 until itemCount) {
             val itemView = recycler.getViewForPosition(i)
-            addView(itemView)
 
+            addView(itemView)
             measureChildWithMargins(itemView, 0, 0)
 
             val params = itemView.layoutParams as RecyclerView.LayoutParams
@@ -116,8 +116,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
 
         for (i in 0 until itemCount) {
             val itemView = recycler.getViewForPosition(i)
-            addView(itemView)
 
+            addView(itemView)
             measureChildWithMargins(itemView, 0, 0)
 
             val params = itemView.layoutParams as RecyclerView.LayoutParams
@@ -176,12 +176,47 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 val lastView = getChildAt(childCount - 1) ?: return
 
                 val lastViewEnd = getDecoratedRight(lastView) + (lastView.layoutParams as RecyclerView.LayoutParams).rightMargin
-                if (lastViewEnd - dx < width) {
+                if (lastViewEnd - dx < width - paddingEnd) {
+                    val lastViewPosition = getPosition(lastView)
+                    val scrap = recycler.getViewForPosition(if (lastViewPosition == itemCount - 1) 0 else lastViewPosition + 1)
 
+                    addView(scrap)
+                    measureChildWithMargins(scrap, 0, 0)
+
+                    val params = scrap.layoutParams as RecyclerView.LayoutParams
+                    val top = paddingTop
+                    val bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin
+                    val left = lastViewEnd
+                    val right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin
+
+                    layoutDecoratedWithMargins(scrap, left, top, right, bottom)
+                } else {
+                    break
                 }
             }
         } else {
+            while (true) {
+                val firstView = getChildAt(0) ?: return
 
+                val firstViewStart = getDecoratedLeft(firstView) - (firstView.layoutParams as RecyclerView.LayoutParams).leftMargin
+                if (firstViewStart - dx > paddingStart) {
+                    val firstViewPosition = getPosition(firstView)
+                    val scrap = recycler.getViewForPosition(if (firstViewPosition == 0) itemCount - 1 else firstViewPosition - 1)
+
+                    addView(scrap, 0)
+                    measureChildWithMargins(scrap, 0, 0)
+
+                    val params = scrap.layoutParams as RecyclerView.LayoutParams
+                    val top = paddingTop
+                    val bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin
+                    val right = firstViewStart
+                    val left = right - getDecoratedMeasuredHeight(scrap) - params.leftMargin - params.rightMargin
+
+                    layoutDecoratedWithMargins(scrap, left, top, right, bottom)
+                } else {
+                    break
+                }
+            }
         }
     }
 
@@ -198,8 +233,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 if (lastViewEnd - dy < height - paddingBottom) {
                     val lastViewPosition = getPosition(lastView)
                     val scrap = recycler.getViewForPosition(if (lastViewPosition == itemCount - 1) 0 else lastViewPosition + 1)
-                    addView(scrap)
 
+                    addView(scrap)
                     measureChildWithMargins(scrap, 0, 0)
 
                     val params = scrap.layoutParams as RecyclerView.LayoutParams
@@ -207,6 +242,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                     val right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin
                     val top = lastViewEnd
                     val bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin
+
                     layoutDecoratedWithMargins(scrap, left, top, right, bottom)
                 } else {
                     break
@@ -220,8 +256,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 if (firstViewStart - dy > paddingTop) {
                     val firstViewPosition = getPosition(firstView)
                     val scrap = recycler.getViewForPosition(if (firstViewPosition == 0) itemCount - 1 else firstViewPosition - 1)
-                    addView(scrap, 0)
 
+                    addView(scrap, 0)
                     measureChildWithMargins(scrap, 0, 0)
 
                     val params = scrap.layoutParams as RecyclerView.LayoutParams
@@ -229,7 +265,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                     val right = left + getDecoratedMeasuredWidth(scrap) + params.leftMargin + params.rightMargin
                     val bottom = firstViewStart
                     val top = bottom - getDecoratedMeasuredHeight(scrap) - params.topMargin - params.bottomMargin
-                    // top = bottom - child.measuredHeight - marginBottom - insetsBottom - marginTop - insetsTop
+
                     layoutDecoratedWithMargins(scrap, left, top, right, bottom)
                 } else {
                     break
@@ -239,7 +275,18 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
     }
 
     private fun recycleChildrenHorizontal(dx: Int, recycler: RecyclerView.Recycler) {
+        for (i in 0 until childCount) {
+            val view = getChildAt(i) ?: continue
+            val params = view.layoutParams as RecyclerView.LayoutParams
 
+            if (dx > 0) {
+                if (getDecoratedRight(view) + params.rightMargin < paddingStart)
+                    removeAndRecycleView(view, recycler)
+            } else {
+                if (getDecoratedLeft(view) + params.leftMargin > width - paddingEnd)
+                    removeAndRecycleView(view, recycler)
+            }
+        }
     }
 
     private fun recycleChildrenVertical(dy: Int, recycler: RecyclerView.Recycler) {

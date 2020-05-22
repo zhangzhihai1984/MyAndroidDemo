@@ -1,13 +1,11 @@
 package com.usher.demo.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.layoutmanager.LoopLayoutManager
-import com.twigcodes.ui.layoutmanager.LoopLayoutManager2
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -34,17 +32,14 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
 //                    Log.i("zzh", "idle $position")
                 }
 
-        val manager2 = LoopLayoutManager2(LoopLayoutManager2.Orientaion.HORIZONTAL)
-        horizontal_recyclerview.layoutManager = manager2
+        horizontal_recyclerview.layoutManager = LoopLayoutManager(RecyclerView.HORIZONTAL)
         horizontal_recyclerview.adapter = HorizontalAdapter(data)
-        horizontal_recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val position = manager2.reviseOffset()
-                    Log.i("zzh", "idle $position")
+        horizontal_recyclerview.scrollStateChanges()
+                .filter { it == RecyclerView.SCROLL_STATE_IDLE }
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe {
+
                 }
-            }
-        })
     }
 
     private class VerticalAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_loop_recycler_vertical, data) {
