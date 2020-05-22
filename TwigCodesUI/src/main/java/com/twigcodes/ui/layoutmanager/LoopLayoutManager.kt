@@ -49,7 +49,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
 
             left = getDecoratedRight(itemView) + params.rightMargin
 
-            if (left > width)
+            if (left > width - paddingEnd)
                 break
         }
     }
@@ -139,13 +139,20 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
 
             top = getDecoratedBottom(itemView) + params.bottomMargin
 
-            if (top > height)
+            if (top > height - paddingBottom)
                 break
         }
     }
 
     override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
-        return super.scrollHorizontallyBy(dx, recycler, state)
+        if (childCount == 0 || dx == 0)
+            return 0
+
+        fillHorizontal(dx, recycler)
+        offsetChildrenHorizontal(-dx)
+        recycleChildrenHorizontal(dx, recycler)
+
+        return dx
     }
 
     override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
@@ -159,13 +166,36 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         return dy
     }
 
+    /**
+     * dx>0 向左滑动
+     * dx<0 向右滑动
+     */
+    private fun fillHorizontal(dx: Int, recycler: RecyclerView.Recycler) {
+        if (dx > 0) {
+            while (true) {
+                val lastView = getChildAt(childCount - 1) ?: return
+
+                val lastViewEnd = getDecoratedRight(lastView) + (lastView.layoutParams as RecyclerView.LayoutParams).rightMargin
+                if (lastViewEnd - dx < width) {
+
+                }
+            }
+        } else {
+
+        }
+    }
+
+    /**
+     * dy>0 向上滑动
+     * dy<0 向下滑动
+     */
     private fun fillVertical(dy: Int, recycler: RecyclerView.Recycler) {
         if (dy > 0) {
             while (true) {
                 val lastView = getChildAt(childCount - 1) ?: return
 
                 val lastViewEnd = getDecoratedBottom(lastView) + (lastView.layoutParams as RecyclerView.LayoutParams).bottomMargin
-                if (lastViewEnd - dy < height) {
+                if (lastViewEnd - dy < height - paddingBottom) {
                     val lastViewPosition = getPosition(lastView)
                     val scrap = recycler.getViewForPosition(if (lastViewPosition == itemCount - 1) 0 else lastViewPosition + 1)
                     addView(scrap)
@@ -187,7 +217,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 val firstView = getChildAt(0) ?: return
 
                 val firstViewStart = getDecoratedTop(firstView) - (firstView.layoutParams as RecyclerView.LayoutParams).topMargin
-                if (firstViewStart - dy > 0) {
+                if (firstViewStart - dy > paddingTop) {
                     val firstViewPosition = getPosition(firstView)
                     val scrap = recycler.getViewForPosition(if (firstViewPosition == 0) itemCount - 1 else firstViewPosition - 1)
                     addView(scrap, 0)
@@ -208,16 +238,20 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         }
     }
 
+    private fun recycleChildrenHorizontal(dx: Int, recycler: RecyclerView.Recycler) {
+
+    }
+
     private fun recycleChildrenVertical(dy: Int, recycler: RecyclerView.Recycler) {
         for (i in 0 until childCount) {
             val view = getChildAt(i) ?: continue
             val params = view.layoutParams as RecyclerView.LayoutParams
 
             if (dy > 0) {
-                if (getDecoratedBottom(view) + params.bottomMargin < 0)
+                if (getDecoratedBottom(view) + params.bottomMargin < paddingTop)
                     removeAndRecycleView(view, recycler)
             } else {
-                if (getDecoratedTop(view) - params.topMargin > height)
+                if (getDecoratedTop(view) - params.topMargin > height - paddingBottom)
                     removeAndRecycleView(view, recycler)
             }
         }
