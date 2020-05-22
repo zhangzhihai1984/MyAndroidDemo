@@ -168,7 +168,12 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
 
     /**
      * dx>0 向左滑动
+     * last_view_end_x = right + insets.right + lp.rightMargin
+     * 如果last_view_x在向左滑动dx后小于width - paddingEnd, 说明最右侧会有空间"露出来", 因此需要补充相应的item.
+     *
      * dx<0 向右滑动
+     * first_view_start_x = left - insets.left - lp.leftMargin
+     * 如果first_view_x在向右滑动dx后大于paddingStart, 说明最左侧会有空间"露出来", 因此需要补充相应的item.
      */
     private fun fillHorizontal(dx: Int, recycler: RecyclerView.Recycler) {
         if (dx > 0) {
@@ -222,7 +227,12 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
 
     /**
      * dy>0 向上滑动
+     * last_view_end_y = bottom + insets.bottom + lp.bottomMargin
+     * 如果last_view_end_y在向上滑动dy后小于height - paddingBottom, 说明底部会有空间"漏出来", 因此需要补充相应的item.
+     *
      * dy<0 向下滑动
+     * first_view_start_y = top - insets.top - lp.topMargin
+     * 如果first_view_start_y在向下滑动dy后大于paddingTop, 说明顶部会有空间"露出来", 因此需要补充相应的item.
      */
     private fun fillVertical(dy: Int, recycler: RecyclerView.Recycler) {
         if (dy > 0) {
@@ -274,6 +284,15 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         }
     }
 
+    /**
+     * dy>0 向左滑动
+     * view_end_x = right + insets.right + lp.rightMargin
+     * 如果view_end_x在向左滑动dx后小于paddingStart, 说明该view已经离开可视范围, 因此需要移除并回收.
+     *
+     * dy<0 向右滑动
+     * view_start_x = left - insets.left - lp.leftMargin
+     * 如果view_start_x在向右滑动dx后大于width - paddingEnd, 说明该view已经离开可视范围, 因此需要移除并回收.
+     */
     private fun recycleChildrenHorizontal(dx: Int, recycler: RecyclerView.Recycler) {
         for (i in 0 until childCount) {
             val view = getChildAt(i) ?: continue
@@ -289,6 +308,15 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         }
     }
 
+    /**
+     * dy>0 向上滑动
+     * view_end_y = bottom + insets.bottom + lp.bottomMargin
+     * 如果view_end_y在向上滑动dy后小于paddingTop, 说明该view已经离开可视范围, 因此需要移除并回收.
+     *
+     * dy<0 向下滑动
+     * view_start_y = top - insets.top - lp.topMargin
+     * 如果view_start_y在向下滑动dy后大于height - paddingBottom, 说明该view已经离开可视范围, 因此需要移除并回收.
+     */
     private fun recycleChildrenVertical(dy: Int, recycler: RecyclerView.Recycler) {
         for (i in 0 until childCount) {
             val view = getChildAt(i) ?: continue
