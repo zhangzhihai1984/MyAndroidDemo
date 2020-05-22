@@ -1,6 +1,7 @@
 package com.usher.demo.view
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
@@ -44,13 +45,13 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     private class VerticalAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_loop_recycler_vertical, data) {
         override fun convert(helper: BaseViewHolder, item: String) {
-            helper.setText(R.id.name_textview, item)
+            (helper.itemView as TextView).text = item
         }
     }
 
     private class HorizontalAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_loop_recycler_horizontal, data) {
         override fun convert(helper: BaseViewHolder, item: String) {
-            helper.setText(R.id.name_textview, item)
+            (helper.itemView as TextView).text = item
         }
     }
 }
