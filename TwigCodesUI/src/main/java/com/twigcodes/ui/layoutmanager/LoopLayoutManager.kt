@@ -345,11 +345,30 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 else -> getFirstViewPositionVertical(correct)
             }
 
+    /**
+     * end - start = getDecoratedMeasuredWidth + lp.leftMargin + lp.rightMargin
+     * 比较first_view_end_x和(end - start)/2:
+     * 如果大于, 说明只有不到一半的view离开可视范围, 需要向右滑动, position不变.
+     * 否则, 说明有超过一半的view离开可视范围, 需要向左滑动, position(position + 1) % itemCount.
+     */
     private fun getFirstViewPositionHorizontal(correct: Boolean): Int {
         var position = -1
 
         mFirstView?.let { view ->
             position = getPosition(view)
+
+            if (correct) {
+                val params = view.layoutParams as RecyclerView.LayoutParams
+                val start = getDecoratedLeft(view) - params.leftMargin
+                val end = getDecoratedRight(view) + params.rightMargin
+
+                if (end > (end - start) / 2) {
+                    offsetChildrenHorizontal(-start)
+                } else {
+                    offsetChildrenHorizontal(-end)
+                    position = (position + 1) % itemCount
+                }
+            }
         }
 
         return position

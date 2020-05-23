@@ -29,8 +29,7 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-//                    val position = (vertical_recyclerview.layoutManager as LoopLayoutManager2).reviseOffset()
-//                    Log.i("zzh", "idle $position")
+                    (vertical_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPosition(true)
                 }
 
         horizontal_recyclerview.layoutManager = LoopLayoutManager(RecyclerView.HORIZONTAL)
@@ -39,7 +38,7 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-
+                    (horizontal_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPosition(true)
                 }
     }
 
