@@ -1,5 +1,6 @@
 package com.twigcodes.ui.layoutmanager
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -8,6 +9,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         const val VERTICAL = RecyclerView.VERTICAL
         const val HORIZONTAL = RecyclerView.HORIZONTAL
     }
+
+    private var mFirstView: View? = null
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
@@ -152,6 +155,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         offsetChildrenHorizontal(-dx)
         recycleChildrenHorizontal(dx, recycler)
 
+        mFirstView = getChildAt(0)
+
         return dx
     }
 
@@ -162,6 +167,8 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         fillVertical(dy, recycler)
         offsetChildrenVertical(-dy)
         recycleChildrenVertical(dy, recycler)
+
+        mFirstView = getChildAt(0)
 
         return dy
     }
@@ -183,7 +190,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 val lastViewEnd = getDecoratedRight(lastView) + (lastView.layoutParams as RecyclerView.LayoutParams).rightMargin
                 if (lastViewEnd - dx < width - paddingEnd) {
                     val lastViewPosition = getPosition(lastView)
-                    val scrap = recycler.getViewForPosition(if (lastViewPosition == itemCount - 1) 0 else lastViewPosition + 1)
+                    val scrap = recycler.getViewForPosition((lastViewPosition + 1) % itemCount)
 
                     addView(scrap)
                     measureChildWithMargins(scrap, 0, 0)
@@ -206,7 +213,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 val firstViewStart = getDecoratedLeft(firstView) - (firstView.layoutParams as RecyclerView.LayoutParams).leftMargin
                 if (firstViewStart - dx > paddingStart) {
                     val firstViewPosition = getPosition(firstView)
-                    val scrap = recycler.getViewForPosition(if (firstViewPosition == 0) itemCount - 1 else firstViewPosition - 1)
+                    val scrap = recycler.getViewForPosition((firstViewPosition - 1 + itemCount) % itemCount)
 
                     addView(scrap, 0)
                     measureChildWithMargins(scrap, 0, 0)
@@ -215,7 +222,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                     val top = paddingTop
                     val bottom = top + getDecoratedMeasuredHeight(scrap) + params.topMargin + params.bottomMargin
                     val right = firstViewStart
-                    val left = right - getDecoratedMeasuredHeight(scrap) - params.leftMargin - params.rightMargin
+                    val left = right - getDecoratedMeasuredWidth(scrap) - params.leftMargin - params.rightMargin
 
                     layoutDecoratedWithMargins(scrap, left, top, right, bottom)
                 } else {
@@ -242,7 +249,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 val lastViewEnd = getDecoratedBottom(lastView) + (lastView.layoutParams as RecyclerView.LayoutParams).bottomMargin
                 if (lastViewEnd - dy < height - paddingBottom) {
                     val lastViewPosition = getPosition(lastView)
-                    val scrap = recycler.getViewForPosition(if (lastViewPosition == itemCount - 1) 0 else lastViewPosition + 1)
+                    val scrap = recycler.getViewForPosition((lastViewPosition + 1) % itemCount)
 
                     addView(scrap)
                     measureChildWithMargins(scrap, 0, 0)
@@ -265,7 +272,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                 val firstViewStart = getDecoratedTop(firstView) - (firstView.layoutParams as RecyclerView.LayoutParams).topMargin
                 if (firstViewStart - dy > paddingTop) {
                     val firstViewPosition = getPosition(firstView)
-                    val scrap = recycler.getViewForPosition(if (firstViewPosition == 0) itemCount - 1 else firstViewPosition - 1)
+                    val scrap = recycler.getViewForPosition((firstViewPosition - 1 + itemCount) % itemCount)
 
                     addView(scrap, 0)
                     measureChildWithMargins(scrap, 0, 0)
@@ -330,5 +337,50 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
                     removeAndRecycleView(view, recycler)
             }
         }
+    }
+
+    fun getFirstViewPosition(correct: Boolean = false): Int =
+            when (mOrientation) {
+                HORIZONTAL -> getFirstViewPositionHorizontal(correct)
+                else -> getFirstViewPositionVertical(correct)
+            }
+
+    private fun getFirstViewPositionHorizontal(correct: Boolean): Int {
+        var position = -1
+
+        mFirstView?.let { view ->
+            position = getPosition(view)
+        }
+
+        return position
+    }
+
+    /**
+     * end - start == getDecoratedMeasuredHeight + lp.topMargin + lp.bottomMargin
+     * 比较first_view_end_y和(end - start)/2:
+     * 如果大于, 说明只有不到一半的view离开可视范围, 需要向下滑动, position不变.
+     * 否则, 说明有超过一半的view离开可视范围, 需要向上滑动, position为(position + 1) % itemCount.
+     */
+    private fun getFirstViewPositionVertical(correct: Boolean): Int {
+        var position = -1
+
+        mFirstView?.let { view ->
+            position = getPosition(view)
+
+            if (correct) {
+                val params = view.layoutParams as RecyclerView.LayoutParams
+                val start = getDecoratedTop(view) - params.topMargin
+                val end = getDecoratedBottom(view) + params.bottomMargin
+
+                if (end > (end - start) / 2) {
+                    offsetChildrenVertical(-start)
+                } else {
+                    offsetChildrenVertical(-end)
+                    position = (position + 1) % itemCount
+                }
+            }
+        }
+
+        return position
     }
 }
