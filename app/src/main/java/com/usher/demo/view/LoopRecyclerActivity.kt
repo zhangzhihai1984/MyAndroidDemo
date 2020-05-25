@@ -29,7 +29,7 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    (vertical_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPosition(true)
+                    (vertical_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithCorrection(vertical_recyclerview)
                 }
 
         horizontal_recyclerview.layoutManager = LoopLayoutManager(RecyclerView.HORIZONTAL)
@@ -38,7 +38,7 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    (horizontal_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPosition(true)
+                    (horizontal_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithCorrection(horizontal_recyclerview)
                 }
     }
 

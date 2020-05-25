@@ -19,10 +19,13 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
     override fun canScrollVertically(): Boolean = mOrientation == VERTICAL
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        if (itemCount <= 0)
+        //nothing to show for an empty data set but clear any existing views
+        if (itemCount <= 0) {
+            detachAndScrapAttachedViews(recycler)
             return
+        }
 
-        //动画相关
+        //动画进行中
         if (state.isPreLayout)
             return
 
@@ -339,11 +342,15 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
         }
     }
 
-    fun getFirstViewPosition(correct: Boolean = false): Int =
-            when (mOrientation) {
-                HORIZONTAL -> getFirstViewPositionHorizontal(correct)
-                else -> getFirstViewPositionVertical(correct)
-            }
+    fun getFirstViewPosition(): Int =
+            mFirstView?.let { view -> getPosition(view) } ?: -1
+
+    fun getFirstViewPositionWithCorrection(recyclerView: RecyclerView) {
+        when (mOrientation) {
+            HORIZONTAL -> getFirstViewPositionWithCorrectionHorizontal(recyclerView)
+            else -> getFirstViewPositionWithCorrectionVertical(recyclerView)
+        }
+    }
 
     /**
      * end - start = getDecoratedMeasuredWidth + lp.leftMargin + lp.rightMargin
@@ -351,28 +358,26 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
      * 如果大于, 说明只有不到一半的view离开可视范围, 需要向右滑动, position不变.
      * 否则, 说明有超过一半的view离开可视范围, 需要向左滑动, position(position + 1) % itemCount.
      */
-    private fun getFirstViewPositionHorizontal(correct: Boolean): Int {
-        var position = -1
+    private fun getFirstViewPositionWithCorrectionHorizontal(recyclerView: RecyclerView): Int =
+            mFirstView?.let { view ->
+                var position = getPosition(view)
 
-        mFirstView?.let { view ->
-            position = getPosition(view)
-
-            if (correct) {
+                val dx: Int
                 val params = view.layoutParams as RecyclerView.LayoutParams
                 val start = getDecoratedLeft(view) - params.leftMargin
                 val end = getDecoratedRight(view) + params.rightMargin
 
                 if (end > (end - start) / 2) {
-                    offsetChildrenHorizontal(-start)
+                    dx = start
                 } else {
-                    offsetChildrenHorizontal(-end)
+                    dx = end
                     position = (position + 1) % itemCount
                 }
-            }
-        }
 
-        return position
-    }
+                recyclerView.scrollBy(dx, 0)
+
+                position
+            } ?: -1
 
     /**
      * end - start == getDecoratedMeasuredHeight + lp.topMargin + lp.bottomMargin
@@ -380,26 +385,24 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
      * 如果大于, 说明只有不到一半的view离开可视范围, 需要向下滑动, position不变.
      * 否则, 说明有超过一半的view离开可视范围, 需要向上滑动, position为(position + 1) % itemCount.
      */
-    private fun getFirstViewPositionVertical(correct: Boolean): Int {
-        var position = -1
+    private fun getFirstViewPositionWithCorrectionVertical(recyclerView: RecyclerView): Int =
+            mFirstView?.let { view ->
+                var position = getPosition(view)
 
-        mFirstView?.let { view ->
-            position = getPosition(view)
-
-            if (correct) {
+                val dy: Int
                 val params = view.layoutParams as RecyclerView.LayoutParams
                 val start = getDecoratedTop(view) - params.topMargin
                 val end = getDecoratedBottom(view) + params.bottomMargin
 
                 if (end > (end - start) / 2) {
-                    offsetChildrenVertical(-start)
+                    dy = start
                 } else {
-                    offsetChildrenVertical(-end)
+                    dy = end
                     position = (position + 1) % itemCount
                 }
-            }
-        }
 
-        return position
-    }
+                recyclerView.scrollBy(0, dy)
+
+                position
+            } ?: -1
 }
