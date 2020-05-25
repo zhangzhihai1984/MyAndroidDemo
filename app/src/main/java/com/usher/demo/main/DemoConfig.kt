@@ -1,10 +1,11 @@
 package com.usher.demo.main
 
-import com.usher.demo.awesome.itemtouch.ChannelEditActivity
 import com.usher.demo.awesome.decoration.ContactsActivity
 import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
+import com.usher.demo.awesome.itemtouch.ChannelEditActivity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
+import com.usher.demo.image.DrawBitmapMeshActivity
 import com.usher.demo.image.ImageBlurActivity
 import com.usher.demo.image.ImageScaleTypeActivity
 import com.usher.demo.image.PicassoTransformationActivity
@@ -22,7 +23,6 @@ import com.usher.demo.rx.RxSplashActivity
 import com.usher.demo.rx.RxSumActivity
 import com.usher.demo.view.*
 import com.usher.demo.view.loading.LoadingActivity
-import com.usher.demo.view.LoopRecyclerActivity
 import com.usher.demo.view.seat.SeatSelection2Activity
 import com.usher.demo.view.seat.SeatSelectionActivity
 import com.usher.demo.web.AngularActivity
@@ -63,7 +63,8 @@ object DemoConfig {
         configMap[KEY_IMAGE] = listOf(
                 DemoItem("blur", ImageBlurActivity::class.java),
                 DemoItem("scale type", ImageScaleTypeActivity::class.java),
-                DemoItem("picasso transform", PicassoTransformationActivity::class.java)
+                DemoItem("picasso transform", PicassoTransformationActivity::class.java),
+                DemoItem("bitmap mesh", DrawBitmapMeshActivity::class.java)
         )
 
         configMap[KEY_WEB] = listOf(

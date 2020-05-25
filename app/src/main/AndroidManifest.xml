@@ -84,6 +84,11 @@
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".image.DrawBitmapMeshActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
 
         <!-- Material Demo -->
         <activity
