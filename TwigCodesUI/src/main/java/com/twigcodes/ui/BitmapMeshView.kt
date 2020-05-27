@@ -36,7 +36,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mBitmapPaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
     }
-    private val mGridPaint = Paint()
+    private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
@@ -57,7 +57,8 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
             color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
         }
 
-        mColors = (1..(mMeshWidth + 1) * (mMeshHeight + 1)).map { Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random()) }
+        if (a.getBoolean(R.styleable.BitmapMeshView_colorVertex, false))
+            mColors = (1..(mMeshWidth + 1) * (mMeshHeight + 1)).map { Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random()) }
 
         a.recycle()
 

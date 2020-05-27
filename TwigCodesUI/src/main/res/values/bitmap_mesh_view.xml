@@ -7,5 +7,6 @@
         <attr name="gridColor" format="reference|color" />
         <attr name="gridWidth" format="dimension" />
         <attr name="maskColor" format="reference|color" />
+        <attr name="colorVertex" format="boolean" />
     </declare-styleable>
 </resources>

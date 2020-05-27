@@ -5,12 +5,32 @@
     android:layout_height="match_parent"
     android:background="@color/page_background">
 
-    <com.twigcodes.ui.BitmapMeshView
+    <com.twigcodes.ui.layout.SquareLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/demo_trump"
-        app:gridColor="@color/colorPrimary"
-        app:gridWidth="2dp"
-        app:maskColor="@color/image_tint" />
+        android:layout_centerInParent="true">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/item_background"
+            app:cardCornerRadius="10dp">
+
+            <com.twigcodes.ui.BitmapMeshView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:src="@drawable/demo_trump"
+                app:gridColor="@color/colorPrimary"
+                app:gridWidth="2dp"
+                app:maskColor="@color/image_tint"
+                app:meshHeight="4"
+                app:meshWidth="4" />
+
+        </androidx.cardview.widget.CardView>
+
+    </com.twigcodes.ui.layout.SquareLayout>
 
 </RelativeLayout>
