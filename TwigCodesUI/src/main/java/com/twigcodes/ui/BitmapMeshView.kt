@@ -75,6 +75,14 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
+    private fun drawBitmapMesh(canvas: Canvas) {
+        val verts = mRowMajorCoordinates.flatten()
+                .flatMap { coordinate -> listOf(coordinate.first, coordinate.second) }
+                .toFloatArray()
+
+        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, null, 0, null)
+    }
+
     private fun drawGrid(canvas: Canvas) {
         /**
          * draw horizontal lines.
@@ -110,7 +118,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawBitmap(mBitmap, 0f, 0f, null)
+        drawBitmapMesh(canvas)
         drawGrid(canvas)
         drawIntersection(canvas)
     }
