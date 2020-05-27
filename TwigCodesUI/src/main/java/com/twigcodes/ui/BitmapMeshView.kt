@@ -26,7 +26,6 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private val mColumnMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mGridPaint = Paint()
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -74,31 +73,32 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             mRowMajorCoordinates.add(rowCoordinates)
         }
-
-        (0..mMeshWidth).forEach { x ->
-            val columnCoordinates = arrayListOf<Pair<Float, Float>>()
-            (0..mMeshHeight).forEach { y ->
-                columnCoordinates.add(Pair(paddingStart + x * intervalX, paddingTop + y * intervalY))
-            }
-
-            mColumnMajorCoordinates.add(columnCoordinates)
-        }
     }
 
     private fun drawGrid(canvas: Canvas) {
+        /**
+         * draw horizontal lines.
+         *
+         * 遍历获取"行坐标"List, 进而对"行坐标"List进行[zipWithNext], 获取每行临近两个点的坐标.
+         */
         mRowMajorCoordinates.forEach { rowCoordinates ->
             rowCoordinates.zipWithNext { start, end ->
                 canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
             }
         }
 
-        mColumnMajorCoordinates.forEach { columnCoordinates ->
-            columnCoordinates.zipWithNext { start, end ->
+        /**
+         * draw vertical lines.
+         *
+         * 通过[zipWithNext]获取临近两列"行坐标"List, 进而对临近两列"行坐标"List进行[zip], 获取每列临近两个点的坐标.
+         */
+        mRowMajorCoordinates.zipWithNext { startRowCoordinates, endRowCoordinates ->
+            startRowCoordinates.zip(endRowCoordinates) { start, end ->
                 canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
             }
         }
     }
-    
+
     private fun drawIntersection(canvas: Canvas) {
         mRowMajorCoordinates.forEach { rowCoordinates ->
             rowCoordinates.forEach { coordinate ->
