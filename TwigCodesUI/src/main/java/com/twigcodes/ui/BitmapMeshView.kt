@@ -24,9 +24,11 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mBitmap: Bitmap
     private val mMeshWidth: Int
     private val mMeshHeight: Int
+    private val mIntersectionRadius: Float
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mColumnMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private val mPaint = Paint()
+    private val mGridPaint = Paint()
+    private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapMeshView, defStyleAttr, defStyleRes)
@@ -34,9 +36,15 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
         mMeshWidth = a.getInteger(R.styleable.BitmapMeshView_meshWidth, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapMeshView_meshHeight, DEFAULT_MESH_HEIGHT)
 
-        mPaint.run {
+        mGridPaint.run {
             color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
-            strokeWidth = a.getDimensionPixelSize(R.styleable.BitmapMeshView_gridWidth, DEFAULT_GRID_WIDTH).toFloat()
+            strokeWidth = a.getDimensionPixelSize(R.styleable.BitmapMeshView_gridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
+                mIntersectionRadius = this * 2f
+            }
+        }
+
+        mIntersectionPaint.run {
+            color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
         }
 
         a.recycle()
@@ -80,13 +88,21 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private fun drawGrid(canvas: Canvas) {
         mRowMajorCoordinates.forEach { rowCoordinates ->
             rowCoordinates.zipWithNext { start, end ->
-                canvas.drawLine(start.first, start.second, end.first, end.second, mPaint)
+                canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
             }
         }
 
         mColumnMajorCoordinates.forEach { columnCoordinates ->
             columnCoordinates.zipWithNext { start, end ->
-                canvas.drawLine(start.first, start.second, end.first, end.second, mPaint)
+                canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
+            }
+        }
+    }
+    
+    private fun drawIntersection(canvas: Canvas) {
+        mRowMajorCoordinates.forEach { rowCoordinates ->
+            rowCoordinates.forEach { coordinate ->
+                canvas.drawCircle(coordinate.first, coordinate.second, mIntersectionRadius, mIntersectionPaint)
             }
         }
     }
@@ -96,5 +112,6 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         canvas.drawBitmap(mBitmap, 0f, 0f, null)
         drawGrid(canvas)
+        drawIntersection(canvas)
     }
 }
