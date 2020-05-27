@@ -3,12 +3,15 @@ package com.twigcodes.ui
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.util.RxUtil
+import kotlin.math.roundToInt
 
 class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -25,6 +28,13 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mIntersectionRadius: Float
     private val mMaskColor: Int
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
+    private var mColors: List<Int>? = null
+
+    private var mIntervalX = 0f
+    private var mIntervalY = 0f
+    private var mTouchRow = 0
+    private var mTouchColumn = 0
+
     private val mBitmapPaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
     }
@@ -49,6 +59,8 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
             color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
         }
 
+        mColors = (1..(mMeshWidth + 1) * (mMeshHeight + 1)).map { Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random()) }
+
         a.recycle()
 
         initView()
@@ -59,19 +71,37 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
+                    mIntervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
+                    mIntervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
+
                     makeCoordinates()
+                    invalidate()
+                }
+
+        touches { true }
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe { event ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            mTouchRow = (event.x / mIntervalX).roundToInt()
+                            mTouchColumn = (event.y / mIntervalY).roundToInt()
+
+                            mRowMajorCoordinates[mTouchColumn][mTouchRow] = event.x to event.y
+                        }
+                        MotionEvent.ACTION_MOVE -> {
+                            mRowMajorCoordinates[mTouchColumn][mTouchRow] = event.x to event.y
+                        }
+                    }
+
                     invalidate()
                 }
     }
 
     private fun makeCoordinates() {
-        val intervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
-        val intervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
-
         (0..mMeshHeight).forEach { y ->
             val rowCoordinates = arrayListOf<Pair<Float, Float>>()
             (0..mMeshWidth).forEach { x ->
-                rowCoordinates.add(Pair(paddingStart + x * intervalX, paddingTop + y * intervalY))
+                rowCoordinates.add(Pair(paddingStart + x * mIntervalX, paddingTop + y * mIntervalY))
             }
 
             mRowMajorCoordinates.add(rowCoordinates)
@@ -83,7 +113,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                 .flatMap { coordinate -> listOf(coordinate.first, coordinate.second) }
                 .toFloatArray()
 
-        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, null, 0, mBitmapPaint)
+        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, mColors?.toIntArray(), 0, mBitmapPaint)
     }
 
     private fun drawGrid(canvas: Canvas) {
