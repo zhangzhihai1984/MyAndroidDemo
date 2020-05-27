@@ -47,8 +47,8 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     private var mIdleColor: Int
     private var mIndexedColor: Int
-    private var mTextSize: Float
     private var mDebounceTime: Long
+
     //text offset方向, 默认向左(-1)
     private var mTextOffsetDirection: Int
     private var mIsDebug = false
@@ -70,15 +70,15 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.IndexView, defStyleAttr, defStyleRes)
         mIdleColor = a.getColor(R.styleable.IndexView_idleColor, DEFAULT_IDLE_COLOR)
         mIndexedColor = a.getColor(R.styleable.IndexView_indexedColor, DEFAULT_INDEXED_COLOR)
-        mTextSize = a.getDimensionPixelSize(R.styleable.IndexView_textSize, DEFAULT_TEXT_SIZE).toFloat()
         mDebounceTime = a.getInteger(R.styleable.IndexView_debounceTime, DEFAULT_DEBOUNCE_TIME).toLong()
         mTextOffsetDirection = a.getInteger(R.styleable.IndexView_OffsetDirection, DEFAULT_TEXT_OFFSET_DIRECTION)
         mIsDebug = a.getBoolean(R.styleable.IndexView_debug, false)
-        a.recycle()
 
         mTextPaint.run {
-            textSize = mTextSize
+            textSize = a.getDimensionPixelSize(R.styleable.IndexView_textSize, DEFAULT_TEXT_SIZE).toFloat()
         }
+
+        a.recycle()
 
         initView()
     }
@@ -104,9 +104,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
          * dy与offset的对照为: [0, itemHeight) -> [min, max)
          * offset = min + (max-min) * (dy/itemHeight)
          */
-        touches {
-            true
-        }
+        touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     when (event.action) {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BitmapMeshView">
+        <attr name="android:src" format="reference" />
+        <attr name="meshWidth" format="integer" />
+        <attr name="meshHeight" format="integer" />
+        <attr name="gridColor" format="reference|color" />
+        <attr name="gridWidth" format="dimension" />
+    </declare-styleable>
+</resources>
