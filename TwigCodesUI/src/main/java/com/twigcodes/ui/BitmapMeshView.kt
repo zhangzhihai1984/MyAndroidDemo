@@ -11,7 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.util.RxUtil
-import kotlin.math.roundToInt
+import kotlin.math.pow
 
 class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -30,8 +30,6 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private var mColors: List<Int>? = null
 
-    private var mIntervalX = 0f
-    private var mIntervalY = 0f
     private var mTouchRow = 0
     private var mTouchColumn = 0
 
@@ -71,9 +69,6 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
-                    mIntervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
-                    mIntervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
-
                     makeCoordinates()
                     invalidate()
                 }
@@ -83,13 +78,22 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                 .subscribe { event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            mTouchRow = (event.x / mIntervalX).roundToInt()
-                            mTouchColumn = (event.y / mIntervalY).roundToInt()
+                            val closestVertex = mRowMajorCoordinates.flatten()
+                                    .minBy { coordinate -> (coordinate.first - event.x).pow(2) + (coordinate.second - event.y).pow(2) }!!
 
-                            mRowMajorCoordinates[mTouchColumn][mTouchRow] = event.x to event.y
+                            mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
+                                rowCoordinates.forEachIndexed { column, coordinate ->
+                                    if (coordinate == closestVertex) {
+                                        mTouchRow = row
+                                        mTouchColumn = column
+
+                                        mRowMajorCoordinates[mTouchRow][mTouchColumn] = event.x to event.y
+                                    }
+                                }
+                            }
                         }
-                        MotionEvent.ACTION_MOVE -> {
-                            mRowMajorCoordinates[mTouchColumn][mTouchRow] = event.x to event.y
+                        MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
+                            mRowMajorCoordinates[mTouchRow][mTouchColumn] = event.x to event.y
                         }
                     }
 
@@ -98,10 +102,13 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     private fun makeCoordinates() {
+        val intervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
+        val intervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
+
         (0..mMeshHeight).forEach { y ->
             val rowCoordinates = arrayListOf<Pair<Float, Float>>()
             (0..mMeshWidth).forEach { x ->
-                rowCoordinates.add(Pair(paddingStart + x * mIntervalX, paddingTop + y * mIntervalY))
+                rowCoordinates.add(Pair(paddingStart + x * intervalX, paddingTop + y * intervalY))
             }
 
             mRowMajorCoordinates.add(rowCoordinates)
@@ -110,7 +117,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     private fun drawBitmapMesh(canvas: Canvas) {
         val verts = mRowMajorCoordinates.flatten()
-                .flatMap { coordinate -> listOf(coordinate.first, coordinate.second) }
+                .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
 
         canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, mColors?.toIntArray(), 0, mBitmapPaint)
