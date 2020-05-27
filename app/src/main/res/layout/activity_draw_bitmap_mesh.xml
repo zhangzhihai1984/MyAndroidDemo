@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:src="@drawable/demo_trump"
         app:gridColor="@color/colorPrimary"
-        app:gridWidth="2dp" />
+        app:gridWidth="2dp"
+        app:maskColor="@color/image_tint" />
 
 </RelativeLayout>

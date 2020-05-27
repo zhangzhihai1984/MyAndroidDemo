@@ -6,5 +6,6 @@
         <attr name="meshHeight" format="integer" />
         <attr name="gridColor" format="reference|color" />
         <attr name="gridWidth" format="dimension" />
+        <attr name="maskColor" format="reference|color" />
     </declare-styleable>
 </resources>

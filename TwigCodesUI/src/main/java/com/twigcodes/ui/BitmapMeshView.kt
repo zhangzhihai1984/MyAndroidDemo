@@ -1,10 +1,7 @@
 package com.twigcodes.ui
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.getDrawableOrThrow
@@ -19,13 +16,18 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
         const val DEFAULT_MESH_HEIGHT = 4
         const val DEFAULT_GRID_COLOR = Color.BLACK
         const val DEFAULT_GRID_WIDTH = 10
+        const val DEFAULT_MASK_COLOR = Color.WHITE
     }
 
     private val mBitmap: Bitmap
     private val mMeshWidth: Int
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
+    private val mMaskColor: Int
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
+    private val mBitmapPaint = Paint().apply {
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
+    }
     private val mGridPaint = Paint()
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -34,6 +36,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
         mBitmap = a.getDrawableOrThrow(R.styleable.BitmapMeshView_android_src).toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapMeshView_meshWidth, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapMeshView_meshHeight, DEFAULT_MESH_HEIGHT)
+        mMaskColor = a.getColor(R.styleable.BitmapMeshView_maskColor, DEFAULT_MASK_COLOR)
 
         mGridPaint.run {
             color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
@@ -80,7 +83,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                 .flatMap { coordinate -> listOf(coordinate.first, coordinate.second) }
                 .toFloatArray()
 
-        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, null, 0, null)
+        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, null, 0, mBitmapPaint)
     }
 
     private fun drawGrid(canvas: Canvas) {
@@ -118,6 +121,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        canvas.drawColor(mMaskColor)
         drawBitmapMesh(canvas)
         drawGrid(canvas)
         drawIntersection(canvas)
