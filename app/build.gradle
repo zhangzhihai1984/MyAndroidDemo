@@ -118,7 +118,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':TwigCodesUI')
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0-alpha01'
+    implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.2.0-alpha06'
 
@@ -159,6 +160,7 @@ dependencies {
 
     //Kotlin
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72'
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.core:core-ktx:1.4.0-alpha01'
+    implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
 }
