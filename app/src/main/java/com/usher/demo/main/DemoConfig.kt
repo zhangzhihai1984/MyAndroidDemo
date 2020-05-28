@@ -89,7 +89,8 @@ object DemoConfig {
                 DemoItem("chart", ChartActivity::class.java),
                 DemoItem("loop recycler", LoopRecyclerActivity::class.java),
                 DemoItem("scan", ScanActivity::class.java),
-                DemoItem("index", IndexActivity::class.java)
+                DemoItem("index", IndexActivity::class.java),
+                DemoItem("color picker", ColorPickerActivity::class.java)
         )
 
         configMap[KEY_OTHER] = listOf(

@@ -171,6 +171,11 @@
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".view.ColorPickerActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
 
         <!-- Web Demo -->
         <activity
