@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.SweepGradient
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
@@ -106,14 +105,9 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                                     invalidate()
                                 }
                             } else {
-                                val angle = atan2(y, x)
-                                // need to turn angle [-PI ... PI] into unit [0....1]
-                                var unit: Float = angle / (2 * Math.PI.toFloat())
-                                if (unit < 0) {
-                                    unit += 1f
-                                }
-                                Log.i("zzh", "angle:$angle x:$x y:$y unit:$unit")
-                                mInnerPaint.color = interpColor(mColors, unit)
+                                mInnerPaint.color = makeColor((atan2(y, x) / (2 * Math.PI.toFloat())).run {
+                                    if (this < 0) this + 1 else this
+                                })
                                 invalidate()
                             }
                         }
@@ -149,30 +143,28 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         }
     }
 
-    private fun ave(s: Int, d: Int, p: Float): Int {
-        return s + (p * (d - s)).roundToInt()
-    }
+    private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
+            ((1 - fraction) * c1 + fraction * c2).roundToInt()
 
-    private fun interpColor(colors: IntArray, unit: Float): Int {
-        if (unit <= 0) {
-            return colors[0]
-        }
-        if (unit >= 1) {
-            return colors[colors.size - 1]
-        }
-        var p = unit * (colors.size - 1)
-        val i = p.toInt()
-        p -= i.toFloat()
+    private fun makeColor(relativePosition: Float): Int =
+            when {
+                relativePosition <= 0 -> mColors[0]
+                relativePosition >= 1 -> mColors[mColors.size - 1]
+                else -> {
+                    var p = relativePosition * (mColors.size - 1)
+                    val i = p.toInt()
+                    p -= i.toFloat()
 
-        // now p is just the fractional part [0...1) and i is the index
-        val c0 = colors[i]
-        val c1 = colors[i + 1]
-        val a = ave(Color.alpha(c0), Color.alpha(c1), p)
-        val r = ave(Color.red(c0), Color.red(c1), p)
-        val g = ave(Color.green(c0), Color.green(c1), p)
-        val b = ave(Color.blue(c0), Color.blue(c1), p)
-        return Color.argb(a, r, g, b)
-    }
+                    // now p is just the fractional part [0...1) and i is the index
+                    val c0 = mColors[i]
+                    val c1 = mColors[i + 1]
+                    val a = mixColorComponent(Color.alpha(c0), Color.alpha(c1), p)
+                    val r = mixColorComponent(Color.red(c0), Color.red(c1), p)
+                    val g = mixColorComponent(Color.green(c0), Color.green(c1), p)
+                    val b = mixColorComponent(Color.blue(c0), Color.blue(c1), p)
+                    Color.argb(a, r, g, b)
+                }
+            }
 
 //    private fun floatToByte(x: Float): Int {
 //        return Math.round(x)
