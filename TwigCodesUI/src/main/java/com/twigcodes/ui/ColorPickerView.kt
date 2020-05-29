@@ -52,28 +52,36 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                 0xFF00FF00.toInt(),
                 0xFFFFFF00.toInt(),
                 0xFFFF0000.toInt())
-        private const val PALETTE_STROKE_WIDTH = 32f
+        private const val PALETTE_STROKE_WIDTH = 32
         private const val INNER_STROKE_WIDTH = 5f
     }
 
     private var mCenterX = 0f
     private var mCenterY = 0f
-    private var mRadius = 0f
-    private var mInnerRadius = 0f
+    private var mPaletteRadius = 0f
+    private var mPickRadius = 0f
     private var mIsTracking = false
     private var mNeedHighlight = false
 
-    private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val mInnerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mPalettePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mPickPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mColorPickSubject = PublishSubject.create<Int>()
 
     init {
-        mPaint.run {
-            style = Paint.Style.STROKE
-            strokeWidth = PALETTE_STROKE_WIDTH
-        }
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
 
-        mInnerPaint.run {
+        mPalettePaint.run {
+            style = Paint.Style.STROKE
+            strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_paletteWidth, PALETTE_STROKE_WIDTH).toFloat()
+        }
+        a.recycle()
+
+        initView()
+    }
+
+    private fun initView() {
+
+        mPickPaint.run {
             style = Paint.Style.FILL
             color = Color.BLUE
             strokeWidth = INNER_STROKE_WIDTH
@@ -85,9 +93,9 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                 .subscribe {
                     mCenterX = width / 2f
                     mCenterY = height / 2f
-                    mRadius = min(mCenterX, mCenterY) - PALETTE_STROKE_WIDTH / 2f
-                    mInnerRadius = mRadius - 150f
-                    mPaint.shader = SweepGradient(mCenterX, mCenterY, COLORS, null)
+                    mPaletteRadius = min(mCenterX, mCenterY) - mPalettePaint.strokeWidth / 2
+                    mPickRadius = mPaletteRadius - 150
+                    mPalettePaint.shader = SweepGradient(mCenterX, mCenterY, COLORS, null)
 
                     invalidate()
                 }
@@ -97,7 +105,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                 .subscribe { event ->
                     val x = event.x - mCenterX
                     val y = event.y - mCenterY
-                    val inner = sqrt(x.pow(2) + y.pow(2)) <= mInnerRadius
+                    val inner = sqrt(x.pow(2) + y.pow(2)) <= mPickRadius
 
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -112,7 +120,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                                     invalidate()
                                 }
                             } else {
-                                mInnerPaint.color = makeColor((atan2(y, x) / (2 * Math.PI.toFloat())).run {
+                                mPickPaint.color = makeColor((atan2(y, x) / (2 * Math.PI.toFloat())).run {
                                     if (this < 0) this + 1 else this
                                 })
                                 invalidate()
@@ -121,7 +129,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                         MotionEvent.ACTION_UP -> {
                             if (mIsTracking) {
                                 if (inner)
-                                    mColorPickSubject.onNext(mInnerPaint.color)
+                                    mColorPickSubject.onNext(mPickPaint.color)
 
                                 mIsTracking = false
                                 invalidate()
@@ -134,19 +142,19 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        val innerColor = mInnerPaint.color
+        val innerColor = mPickPaint.color
 
-        canvas.drawCircle(mCenterX, mCenterY, mRadius, mPaint)
-        canvas.drawCircle(mCenterX, mCenterY, mInnerRadius, mInnerPaint)
+        canvas.drawCircle(mCenterX, mCenterY, mPaletteRadius, mPalettePaint)
+        canvas.drawCircle(mCenterX, mCenterY, mPickRadius, mPickPaint)
 
         if (mIsTracking) {
-            mInnerPaint.style = Paint.Style.STROKE
-            mInnerPaint.alpha = if (mNeedHighlight) 0xFF else 0x80
+            mPickPaint.style = Paint.Style.STROKE
+            mPickPaint.alpha = if (mNeedHighlight) 0xFF else 0x80
 
-            canvas.drawCircle(mCenterX, mCenterY, mInnerRadius + INNER_STROKE_WIDTH, mInnerPaint)
+            canvas.drawCircle(mCenterX, mCenterY, mPickRadius + INNER_STROKE_WIDTH, mPickPaint)
 
-            mInnerPaint.style = Paint.Style.FILL
-            mInnerPaint.color = innerColor
+            mPickPaint.style = Paint.Style.FILL
+            mPickPaint.color = innerColor
         }
     }
 
@@ -175,7 +183,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
             ((1 - fraction) * c1 + fraction * c2).roundToInt()
-    
+
     fun colorPicks() = mColorPickSubject
 
 //    private fun floatToByte(x: Float): Int {
