@@ -2,5 +2,7 @@
 <resources>
     <declare-styleable name="ColorPickerView">
         <attr name="paletteWidth" format="dimension" />
+        <attr name="paletteMarginInner" format="dimension" />
+        <attr name="pickerHaloWidth" format="dimension" />
     </declare-styleable>
 </resources>
