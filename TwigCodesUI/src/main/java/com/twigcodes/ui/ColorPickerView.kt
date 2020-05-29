@@ -143,28 +143,31 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         }
     }
 
-    private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
-            ((1 - fraction) * c1 + fraction * c2).roundToInt()
-
     private fun makeColor(relativePosition: Float): Int =
             when {
                 relativePosition <= 0 -> mColors[0]
                 relativePosition >= 1 -> mColors[mColors.size - 1]
                 else -> {
-                    var p = relativePosition * (mColors.size - 1)
-                    val i = p.toInt()
-                    p -= i.toFloat()
+                    val position: Int
+                    val fraction: Float
 
-                    // now p is just the fractional part [0...1) and i is the index
-                    val c0 = mColors[i]
-                    val c1 = mColors[i + 1]
-                    val a = mixColorComponent(Color.alpha(c0), Color.alpha(c1), p)
-                    val r = mixColorComponent(Color.red(c0), Color.red(c1), p)
-                    val g = mixColorComponent(Color.green(c0), Color.green(c1), p)
-                    val b = mixColorComponent(Color.blue(c0), Color.blue(c1), p)
+                    (relativePosition * (mColors.size - 1)).let {positionWithFraction ->
+                        position = positionWithFraction.toInt()
+                        fraction = positionWithFraction - position
+                    }
+
+                    val color1 = mColors[position]
+                    val color2 = mColors[position + 1]
+                    val a = mixColorComponent(Color.alpha(color1), Color.alpha(color2), fraction)
+                    val r = mixColorComponent(Color.red(color1), Color.red(color2), fraction)
+                    val g = mixColorComponent(Color.green(color1), Color.green(color2), fraction)
+                    val b = mixColorComponent(Color.blue(color1), Color.blue(color2), fraction)
                     Color.argb(a, r, g, b)
                 }
             }
+
+    private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
+            ((1 - fraction) * c1 + fraction * c2).roundToInt()
 
 //    private fun floatToByte(x: Float): Int {
 //        return Math.round(x)
