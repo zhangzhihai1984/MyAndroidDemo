@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.subjects.PublishSubject
 import kotlin.math.*
 
 /**
@@ -43,12 +44,17 @@ import kotlin.math.*
  */
 class ColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
+        private val COLORS = intArrayOf(
+                0xFFFF0000.toInt(),
+                0xFFFF00FF.toInt(),
+                0xFF0000FF.toInt(),
+                0xFF00FFFF.toInt(),
+                0xFF00FF00.toInt(),
+                0xFFFFFF00.toInt(),
+                0xFFFF0000.toInt())
         private const val PALETTE_STROKE_WIDTH = 32f
         private const val INNER_STROKE_WIDTH = 5f
     }
-
-    private val mColors = intArrayOf(0xFFFF0000.toInt(), 0xFFFF00FF.toInt(), 0xFF0000FF.toInt(), 0xFF00FFFF.toInt(), 0xFF00FF00.toInt(),
-            0xFFFFFF00.toInt(), 0xFFFF0000.toInt())
 
     private var mCenterX = 0f
     private var mCenterY = 0f
@@ -59,6 +65,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mInnerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mColorPickSubject = PublishSubject.create<Int>()
 
     init {
         mPaint.run {
@@ -80,7 +87,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                     mCenterY = height / 2f
                     mRadius = min(mCenterX, mCenterY) - PALETTE_STROKE_WIDTH / 2f
                     mInnerRadius = mRadius - 150f
-                    mPaint.shader = SweepGradient(mCenterX, mCenterY, mColors, null)
+                    mPaint.shader = SweepGradient(mCenterX, mCenterY, COLORS, null)
 
                     invalidate()
                 }
@@ -113,9 +120,9 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                         }
                         MotionEvent.ACTION_UP -> {
                             if (mIsTracking) {
-                                if (inner) {
+                                if (inner)
+                                    mColorPickSubject.onNext(mInnerPaint.color)
 
-                                }
                                 mIsTracking = false
                                 invalidate()
                             }
@@ -145,19 +152,19 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private fun makeColor(relativePosition: Float): Int =
             when {
-                relativePosition <= 0 -> mColors[0]
-                relativePosition >= 1 -> mColors[mColors.size - 1]
+                relativePosition <= 0 -> COLORS[0]
+                relativePosition >= 1 -> COLORS[COLORS.size - 1]
                 else -> {
                     val position: Int
                     val fraction: Float
 
-                    (relativePosition * (mColors.size - 1)).let {positionWithFraction ->
+                    (relativePosition * (COLORS.size - 1)).let { positionWithFraction ->
                         position = positionWithFraction.toInt()
                         fraction = positionWithFraction - position
                     }
 
-                    val color1 = mColors[position]
-                    val color2 = mColors[position + 1]
+                    val color1 = COLORS[position]
+                    val color2 = COLORS[position + 1]
                     val a = mixColorComponent(Color.alpha(color1), Color.alpha(color2), fraction)
                     val r = mixColorComponent(Color.red(color1), Color.red(color2), fraction)
                     val g = mixColorComponent(Color.green(color1), Color.green(color2), fraction)
@@ -168,6 +175,8 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
             ((1 - fraction) * c1 + fraction * c2).roundToInt()
+    
+    fun colorPicks() = mColorPickSubject
 
 //    private fun floatToByte(x: Float): Int {
 //        return Math.round(x)
