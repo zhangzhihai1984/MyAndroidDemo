@@ -54,7 +54,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                 0xFFFF0000.toInt())
         private const val DEFAULT_PALETTE_STROKE_WIDTH = 32
         private const val DEFAULT_PALETTE_MARGIN_INNER = 150
-        private const val INNER_STROKE_WIDTH = 5f
+        private const val DEFAULT_PICKER_HALO_WIDTH = 6
     }
 
     private val mPaletteMarginInner: Float
@@ -67,6 +67,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private val mPalettePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mPickerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mPickerHaloPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mColorPickSubject = PublishSubject.create<Int>()
 
     init {
@@ -77,6 +78,12 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
             strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_paletteWidth, DEFAULT_PALETTE_STROKE_WIDTH).toFloat()
         }
 
+        mPickerHaloPaint.run {
+            style = Paint.Style.STROKE
+            color = COLORS[0]
+            strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_pickerHaloWidth, DEFAULT_PICKER_HALO_WIDTH).toFloat()
+        }
+
         mPaletteMarginInner = a.getDimensionPixelSize(R.styleable.ColorPickerView_paletteMarginInner, DEFAULT_PALETTE_MARGIN_INNER).toFloat()
 
         a.recycle()
@@ -85,11 +92,9 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
     private fun initView() {
-
         mPickerPaint.run {
             style = Paint.Style.FILL
-            color = Color.BLUE
-            strokeWidth = INNER_STROKE_WIDTH
+            color = COLORS[0]
         }
 
         globalLayouts()
@@ -99,7 +104,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                     mCenterX = width / 2f
                     mCenterY = height / 2f
                     mPaletteRadius = min(mCenterX, mCenterY) - mPalettePaint.strokeWidth / 2
-                    mPickerRadius = mPaletteRadius - mPalettePaint.strokeWidth / 2 - mPaletteMarginInner / 2
+                    mPickerRadius = mPaletteRadius - mPalettePaint.strokeWidth / 2 - mPaletteMarginInner
                     mPalettePaint.shader = SweepGradient(mCenterX, mCenterY, COLORS, null)
 
                     invalidate()
@@ -125,9 +130,11 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                                     invalidate()
                                 }
                             } else {
-                                mPickerPaint.color = makeColor((atan2(y, x) / (2 * Math.PI.toFloat())).run {
+                                val color = makeColor((atan2(y, x) / (2 * Math.PI.toFloat())).run {
                                     if (this < 0) this + 1 else this
                                 })
+                                mPickerPaint.color = color
+                                mPickerHaloPaint.color = color
                                 invalidate()
                             }
                         }
@@ -153,13 +160,11 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         canvas.drawCircle(mCenterX, mCenterY, mPickerRadius, mPickerPaint)
 
         if (mIsTracking) {
-            mPickerPaint.style = Paint.Style.STROKE
-            mPickerPaint.alpha = if (mNeedHighlight) 0xFF else 0x80
+            canvas.drawCircle(mCenterX, mCenterY, mPickerRadius + mPickerHaloPaint.strokeWidth, mPickerHaloPaint.apply {
+                alpha = if (mNeedHighlight) 0xFF else 0x80
+            })
 
-            canvas.drawCircle(mCenterX, mCenterY, mPickerRadius + INNER_STROKE_WIDTH, mPickerPaint)
-
-            mPickerPaint.style = Paint.Style.FILL
-            mPickerPaint.color = innerColor
+            mPickerHaloPaint.color = innerColor
         }
     }
 
@@ -188,6 +193,11 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
             ((1 - fraction) * c1 + fraction * c2).roundToInt()
+
+    fun updateColor(color: Int) {
+        mPickerPaint.color = color
+        mPickerHaloPaint.color = color
+    }
 
     fun colorPicks() = mColorPickSubject
 
