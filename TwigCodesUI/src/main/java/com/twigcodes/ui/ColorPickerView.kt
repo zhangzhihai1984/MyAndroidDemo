@@ -62,8 +62,8 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
     private var mCenterY = 0f
     private var mPaletteRadius = 0f
     private var mPickerRadius = 0f
-    private var mIsTracking = false
-    private var mNeedHighlight = false
+    private var mDownInPicker = false
+    private var mOpaquePickerHalo = false
 
     private val mPalettePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mPickerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -110,25 +110,39 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                     invalidate()
                 }
 
+        /**
+         * 我们将控件分为"颜色选取"区域(palette)和"颜色确认"区域(picker).
+         * 当"down"发生时, 我们判断(x,y)落入的区域, 记录一下这个"起始"区域.
+         *
+         * 当"move"发生时:
+         * (1) 如果"起始"区域为"确认"区域, 在"确认"区域外层绘制halo, 可以时刻提醒用户他当前的操作是在"确认"
+         * 选取的颜色. 另外, 如果当前的区域不是"确认"区域的话, 也就是"滑出圈了", 那么绘制的halo会进行透明处理以提示用户.
+         * (2) 如果"起始"区域为"选取"区域, 我们要根据(x,y)计算出对应的颜色同时更新"确认"区域的颜色.
+         *
+         * 当"up"发生时, 如果"起始"区域与当前区域均为"确认", 说明用户"确认"了选取的颜色同时将该颜色告知用户.
+         *
+         * 注: "down"中应该也有"move"处理(2)中的逻辑, 考虑到只有"down"和"up"的操作需要一定的技巧和偶然性, 姑且就让
+         * 用户认为是自己刚刚"手抖"了吧.
+         */
         touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     val x = event.x - mCenterX
                     val y = event.y - mCenterY
-                    val inner = sqrt(x.pow(2) + y.pow(2)) <= mPickerRadius
+                    val inPicker = sqrt(x.pow(2) + y.pow(2)) <= mPickerRadius
 
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            mIsTracking = inner
-                            mNeedHighlight = true
-                            invalidate()
+                            mDownInPicker = inPicker
+                            if (mDownInPicker) {
+                                mOpaquePickerHalo = true
+                                invalidate()
+                            }
                         }
                         MotionEvent.ACTION_MOVE -> {
-                            if (mIsTracking) {
-                                if (mNeedHighlight != inner) {
-                                    mNeedHighlight = inner
-                                    invalidate()
-                                }
+                            if (mDownInPicker) {
+                                mOpaquePickerHalo = inPicker
+                                invalidate()
                             } else {
                                 val color = makeColor((atan2(y, x) / (2 * Math.PI.toFloat())).run {
                                     if (this < 0) this + 1 else this
@@ -139,11 +153,11 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                             }
                         }
                         MotionEvent.ACTION_UP -> {
-                            if (mIsTracking) {
-                                if (inner)
+                            if (mDownInPicker) {
+                                if (inPicker)
                                     mColorPickSubject.onNext(mPickerPaint.color)
 
-                                mIsTracking = false
+                                mDownInPicker = false
                                 invalidate()
                             }
                         }
@@ -159,9 +173,9 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         canvas.drawCircle(mCenterX, mCenterY, mPaletteRadius, mPalettePaint)
         canvas.drawCircle(mCenterX, mCenterY, mPickerRadius, mPickerPaint)
 
-        if (mIsTracking) {
+        if (mDownInPicker) {
             canvas.drawCircle(mCenterX, mCenterY, mPickerRadius + mPickerHaloPaint.strokeWidth, mPickerHaloPaint.apply {
-                alpha = if (mNeedHighlight) 0xFF else 0x80
+                alpha = if (mOpaquePickerHalo) 0xFF else 0x80
             })
 
             mPickerHaloPaint.color = innerColor

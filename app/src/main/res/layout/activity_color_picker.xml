@@ -47,7 +47,6 @@
             android:layout_margin="10dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_palette"
-            android:tint="@android:color/holo_orange_dark"
             android:tintMode="src_in" />
 
     </androidx.cardview.widget.CardView>
