@@ -201,10 +201,12 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
     private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
             ((1 - fraction) * c1 + fraction * c2).roundToInt()
 
-    fun updateColor(color: Int) {
+    fun updateColor(color: Int, emit: Boolean = true) {
         mPickerPaint.color = color
         mPickerHaloPaint.color = color
-        mColorChangeSubject.onNext(color)
+
+        if (emit)
+            mColorChangeSubject.onNext(color)
 
         invalidate()
     }

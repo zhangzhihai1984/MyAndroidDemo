@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.subjects.PublishSubject
 
 internal class BrightnessView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -16,6 +17,7 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
 
     private val mCornerRadius: Float
     private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mBrightnessChangeSubject = PublishSubject.create<Int>()
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
@@ -43,4 +45,6 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
         mPaint.shader = LinearGradient(0f, 0f, width.toFloat(), 0f, intArrayOf(Color.WHITE, color, Color.BLACK), null, Shader.TileMode.CLAMP)
         invalidate()
     }
+
+    fun brightnessChanges() = mBrightnessChangeSubject
 }
