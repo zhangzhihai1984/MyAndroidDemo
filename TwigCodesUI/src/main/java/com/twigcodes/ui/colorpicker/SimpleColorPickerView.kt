@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.SweepGradient
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
@@ -67,22 +66,20 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
     private var mDownInPicker = false
     private var mOpaquePickerHalo = false
 
-    private val mPalettePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val mPickerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val mPickerHaloPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mPalettePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
+    private val mPickerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val mPickerHaloPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
+    private val mColorChangeSubject = PublishSubject.create<Int>()
     private val mColorPickSubject = PublishSubject.create<Int>()
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
 
         mPalettePaint.run {
-            style = Paint.Style.STROKE
             strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_paletteWidth, DEFAULT_PALETTE_STROKE_WIDTH).toFloat()
         }
 
         mPickerHaloPaint.run {
-            style = Paint.Style.STROKE
-            color = COLORS[0]
             strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_pickerHaloWidth, DEFAULT_PICKER_HALO_WIDTH).toFloat()
         }
 
@@ -94,23 +91,17 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
     }
 
     private fun initView() {
-        mPickerPaint.run {
-            style = Paint.Style.FILL
-            color = COLORS[0]
-        }
-
         globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mCenterX = width / 2f
                     mCenterY = height / 2f
-                    Log.i("zzh", "height:$height")
                     mPaletteRadius = min(mCenterX, mCenterY) - mPalettePaint.strokeWidth / 2
                     mPickerRadius = mPaletteRadius - mPalettePaint.strokeWidth / 2 - mPaletteMarginInner
                     mPalettePaint.shader = SweepGradient(mCenterX, mCenterY, COLORS, null)
 
-                    invalidate()
+                    updateColor(COLORS[0])
                 }
 
         /**
@@ -150,9 +141,8 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
                                 val color = makeColor((atan2(y, x) / (2 * Math.PI.toFloat())).run {
                                     if (this < 0) this + 1 else this
                                 })
-                                mPickerPaint.color = color
-                                mPickerHaloPaint.color = color
-                                invalidate()
+
+                                updateColor(color)
                             }
                         }
                         MotionEvent.ACTION_UP -> {
@@ -214,7 +204,12 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
     fun updateColor(color: Int) {
         mPickerPaint.color = color
         mPickerHaloPaint.color = color
+        mColorChangeSubject.onNext(color)
+
+        invalidate()
     }
+
+    fun colorChanges() = mColorChangeSubject
 
     fun colorPicks() = mColorPickSubject
 

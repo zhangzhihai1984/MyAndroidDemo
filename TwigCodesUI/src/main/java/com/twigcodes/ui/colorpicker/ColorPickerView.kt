@@ -4,7 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.LifecycleOwner
+import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.R
+import com.twigcodes.ui.util.RxUtil
+import kotlin.math.abs
 
 class ColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -29,12 +34,22 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         mBrightnessView = BrightnessView(context, attrs, defStyleAttr, defStyleRes)
         addView(mSimpleColorPickerView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         if (hasBrightness)
-            addView(mBrightnessView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100).apply { topMargin = brightnessMarginTop })
+            addView(mBrightnessView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, brightnessHeight).apply { topMargin = brightnessMarginTop })
 
         initView()
     }
 
     private fun initView() {
+        mSimpleColorPickerView.globalLayouts()
+                .take(1)
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    mBrightnessView.updateLayoutParams<LayoutParams> {
+                        val margin = abs(mSimpleColorPickerView.width - mSimpleColorPickerView.height) / 2
+                        leftMargin = margin
+                        rightMargin = margin
+                    }
+                }
     }
 
     fun colorPicks() = mSimpleColorPickerView.colorPicks()
