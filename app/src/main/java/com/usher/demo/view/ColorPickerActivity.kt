@@ -18,8 +18,8 @@ class ColorPickerActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        color_picker_view.updateColor(Color.BLUE)
-
+//        color_picker_view.updateColor(Color.BLUE)
+//
         color_picker_view.colorPicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
