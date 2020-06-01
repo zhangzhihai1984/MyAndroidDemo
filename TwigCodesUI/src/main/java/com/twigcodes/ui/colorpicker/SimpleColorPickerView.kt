@@ -1,4 +1,4 @@
-package com.twigcodes.ui
+package com.twigcodes.ui.colorpicker
 
 import android.content.Context
 import android.graphics.Canvas
@@ -12,6 +12,7 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
+import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.subjects.PublishSubject
 import kotlin.math.*
@@ -43,7 +44,7 @@ import kotlin.math.*
  * 上面获得的值可以理解为是个百分比, 举个例子, 该值为0.4, color数组size为7, 那么0.4*(7-1)=2.4, 也就是当前的选中的颜色
  * 介于color[2]和color[3]之间, 这个颜色有color[2]60%的基因, 有color[3]40%的基因.
  */
-class SimpleColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
+internal class SimpleColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private val COLORS = intArrayOf(
                 0xFFFF0000.toInt(),
