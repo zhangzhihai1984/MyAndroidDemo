@@ -4,5 +4,8 @@
         <attr name="paletteWidth" format="dimension" />
         <attr name="paletteMarginInner" format="dimension" />
         <attr name="pickerHaloWidth" format="dimension" />
+        <attr name="brightnessMarginTop" format="dimension" />
+        <attr name="brightnessHeight" format="dimension" />
+        <attr name="hasBrightness" format="boolean" />
     </declare-styleable>
 </resources>
