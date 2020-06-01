@@ -6,6 +6,7 @@
         <attr name="pickerHaloWidth" format="dimension" />
         <attr name="brightnessMarginTop" format="dimension" />
         <attr name="brightnessHeight" format="dimension" />
+        <attr name="brightnessCornerRadius" format="dimension" />
         <attr name="hasBrightness" format="boolean" />
     </declare-styleable>
 </resources>

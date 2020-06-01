@@ -50,6 +50,11 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                         rightMargin = margin
                     }
                 }
+
+        mSimpleColorPickerView.colorChanges()
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe { color -> mBrightnessView.updateColor(color) }
     }
 
     fun colorPicks() = mSimpleColorPickerView.colorPicks()
