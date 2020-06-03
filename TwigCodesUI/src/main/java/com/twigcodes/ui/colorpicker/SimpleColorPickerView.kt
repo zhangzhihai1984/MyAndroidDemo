@@ -175,15 +175,15 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
         }
     }
 
-    private fun makeColor(relativePosition: Float): Int =
+    private fun makeColor(percentPosition: Float): Int =
             when {
-                relativePosition <= 0 -> COLORS[0]
-                relativePosition >= 1 -> COLORS[COLORS.size - 1]
+                percentPosition <= 0 -> COLORS[0]
+                percentPosition >= 1 -> COLORS[COLORS.size - 1]
                 else -> {
                     val position: Int
                     val fraction: Float
 
-                    (relativePosition * (COLORS.size - 1)).let { positionWithFraction ->
+                    (percentPosition * (COLORS.size - 1)).let { positionWithFraction ->
                         position = positionWithFraction.toInt()
                         fraction = positionWithFraction - position
                     }
@@ -198,8 +198,8 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
                 }
             }
 
-    private fun mixColorComponent(c1: Int, c2: Int, fraction: Float): Int =
-            ((1 - fraction) * c1 + fraction * c2).roundToInt()
+    private fun mixColorComponent(component1: Int, component2: Int, fraction: Float): Int =
+            ((1 - fraction) * component1 + fraction * component2).roundToInt()
 
     fun updateColor(color: Int, emit: Boolean = true) {
         mPickerPaint.color = color
