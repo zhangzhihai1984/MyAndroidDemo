@@ -24,6 +24,8 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
     private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mBrightnessChangeSubject = PublishSubject.create<Int>()
 
+    private var mPercent = 0.5f
+
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
         mCornerRadius = a.getDimensionPixelSize(R.styleable.ColorPickerView_brightnessCornerRadius, DEFAULT_CORNER_RADIUS).toFloat()
@@ -41,21 +43,23 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
         touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
-                    val fraction = min(max(0f, (event.x / width)), 1f)
+                    mPercent = min(max(0f, (event.x / width)), 1f)
 
-                    val color = if (fraction <= 0.5f)
-                        makeColor(COLORS[0], COLORS[1], fraction * 2)
+                    val color = if (mPercent <= 0.5f)
+                        makeColor(COLORS[0], COLORS[1], mPercent * 2)
                     else
-                        makeColor(COLORS[1], COLORS[2], fraction * 2 - 1)
+                        makeColor(COLORS[1], COLORS[2], mPercent * 2 - 1)
 
                     mBrightnessChangeSubject.onNext(color)
+                    invalidate()
                 }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(), mCornerRadius, mCornerRadius, mPaint)
+        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat() - 9, mCornerRadius, mCornerRadius, mPaint)
+        canvas.drawRect(0f, height.toFloat() - 3, width.toFloat() * mPercent, height.toFloat(), mPaint)
     }
 
     private fun makeColor(color1: Int, color2: Int, fraction: Float): Int {
@@ -72,6 +76,7 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
 
     fun updateColor(color: Int) {
         COLORS[1] = color
+        mPercent = 0.5f
         mPaint.shader = LinearGradient(0f, 0f, width.toFloat(), 0f, COLORS, null, Shader.TileMode.CLAMP)
         invalidate()
     }
