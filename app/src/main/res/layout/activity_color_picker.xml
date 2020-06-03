@@ -26,6 +26,7 @@
                 android:layout_margin="10dp"
                 app:brightnessCornerRadius="5dp"
                 app:brightnessHeight="20dp"
+                app:hasBrightnessIndicator="true"
                 app:paletteMarginInner="10dp"
                 app:paletteWidth="50dp"
                 app:pickerHaloWidth="2dp" />

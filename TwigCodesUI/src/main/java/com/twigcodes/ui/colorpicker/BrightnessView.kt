@@ -18,17 +18,28 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
     companion object {
         private val COLORS = intArrayOf(Color.WHITE, Color.BLACK, Color.BLACK)
         private const val DEFAULT_CORNER_RADIUS = 0
+        private const val DEFAULT_BRIGHTNESS_MARGIN_BOTTOM = 6f
+        private const val DEFAULT_INDICATOR_HEIGHT = 3f
     }
 
     private val mCornerRadius: Float
     private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mBrightnessChangeSubject = PublishSubject.create<Int>()
 
+    private var mBrightnessMarginBottom = 0f
+    private var mIndicatorHeight = 0f
+
     private var mPercent = 0.5f
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
         mCornerRadius = a.getDimensionPixelSize(R.styleable.ColorPickerView_brightnessCornerRadius, DEFAULT_CORNER_RADIUS).toFloat()
+        val hasIndicator = a.getBoolean(R.styleable.ColorPickerView_hasBrightnessIndicator, false)
+
+        if (hasIndicator) {
+            mBrightnessMarginBottom = DEFAULT_BRIGHTNESS_MARGIN_BOTTOM
+            mIndicatorHeight = DEFAULT_INDICATOR_HEIGHT
+        }
         a.recycle()
         initView()
     }
@@ -58,8 +69,8 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat() - 9, mCornerRadius, mCornerRadius, mPaint)
-        canvas.drawRect(0f, height.toFloat() - 3, width.toFloat() * mPercent, height.toFloat(), mPaint)
+        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat() - mBrightnessMarginBottom, mCornerRadius, mCornerRadius, mPaint)
+        canvas.drawRect(0f, height.toFloat() - mIndicatorHeight, width.toFloat() * mPercent, height.toFloat(), mPaint)
     }
 
     private fun makeColor(color1: Int, color2: Int, fraction: Float): Int {

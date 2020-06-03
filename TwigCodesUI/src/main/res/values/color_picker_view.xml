@@ -8,5 +8,6 @@
         <attr name="brightnessHeight" format="dimension" />
         <attr name="brightnessCornerRadius" format="dimension" />
         <attr name="hasBrightness" format="boolean" />
+        <attr name="hasBrightnessIndicator" format="boolean" />
     </declare-styleable>
 </resources>
