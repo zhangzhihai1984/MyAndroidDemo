@@ -28,7 +28,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mIntersectionRadius: Float
     private val mMaskColor: Int
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private var mColors: List<Int>? = null
+    private var mColors: IntArray? = null
 
     private var mTouchRow = 0
     private var mTouchColumn = 0
@@ -56,9 +56,6 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
         mIntersectionPaint.run {
             color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
         }
-
-        if (a.getBoolean(R.styleable.BitmapMeshView_colorVertex, false))
-            mColors = (1..(mMeshWidth + 1) * (mMeshHeight + 1)).map { Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random()) }
 
         a.recycle()
 
@@ -102,6 +99,22 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                 }
     }
 
+    var vertexCount: Int = 0
+        get() = (mMeshWidth + 1) * (mMeshHeight + 1)
+        private set
+
+    fun colorVertex(colors: IntArray) {
+        mColors = colors
+        invalidate()
+    }
+
+    fun colorVertex(color: Int?) {
+        mColors = color?.run {
+            (1..(mMeshWidth + 1) * (mMeshHeight + 1)).map { this }.toIntArray()
+        }
+        invalidate()
+    }
+
     private fun makeCoordinates() {
         val intervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
         val intervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
@@ -121,7 +134,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
 
-        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, mColors?.toIntArray(), 0, mBitmapPaint)
+        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
     }
 
     private fun drawGrid(canvas: Canvas) {
