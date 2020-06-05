@@ -77,7 +77,7 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             val closestVertex = mRowMajorCoordinates.flatten()
-                                    .minBy { coordinate -> (coordinate.first - event.x).pow(2) + (coordinate.second - event.y).pow(2) }!!
+                                    .sortedBy { coordinate -> (coordinate.first - event.x).pow(2) + (coordinate.second - event.y).pow(2) }[0]
 
                             mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
                                 rowCoordinates.forEachIndexed { column, coordinate ->
