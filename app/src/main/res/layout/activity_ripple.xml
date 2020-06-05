@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background">
+
+    <com.twigcodes.ui.layout.SquareLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/item_background"
+            app:cardCornerRadius="10dp">
+
+            <com.twigcodes.ui.RippleView
+                android:id="@+id/bitmap_mesh_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:src="@drawable/demo_trump"
+                app:rippleGridColor="@color/colorPrimary"
+                app:rippleGridWidth="1dp"
+                app:rippleMaskColor="@color/image_tint"
+                app:rippleMeshHeight="10"
+                app:rippleMeshWidth="10" />
+
+        </androidx.cardview.widget.CardView>
+
+    </com.twigcodes.ui.layout.SquareLayout>
+
+</RelativeLayout>

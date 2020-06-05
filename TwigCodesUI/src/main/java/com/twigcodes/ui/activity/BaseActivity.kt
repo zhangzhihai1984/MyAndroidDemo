@@ -17,6 +17,7 @@ open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK
     private var lightStatusBarTheme = true
         set(isLight) {
             field = isLight
+
             val decorView = window.decorView
             val visibility = decorView.systemUiVisibility
 

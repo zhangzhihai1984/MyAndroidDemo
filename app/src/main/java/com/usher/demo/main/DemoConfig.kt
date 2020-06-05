@@ -5,10 +5,7 @@ import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.itemtouch.ChannelEditActivity
 import com.usher.demo.awesome.smarthome.SmartHomeActivity
-import com.usher.demo.image.DrawBitmapMeshActivity
-import com.usher.demo.image.ImageBlurActivity
-import com.usher.demo.image.ImageScaleTypeActivity
-import com.usher.demo.image.PicassoTransformationActivity
+import com.usher.demo.image.*
 import com.usher.demo.kotlin.KotlinActivity
 import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
@@ -64,7 +61,8 @@ object DemoConfig {
                 DemoItem("blur", ImageBlurActivity::class.java),
                 DemoItem("scale type", ImageScaleTypeActivity::class.java),
                 DemoItem("picasso transform", PicassoTransformationActivity::class.java),
-                DemoItem("bitmap mesh", DrawBitmapMeshActivity::class.java)
+                DemoItem("bitmap mesh", DrawBitmapMeshActivity::class.java),
+                DemoItem("ripple", RippleActivity::class.java)
         )
 
         configMap[KEY_WEB] = listOf(
