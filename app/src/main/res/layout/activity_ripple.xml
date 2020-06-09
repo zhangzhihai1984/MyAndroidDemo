@@ -27,8 +27,8 @@
                 app:rippleGridColor="@color/colorPrimary"
                 app:rippleGridWidth="1dp"
                 app:rippleMaskColor="@color/image_tint"
-                app:rippleMeshHeight="10"
-                app:rippleMeshWidth="10" />
+                app:rippleMeshHeight="20"
+                app:rippleMeshWidth="20" />
 
         </androidx.cardview.widget.CardView>
 
