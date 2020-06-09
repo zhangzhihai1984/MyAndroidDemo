@@ -22,13 +22,13 @@
                 android:id="@+id/bitmap_mesh_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="10dp"
-                android:src="@drawable/demo_trump"
-                app:rippleGridColor="@color/colorPrimary"
+                android:padding="0dp"
+                android:src="@drawable/demo_tree"
+                app:rippleGridColor="@android:color/transparent"
                 app:rippleGridWidth="1dp"
                 app:rippleMaskColor="@color/image_tint"
-                app:rippleMeshHeight="20"
-                app:rippleMeshWidth="20" />
+                app:rippleMeshHeight="30"
+                app:rippleMeshWidth="30" />
 
         </androidx.cardview.widget.CardView>
 

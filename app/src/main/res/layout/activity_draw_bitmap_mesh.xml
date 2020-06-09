@@ -26,10 +26,10 @@
                 android:padding="10dp"
                 android:src="@drawable/demo_trump"
                 app:gridColor="@color/colorPrimary"
-                app:gridWidth="2dp"
+                app:gridWidth="1dp"
                 app:maskColor="@color/image_tint"
-                app:meshHeight="4"
-                app:meshWidth="4" />
+                app:meshHeight="8"
+                app:meshWidth="8" />
 
         </androidx.cardview.widget.CardView>
 

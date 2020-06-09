@@ -11,6 +11,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -21,6 +24,9 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         const val DEFAULT_GRID_COLOR = Color.BLACK
         const val DEFAULT_GRID_WIDTH = 10
         const val DEFAULT_MASK_COLOR = Color.WHITE
+        const val RIPPLE_WIDTH = 60f
+        const val INIT_RIPPLE_RADIUS = 30f
+        const val RIPPLE_INTEVAL = 15f
     }
 
     private val mBitmap: Bitmap
@@ -30,7 +36,7 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     private val mMaskColor: Int
     private val mImmutableCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private var mColors: IntArray? = null
+    private val mTouchDownSubject = PublishSubject.create<Unit>()
 
     private val mBitmapPaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
@@ -74,15 +80,9 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     when (event.action) {
-                        MotionEvent.ACTION_MOVE -> {
-                            mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
-                                rowCoordinates.forEachIndexed { column, coordinate ->
-                                    val p0 = event.x to event.y
-                                    val p1 = mImmutableCoordinates[row][column]
-                                    mRowMajorCoordinates[row][column] = makeRippleCoordinate(p0, p1)
-                                }
-                            }
-                            invalidate()
+                        MotionEvent.ACTION_DOWN -> {
+                            mTouchDownSubject.onNext(Unit)
+                            startRipple(event.x to event.y)
                         }
                     }
                 }
@@ -96,17 +96,46 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
      *      x2 = x1 - (x1-x0)ΔL/L
      *      y2 = y1 - (y1-y0)ΔL/L
      */
-    private fun makeRippleCoordinate(p0: Pair<Float, Float>, p1: Pair<Float, Float>): Pair<Float, Float> {
+    private fun startRipple(p0: Pair<Float, Float>) {
+        val maxL = sqrt(width.toFloat().pow(2) + height.toFloat().pow(2))
+        val count = (maxL - INIT_RIPPLE_RADIUS) / RIPPLE_INTEVAL
+
+        Observable.interval(20, TimeUnit.MILLISECONDS)
+                .take(count.toLong())
+                .takeUntil(mTouchDownSubject)
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe({
+                    val radius = INIT_RIPPLE_RADIUS + RIPPLE_INTEVAL * it
+
+                    mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
+                        rowCoordinates.forEachIndexed { column, _ ->
+                            val p1 = mImmutableCoordinates[row][column]
+                            mRowMajorCoordinates[row][column] = makeRippleCoordinate(p0, p1, radius)
+                        }
+                    }
+                    invalidate()
+                }, {}, {
+                    mImmutableCoordinates.forEachIndexed { row, rowCoordinates ->
+                        rowCoordinates.forEachIndexed { column, coordinate ->
+                            mRowMajorCoordinates[row][column] = coordinate
+                        }
+                    }
+                    invalidate()
+                })
+    }
+
+    private fun makeRippleCoordinate(p0: Pair<Float, Float>, p1: Pair<Float, Float>, radius: Float): Pair<Float, Float> {
         val l = sqrt((p0.first - p1.first).pow(2) + (p0.second - p1.second).pow(2))
         return when {
-            l > 200 - 100 && l < 200 -> {
-                val x = p1.first + (p1.first - p0.first) * 15 / l
-                val y = p1.second + (p1.second - p0.second) * 15 / l
+            l > radius - RIPPLE_WIDTH / 2 && l < radius -> {
+                val x = p1.first + (p1.first - p0.first) * 10 / l
+                val y = p1.second + (p1.second - p0.second) * 10 / l
                 x to y
             }
-            l >= 200 && l < 200 + 100 -> {
-                val x = p1.first - (p1.first - p0.first) * 15 / l
-                val y = p1.second - (p1.second - p0.second) * 15 / l
+            l >= radius && l < radius + RIPPLE_WIDTH / 2 -> {
+                val x = p1.first + (p1.first - p0.first) * 10 / l
+                val y = p1.second + (p1.second - p0.second) * 10 / l
                 x to y
             }
             else -> p1
@@ -142,7 +171,7 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
 
-        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
+        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, null, 0, mBitmapPaint)
     }
 
     private fun drawGrid(canvas: Canvas) {
