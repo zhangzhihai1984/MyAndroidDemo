@@ -6,7 +6,7 @@
     <attr name="meshGridWidth" format="dimension" />
     <attr name="meshMaskColor" format="reference|color" />
 
-    <declare-styleable name="BitmapMeshView">
+    <declare-styleable name="BitmapWarpView">
         <attr name="android:src" format="reference" />
         <attr name="meshRow" />
         <attr name="meshColumn"/>
@@ -15,7 +15,7 @@
         <attr name="meshMaskColor" />
     </declare-styleable>
 
-    <declare-styleable name="RippleView">
+    <declare-styleable name="BitmapRippleView">
         <attr name="android:src" format="reference" />
         <attr name="meshRow" />
         <attr name="meshColumn"/>

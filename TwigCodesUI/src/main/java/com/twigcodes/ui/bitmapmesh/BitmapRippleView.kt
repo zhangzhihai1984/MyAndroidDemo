@@ -1,4 +1,4 @@
-package com.twigcodes.ui
+package com.twigcodes.ui.bitmapmesh
 
 import android.content.Context
 import android.graphics.*
@@ -10,6 +10,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
+import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -18,7 +19,7 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
+class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         const val DEFAULT_MESH_WIDTH = 20
         const val DEFAULT_MESH_HEIGHT = 20
@@ -49,21 +50,21 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     private var mIntervalY = 0f
 
     init {
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.RippleView, defStyleAttr, defStyleRes)
-        mBitmap = a.getDrawableOrThrow(R.styleable.RippleView_android_src).toBitmap()
-        mMeshWidth = a.getInteger(R.styleable.RippleView_meshRow, DEFAULT_MESH_WIDTH)
-        mMeshHeight = a.getInteger(R.styleable.RippleView_meshColumn, DEFAULT_MESH_HEIGHT)
-        mMaskColor = a.getColor(R.styleable.RippleView_meshMaskColor, DEFAULT_MASK_COLOR)
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapRippleView, defStyleAttr, defStyleRes)
+        mBitmap = a.getDrawableOrThrow(R.styleable.BitmapRippleView_android_src).toBitmap()
+        mMeshWidth = a.getInteger(R.styleable.BitmapRippleView_meshRow, DEFAULT_MESH_WIDTH)
+        mMeshHeight = a.getInteger(R.styleable.BitmapRippleView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMaskColor = a.getColor(R.styleable.BitmapRippleView_meshMaskColor, DEFAULT_MASK_COLOR)
 
         mGridPaint.run {
-            color = a.getColor(R.styleable.RippleView_meshGridColor, DEFAULT_GRID_COLOR)
-            strokeWidth = a.getDimensionPixelSize(R.styleable.RippleView_meshGridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
+            color = a.getColor(R.styleable.BitmapRippleView_meshGridColor, DEFAULT_GRID_COLOR)
+            strokeWidth = a.getDimensionPixelSize(R.styleable.BitmapRippleView_meshGridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
                 mIntersectionRadius = this * 2f
             }
         }
 
         mIntersectionPaint.run {
-            color = a.getColor(R.styleable.RippleView_meshGridColor, DEFAULT_GRID_COLOR)
+            color = a.getColor(R.styleable.BitmapRippleView_meshGridColor, DEFAULT_GRID_COLOR)
         }
 
         a.recycle()

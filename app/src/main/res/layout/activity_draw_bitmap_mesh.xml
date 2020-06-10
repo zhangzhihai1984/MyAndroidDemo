@@ -19,7 +19,7 @@
             app:cardBackgroundColor="@color/item_background"
             app:cardCornerRadius="10dp">
 
-            <com.twigcodes.ui.BitmapMeshView
+            <com.twigcodes.ui.bitmapmesh.BitmapWarpView
                 android:id="@+id/bitmap_mesh_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

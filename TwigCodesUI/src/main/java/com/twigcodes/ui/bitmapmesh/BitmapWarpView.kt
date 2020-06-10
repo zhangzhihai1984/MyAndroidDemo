@@ -1,4 +1,4 @@
-package com.twigcodes.ui
+package com.twigcodes.ui.bitmapmesh
 
 import android.content.Context
 import android.graphics.*
@@ -10,10 +10,11 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
+import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import kotlin.math.pow
 
-class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
+class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         const val DEFAULT_MESH_WIDTH = 10
         const val DEFAULT_MESH_HEIGHT = 10
@@ -40,21 +41,21 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapMeshView, defStyleAttr, defStyleRes)
-        mBitmap = a.getDrawableOrThrow(R.styleable.BitmapMeshView_android_src).toBitmap()
-        mMeshWidth = a.getInteger(R.styleable.BitmapMeshView_meshRow, DEFAULT_MESH_WIDTH)
-        mMeshHeight = a.getInteger(R.styleable.BitmapMeshView_meshColumn, DEFAULT_MESH_HEIGHT)
-        mMaskColor = a.getColor(R.styleable.BitmapMeshView_meshMaskColor, DEFAULT_MASK_COLOR)
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapWarpView, defStyleAttr, defStyleRes)
+        mBitmap = a.getDrawableOrThrow(R.styleable.BitmapWarpView_android_src).toBitmap()
+        mMeshWidth = a.getInteger(R.styleable.BitmapWarpView_meshRow, DEFAULT_MESH_WIDTH)
+        mMeshHeight = a.getInteger(R.styleable.BitmapWarpView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMaskColor = a.getColor(R.styleable.BitmapWarpView_meshMaskColor, DEFAULT_MASK_COLOR)
 
         mGridPaint.run {
-            color = a.getColor(R.styleable.BitmapMeshView_meshGridColor, DEFAULT_GRID_COLOR)
-            strokeWidth = a.getDimensionPixelSize(R.styleable.BitmapMeshView_meshGridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
+            color = a.getColor(R.styleable.BitmapWarpView_meshGridColor, DEFAULT_GRID_COLOR)
+            strokeWidth = a.getDimensionPixelSize(R.styleable.BitmapWarpView_meshGridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
                 mIntersectionRadius = this * 2f
             }
         }
 
         mIntersectionPaint.run {
-            color = a.getColor(R.styleable.BitmapMeshView_meshGridColor, DEFAULT_GRID_COLOR)
+            color = a.getColor(R.styleable.BitmapWarpView_meshGridColor, DEFAULT_GRID_COLOR)
         }
 
         a.recycle()
