@@ -14,6 +14,7 @@
         <attr name="meshGridColor" />
         <attr name="meshGridWidth" />
         <attr name="meshMaskColor" />
+        <attr name="debug" />
     </declare-styleable>
 
     <declare-styleable name="BitmapRippleView">

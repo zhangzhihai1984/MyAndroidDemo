@@ -20,19 +20,24 @@ class BitmapWarpActivity : BaseActivity(Theme.LIGHT_AUTO) {
         color_picker_view.colorPicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { color -> bitmap_mesh_view.colorVertex(color) }
+                .subscribe { color -> bitmap_warp_view.colorVertex(color) }
 
         shuffle_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    val colors = (1..bitmap_mesh_view.vertexCount).map { Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random()) }.toIntArray()
-                    bitmap_mesh_view.colorVertex(colors)
+                    val colors = (1..bitmap_warp_view.vertexCount).map { Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random()) }.toIntArray()
+                    bitmap_warp_view.colorVertex(colors)
                 }
 
         clear_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .`as`(RxUtil.autoDispose(this))
-                .subscribe { bitmap_mesh_view.colorVertex(null) }
+                .subscribe { bitmap_warp_view.colorVertex(null) }
+
+        debug_imageview.clicks()
+                .compose(RxUtil.singleClick())
+                .`as`(RxUtil.autoDispose(this))
+                .subscribe { bitmap_warp_view.debug = bitmap_warp_view.debug.not() }
     }
 }

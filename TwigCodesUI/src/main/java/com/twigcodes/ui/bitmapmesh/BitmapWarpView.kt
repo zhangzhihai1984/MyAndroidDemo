@@ -40,12 +40,23 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    var debug: Boolean = false
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    var vertexCount: Int = 0
+        get() = (mMeshWidth + 1) * (mMeshHeight + 1)
+        private set
+
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapWarpView, defStyleAttr, defStyleRes)
         mBitmap = a.getDrawableOrThrow(R.styleable.BitmapWarpView_android_src).toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapWarpView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapWarpView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapWarpView_meshMaskColor, DEFAULT_MASK_COLOR)
+        debug = a.getBoolean(R.styleable.BitmapWarpView_debug, false)
 
         mGridPaint.run {
             color = a.getColor(R.styleable.BitmapWarpView_meshGridColor, DEFAULT_GRID_COLOR)
@@ -99,10 +110,6 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
                     invalidate()
                 }
     }
-
-    var vertexCount: Int = 0
-        get() = (mMeshWidth + 1) * (mMeshHeight + 1)
-        private set
 
     fun colorVertex(colors: IntArray) {
         mColors = colors
@@ -175,7 +182,10 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         canvas.drawColor(mMaskColor)
         drawBitmapMesh(canvas)
-        drawGrid(canvas)
-        drawIntersection(canvas)
+
+        if (debug) {
+            drawGrid(canvas)
+            drawIntersection(canvas)
+        }
     }
 }

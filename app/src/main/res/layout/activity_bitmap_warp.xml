@@ -20,15 +20,15 @@
             app:cardCornerRadius="10dp">
 
             <com.twigcodes.ui.bitmapmesh.BitmapWarpView
-                android:id="@+id/bitmap_mesh_view"
+                android:id="@+id/bitmap_warp_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
                 android:src="@drawable/demo_trump"
+                app:meshColumn="8"
                 app:meshGridColor="@color/colorPrimary"
                 app:meshGridWidth="1dp"
                 app:meshMaskColor="@color/image_tint"
-                app:meshColumn="8"
                 app:meshRow="8" />
 
         </androidx.cardview.widget.CardView>
@@ -80,11 +80,21 @@
                     android:id="@+id/clear_imageview"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
                     android:src="@drawable/ic_refresh_white" />
+
+                <ImageView
+                    android:id="@+id/debug_imageview"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/common_mask_circle_background"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_debug_white" />
 
             </LinearLayout>
 
