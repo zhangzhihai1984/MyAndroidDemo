@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:padding="0dp"
                 android:src="@drawable/demo_tree"
-                app:meshGridColor="@android:color/transparent"
+                app:meshGridColor="@color/colorPrimary"
                 app:meshGridWidth="1dp"
                 app:meshMaskColor="@color/image_tint"
                 app:meshRow="30"

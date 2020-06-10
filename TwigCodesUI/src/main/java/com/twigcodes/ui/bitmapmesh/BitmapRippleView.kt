@@ -36,6 +36,7 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
     private val mMaskColor: Int
+    private val mIsDebug: Boolean
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mTouchDownSubject = PublishSubject.create<Unit>()
@@ -55,6 +56,7 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
         mMeshWidth = a.getInteger(R.styleable.BitmapRippleView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapRippleView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapRippleView_meshMaskColor, DEFAULT_MASK_COLOR)
+        mIsDebug = a.getBoolean(R.styleable.BitmapRippleView_debug, false)
 
         mGridPaint.run {
             color = a.getColor(R.styleable.BitmapRippleView_meshGridColor, DEFAULT_GRID_COLOR)
@@ -217,7 +219,10 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
 
         canvas.drawColor(mMaskColor)
         drawBitmapMesh(canvas)
-        drawGrid(canvas)
-        drawIntersection(canvas)
+
+        if (mIsDebug) {
+            drawGrid(canvas)
+            drawIntersection(canvas)
+        }
     }
 }

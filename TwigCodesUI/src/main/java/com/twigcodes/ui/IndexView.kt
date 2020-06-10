@@ -51,7 +51,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     //text offset方向, 默认向左(-1)
     private var mTextOffsetDirection: Int
-    private var mIsDebug = false
+    private var mIsDebug: Boolean
 
     private var mData = listOf<String>()
     private var mTextOffsets = listOf<Float>()

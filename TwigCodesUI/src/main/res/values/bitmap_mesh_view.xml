@@ -5,11 +5,12 @@
     <attr name="meshGridColor" format="reference|color" />
     <attr name="meshGridWidth" format="dimension" />
     <attr name="meshMaskColor" format="reference|color" />
+    <attr name="meshDebug" format="boolean" />
 
     <declare-styleable name="BitmapWarpView">
         <attr name="android:src" format="reference" />
         <attr name="meshRow" />
-        <attr name="meshColumn"/>
+        <attr name="meshColumn" />
         <attr name="meshGridColor" />
         <attr name="meshGridWidth" />
         <attr name="meshMaskColor" />
@@ -18,9 +19,10 @@
     <declare-styleable name="BitmapRippleView">
         <attr name="android:src" format="reference" />
         <attr name="meshRow" />
-        <attr name="meshColumn"/>
+        <attr name="meshColumn" />
         <attr name="meshGridColor" />
         <attr name="meshGridWidth" />
         <attr name="meshMaskColor" />
+        <attr name="debug" />
     </declare-styleable>
 </resources>
