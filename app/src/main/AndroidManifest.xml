@@ -85,12 +85,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.DrawBitmapMeshActivity"
+            android:name=".image.BitmapWarpActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.RippleActivity"
+            android:name=".image.BitmapRippleActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />

@@ -6,13 +6,13 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_draw_bitmap_mesh.*
+import kotlinx.android.synthetic.main.activity_bitmap_warp.*
 
-class DrawBitmapMeshActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class BitmapWarpActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_draw_bitmap_mesh)
+        setContentView(R.layout.activity_bitmap_warp)
         initView()
     }
 

@@ -61,8 +61,8 @@ object DemoConfig {
                 DemoItem("blur", ImageBlurActivity::class.java),
                 DemoItem("scale type", ImageScaleTypeActivity::class.java),
                 DemoItem("picasso transform", PicassoTransformationActivity::class.java),
-                DemoItem("bitmap mesh", DrawBitmapMeshActivity::class.java),
-                DemoItem("ripple", RippleActivity::class.java)
+                DemoItem("bitmap warp", BitmapWarpActivity::class.java),
+                DemoItem("bitmap ripple", BitmapRippleActivity::class.java)
         )
 
         configMap[KEY_WEB] = listOf(
