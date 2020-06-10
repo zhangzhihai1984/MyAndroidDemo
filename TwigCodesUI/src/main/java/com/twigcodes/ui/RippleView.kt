@@ -34,8 +34,8 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
     private val mMaskColor: Int
-    private val mImmutableCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
+    private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
+    private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mTouchDownSubject = PublishSubject.create<Unit>()
 
     private val mBitmapPaint = Paint().apply {
@@ -77,8 +77,8 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 .subscribe {
                     mIntervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
                     mIntervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
-                    makeCoordinates(mRowMajorCoordinates)
-                    makeCoordinates(mImmutableCoordinates)
+                    makeCoordinates(mRowMajorWarpCoordinates)
+                    makeCoordinates(mRowMajorOriginalCoordinates)
                 }
 
         touches { true }
@@ -122,16 +122,16 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 .subscribe({
                     val radius = INIT_RIPPLE_RADIUS + OFFSET_PER_PERIOD * it
 
-                    mImmutableCoordinates.forEachIndexed { row, rowCoordinates ->
+                    mRowMajorOriginalCoordinates.forEachIndexed { row, rowCoordinates ->
                         rowCoordinates.forEachIndexed { column, p1 ->
-                            mRowMajorCoordinates[row][column] = getWarpCoordinate(p0, p1, radius)
+                            mRowMajorWarpCoordinates[row][column] = getWarpCoordinate(p0, p1, radius)
                         }
                     }
                     invalidate()
                 }, {}, {
-                    mImmutableCoordinates.forEachIndexed { row, rowCoordinates ->
+                    mRowMajorOriginalCoordinates.forEachIndexed { row, rowCoordinates ->
                         rowCoordinates.forEachIndexed { column, coordinate ->
-                            mRowMajorCoordinates[row][column] = coordinate
+                            mRowMajorWarpCoordinates[row][column] = coordinate
                         }
                     }
                     invalidate()
@@ -175,7 +175,7 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     private fun drawBitmapMesh(canvas: Canvas) {
-        val verts = mRowMajorCoordinates.flatten()
+        val verts = mRowMajorWarpCoordinates.flatten()
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
 
@@ -188,7 +188,7 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
          *
          * 遍历获取"行坐标"List, 进而对"行坐标"List进行[zipWithNext], 获取每行临近两个点的坐标.
          */
-        mRowMajorCoordinates.forEach { rowCoordinates ->
+        mRowMajorWarpCoordinates.forEach { rowCoordinates ->
             rowCoordinates.zipWithNext { start, end ->
                 canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
             }
@@ -199,7 +199,7 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
          *
          * 通过[zipWithNext]获取临近两列"行坐标"List, 进而对临近两列"行坐标"List进行[zip], 获取每列临近两个点的坐标.
          */
-        mRowMajorCoordinates.zipWithNext { startRowCoordinates, endRowCoordinates ->
+        mRowMajorWarpCoordinates.zipWithNext { startRowCoordinates, endRowCoordinates ->
             startRowCoordinates.zip(endRowCoordinates) { start, end ->
                 canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
             }
@@ -207,7 +207,7 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     private fun drawIntersection(canvas: Canvas) {
-        mRowMajorCoordinates.forEach { rowCoordinates ->
+        mRowMajorWarpCoordinates.forEach { rowCoordinates ->
             rowCoordinates.forEach { coordinate ->
                 canvas.drawCircle(coordinate.first, coordinate.second, mIntersectionRadius, mIntersectionPaint)
             }
