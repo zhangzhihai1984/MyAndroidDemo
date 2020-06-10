@@ -22,11 +22,11 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         const val DEFAULT_MESH_WIDTH = 10
         const val DEFAULT_MESH_HEIGHT = 10
         const val DEFAULT_GRID_COLOR = Color.BLACK
-        const val DEFAULT_GRID_WIDTH = 10
+        const val DEFAULT_GRID_WIDTH = 3
         const val DEFAULT_MASK_COLOR = Color.WHITE
-        const val RIPPLE_WIDTH = 60f
+        const val DEFAULT_RIPPLE_WIDTH = 60f
         const val INIT_RIPPLE_RADIUS = 30f
-        const val RIPPLE_INTEVAL = 15f
+        const val OFFSET_PER_PERIOD = 15f
     }
 
     private val mBitmap: Bitmap
@@ -88,60 +88,6 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 }
     }
 
-    /**
-     * in:  y1-y0/y2-y1 = x1-x0/x2-x1 = L/ΔL
-     *      x2 = x1 + (x1-x0)ΔL/L
-     *      y2 = y1 + (y1-y0)ΔL/L
-     * out: y1-y0/y1-y2 = x1-x0/x1-x2 = L/ΔL
-     *      x2 = x1 - (x1-x0)ΔL/L
-     *      y2 = y1 - (y1-y0)ΔL/L
-     */
-    private fun startRipple(p0: Pair<Float, Float>) {
-        val maxL = sqrt(width.toFloat().pow(2) + height.toFloat().pow(2))
-        val count = (maxL - INIT_RIPPLE_RADIUS) / RIPPLE_INTEVAL
-
-        Observable.interval(20, TimeUnit.MILLISECONDS)
-                .take(count.toLong())
-                .takeUntil(mTouchDownSubject)
-                .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe({
-                    val radius = INIT_RIPPLE_RADIUS + RIPPLE_INTEVAL * it
-
-                    mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
-                        rowCoordinates.forEachIndexed { column, _ ->
-                            val p1 = mImmutableCoordinates[row][column]
-                            mRowMajorCoordinates[row][column] = makeRippleCoordinate(p0, p1, radius)
-                        }
-                    }
-                    invalidate()
-                }, {}, {
-                    mImmutableCoordinates.forEachIndexed { row, rowCoordinates ->
-                        rowCoordinates.forEachIndexed { column, coordinate ->
-                            mRowMajorCoordinates[row][column] = coordinate
-                        }
-                    }
-                    invalidate()
-                })
-    }
-
-    private fun makeRippleCoordinate(p0: Pair<Float, Float>, p1: Pair<Float, Float>, radius: Float): Pair<Float, Float> {
-        val l = sqrt((p0.first - p1.first).pow(2) + (p0.second - p1.second).pow(2))
-        return when {
-            l > radius - RIPPLE_WIDTH / 2 && l < radius -> {
-                val x = p1.first + (p1.first - p0.first) * 10 / l
-                val y = p1.second + (p1.second - p0.second) * 10 / l
-                x to y
-            }
-            l >= radius && l < radius + RIPPLE_WIDTH / 2 -> {
-                val x = p1.first + (p1.first - p0.first) * 10 / l
-                val y = p1.second + (p1.second - p0.second) * 10 / l
-                x to y
-            }
-            else -> p1
-        }
-    }
-
     private fun makeCoordinates() {
         val intervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
         val intervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
@@ -163,7 +109,66 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
             mImmutableCoordinates.add(rowCoordinates)
         }
+    }
 
+    /**
+     * in:  y1-y0/y2-y1 = x1-x0/x2-x1 = L/ΔL
+     *      x2 = x1 + (x1-x0)ΔL/L
+     *      y2 = y1 + (y1-y0)ΔL/L
+     * out: y1-y0/y1-y2 = x1-x0/x1-x2 = L/ΔL
+     *      x2 = x1 - (x1-x0)ΔL/L
+     *      y2 = y1 - (y1-y0)ΔL/L
+     */
+    /**
+     *
+     * 移动次数 = (对角线长度 - 初始选取半径 + 选取宽度/2) / 每20ms向外移动距离
+     */
+    private fun startRipple(p0: Pair<Float, Float>) {
+        val w = width - paddingStart - paddingEnd
+        val h = height - paddingTop - paddingBottom
+        val diagonal = sqrt(w.toFloat().pow(2) + h.toFloat().pow(2))
+        val count = (diagonal - INIT_RIPPLE_RADIUS + DEFAULT_RIPPLE_WIDTH / 2) / OFFSET_PER_PERIOD
+
+        Observable.interval(20, TimeUnit.MILLISECONDS)
+                .take(count.toLong())
+                .takeUntil(mTouchDownSubject)
+                .compose(RxUtil.getSchedulerComposer())
+                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe({
+                    val radius = INIT_RIPPLE_RADIUS + OFFSET_PER_PERIOD * it
+
+                    mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
+                        rowCoordinates.forEachIndexed { column, _ ->
+                            val p1 = mImmutableCoordinates[row][column]
+                            mRowMajorCoordinates[row][column] = makeRippleCoordinate(p0, p1, radius)
+                        }
+                    }
+                    invalidate()
+                }, {}, {
+                    mImmutableCoordinates.forEachIndexed { row, rowCoordinates ->
+                        rowCoordinates.forEachIndexed { column, coordinate ->
+                            mRowMajorCoordinates[row][column] = coordinate
+                        }
+                    }
+                    invalidate()
+                })
+    }
+
+    private fun makeRippleCoordinate(p0: Pair<Float, Float>, p1: Pair<Float, Float>, radius: Float): Pair<Float, Float> {
+        val l = sqrt((p0.first - p1.first).pow(2) + (p0.second - p1.second).pow(2))
+        return when {
+            l > radius - DEFAULT_RIPPLE_WIDTH / 2 && l < radius -> {
+                val x = p1.first + (p1.first - p0.first) * 10 / l
+                val y = p1.second + (p1.second - p0.second) * 10 / l
+                x to y
+            }
+            l >= radius && l < radius + DEFAULT_RIPPLE_WIDTH / 2 -> {
+                val x = p1.first + (p1.first - p0.first) * 10 / l
+                val y = p1.second + (p1.second - p0.second) * 10 / l
+                x to y
+            }
+            else -> p1
+        }
     }
 
     private fun drawBitmapMesh(canvas: Canvas) {

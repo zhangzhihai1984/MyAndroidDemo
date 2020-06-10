@@ -15,10 +15,10 @@ import kotlin.math.pow
 
 class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
-        const val DEFAULT_MESH_WIDTH = 3
-        const val DEFAULT_MESH_HEIGHT = 4
+        const val DEFAULT_MESH_WIDTH = 10
+        const val DEFAULT_MESH_HEIGHT = 10
         const val DEFAULT_GRID_COLOR = Color.BLACK
-        const val DEFAULT_GRID_WIDTH = 10
+        const val DEFAULT_GRID_WIDTH = 3
         const val DEFAULT_MASK_COLOR = Color.WHITE
     }
 
