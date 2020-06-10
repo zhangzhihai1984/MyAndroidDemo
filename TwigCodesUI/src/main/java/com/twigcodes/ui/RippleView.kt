@@ -8,7 +8,6 @@ import android.view.View
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.Observable
@@ -34,8 +33,8 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
     private val mMaskColor: Int
-    private val mImmutableCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
+    private val mImmutableCoordinates: List<List<Pair<Float, Float>>> by lazy { getCoordinates() }
+    private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> by lazy { getCoordinates() }
     private val mTouchDownSubject = PublishSubject.create<Unit>()
 
     private val mBitmapPaint = Paint().apply {
@@ -68,14 +67,6 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     private fun initView() {
-        globalLayouts()
-                .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe {
-                    makeCoordinates()
-                    invalidate()
-                }
-
         touches { true }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
@@ -88,7 +79,8 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 }
     }
 
-    private fun makeCoordinates() {
+    private fun getCoordinates(): ArrayList<ArrayList<Pair<Float, Float>>> {
+        val coordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
         val intervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
         val intervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
 
@@ -98,17 +90,9 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 rowCoordinates.add(Pair(paddingStart + x * intervalX, paddingTop + y * intervalY))
             }
 
-            mRowMajorCoordinates.add(rowCoordinates)
+            coordinates.add(rowCoordinates)
         }
-
-        (0..mMeshHeight).forEach { y ->
-            val rowCoordinates = arrayListOf<Pair<Float, Float>>()
-            (0..mMeshWidth).forEach { x ->
-                rowCoordinates.add(Pair(paddingStart + x * intervalX, paddingTop + y * intervalY))
-            }
-
-            mImmutableCoordinates.add(rowCoordinates)
-        }
+        return coordinates
     }
 
     /**
