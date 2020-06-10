@@ -42,19 +42,19 @@ class BitmapMeshView @JvmOverloads constructor(context: Context, attrs: Attribut
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapMeshView, defStyleAttr, defStyleRes)
         mBitmap = a.getDrawableOrThrow(R.styleable.BitmapMeshView_android_src).toBitmap()
-        mMeshWidth = a.getInteger(R.styleable.BitmapMeshView_meshWidth, DEFAULT_MESH_WIDTH)
-        mMeshHeight = a.getInteger(R.styleable.BitmapMeshView_meshHeight, DEFAULT_MESH_HEIGHT)
-        mMaskColor = a.getColor(R.styleable.BitmapMeshView_maskColor, DEFAULT_MASK_COLOR)
+        mMeshWidth = a.getInteger(R.styleable.BitmapMeshView_meshRow, DEFAULT_MESH_WIDTH)
+        mMeshHeight = a.getInteger(R.styleable.BitmapMeshView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMaskColor = a.getColor(R.styleable.BitmapMeshView_meshMaskColor, DEFAULT_MASK_COLOR)
 
         mGridPaint.run {
-            color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
-            strokeWidth = a.getDimensionPixelSize(R.styleable.BitmapMeshView_gridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
+            color = a.getColor(R.styleable.BitmapMeshView_meshGridColor, DEFAULT_GRID_COLOR)
+            strokeWidth = a.getDimensionPixelSize(R.styleable.BitmapMeshView_meshGridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
                 mIntersectionRadius = this * 2f
             }
         }
 
         mIntersectionPaint.run {
-            color = a.getColor(R.styleable.BitmapMeshView_gridColor, DEFAULT_GRID_COLOR)
+            color = a.getColor(R.styleable.BitmapMeshView_meshGridColor, DEFAULT_GRID_COLOR)
         }
 
         a.recycle()

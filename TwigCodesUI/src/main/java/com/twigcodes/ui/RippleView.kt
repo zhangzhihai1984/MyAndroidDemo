@@ -14,6 +14,7 @@ import com.twigcodes.ui.util.RxUtil
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -50,19 +51,19 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.RippleView, defStyleAttr, defStyleRes)
         mBitmap = a.getDrawableOrThrow(R.styleable.RippleView_android_src).toBitmap()
-        mMeshWidth = a.getInteger(R.styleable.RippleView_rippleMeshWidth, DEFAULT_MESH_WIDTH)
-        mMeshHeight = a.getInteger(R.styleable.RippleView_rippleMeshHeight, DEFAULT_MESH_HEIGHT)
-        mMaskColor = a.getColor(R.styleable.RippleView_rippleMaskColor, DEFAULT_MASK_COLOR)
+        mMeshWidth = a.getInteger(R.styleable.RippleView_meshRow, DEFAULT_MESH_WIDTH)
+        mMeshHeight = a.getInteger(R.styleable.RippleView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMaskColor = a.getColor(R.styleable.RippleView_meshMaskColor, DEFAULT_MASK_COLOR)
 
         mGridPaint.run {
-            color = a.getColor(R.styleable.RippleView_rippleGridColor, DEFAULT_GRID_COLOR)
-            strokeWidth = a.getDimensionPixelSize(R.styleable.RippleView_rippleGridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
+            color = a.getColor(R.styleable.RippleView_meshGridColor, DEFAULT_GRID_COLOR)
+            strokeWidth = a.getDimensionPixelSize(R.styleable.RippleView_meshGridWidth, DEFAULT_GRID_WIDTH).toFloat().apply {
                 mIntersectionRadius = this * 2f
             }
         }
 
         mIntersectionPaint.run {
-            color = a.getColor(R.styleable.RippleView_rippleGridColor, DEFAULT_GRID_COLOR)
+            color = a.getColor(R.styleable.RippleView_meshGridColor, DEFAULT_GRID_COLOR)
         }
 
         a.recycle()
@@ -141,6 +142,8 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     /**
      * 以radius为中心, 以[radius - DEFAULT_RIPPLE_WIDTH/2, radius + DEFAULT_RIPPLE_WIDTH/2]作为选取宽度,
      * 落在这个区间的顶点做"扭曲"处理, 否则恢复原状.
+     * 关于"扭曲"的处理, 一种实现方案是"向中间靠拢", 其中ΔL是顶点"扭曲"的距离, 取值为一个mesh宽高较小值的一半.
+     * p0为touch down的坐标, p1为落入区间顶点的坐标, p2为"扭曲"后的坐标.
      *
      * in:  y1-y0/y2-y1 = x1-x0/x2-x1 = L/ΔL
      *      x2 = x1 + (x1-x0)ΔL/L
@@ -148,30 +151,24 @@ class RippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet
      * out: y1-y0/y1-y2 = x1-x0/x1-x2 = L/ΔL
      *      x2 = x1 - (x1-x0)ΔL/L
      *      y2 = y1 - (y1-y0)ΔL/L
+     *
+     * 这种实现方式有一个弊端, 就是由于落入"out"的顶点是向内"扭曲", 当在边界处时, "底色"就会漏出来.
+     * 这里选择的实现方案是全部向外"扭曲".
+     *      y1-y0/y2-y1 = x1-x0/x2-x1 = L/ΔL
+     *      x2 = x1 + (x1-x0)ΔL/L
+     *      y2 = y1 + (y1-y0)ΔL/L
      */
     private fun getWarpCoordinate(p0: Pair<Float, Float>, p1: Pair<Float, Float>, radius: Float): Pair<Float, Float> {
         val l = sqrt((p0.first - p1.first).pow(2) + (p0.second - p1.second).pow(2))
         return when {
             l >= radius - DEFAULT_RIPPLE_WIDTH / 2 && l <= radius + DEFAULT_RIPPLE_WIDTH / 2 -> {
-                val x = p1.first + (p1.first - p0.first) * 18 / l
-                val y = p1.second + (p1.second - p0.second) * 18 / l
+                val deltaL = min(mIntervalX, mIntervalY) / 2
+                val x = p1.first + (p1.first - p0.first) * deltaL / l
+                val y = p1.second + (p1.second - p0.second) * deltaL / l
                 x to y
             }
             else -> p1
         }
-        /*return when {
-            l >= radius - DEFAULT_RIPPLE_WIDTH / 2 && l < radius -> {
-                val x = p1.first + (p1.first - p0.first) * 10 / l
-                val y = p1.second + (p1.second - p0.second) * 10 / l
-                x to y
-            }
-            l >= radius && l <= radius + DEFAULT_RIPPLE_WIDTH / 2 -> {
-                val x = p1.first - (p1.first - p0.first) * 10 / l
-                val y = p1.second - (p1.second - p0.second) * 10 / l
-                x to y
-            }
-            else -> p1
-        }*/
     }
 
     private fun drawBitmapMesh(canvas: Canvas) {

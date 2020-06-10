@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="meshRow" format="integer" />
+    <attr name="meshColumn" format="integer" />
+    <attr name="meshGridColor" format="reference|color" />
+    <attr name="meshGridWidth" format="dimension" />
+    <attr name="meshMaskColor" format="reference|color" />
+
     <declare-styleable name="BitmapMeshView">
         <attr name="android:src" format="reference" />
-        <attr name="meshWidth" format="integer" />
-        <attr name="meshHeight" format="integer" />
-        <attr name="gridColor" format="reference|color" />
-        <attr name="gridWidth" format="dimension" />
-        <attr name="maskColor" format="reference|color" />
+        <attr name="meshRow" />
+        <attr name="meshColumn"/>
+        <attr name="meshGridColor" />
+        <attr name="meshGridWidth" />
+        <attr name="meshMaskColor" />
+    </declare-styleable>
+
+    <declare-styleable name="RippleView">
+        <attr name="android:src" format="reference" />
+        <attr name="meshRow" />
+        <attr name="meshColumn"/>
+        <attr name="meshGridColor" />
+        <attr name="meshGridWidth" />
+        <attr name="meshMaskColor" />
     </declare-styleable>
 </resources>
