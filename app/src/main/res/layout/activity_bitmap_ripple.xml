@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background">
+    android:background="@color/page_background"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <com.twigcodes.ui.layout.SquareLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true">
+    <androidx.cardview.widget.CardView
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:elevation="10dp"
+        app:cardBackgroundColor="@color/item_background"
+        app:cardCornerRadius="10dp">
 
-        <androidx.cardview.widget.CardView
+        <com.twigcodes.ui.bitmapmesh.BitmapRippleView
+            android:id="@+id/bitmap_ripple_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            android:elevation="10dp"
-            app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="10dp">
+            android:padding="10dp"
+            android:src="@drawable/demo_tree"
+            app:meshColumn="30"
+            app:meshGridColor="@color/colorPrimary"
+            app:meshGridWidth="1dp"
+            app:meshMaskColor="@color/image_tint"
+            app:meshRow="30" />
 
-            <com.twigcodes.ui.bitmapmesh.BitmapRippleView
-                android:id="@+id/bitmap_mesh_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="0dp"
-                android:src="@drawable/demo_tree"
-                app:meshGridColor="@color/colorPrimary"
-                app:meshGridWidth="1dp"
-                app:meshMaskColor="@color/image_tint"
-                app:meshRow="30"
-                app:meshColumn="30" />
+    </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
+    <ImageView
+        android:id="@+id/debug_imageview"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/common_mask_circle_background"
+        android:contentDescription="@null"
+        android:scaleType="center"
+        android:src="@drawable/ic_debug_white" />
 
-    </com.twigcodes.ui.layout.SquareLayout>
-
-</RelativeLayout>
+</LinearLayout>

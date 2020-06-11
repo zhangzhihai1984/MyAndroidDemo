@@ -5,7 +5,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
@@ -31,12 +30,10 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
         const val OFFSET_PER_PERIOD = 15f
     }
 
-    private val mBitmap: Bitmap
     private val mMeshWidth: Int
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
     private val mMaskColor: Int
-    private val mIsDebug: Boolean
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mTouchDownSubject = PublishSubject.create<Unit>()
@@ -47,16 +44,30 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    private var mColors: IntArray? = null
+
     private var mIntervalX = 0f
     private var mIntervalY = 0f
 
+    var bitmap: Bitmap? = null
+    set(value) {
+        field = value
+        invalidate()
+    }
+
+    var debug: Boolean = false
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapRippleView, defStyleAttr, defStyleRes)
-        mBitmap = a.getDrawableOrThrow(R.styleable.BitmapRippleView_android_src).toBitmap()
+        bitmap = a.getDrawable(R.styleable.BitmapRippleView_android_src)?.toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapRippleView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapRippleView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapRippleView_meshMaskColor, DEFAULT_MASK_COLOR)
-        mIsDebug = a.getBoolean(R.styleable.BitmapRippleView_debug, false)
+        debug = a.getBoolean(R.styleable.BitmapRippleView_debug, false)
 
         mGridPaint.run {
             color = a.getColor(R.styleable.BitmapRippleView_meshGridColor, DEFAULT_GRID_COLOR)
@@ -179,7 +190,9 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
 
-        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, null, 0, mBitmapPaint)
+        bitmap?.run {
+            canvas.drawBitmapMesh(this, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
+        }
     }
 
     private fun drawGrid(canvas: Canvas) {
@@ -220,9 +233,21 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
         canvas.drawColor(mMaskColor)
         drawBitmapMesh(canvas)
 
-        if (mIsDebug) {
+        if (debug) {
             drawGrid(canvas)
             drawIntersection(canvas)
         }
+    }
+
+    fun colorVertex(colors: IntArray) {
+        mColors = colors
+        invalidate()
+    }
+
+    fun colorVertex(color: Int?) {
+        mColors = color?.run {
+            (1..(mMeshWidth + 1) * (mMeshHeight + 1)).map { this }.toIntArray()
+        }
+        invalidate()
     }
 }

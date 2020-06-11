@@ -5,7 +5,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
@@ -23,7 +22,6 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
         const val DEFAULT_MASK_COLOR = Color.WHITE
     }
 
-    private val mBitmap: Bitmap
     private val mMeshWidth: Int
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
@@ -40,6 +38,12 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    var bitmap: Bitmap? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     var debug: Boolean = false
         set(value) {
             field = value
@@ -52,7 +56,7 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapWarpView, defStyleAttr, defStyleRes)
-        mBitmap = a.getDrawableOrThrow(R.styleable.BitmapWarpView_android_src).toBitmap()
+        bitmap = a.getDrawable(R.styleable.BitmapWarpView_android_src)?.toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapWarpView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapWarpView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapWarpView_meshMaskColor, DEFAULT_MASK_COLOR)
@@ -141,8 +145,10 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
         val verts = mRowMajorCoordinates.flatten()
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
+        bitmap?.run {
+            canvas.drawBitmapMesh(this, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
+        }
 
-        canvas.drawBitmapMesh(mBitmap, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
     }
 
     private fun drawGrid(canvas: Canvas) {
