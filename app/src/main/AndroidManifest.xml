@@ -94,6 +94,11 @@
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".image.BitmapCurtainActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
 
         <!-- Material Demo -->
         <activity

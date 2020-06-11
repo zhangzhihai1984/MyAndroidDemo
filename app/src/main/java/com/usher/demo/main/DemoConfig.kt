@@ -62,7 +62,8 @@ object DemoConfig {
                 DemoItem("scale type", ImageScaleTypeActivity::class.java),
                 DemoItem("picasso transform", PicassoTransformationActivity::class.java),
                 DemoItem("bitmap warp", BitmapWarpActivity::class.java),
-                DemoItem("bitmap ripple", BitmapRippleActivity::class.java)
+                DemoItem("bitmap ripple", BitmapRippleActivity::class.java),
+                DemoItem("bitmap curtain", BitmapCurtainActivity::class.java)
         )
 
         configMap[KEY_WEB] = listOf(
