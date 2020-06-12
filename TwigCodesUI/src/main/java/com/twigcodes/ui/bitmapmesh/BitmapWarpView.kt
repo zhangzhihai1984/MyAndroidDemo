@@ -133,6 +133,7 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
         val verts = mRowMajorCoordinates.flatten()
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
+
         bitmap?.run {
             canvas.drawBitmapMesh(this, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
         }

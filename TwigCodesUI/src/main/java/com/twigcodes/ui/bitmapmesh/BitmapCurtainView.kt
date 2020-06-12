@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import kotlin.math.sin
 
 class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -17,6 +18,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         const val DEFAULT_GRID_COLOR = Color.BLACK
         const val DEFAULT_GRID_WIDTH = 3
         const val DEFAULT_MASK_COLOR = Color.WHITE
+        private const val PI2 = 2 * Math.PI
     }
 
     private val mMeshWidth: Int
@@ -31,6 +33,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     }
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    // ω
+    private var omega = 0.0
 
     var bitmap: Bitmap? = null
         set(value) {
@@ -71,13 +76,23 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
 
         initView()
     }
-    
+
     private fun initView() {
         globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     makeCoordinates()
+                    omega = PI2 / (width.toFloat() / 2.5)
+
+                    mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
+                        rowCoordinates.forEachIndexed { column, coordinate ->
+                            val x = coordinate.first
+                            val y = coordinate.second - 20 * sin(omega * x).toFloat()
+                            mRowMajorCoordinates[row][column] = x to y
+                        }
+                    }
+
                     invalidate()
                 }
     }
@@ -100,6 +115,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         val verts = mRowMajorCoordinates.flatten()
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
+
         bitmap?.run {
             canvas.drawBitmapMesh(this, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
         }
