@@ -40,7 +40,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      * 但是, 如果让用户来对ω进行赋值会是个比较痛疼的事情, 因为它不是一个很直观的长度或系数, 他们更关心的应该是一个周期的长度是多少,
      * 或者干脆一点, [WaveView]的宽度内显示几个周期, 比如说我想要两个周期的效果, 那么这个参数就传2.
      *
-     * ω = 2π/waveLength = 2π/(width*multiple)
+     * ω = 2π/waveLength = 2π/(width/multiple)
      */
     private val mWaveLengthMultiple: Float
 
@@ -66,12 +66,12 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         setPadding(0)
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.WaveView, defStyleAttr, defStyleRes)
-        mFrontWaveColor = a.getColor(R.styleable.WaveView_frontColor, DEFAULT_FRONT_WAVE_COLOR)
-        mBackWaveColor = a.getColor(R.styleable.WaveView_backColor, DEFAULT_BACK_WAVE_COLOR)
-        mWaveHeight = a.getDimensionPixelSize(R.styleable.WaveView_wave_height, DEFAULT_WAVE_HEIGHT)
-        mWaveLengthMultiple = a.getFloat(R.styleable.WaveView_wave_length_multiple, DEFAULT_WAVE_LENGTH_MULTIPLE)
-        mWaveDuration = a.getInt(R.styleable.WaveView_wave_duration, DEFAULT_WAVE_DURATION)
-        _progress = a.getInt(R.styleable.WaveView_progress, DEFAULT_PROGRESS)
+        mFrontWaveColor = a.getColor(R.styleable.WaveView_waveFrontColor, DEFAULT_FRONT_WAVE_COLOR)
+        mBackWaveColor = a.getColor(R.styleable.WaveView_waveBackColor, DEFAULT_BACK_WAVE_COLOR)
+        mWaveHeight = a.getDimensionPixelSize(R.styleable.WaveView_waveHeight, DEFAULT_WAVE_HEIGHT)
+        mWaveLengthMultiple = a.getFloat(R.styleable.WaveView_waveLengthMultiple, DEFAULT_WAVE_LENGTH_MULTIPLE)
+        mWaveDuration = a.getInt(R.styleable.WaveView_waveDuration, DEFAULT_WAVE_DURATION)
+        _progress = a.getInt(R.styleable.WaveView_waveProgress, DEFAULT_PROGRESS)
         a.recycle()
 
         initView()
@@ -153,7 +153,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                     .subscribe {
                         mRight = width.toFloat()
                         mBottom = height.toFloat()
-                        omega = PI2 / (width.toFloat() * mWaveLengthMultiple)
+                        omega = PI2 / (width.toFloat() / mWaveLengthMultiple)
 
                         startWave()
                     }

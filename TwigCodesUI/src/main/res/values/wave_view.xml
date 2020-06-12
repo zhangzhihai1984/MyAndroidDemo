@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="WaveView">
-        <attr name="frontColor" format="reference|color" />
-        <attr name="backColor" format="reference|color" />
-        <attr name="progress" format="integer" />
-        <attr name="wave_length_multiple" format="float" />
-        <attr name="wave_height" format="dimension" />
-        <attr name="wave_duration" format="integer" />
+        <attr name="waveFrontColor" format="reference|color" />
+        <attr name="waveBackColor" format="reference|color" />
+        <attr name="waveProgress" format="integer" />
+        <attr name="waveLengthMultiple" format="float" />
+        <attr name="waveHeight" format="dimension" />
+        <attr name="waveDuration" format="integer" />
     </declare-styleable>
 </resources>
