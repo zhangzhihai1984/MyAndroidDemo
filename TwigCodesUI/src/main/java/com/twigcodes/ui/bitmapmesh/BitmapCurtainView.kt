@@ -9,7 +9,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
-import kotlin.math.sin
+import kotlin.math.max
+import kotlin.math.min
 
 class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -25,7 +26,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private val mMeshHeight: Int
     private val mIntersectionRadius: Float
     private val mMaskColor: Int
-    private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
+    private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
+    private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private var mColors: IntArray? = null
 
     private val mBitmapPaint = Paint().apply {
@@ -40,6 +42,13 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     var bitmap: Bitmap? = null
         set(value) {
             field = value
+            invalidate()
+        }
+
+    var percent: Float = 1f
+        set(value) {
+            field = min(max(value, 0f), 1f)
+            makeWarpCoordinates()
             invalidate()
         }
 
@@ -82,22 +91,23 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
-                    makeCoordinates()
+                    makeCoordinates(mRowMajorWarpCoordinates)
+                    makeCoordinates(mRowMajorOriginalCoordinates)
                     omega = PI2 / (width.toFloat() / 2.5)
 
-                    mRowMajorCoordinates.forEachIndexed { row, rowCoordinates ->
-                        rowCoordinates.forEachIndexed { column, coordinate ->
-                            val x = coordinate.first
-                            val y = coordinate.second - 20 * sin(omega * x).toFloat()
-                            mRowMajorCoordinates[row][column] = x to y
-                        }
-                    }
+//                    mRowMajorWarpCoordinates.forEachIndexed { row, rowCoordinates ->
+//                        rowCoordinates.forEachIndexed { column, coordinate ->
+//                            val x = coordinate.first
+//                            val y = coordinate.second - 20 * sin(omega * x).toFloat()
+//                            mRowMajorWarpCoordinates[row][column] = x to y
+//                        }
+//                    }
 
                     invalidate()
                 }
     }
 
-    private fun makeCoordinates() {
+    private fun makeCoordinates(coordinates: ArrayList<ArrayList<Pair<Float, Float>>>) {
         val intervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
         val intervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
 
@@ -107,12 +117,23 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 rowCoordinates.add(Pair(paddingStart + x * intervalX, paddingTop + y * intervalY))
             }
 
-            mRowMajorCoordinates.add(rowCoordinates)
+            coordinates.add(rowCoordinates)
+        }
+    }
+
+    private fun makeWarpCoordinates() {
+        mRowMajorOriginalCoordinates.forEachIndexed { row, rowCoordinates ->
+            rowCoordinates.forEachIndexed { column, coordinate ->
+                val x = coordinate.first + (width - paddingEnd - coordinate.first) * percent
+                val y = coordinate.second
+
+                mRowMajorWarpCoordinates[row][column] = x to y
+            }
         }
     }
 
     private fun drawBitmapMesh(canvas: Canvas) {
-        val verts = mRowMajorCoordinates.flatten()
+        val verts = mRowMajorWarpCoordinates.flatten()
                 .flatMap { coordinate -> coordinate.toList() }
                 .toFloatArray()
 
@@ -128,7 +149,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
          *
          * 遍历获取"行坐标"List, 进而对"行坐标"List进行[zipWithNext], 获取每行临近两个点的坐标.
          */
-        mRowMajorCoordinates.forEach { rowCoordinates ->
+        mRowMajorWarpCoordinates.forEach { rowCoordinates ->
             rowCoordinates.zipWithNext { start, end ->
                 canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
             }
@@ -139,7 +160,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
          *
          * 通过[zipWithNext]获取临近两列"行坐标"List, 进而对临近两列"行坐标"List进行[zip], 获取每列临近两个点的坐标.
          */
-        mRowMajorCoordinates.zipWithNext { startRowCoordinates, endRowCoordinates ->
+        mRowMajorWarpCoordinates.zipWithNext { startRowCoordinates, endRowCoordinates ->
             startRowCoordinates.zip(endRowCoordinates) { start, end ->
                 canvas.drawLine(start.first, start.second, end.first, end.second, mGridPaint)
             }
@@ -147,7 +168,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     private fun drawIntersection(canvas: Canvas) {
-        mRowMajorCoordinates.forEach { rowCoordinates ->
+        mRowMajorWarpCoordinates.forEach { rowCoordinates ->
             rowCoordinates.forEach { coordinate ->
                 canvas.drawCircle(coordinate.first, coordinate.second, mIntersectionRadius, mIntersectionPaint)
             }
