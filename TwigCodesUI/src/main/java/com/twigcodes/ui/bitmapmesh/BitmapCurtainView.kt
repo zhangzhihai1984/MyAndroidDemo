@@ -14,11 +14,11 @@ import kotlin.math.min
 
 class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
-        const val DEFAULT_MESH_WIDTH = 20
-        const val DEFAULT_MESH_HEIGHT = 20
-        const val DEFAULT_GRID_COLOR = Color.BLACK
-        const val DEFAULT_GRID_WIDTH = 3
-        const val DEFAULT_MASK_COLOR = Color.WHITE
+        private const val DEFAULT_MESH_WIDTH = 20
+        private const val DEFAULT_MESH_HEIGHT = 20
+        private const val DEFAULT_GRID_COLOR = Color.BLACK
+        private const val DEFAULT_GRID_WIDTH = 3
+        private const val DEFAULT_MASK_COLOR = Color.WHITE
         private const val PI2 = 2 * Math.PI
     }
 

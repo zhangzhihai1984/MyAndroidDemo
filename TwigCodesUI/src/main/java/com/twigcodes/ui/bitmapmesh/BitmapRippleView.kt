@@ -20,14 +20,14 @@ import kotlin.math.sqrt
 
 class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
-        const val DEFAULT_MESH_WIDTH = 20
-        const val DEFAULT_MESH_HEIGHT = 20
-        const val DEFAULT_GRID_COLOR = Color.BLACK
-        const val DEFAULT_GRID_WIDTH = 3
-        const val DEFAULT_MASK_COLOR = Color.WHITE
-        const val DEFAULT_RIPPLE_WIDTH = 60f
-        const val INIT_RIPPLE_RADIUS = 30f
-        const val OFFSET_PER_PERIOD = 15f
+        private const val DEFAULT_MESH_WIDTH = 20
+        private const val DEFAULT_MESH_HEIGHT = 20
+        private const val DEFAULT_GRID_COLOR = Color.BLACK
+        private const val DEFAULT_GRID_WIDTH = 3
+        private const val DEFAULT_MASK_COLOR = Color.WHITE
+        private const val DEFAULT_RIPPLE_WIDTH = 60f
+        private const val INIT_RIPPLE_RADIUS = 30f
+        private const val OFFSET_PER_PERIOD = 15f
     }
 
     private val mMeshWidth: Int
