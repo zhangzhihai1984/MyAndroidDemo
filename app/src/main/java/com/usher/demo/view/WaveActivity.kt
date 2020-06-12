@@ -16,9 +16,8 @@ class WaveActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        Observable.interval(200, TimeUnit.MILLISECONDS)
+        Observable.interval(0, 200, TimeUnit.MILLISECONDS)
                 .take(100 + 1)
-                .startWith(0)
                 .map { it.toInt() }
                 .compose(RxUtil.getSchedulerComposer())
                 .`as`(RxUtil.autoDispose(this))
