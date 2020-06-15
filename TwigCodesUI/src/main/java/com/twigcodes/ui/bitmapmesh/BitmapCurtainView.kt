@@ -24,6 +24,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         private const val DEFAULT_MASK_COLOR = Color.WHITE
         private const val PI2 = 2 * Math.PI
         private const val WAVE_MAX_HEIGHT = 50
+        private const val WAVE_MAX_WIDHT = 500
     }
 
     private val mMeshWidth: Int
@@ -41,7 +42,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // ω
-    private var omega = 0.0
+    private var omegaV = 0.0
+    private var omegaH = 0.0
 
     var bitmap: Bitmap? = null
         set(value) {
@@ -97,7 +99,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 .subscribe {
                     makeCoordinates(mRowMajorWarpCoordinates)
                     makeCoordinates(mRowMajorOriginalCoordinates)
-                    omega = PI2 * 2.5 / (width.toFloat() - paddingStart - paddingEnd)
+                    omegaV = PI2 * 2.5 / (width.toFloat() - paddingStart - paddingEnd)
+                    omegaH = PI2 * 0.5 / (height.toFloat() - paddingTop - paddingBottom)
 
                     invalidate()
                 }
@@ -161,14 +164,24 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      * 是逐渐衰减的, 也就是说, 某一时刻, 最左侧始终是扭曲程度最大的, 向右逐渐减小, "靠墙的"最右侧为0.
      * 之所以强调"某一时刻", 是因为这个比较范畴是"相互比较", 还有整个过程中的"自我比较", 也就是某一条纵向的线在开始和结束
      * 时刻的扭曲程度都是0, 中间的某个时刻达到最大值, 当然这个最大值还是相对自己, 只有最左侧的线会达到ΔX2max.
+     *
+     * 我们先不考虑"自我比较"
+     *
      */
     private fun makeWarpCoordinates() {
         mRowMajorOriginalCoordinates.forEachIndexed { row, rowCoordinates ->
             rowCoordinates.forEachIndexed { column, coordinate ->
-                val a = 500 * sin(PI2 * 0.5 / (height.toFloat() - paddingTop - paddingBottom) * (coordinate.second - paddingTop)).toFloat()
-                val pendingX = coordinate.first + (width - paddingEnd - coordinate.first) * percent
-                val x = pendingX + (1 - pendingX / (width - paddingEnd)) * a * percent
-                val y = coordinate.second - WAVE_MAX_HEIGHT * sin(omega * (coordinate.first - paddingStart)).toFloat() * percent
+                val deltaX1Max = width - paddingEnd - coordinate.first
+                val deltax1 = deltaX1Max * percent
+
+                val x1Proportion = (coordinate.first - paddingStart + deltax1) / (width - paddingStart - paddingEnd)
+                val deltaX2Max = WAVE_MAX_WIDHT * sin(omegaH * (coordinate.second - paddingTop)).toFloat()
+                val deltax2 = deltaX2Max * (1 - x1Proportion) * x1Proportion
+
+                val x = coordinate.first + deltax1 + deltax2
+
+                val deltaYMax = WAVE_MAX_HEIGHT * sin(omegaV * (coordinate.first - paddingStart)).toFloat()
+                val y = coordinate.second - deltaYMax * percent
 
                 mRowMajorWarpCoordinates[row][column] = x to y
             }
