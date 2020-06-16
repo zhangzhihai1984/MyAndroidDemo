@@ -33,7 +33,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private val mMaskColor: Int
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private var mColors: IntArray? = null
+    private var mColors: IntArray
 
     private val mBitmapPaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
@@ -64,10 +64,6 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             invalidate()
         }
 
-    var vertexCount: Int = 0
-        get() = (mMeshWidth + 1) * (mMeshHeight + 1)
-        private set
-
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapCurtainView, defStyleAttr, defStyleRes)
         bitmap = a.getDrawable(R.styleable.BitmapCurtainView_android_src)?.toBitmap()
@@ -75,6 +71,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
         debug = a.getBoolean(R.styleable.BitmapCurtainView_debug, false)
+
+        mColors = IntArray((mMeshWidth + 1) * (mMeshHeight + 1)) { Color.WHITE }
 
         mGridPaint.run {
             color = a.getColor(R.styleable.BitmapCurtainView_meshGridColor, DEFAULT_GRID_COLOR)
@@ -141,8 +139,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      *
      * 关于ω_v:
      * 对于sinx来说, 一个周期的长度为2π, 对于sin0.5x来说, 一个周期的长度为4π, 那么对于sinωx来说, 一个周期的长度为2π/ω.
-     * ω_v = 2π/waveLength = 2π / ((width - paddingStart - paddingEnd) / multiple)
-     *                   = 2π * multiple / (width - paddingStart - paddingEnd)
+     * ω_v = 2π/waveLength
+     *     = 2π / ((width - paddingStart - paddingEnd) / multiple)
+     *     = 2π * multiple / (width - paddingStart - paddingEnd)
      *
      * 上述实现的效果与现实中的效果其实有差距的. 因为在现实中, 当我们用手从左向右收起窗帘的时候, 纵向有折叠的效果的同时,
      * 横向也会因手的拉动有从左向右扭曲的效果, 这就需要相同的原始x移动后的x连接起来是一条有弧度的曲线, 而不是一条直线.
@@ -181,6 +180,18 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      * 于是:
      * Δx2 = ΔX2max * 4 * (1 - percent） * percent * (1 - x原Proportion)
      *
+     *
+     *
+     * 关于阴影:
+     * 如果看上去有立体的效果, 我们还需要在褶皱处加上"阴影".
+     *
+     * (ΔYmax * percent) / waveHeight ∈ [-1, 1]
+     * 其中[-1, 0)从最暗向白色过渡, [0, 1]为白色
+     *
+     * blackRatio =  min((ΔYmax * percent) / waveHeight, 0)       ∈ [-1, 0]
+     * blackRatio = -min((ΔYmax * percent) / waveHeight, 0)       ∈ [1, 0]
+     * blackRatio = -min((ΔYmax * percent) / waveHeight, 0) * 0.2 ∈ [0.2, 0]
+     * 0.2这个值的目的是不要太暗, 稍微有点就行
      */
     private fun makeWarpCoordinates() {
         mRowMajorOriginalCoordinates.forEachIndexed { row, rowCoordinates ->
@@ -198,6 +209,10 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 val y = coordinate.second - deltaYMax * percent
 
                 mRowMajorWarpCoordinates[row][column] = x to y
+
+                val blackRatio = -min(deltaYMax * percent / WAVE_MAX_HEIGHT, 0f) * 0.2f
+                val component = (255 * (1 - blackRatio)).toInt()
+                mColors[(mMeshWidth + 1) * row + column] = Color.argb(255, component, component, component)
             }
         }
     }
@@ -255,17 +270,5 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             drawGrid(canvas)
             drawIntersection(canvas)
         }
-    }
-
-    fun colorVertex(colors: IntArray) {
-        mColors = colors
-        invalidate()
-    }
-
-    fun colorVertex(color: Int?) {
-        mColors = color?.run {
-            (1..(mMeshWidth + 1) * (mMeshHeight + 1)).map { this }.toIntArray()
-        }
-        invalidate()
     }
 }
