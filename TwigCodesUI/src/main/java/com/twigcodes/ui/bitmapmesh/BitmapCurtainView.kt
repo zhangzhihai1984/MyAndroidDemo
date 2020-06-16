@@ -24,7 +24,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         private const val DEFAULT_MASK_COLOR = Color.WHITE
         private const val PI2 = 2 * Math.PI
         private const val WAVE_MAX_HEIGHT = 50
-        private const val WAVE_MAX_WIDHT = 500
+        private const val WAVE_MAX_WIDHT = 150
     }
 
     private val mMeshWidth: Int
@@ -110,7 +110,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 .subscribe { event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
-                            percent = event.x / width
+                            percent = (event.x - paddingStart) / (width - paddingStart - paddingEnd)
                         }
                     }
                 }
@@ -145,9 +145,13 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      *                   = 2π * multiple / (width - paddingStart - paddingEnd)
      *
      * 上述实现的效果与现实中的效果其实有差距的. 因为在现实中, 当我们用手从左向右收起窗帘的时候, 纵向有折叠的效果的同时,
-     * 横向也会因手的拉动有从左向右扭曲的效果, 也就是说相同的原始x不应该得到相同的x, 需要把原始y这个因素也考虑在内. 这样x变成:
+     * 横向也会因手的拉动有从左向右扭曲的效果, 这就需要相同的原始x移动后的x连接起来是一条有弧度的曲线, 而不是一条直线.
+     * 因此需要把原始y这个因素也考虑在内.
+     *
+     * 于是, 原始x需要"二次移动":
      * x = 原始x + Δx1 + Δx2
      * 其中, Δx1 = ΔX1max * percent = (width - paddingEnd - 原始x) * percent
+     * Δx1是正常的线性移动, Δx2实现"扭曲".
      *
      *   0 -----> x
      *   |
@@ -159,13 +163,23 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      * ω_h = 2π * multiple / (height - paddingTop - paddingBottom)
      * ΔX2max = waveWidth * sin(ω_h * (原始y - paddingTop))
      *
-     * 接下来需要考虑的是如何得出Δx2, 也就是如何"加工"ΔX2max和percent.
-     * 考虑一下现实中从左向右收起窗帘过程, 最左侧的部分开始向右侧扭曲, 可以将其想象为是一种"力的传递", 同时这种"力的传递"
+     * 分析一下现实中从左向右收起窗帘过程, 最左侧的部分开始向右侧扭曲, 可以将其想象为是一种"力的传递", 同时这种"力的传递"
      * 是逐渐衰减的, 也就是说, 某一时刻, 最左侧始终是扭曲程度最大的, 向右逐渐减小, "靠墙的"最右侧为0.
-     * 之所以强调"某一时刻", 是因为这个比较范畴是"相互比较", 还有整个过程中的"自我比较", 也就是某一条纵向的线在开始和结束
-     * 时刻的扭曲程度都是0, 中间的某个时刻达到最大值, 当然这个最大值还是相对自己, 只有最左侧的线会达到ΔX2max.
+     * 之所以强调"某一时刻", 是因为这个比较范畴是"相互比较", 还有整个过程中的"自我比较", 也就是对于某一条曲线来说,
+     * 在开始和结束时刻的扭曲程度都是0, 中间的某个时刻达到最大值, 当然这个最大值还是相对自己, 只有最左侧的曲线会达到ΔX2max.
+     * 总结一下, 就是Δx2需要满足"自我比较"和"相互比较"两个原则.
      *
-     * 我们先不考虑"自我比较"
+     * 我们先来看"自我比较"原则: 变量∈[0,1], 0和1值为0, 中间0.5达到最大值, 我们首先能想到的就是y=x(1-x)这样的函数,
+     * 0.5时达到最大值0.25, 因此我们需要将其变成y=4x(1-x), 于是
+     * Δx2 = ΔX2max * 4 * (1 - percent） * percent
+     *
+     * 它似乎并不符合"相互比较"原则, "相互比较"原则是在某一时刻, 从左至右曲线扭曲程度逐渐减小, 最右为0. 但是目前的Δx2在
+     * 某一时刻的所有的曲线的的扭曲程度是一样的.
+     * 考虑到原始x是从左至右逐渐变大的, 既然需要从左至右曲线扭曲程度逐渐减小, 那么就将"原始x距离最右侧的百分比"这个因素
+     * 考虑在内:
+     * x原Proportion = (x原 - paddingStart) / (width - paddingStart - paddingEnd)
+     * 于是:
+     * Δx2 = ΔX2max * 4 * (1 - percent） * percent * (1 - x原Proportion)
      *
      */
     private fun makeWarpCoordinates() {
@@ -174,9 +188,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 val deltaX1Max = width - paddingEnd - coordinate.first
                 val deltax1 = deltaX1Max * percent
 
-                val x1Proportion = (coordinate.first - paddingStart + deltax1) / (width - paddingStart - paddingEnd)
+                val xProportion = (coordinate.first - paddingStart) / (width - paddingStart - paddingEnd)
                 val deltaX2Max = WAVE_MAX_WIDHT * sin(omegaH * (coordinate.second - paddingTop)).toFloat()
-                val deltax2 = deltaX2Max * (1 - x1Proportion) * x1Proportion
+                val deltax2 = deltaX2Max * 4 * (1 - percent) * percent * (1 - xProportion)
 
                 val x = coordinate.first + deltax1 + deltax2
 
