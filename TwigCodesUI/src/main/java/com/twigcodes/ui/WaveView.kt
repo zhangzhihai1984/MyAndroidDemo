@@ -40,7 +40,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      * 但是, 如果让用户来对ω进行赋值会是个比较痛疼的事情, 因为它不是一个很直观的长度或系数, 他们更关心的应该是一个周期的长度是多少,
      * 或者干脆一点, [WaveView]的宽度内显示几个周期, 比如说我想要两个周期的效果, 那么这个参数就传2.
      *
-     * ω = 2π/waveLength = 2π/(width/multiple)
+     * ω = 2π/waveLength = 2π/(width/multiple) = 2π*multiple/width
      */
     private val mWaveLengthMultiple: Float
 
@@ -113,7 +113,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      * y=Asin(ωx+φ)+k
      *
      * A=waveHeight
-     * ω=2π/(width*multiple)
+     * ω=2π*multiple/width
      * φ+=Δφ  1. φ∈[0,2π) 2. φ*period=2π
      * k=waveHeight
      */
@@ -153,7 +153,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                     .subscribe {
                         mRight = width.toFloat()
                         mBottom = height.toFloat()
-                        omega = PI2 / (width.toFloat() / mWaveLengthMultiple)
+                        omega = PI2 * mWaveLengthMultiple / width.toFloat()
 
                         startWave()
                     }

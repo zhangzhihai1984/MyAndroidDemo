@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_image_blur.*
 
 class ImageBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
     companion object {
-        private val RES_IDS = listOf(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4, R.drawable.banner5)
+        private val RES_IDS = listOf(R.drawable.duggee1, R.drawable.duggee2, R.drawable.duggee3, R.drawable.duggee4, R.drawable.duggee5)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

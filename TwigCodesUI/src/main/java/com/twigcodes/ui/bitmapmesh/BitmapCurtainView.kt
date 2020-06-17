@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding3.view.globalLayouts
 import com.jakewharton.rxbinding3.view.touches
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
@@ -23,8 +24,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         private const val DEFAULT_GRID_WIDTH = 3
         private const val DEFAULT_MASK_COLOR = Color.WHITE
         private const val PI2 = 2 * Math.PI
-        private const val WAVE_MAX_HEIGHT = 50
-        private const val WAVE_MAX_WIDHT = 150
+        private const val WAVE_MAX_HEIGHT = 30
+        private const val WAVE_MAX_WIDHT = 120
     }
 
     private val mMeshWidth: Int
@@ -33,7 +34,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private val mMaskColor: Int
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private var mColors: IntArray
+    private val mColors: IntArray
 
     private val mBitmapPaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
@@ -45,6 +46,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private var omegaV = 0.0
     private var omegaH = 0.0
 
+    private var mCenterY = 0f
+
     var bitmap: Bitmap? = null
         set(value) {
             field = value
@@ -53,7 +56,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
 
     var percent: Float = 1f
         set(value) {
-            field = min(max(value, 0f), 1f)
+            field = min(max(value, 0f), 0.8f)
             makeWarpCoordinates()
             invalidate()
         }
@@ -98,7 +101,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                     makeCoordinates(mRowMajorWarpCoordinates)
                     makeCoordinates(mRowMajorOriginalCoordinates)
                     omegaV = PI2 * 2.5 / (width.toFloat() - paddingStart - paddingEnd)
-                    omegaH = PI2 * 0.5 / (height.toFloat() - paddingTop - paddingBottom)
+                    omegaH = PI2 * 0.7 / (height.toFloat() - paddingTop - paddingBottom)
+
+                    mCenterY = (height.toFloat() - paddingTop - paddingBottom) / 2
 
                     invalidate()
                 }
@@ -197,20 +202,23 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         mRowMajorOriginalCoordinates.forEachIndexed { row, rowCoordinates ->
             rowCoordinates.forEachIndexed { column, coordinate ->
                 val deltaX1Max = width - paddingEnd - coordinate.first
-                val deltax1 = deltaX1Max * percent
+                val deltaX1 = deltaX1Max * percent
 
                 val xProportion = (coordinate.first - paddingStart) / (width - paddingStart - paddingEnd)
                 val deltaX2Max = WAVE_MAX_WIDHT * sin(omegaH * (coordinate.second - paddingTop)).toFloat()
-                val deltax2 = deltaX2Max * 4 * (1 - percent) * percent * (1 - xProportion)
+                val deltaX2 = deltaX2Max * 4 * (1 - percent) * percent * (1 - xProportion)
 
-                val x = coordinate.first + deltax1 + deltax2
+                val x = coordinate.first + deltaX1 + deltaX2
 
-                val deltaYMax = WAVE_MAX_HEIGHT * sin(omegaV * (coordinate.first - paddingStart)).toFloat()
-                val y = coordinate.second - deltaYMax * percent
+                val deltaY1Max = WAVE_MAX_HEIGHT * cos(omegaV * (coordinate.first - paddingStart)).toFloat()
+                val deltaY1 = deltaY1Max * percent
+                val deltaY2Max = (mCenterY - coordinate.second) / mCenterY * WAVE_MAX_HEIGHT
+                val deltaY2 = deltaY2Max * percent
+                val y = coordinate.second - deltaY1 + deltaY2
 
                 mRowMajorWarpCoordinates[row][column] = x to y
 
-                val blackRatio = -min(deltaYMax * percent / WAVE_MAX_HEIGHT, 0f) * 0.2f
+                val blackRatio = -min(deltaY1Max * percent / WAVE_MAX_HEIGHT, 0f) * 0.2f
                 val component = (255 * (1 - blackRatio)).toInt()
                 mColors[(mMeshWidth + 1) * row + column] = Color.argb(255, component, component, component)
             }
