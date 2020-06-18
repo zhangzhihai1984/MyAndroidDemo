@@ -36,6 +36,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mMeshHeight: Int
     private var mIntersectionRadius: Float
     private var mColors: IntArray
+    private var mTouchable: Boolean
 
     //    private val mMaskColor: Int
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
@@ -79,6 +80,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_HEIGHT)
 //        mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
+        mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_meshTouchable, true)
         debug = a.getBoolean(R.styleable.BitmapCurtainView_debug, false)
 
         mColors = IntArray((mMeshWidth + 1) * (mMeshHeight + 1)) { Color.WHITE }
@@ -99,10 +101,11 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         initView()
     }
 
-    internal fun config(meshWidth: Int, meshHeight: Int, bitmap: Bitmap?, debug: Boolean, gridColor: Int, gridWidth: Int) {
+    internal fun config(meshWidth: Int, meshHeight: Int, bitmap: Bitmap?, touchable: Boolean, debug: Boolean, gridColor: Int, gridWidth: Int) {
         mMeshWidth = meshWidth
         mMeshHeight = meshHeight
         this.bitmap = bitmap
+        mTouchable = touchable
         this.debug = debug
 
         mColors = IntArray((mMeshWidth + 1) * (mMeshHeight + 1)) { Color.WHITE }
@@ -133,7 +136,18 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                     invalidate()
                 }
 
-        touches { true }
+        touches { event ->
+            if (mTouchable) {
+                when (event.action) {
+                    /**
+                     * 在手指落入窗帘区域的情况下处理滑动, 否则在空白处也可以滑来滑去比较奇怪.
+                     */
+                    MotionEvent.ACTION_DOWN -> (event.x - paddingStart) / (width - paddingStart - paddingEnd) >= percent
+                    else -> true
+                }
+            } else
+                false
+        }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     when (event.action) {

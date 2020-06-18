@@ -27,12 +27,13 @@ class CurtainLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         val bitmap = a.getDrawable(R.styleable.CurtainLayout_android_src)?.toBitmap()
         val meshWidth = a.getInteger(R.styleable.CurtainLayout_meshRow, BitmapCurtainView.DEFAULT_MESH_WIDTH)
         val meshHeight = a.getInteger(R.styleable.CurtainLayout_meshColumn, BitmapCurtainView.DEFAULT_MESH_HEIGHT)
+        val touchable = a.getBoolean(R.styleable.CurtainLayout_meshTouchable, true)
         val debug = a.getBoolean(R.styleable.CurtainLayout_debug, false)
         val gridColor = a.getColor(R.styleable.CurtainLayout_meshGridColor, BitmapCurtainView.DEFAULT_GRID_COLOR)
         val gridWidth = a.getDimensionPixelSize(R.styleable.CurtainLayout_meshGridWidth, BitmapCurtainView.DEFAULT_GRID_WIDTH)
         a.recycle()
 
-        mCurtainView.config(meshWidth, meshHeight, bitmap, debug, gridColor, gridWidth)
+        mCurtainView.config(meshWidth, meshHeight, bitmap, touchable, debug, gridColor, gridWidth)
 
         globalLayouts()
                 .take(1)
