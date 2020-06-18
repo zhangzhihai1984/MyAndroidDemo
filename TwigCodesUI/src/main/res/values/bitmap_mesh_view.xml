@@ -36,4 +36,15 @@
         <attr name="meshMaskColor" />
         <attr name="debug" />
     </declare-styleable>
+
+    <declare-styleable name="CurtainLayout">
+        <attr name="android:src" format="reference" />
+        <attr name="meshRow" />
+        <attr name="meshColumn" />
+        <attr name="meshGridColor" />
+        <attr name="meshGridWidth" />
+        <attr name="meshMaskColor" />
+        <attr name="debug" />
+    </declare-styleable>
+
 </resources>

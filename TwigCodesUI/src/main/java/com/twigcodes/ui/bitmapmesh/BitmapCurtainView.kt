@@ -1,7 +1,10 @@
 package com.twigcodes.ui.bitmapmesh
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -18,26 +21,28 @@ import kotlin.math.sin
 
 class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
-        private const val DEFAULT_MESH_WIDTH = 20
-        private const val DEFAULT_MESH_HEIGHT = 20
-        private const val DEFAULT_GRID_COLOR = Color.BLACK
-        private const val DEFAULT_GRID_WIDTH = 3
-        private const val DEFAULT_MASK_COLOR = Color.WHITE
+        internal const val DEFAULT_MESH_WIDTH = 20
+        internal const val DEFAULT_MESH_HEIGHT = 20
+        internal const val DEFAULT_GRID_COLOR = Color.BLACK
+        internal const val DEFAULT_GRID_WIDTH = 3
+
+        //        private const val DEFAULT_MASK_COLOR = Color.WHITE
         private const val PI2 = 2 * Math.PI
         private const val WAVE_MAX_HEIGHT = 30
         private const val WAVE_MAX_WIDHT = 120
     }
 
-    private val mMeshWidth: Int
-    private val mMeshHeight: Int
-    private val mIntersectionRadius: Float
-    private val mMaskColor: Int
+    private var mMeshWidth: Int
+    private var mMeshHeight: Int
+    private var mIntersectionRadius: Float
+    private var mColors: IntArray
+
+    //    private val mMaskColor: Int
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
-    private val mColors: IntArray
 
     private val mBitmapPaint = Paint().apply {
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
+//        xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
     }
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -47,6 +52,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private var omegaH = 0.0
 
     private var mCenterY = 0f
+    private var mDownX = 0f
 
     var bitmap: Bitmap? = null
         set(value) {
@@ -54,7 +60,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             invalidate()
         }
 
-    var percent: Float = 1f
+    var percent: Float = 0f
         set(value) {
             field = min(max(value, 0f), 0.8f)
             makeWarpCoordinates()
@@ -72,7 +78,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         bitmap = a.getDrawable(R.styleable.BitmapCurtainView_android_src)?.toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_HEIGHT)
-        mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
+//        mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
         debug = a.getBoolean(R.styleable.BitmapCurtainView_debug, false)
 
         mColors = IntArray((mMeshWidth + 1) * (mMeshHeight + 1)) { Color.WHITE }
@@ -91,6 +97,25 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         a.recycle()
 
         initView()
+    }
+
+    internal fun config(meshWidth: Int, meshHeight: Int, bitmap: Bitmap?, debug: Boolean, gridColor: Int, gridWidth: Int) {
+        mMeshWidth = meshWidth
+        mMeshHeight = meshHeight
+        this.bitmap = bitmap
+        this.debug = debug
+
+        mColors = IntArray((mMeshWidth + 1) * (mMeshHeight + 1)) { Color.WHITE }
+
+        mGridPaint.run {
+            color = gridColor
+            strokeWidth = gridWidth.toFloat()
+            mIntersectionRadius = gridWidth.toFloat() * 2
+        }
+
+        mIntersectionPaint.run {
+            color = gridColor
+        }
     }
 
     private fun initView() {
@@ -112,9 +137,13 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     when (event.action) {
-                        MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
-                            percent = (event.x - paddingStart) / (width - paddingStart - paddingEnd)
+                        MotionEvent.ACTION_DOWN -> mDownX = event.x
+                        MotionEvent.ACTION_MOVE -> {
+                            percent += (event.x - mDownX) / (width - paddingStart - paddingEnd)
+                            mDownX = event.x
+//                            percent = (event.x - paddingStart) / (width - paddingStart - paddingEnd)
                         }
+                        MotionEvent.ACTION_UP -> mDownX = 0f
                     }
                 }
     }
@@ -290,7 +319,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawColor(mMaskColor)
+//        canvas.drawColor(mMaskColor)
         drawBitmapMesh(canvas)
 
         if (debug) {
