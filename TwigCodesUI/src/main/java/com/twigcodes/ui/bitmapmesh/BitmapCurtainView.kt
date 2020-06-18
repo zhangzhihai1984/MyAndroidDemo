@@ -154,7 +154,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      *
      * 于是, 原始x需要"二次移动":
      * x = 原始x + Δx1 + Δx2
-     * 其中, Δx1 = ΔX1max * percent = (width - paddingEnd - 原始x) * percent
+     * 其中,
+     * ΔX1max = width - paddingEnd - 原始x
+     * Δx1 = ΔX1max * percent
      * Δx1是正常的线性移动, Δx2实现"扭曲".
      *
      *   0 -----> x
@@ -162,7 +164,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      *   | y
      *   ∨
      *
-     * "横向扭曲"的实现依然是依赖sin函数, 只不过x与y互换位置, 变成了已知y求x.
+     * "横向扭曲"由sin函数实现, 只不过x与y互换位置, 变成了已知y求x.
      * 参照上面对于ω的说明, 这里的ω:
      * ω_h = 2π * multiple / (height - paddingTop - paddingBottom)
      * ΔX2max = waveWidth * sin(ω_h * (原始y - paddingTop))
@@ -181,33 +183,46 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
      * 某一时刻的所有的曲线的的扭曲程度是一样的.
      * 考虑到原始x是从左至右逐渐变大的, 既然需要从左至右曲线扭曲程度逐渐减小, 那么就将"原始x距离最右侧的百分比"这个因素
      * 考虑在内:
-     * x原Proportion = (x原 - paddingStart) / (width - paddingStart - paddingEnd)
+     * x原Proportion = (原始x - paddingStart) / (width - paddingStart - paddingEnd)
      * 于是:
      * Δx2 = ΔX2max * 4 * (1 - percent） * percent * (1 - x原Proportion)
      *
+     * 目前实现的效果已经比较自然了, 但是在滑动过程中可以发现, 在三角函数的作用下, 整个图片实际上是逐渐被"拉高了", 这样就
+     * 会使顶部和底部的部分区域被"挤出去了". 这就需要以centerY为中心, 让上下两部分的y同时按距离比例向中间靠拢, 让所有的
+     * 部分均可见.
      *
+     * 于是, 原始y需要"二次移动":
+     * y = 原始y - Δy1 + Δy2
+     * 其中,
+     * ΔY1max = waveHeight * sin(ω_v * (原始x - paddingStart))
+     * Δy1 = ΔY1max * percent
+     * ΔY2max = ((centerY - 原始y) / centerY) * waveHeight
+     * Δy2 = ΔY2max * percent
+     * Δy1实现"折叠", Δy2实现"靠拢".
+     * 需要解释一下, 之所以"减去"Δy1, 可以看一下上面的坐标系, 手机的纵坐标与数学计算的坐标是相反的, 而横坐标没有这个问题.
      *
      * 关于阴影:
-     * 如果看上去有立体的效果, 我们还需要在褶皱处加上"阴影".
+     * 如果希望看上去更有立体的效果, 我们还需要在"视觉凹进去"的区域加上"阴影".
+     * 所谓"视觉凹进去"的区域就是Δy1为负数的情况, 所谓的"阴影"就是将顶点颜色变暗.
+     * 对于"凸起"的部分, 也就是Δy1为正数的情况, 顶点的颜色为白色.
+     * 总之, 原则就如果Δy1为负数, Δy1越小, 顶点颜色越深, 当然不能为黑色, 因为太暗了也不美观, 我们需要加个系数控制一下.
+     * 如果Δy1为正数, 顶点为白色.
+     * 当Δy1为负数时:
+     * ratio = -Δy1 / waveHeight * 0.2
+     * 其中, -Δy1 / waveHeight ∈ [0, 1], 越接近1越黑, 上面说了, 为了不影响美观, 不能太黑, 经过测试, 乘了一个0.2.
+     * 简单来说, 就是最暗也就暗到20%的黑. 由于全部255表示白色, 因此:
+     * component = 255 * (1 - ratio)
+     * color = argb(255, component, component, component)
      *
-     * (ΔYmax * percent) / waveHeight ∈ [-1, 1]
-     * 其中[-1, 0)从最暗向白色过渡, [0, 1]为白色
-     *
-     * blackRatio =  min((ΔYmax * percent) / waveHeight, 0)       ∈ [-1, 0]
-     * blackRatio = -min((ΔYmax * percent) / waveHeight, 0)       ∈ [1, 0]
-     * blackRatio = -min((ΔYmax * percent) / waveHeight, 0) * 0.2 ∈ [0.2, 0]
-     * 0.2这个值的目的是不要太暗, 稍微有点就行
      */
     private fun makeWarpCoordinates() {
         mRowMajorOriginalCoordinates.forEachIndexed { row, rowCoordinates ->
             rowCoordinates.forEachIndexed { column, coordinate ->
                 val deltaX1Max = width - paddingEnd - coordinate.first
                 val deltaX1 = deltaX1Max * percent
-
                 val xProportion = (coordinate.first - paddingStart) / (width - paddingStart - paddingEnd)
                 val deltaX2Max = WAVE_MAX_WIDHT * sin(omegaH * (coordinate.second - paddingTop)).toFloat()
                 val deltaX2 = deltaX2Max * 4 * (1 - percent) * percent * (1 - xProportion)
-
                 val x = coordinate.first + deltaX1 + deltaX2
 
                 val deltaY1Max = WAVE_MAX_HEIGHT * cos(omegaV * (coordinate.first - paddingStart)).toFloat()
@@ -218,9 +233,14 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
 
                 mRowMajorWarpCoordinates[row][column] = x to y
 
-                val blackRatio = -min(deltaY1Max * percent / WAVE_MAX_HEIGHT, 0f) * 0.2f
-                val component = (255 * (1 - blackRatio)).toInt()
-                mColors[(mMeshWidth + 1) * row + column] = Color.argb(255, component, component, component)
+                mColors[(mMeshWidth + 1) * row + column] = when {
+                    deltaY1 < 0 -> {
+                        val ratio = -deltaY1 / WAVE_MAX_HEIGHT * 0.2f
+                        val component = (255 * (1 - ratio)).toInt()
+                        Color.argb(255, component, component, component)
+                    }
+                    else -> Color.WHITE
+                }
             }
         }
     }
@@ -233,7 +253,6 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         bitmap?.run {
             canvas.drawBitmapMesh(this, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
         }
-
     }
 
     private fun drawGrid(canvas: Canvas) {
