@@ -1,5 +1,6 @@
 package com.twigcodes.ui.bitmapmesh
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -7,7 +8,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.VelocityTracker
 import android.view.View
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.widget.Scroller
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding3.view.globalLayouts
@@ -47,6 +52,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     }
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private val mScroller by lazy { Scroller(context, LinearInterpolator()) }
+    private val mVelocityTracker by lazy { VelocityTracker.obtain() }
 
     // ω
     private var omegaV = 0.0
@@ -150,14 +158,19 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         }
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
+                    mVelocityTracker.addMovement(event)
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> mDownX = event.x
                         MotionEvent.ACTION_MOVE -> {
                             percent += (event.x - mDownX) / (width - paddingStart - paddingEnd)
                             mDownX = event.x
-//                            percent = (event.x - paddingStart) / (width - paddingStart - paddingEnd)
                         }
-                        MotionEvent.ACTION_UP -> mDownX = 0f
+                        MotionEvent.ACTION_UP -> {
+                            mDownX = 0f
+                            mVelocityTracker.computeCurrentVelocity(1000)
+                            val startX = (width - paddingStart - paddingEnd) * percent + paddingStart
+                            mScroller.fling(startX.toInt(), 0, mVelocityTracker.xVelocity.toInt(), 0, paddingStart, width - paddingStart - paddingEnd, 0, 0)
+                        }
                     }
                 }
     }
@@ -340,5 +353,27 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             drawGrid(canvas)
             drawIntersection(canvas)
         }
+    }
+
+    override fun computeScroll() {
+        if (mScroller.computeScrollOffset()) {
+            percent = (mScroller.currX - paddingStart).toFloat() / (width - paddingStart - paddingEnd)
+        }
+    }
+
+    fun open() {
+        ValueAnimator.ofFloat(percent, 1f).apply {
+            duration = 300
+            interpolator = DecelerateInterpolator()
+            addUpdateListener { percent = animatedValue as Float }
+        }.start()
+    }
+
+    fun close() {
+        ValueAnimator.ofFloat(percent, 0f).apply {
+            interpolator = DecelerateInterpolator()
+            duration = 300
+            addUpdateListener { percent = animatedValue as Float }
+        }.start()
     }
 }

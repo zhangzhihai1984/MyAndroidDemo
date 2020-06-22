@@ -12,7 +12,7 @@ import com.twigcodes.ui.util.RxUtil
 
 class CurtainLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val mCurtainView: BitmapCurtainView = BitmapCurtainView(context)
+    private val mCurtainView: BitmapCurtainView = BitmapCurtainView(context).apply { elevation = 100f }
 
     var debug: Boolean = false
         set(value) {
@@ -21,8 +21,6 @@ class CurtainLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         }
 
     init {
-        addView(mCurtainView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.CurtainLayout, defStyleAttr, defStyleRes)
         val bitmap = a.getDrawable(R.styleable.CurtainLayout_android_src)?.toBitmap()
         val meshWidth = a.getInteger(R.styleable.CurtainLayout_meshRow, BitmapCurtainView.DEFAULT_MESH_WIDTH)
@@ -33,16 +31,20 @@ class CurtainLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         val gridWidth = a.getDimensionPixelSize(R.styleable.CurtainLayout_meshGridWidth, BitmapCurtainView.DEFAULT_GRID_WIDTH)
         a.recycle()
 
-        mCurtainView.config(meshWidth, meshHeight, bitmap, touchable, debug, gridColor, gridWidth)
-
         globalLayouts()
                 .take(1)
                 .`as`(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
+                    mCurtainView.config(meshWidth, meshHeight, bitmap, touchable, debug, gridColor, gridWidth)
+                    addView(mCurtainView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 }
     }
 
     fun open() {
+        mCurtainView.open()
+    }
 
+    fun close() {
+        mCurtainView.close()
     }
 }
