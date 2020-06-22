@@ -20,7 +20,7 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.singleClick())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    bitmap_curtain_view1.debug = bitmap_curtain_view1.debug.not()
+                    bitmap_curtain_layout1.debug = bitmap_curtain_layout1.debug.not()
                     bitmap_curtain_layout2.debug = bitmap_curtain_layout2.debug.not()
                 }
 
@@ -28,7 +28,7 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.singleClick())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    bitmap_curtain_view1.open()
+                    bitmap_curtain_layout1.open()
                     bitmap_curtain_layout2.open()
                 }
 
@@ -36,7 +36,7 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.singleClick())
                 .`as`(RxUtil.autoDispose(this))
                 .subscribe {
-                    bitmap_curtain_view1.close()
+                    bitmap_curtain_layout1.close()
                     bitmap_curtain_layout2.close()
                 }
     }

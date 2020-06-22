@@ -30,6 +30,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         internal const val DEFAULT_MESH_HEIGHT = 20
         internal const val DEFAULT_GRID_COLOR = Color.BLACK
         internal const val DEFAULT_GRID_WIDTH = 3
+        internal const val DEFAULT_MAX_PERCENT = 0.8f
 
         //        private const val DEFAULT_MASK_COLOR = Color.WHITE
         private const val PI2 = 2 * Math.PI
@@ -40,6 +41,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mMeshWidth: Int
     private var mMeshHeight: Int
     private var mIntersectionRadius: Float
+    private var mMaxPercent: Float
     private var mColors: IntArray
     private var mTouchable: Boolean
 
@@ -71,7 +73,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
 
     var percent: Float = 0f
         set(value) {
-            field = min(max(value, 0f), 0.8f)
+            field = min(max(value, 0f), mMaxPercent)
             makeWarpCoordinates()
             invalidate()
         }
@@ -87,9 +89,10 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         bitmap = a.getDrawable(R.styleable.BitmapCurtainView_android_src)?.toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMaxPercent = min(max(a.getFloat(R.styleable.BitmapCurtainView_meshCurtainMaxPercent, DEFAULT_MAX_PERCENT), 0f), 1f)
 //        mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
-        mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_meshTouchable, true)
-        debug = a.getBoolean(R.styleable.BitmapCurtainView_debug, false)
+        mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_meshCurtainTouchable, true)
+        debug = a.getBoolean(R.styleable.BitmapCurtainView_meshDebug, false)
 
         mColors = IntArray((mMeshWidth + 1) * (mMeshHeight + 1)) { Color.WHITE }
 
@@ -109,10 +112,11 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         initView()
     }
 
-    internal fun config(meshWidth: Int, meshHeight: Int, bitmap: Bitmap?, touchable: Boolean, debug: Boolean, gridColor: Int, gridWidth: Int) {
+    internal fun config(meshWidth: Int, meshHeight: Int, bitmap: Bitmap?, maxPercent: Float, touchable: Boolean, debug: Boolean, gridColor: Int, gridWidth: Int) {
         mMeshWidth = meshWidth
         mMeshHeight = meshHeight
         this.bitmap = bitmap
+        mMaxPercent = min(max(maxPercent, 0f), 1f)
         mTouchable = touchable
         this.debug = debug
 
@@ -169,7 +173,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                             mDownX = 0f
                             mVelocityTracker.computeCurrentVelocity(1000)
                             val startX = (width - paddingStart - paddingEnd) * percent + paddingStart
-                            mScroller.fling(startX.toInt(), 0, mVelocityTracker.xVelocity.toInt(), 0, paddingStart, width - paddingStart - paddingEnd, 0, 0)
+                            val velocityX = mVelocityTracker.xVelocity
+                            mScroller.fling(startX.toInt(), 0, velocityX.toInt(), 0, -2000, 2000, 0, 0)
                         }
                     }
                 }
@@ -358,6 +363,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     override fun computeScroll() {
         if (mScroller.computeScrollOffset()) {
             percent = (mScroller.currX - paddingStart).toFloat() / (width - paddingStart - paddingEnd)
+            when (percent) {
+                0f, mMaxPercent -> mScroller.abortAnimation()
+            }
         }
     }
 

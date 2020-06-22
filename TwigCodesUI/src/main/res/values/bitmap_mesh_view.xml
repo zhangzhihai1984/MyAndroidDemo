@@ -6,7 +6,8 @@
     <attr name="meshGridWidth" format="dimension" />
     <attr name="meshMaskColor" format="reference|color" />
     <attr name="meshDebug" format="boolean" />
-    <attr name="meshTouchable" format="boolean" />
+    <attr name="meshCurtainTouchable" format="boolean" />
+    <attr name="meshCurtainMaxPercent" format="float" />
 
     <declare-styleable name="BitmapWarpView">
         <attr name="android:src" format="reference" />
@@ -15,7 +16,7 @@
         <attr name="meshGridColor" />
         <attr name="meshGridWidth" />
         <attr name="meshMaskColor" />
-        <attr name="debug" />
+        <attr name="meshDebug" />
     </declare-styleable>
 
     <declare-styleable name="BitmapRippleView">
@@ -25,7 +26,7 @@
         <attr name="meshGridColor" />
         <attr name="meshGridWidth" />
         <attr name="meshMaskColor" />
-        <attr name="debug" />
+        <attr name="meshDebug" />
     </declare-styleable>
 
     <declare-styleable name="BitmapCurtainView">
@@ -35,8 +36,9 @@
         <attr name="meshGridColor" />
         <attr name="meshGridWidth" />
         <attr name="meshMaskColor" />
-        <attr name="debug" />
-        <attr name="meshTouchable" />
+        <attr name="meshDebug" />
+        <attr name="meshCurtainTouchable" />
+        <attr name="meshCurtainMaxPercent" />
     </declare-styleable>
 
     <declare-styleable name="CurtainLayout">
@@ -46,8 +48,9 @@
         <attr name="meshGridColor" />
         <attr name="meshGridWidth" />
         <attr name="meshMaskColor" />
-        <attr name="debug" />
-        <attr name="meshTouchable" />
+        <attr name="meshDebug" />
+        <attr name="meshCurtainTouchable" />
+        <attr name="meshCurtainMaxPercent" />
     </declare-styleable>
 
 </resources>

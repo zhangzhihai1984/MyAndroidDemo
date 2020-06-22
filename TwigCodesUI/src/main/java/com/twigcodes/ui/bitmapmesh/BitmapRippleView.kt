@@ -67,7 +67,7 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
         mMeshWidth = a.getInteger(R.styleable.BitmapRippleView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapRippleView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapRippleView_meshMaskColor, DEFAULT_MASK_COLOR)
-        debug = a.getBoolean(R.styleable.BitmapRippleView_debug, false)
+        debug = a.getBoolean(R.styleable.BitmapRippleView_meshDebug, false)
 
         mGridPaint.run {
             color = a.getColor(R.styleable.BitmapRippleView_meshGridColor, DEFAULT_GRID_COLOR)

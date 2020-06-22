@@ -60,7 +60,7 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
         mMeshWidth = a.getInteger(R.styleable.BitmapWarpView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapWarpView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapWarpView_meshMaskColor, DEFAULT_MASK_COLOR)
-        debug = a.getBoolean(R.styleable.BitmapWarpView_debug, false)
+        debug = a.getBoolean(R.styleable.BitmapWarpView_meshDebug, false)
 
         mGridPaint.run {
             color = a.getColor(R.styleable.BitmapWarpView_meshGridColor, DEFAULT_GRID_COLOR)

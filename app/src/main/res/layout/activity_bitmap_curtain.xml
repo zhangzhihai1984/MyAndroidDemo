@@ -15,8 +15,8 @@
         app:cardBackgroundColor="@color/item_background"
         app:cardCornerRadius="10dp">
 
-        <com.twigcodes.ui.bitmapmesh.BitmapCurtainView
-            android:id="@+id/bitmap_curtain_view1"
+        <com.twigcodes.ui.layout.CurtainLayout
+            android:id="@+id/bitmap_curtain_layout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/demo_tree"
