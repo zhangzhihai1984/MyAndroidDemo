@@ -3,7 +3,7 @@ package com.usher.demo.view.seat
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.animation.OvershootInterpolator
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.SeatSelectionView
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
@@ -31,7 +31,7 @@ class SeatSelectionActivity : BaseActivity(Theme.DARK_ONLY) {
         }
 
         seatselectionview.dataChanges()
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     val count = seatData.flatten().filter { status -> status == SeatSelectionView.Status.PENDING }.size
                     count_textview.text = "$count"
@@ -39,9 +39,9 @@ class SeatSelectionActivity : BaseActivity(Theme.DARK_ONLY) {
                 }
 
         refresh_imageview.clicks()
-                .startWith(Unit)
+                .startWithItem(Unit)
                 .compose(RxUtil.singleClick())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     val config = DataUtil.makeSeatConfig()
                     seatData = config.data

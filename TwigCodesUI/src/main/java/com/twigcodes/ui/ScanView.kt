@@ -7,9 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding4.view.globalLayouts
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -81,7 +81,7 @@ class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mRadius = max(width, height) / 2f
                     mCenterX = width / 2f
@@ -104,7 +104,7 @@ class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             */
             Observable.timer((ANIMATION_DURATION * (1 + (CIRCLE_COUNT - 1) * 1f / CIRCLE_COUNT)).toLong(), TimeUnit.MILLISECONDS)
                     .compose(RxUtil.getSchedulerComposer())
-                    .`as`(RxUtil.autoDispose((context as LifecycleOwner)))
+                    .to(RxUtil.autoDispose((context as LifecycleOwner)))
                     .subscribe { stopScan() }
         }
     }
@@ -117,7 +117,7 @@ class ScanView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
             Observable.timer(0, TimeUnit.MILLISECONDS)
                     .compose(RxUtil.getSchedulerComposer())
-                    .`as`(RxUtil.autoDispose((context as LifecycleOwner)))
+                    .to(RxUtil.autoDispose((context as LifecycleOwner)))
                     .subscribe { startScan() }
         }
     }

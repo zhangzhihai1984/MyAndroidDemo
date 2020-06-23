@@ -7,12 +7,12 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
-import com.jakewharton.rxbinding3.view.touches
+import com.jakewharton.rxbinding4.view.globalLayouts
+import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 import kotlin.math.pow
@@ -50,10 +50,10 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
     private var mIntervalY = 0f
 
     var bitmap: Bitmap? = null
-    set(value) {
-        field = value
-        invalidate()
-    }
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     var debug: Boolean = false
         set(value) {
@@ -88,7 +88,7 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
     private fun initView() {
         globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mIntervalX = (width - paddingStart - paddingEnd) / mMeshWidth.toFloat()
                     mIntervalY = (height - paddingTop - paddingBottom) / mMeshHeight.toFloat()
@@ -97,7 +97,7 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
                 }
 
         touches { true }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -133,7 +133,7 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
                 .take(count.toLong())
                 .takeUntil(mTouchDownSubject)
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe({
                     val radius = INIT_RIPPLE_RADIUS + OFFSET_PER_PERIOD * it
 

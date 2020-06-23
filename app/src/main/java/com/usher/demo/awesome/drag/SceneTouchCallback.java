@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class SceneTouchCallback extends ItemTouchHelper.Callback {
     private PublishSubject<DragStart> mDragStartSubject = PublishSubject.create();

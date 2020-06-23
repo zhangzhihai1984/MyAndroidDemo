@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding4.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.bitmapmesh.BitmapCurtainView
 import com.twigcodes.ui.util.RxUtil
@@ -34,7 +34,7 @@ class CurtainLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
         globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mCurtainView.config(meshWidth, meshHeight, bitmap, maxPercent, touchable, debug, gridColor, gridWidth)
                     addView(mCurtainView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))

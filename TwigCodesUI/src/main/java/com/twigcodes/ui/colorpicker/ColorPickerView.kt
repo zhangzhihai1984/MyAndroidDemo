@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding4.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import kotlin.math.abs
@@ -42,7 +42,7 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
     private fun initView() {
         mSimpleColorPickerView.globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mBrightnessView.updateLayoutParams<LayoutParams> {
                         val margin = abs(mSimpleColorPickerView.width - mSimpleColorPickerView.height) / 2
@@ -53,12 +53,12 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
         mSimpleColorPickerView.colorChanges()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { color -> mBrightnessView.updateColor(color) }
 
         mBrightnessView.brightnessChanges()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { color -> mSimpleColorPickerView.updateColor(color, false) }
     }
 

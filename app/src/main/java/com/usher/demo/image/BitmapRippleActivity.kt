@@ -1,7 +1,7 @@
 package com.usher.demo.image
 
 import android.os.Bundle
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -17,7 +17,7 @@ class BitmapRippleActivity : BaseActivity(Theme.LIGHT_AUTO) {
     private fun initView() {
         debug_imageview.clicks()
                 .compose(RxUtil.singleClick())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { bitmap_ripple_view.debug = bitmap_ripple_view.debug.not() }
     }
 }

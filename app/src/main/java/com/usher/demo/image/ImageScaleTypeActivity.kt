@@ -91,7 +91,7 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
                                     .withDialogType(CommonDialog.ButtonType.SINGLE)
                                     .clicks()
                         }
-                        .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                        .to(RxUtil.autoDispose(context as LifecycleOwner))
                         .subscribe { }
             }
         }

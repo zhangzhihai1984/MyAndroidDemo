@@ -6,7 +6,7 @@ import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.LogUtil
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_log.*
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +21,7 @@ class LogActivity : BaseActivity() {
     private fun initView() {
         LogUtil.readLog()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     log_textview.append(it)
                     log_textview.append("\n")
@@ -31,7 +31,7 @@ class LogActivity : BaseActivity() {
         Observable.interval(2 * 1000, TimeUnit.MILLISECONDS)
                 .take(10)
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { LogUtil.log("log write $it") }
     }
 }

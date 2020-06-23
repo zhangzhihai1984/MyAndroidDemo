@@ -9,10 +9,10 @@ import android.widget.LinearLayout
 import androidx.core.view.setPadding
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
+import com.jakewharton.rxbinding4.view.globalLayouts
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 import kotlin.math.sin
@@ -99,7 +99,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     progress = _progress
                 }
@@ -149,7 +149,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
             globalLayouts()
                     .take(1)
-                    .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                    .to(RxUtil.autoDispose(context as LifecycleOwner))
                     .subscribe {
                         mRight = width.toFloat()
                         mBottom = height.toFloat()
@@ -171,7 +171,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             Observable.interval(DELTA_PHI_PERIOD, TimeUnit.MILLISECONDS)
                     .takeUntil(mStopSubject)
                     .compose(RxUtil.getSchedulerComposer())
-                    .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                    .to(RxUtil.autoDispose(context as LifecycleOwner))
                     .subscribe {
                         updatePhi()
                         updatePath(mFrontWavePath, mFrontPhi)
@@ -236,7 +236,7 @@ class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         init {
             globalLayouts()
                     .take(1)
-                    .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                    .to(RxUtil.autoDispose(context as LifecycleOwner))
                     .subscribe { mRect = Rect(0, 0, width, height) }
         }
 

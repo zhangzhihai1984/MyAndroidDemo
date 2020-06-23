@@ -4,7 +4,6 @@ import com.usher.demo.awesome.decoration.ContactsActivity
 import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.itemtouch.ChannelEditActivity
-import com.usher.demo.awesome.smarthome.SmartHomeActivity
 import com.usher.demo.image.*
 import com.usher.demo.kotlin.KotlinActivity
 import com.usher.demo.material.FitsSystemWindowActivity
@@ -102,7 +101,6 @@ object DemoConfig {
                 DemoItem("channel edit", ChannelEditActivity::class.java),
                 DemoItem("sticky header", StickyHeaderActivity::class.java),
                 DemoItem("contacts", ContactsActivity::class.java),
-                DemoItem("smart home", SmartHomeActivity::class.java),
                 DemoItem("drag", DragActiity::class.java)
         )
     }

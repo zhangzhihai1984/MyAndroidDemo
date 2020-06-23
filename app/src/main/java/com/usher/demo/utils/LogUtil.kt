@@ -1,8 +1,8 @@
 package com.usher.demo.utils
 
 import android.util.Log
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.BufferedReader
 import java.io.InputStream
 import kotlin.concurrent.thread

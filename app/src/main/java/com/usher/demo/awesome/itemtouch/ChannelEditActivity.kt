@@ -15,13 +15,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_channel_edit.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
@@ -61,7 +61,7 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
         touchCallback.dragStarts()
                 .map { it.viewHolder.itemView }
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { itemView ->
                     mAdapter.onDragStart(itemView)
 
@@ -75,7 +75,7 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         touchCallback.dragMoving()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     mAdapter.onDragMoving(it.from, it.to)
 
@@ -100,7 +100,7 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         touchCallback.dragEnds()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     mAdapter.onDragEnd(it.viewHolder.itemView)
 
@@ -109,7 +109,7 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         mAdapter.removes()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { (view, to) ->
                     item_capture_imageview.setImageBitmap(ImageUtil.getViewBitmap(view))
                     item_capture_imageview.updateLayoutParams { width = view.width }
@@ -239,7 +239,7 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
             init {
                 itemView.clicks()
                         .compose(RxUtil.singleClick())
-                        .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                        .to(RxUtil.autoDispose(context as LifecycleOwner))
                         .subscribe {
                             val from = adapterPosition
                             val to = data.indexOfFirst { it.second == ITEM_VIEW_TYPE_RECOMMENDED_HEADER }
@@ -260,7 +260,7 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
             init {
                 itemView.clicks()
                         .compose(RxUtil.singleClick())
-                        .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                        .to(RxUtil.autoDispose(context as LifecycleOwner))
                         .subscribe {
                             val from = adapterPosition
                             val to = data.indexOfFirst { it.second == ITEM_VIEW_TYPE_RECOMMENDED_HEADER }

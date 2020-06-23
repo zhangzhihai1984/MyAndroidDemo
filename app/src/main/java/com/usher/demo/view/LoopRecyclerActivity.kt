@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
+import com.jakewharton.rxbinding4.recyclerview.scrollStateChanges
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.layoutmanager.LoopLayoutManager
 import com.twigcodes.ui.util.RxUtil
@@ -27,7 +27,7 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
         vertical_recyclerview.adapter = VerticalAdapter(data)
         vertical_recyclerview.scrollStateChanges()
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     (vertical_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithCorrection(vertical_recyclerview)
                 }
@@ -36,7 +36,7 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
         horizontal_recyclerview.adapter = HorizontalAdapter(data)
         horizontal_recyclerview.scrollStateChanges()
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     (horizontal_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithCorrection(horizontal_recyclerview)
                 }

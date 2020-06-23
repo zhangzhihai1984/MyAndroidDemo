@@ -21,13 +21,13 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.jakewharton.rxbinding3.recyclerview.scrollEvents
+import com.jakewharton.rxbinding4.recyclerview.scrollEvents
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.concurrent.TimeUnit
 
@@ -166,7 +166,7 @@ class ContactsActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     val position = recyclerview.getChildAdapterPosition(recyclerview[0])
                     val data = decorationData[position]
@@ -206,7 +206,7 @@ class ContactsActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { hideAnimatorSet.start() }
     }
 

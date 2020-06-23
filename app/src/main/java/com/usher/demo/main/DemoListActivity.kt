@@ -29,7 +29,7 @@ class DemoListActivity : BaseActivity(Theme.LIGHT_AUTO) {
         adapter.itemClicks()
                 .compose(RxUtil.singleClick())
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { position ->
                     val demoItem = demoItems[position]
                     startActivity(Intent(this, demoItem.cls).apply {

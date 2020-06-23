@@ -26,8 +26,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 import kotlin.Unit;
 
 public class ChartView extends View {
@@ -592,7 +592,7 @@ public class ChartView extends View {
                 Observable.timer(1000, TimeUnit.MILLISECONDS)
                         .takeUntil(mTouchDownSubject)
                         .takeUntil(mSetConfigSubject)
-                        .as(RxUtil.autoDispose((LifecycleOwner) getContext()))
+                        .to(RxUtil.autoDispose((LifecycleOwner) getContext()))
                         .subscribe(v -> {
                             mSelectedDataIndex = -1;
                             invalidate();

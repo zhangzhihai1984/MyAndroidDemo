@@ -6,10 +6,10 @@ import android.view.View
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
-import io.reactivex.functions.BiFunction
-import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableTransformer
+import io.reactivex.rxjava3.functions.BiFunction
+import io.reactivex.rxjava3.kotlin.Observables
 import kotlinx.android.synthetic.main.activity_kotlin.*
 import java.util.concurrent.TimeUnit
 
@@ -35,7 +35,7 @@ class KotlinActivity : BaseActivity() {
     private fun init() {
         Observable.timer(3000, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { v ->
                     Log.i("zzh", "haha")
                 }
@@ -113,7 +113,7 @@ class KotlinActivity : BaseActivity() {
         Observable.just(Apple())
                 .onErrorReturn { RedApple() }
 //                .compose(getBaseComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { }
 
 
@@ -169,7 +169,7 @@ class KotlinActivity : BaseActivity() {
         //
         var max1 = people.maxBy({ it.age })
         Observables.combineLatest(p1, p2, { a, b -> a.age + b.age })
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {}
 
         button.setOnClickListener(object : View.OnClickListener {
@@ -182,7 +182,7 @@ class KotlinActivity : BaseActivity() {
         //如果lambda是函数的最后一个实参, 它可以放到括号的外面
         var max2 = people.maxBy() { it.age }
         Observables.combineLatest(p1, p2) { a, b -> a.age + b.age }
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {}
 
         button.setOnClickListener() {}
@@ -230,7 +230,7 @@ class KotlinActivity : BaseActivity() {
 
         Observable.just(1)
                 .withLatestFrom(Observable.just(2), BiFunction<Int, Int, Int> { t1, t2 -> t1 + t2 })
-                .`as`(RxUtil.autoDispose<Int>(this))
+                .to(RxUtil.autoDispose<Int>(this))
                 .subscribe()
 
         val a = arrayOf(arrayOf(1, 2), arrayOf(3, 4)).flatMap { it.asIterable() }

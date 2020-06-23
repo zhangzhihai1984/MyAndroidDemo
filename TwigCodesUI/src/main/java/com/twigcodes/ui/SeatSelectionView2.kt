@@ -10,14 +10,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.jakewharton.rxbinding3.recyclerview.dataChanges
-import com.jakewharton.rxbinding3.recyclerview.scrollEvents
-import com.jakewharton.rxbinding3.view.globalLayouts
-import com.jakewharton.rxbinding3.view.scrollChangeEvents
-import com.jakewharton.rxbinding3.view.touches
+import com.jakewharton.rxbinding4.recyclerview.dataChanges
+import com.jakewharton.rxbinding4.recyclerview.scrollEvents
+import com.jakewharton.rxbinding4.view.globalLayouts
+import com.jakewharton.rxbinding4.view.scrollChangeEvents
+import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.seat_selection_layout2.view.*
 
 class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
@@ -58,7 +58,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
         mSelectionAdapter = SelectionAdapter(mSelectionData, mSeatWidth, mSeatHeight)
         mSelectionAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { click ->
                     mSelectionData[click.rowPosition][click.columnPosition] = mSelectionData[click.rowPosition][click.columnPosition].let { status ->
                         when (status) {
@@ -70,30 +70,30 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                     mSelectionAdapter.notifyDataSetChanged()
                 }
         mSelectionAdapter.dataChanges()
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { mDataChangeSubject.onNext(Unit) }
 
         selection_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         selection_recyclerview.adapter = mSelectionAdapter
         //纵向滑动座位区域的同时对座位排号做相应的纵向滚动, 同时禁止手动滑动座位排号
         selection_recyclerview.scrollEvents()
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { index_recyclerview.scrollBy(0, it.dy) }
 
         mIndexAdapter = IndexAdapter(mIndexData, mSeatHeight)
         index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         index_recyclerview.adapter = mIndexAdapter
         index_recyclerview.touches { true }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe()
 
         //横向滑动座位区域的同时对屏幕区域做相应的横向滚动, 同时禁止手动滑动屏幕区域
         selection_scrollview.scrollChangeEvents()
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { screen_scrollview.scrollTo(it.scrollX, 0) }
 
         screen_scrollview.touches { true }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe()
     }
 
@@ -114,7 +114,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
 
         selection_recyclerview.globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     screen_layout.updateLayoutParams { width = selection_layout.width }
                     screen_view.updateLayoutParams { width = selection_layout.width * 2 / 3 }
@@ -151,7 +151,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
 
                 statusAdapter.itemClicks()
                         .compose(RxUtil.getSchedulerComposer())
-                        .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
+                        .to(RxUtil.autoDispose(mContext as LifecycleOwner))
                         .subscribe { position ->
                             val seatClick = SeatClick(view.tag as Int, position)
                             when (data[seatClick.rowPosition][seatClick.columnPosition]) {

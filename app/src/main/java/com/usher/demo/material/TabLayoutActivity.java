@@ -9,15 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.tabs.TabLayout;
-import com.jakewharton.rxbinding3.viewpager.RxViewPager;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.usher.demo.R;
-import com.usher.demo.utils.RxUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,8 +18,18 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
+
+import com.google.android.material.tabs.TabLayout;
+import com.jakewharton.rxbinding4.viewpager.RxViewPager;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.twigcodes.ui.util.RxUtil;
+import com.usher.demo.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class TabLayoutActivity extends AppCompatActivity {
 
@@ -88,7 +89,7 @@ public class TabLayoutActivity extends AppCompatActivity {
         smartTabLayout3.setViewPager(mViewPager);
 
         RxViewPager.pageSelections(mViewPager)
-                .as(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe(position -> {
                     for (int i = 0; i < 3; i++) {
                         TextView view = (TextView) smartTabLayout.getTabAt(i);
@@ -122,6 +123,7 @@ public class TabLayoutActivity extends AppCompatActivity {
                     (v1, v2) -> v1
             )
                     .take(1)
+                    .to(RxUtil.autoDispose(this))
                     .subscribe(
                             v -> doRequest(),
                             err -> Log.i("zzh", err.getMessage())

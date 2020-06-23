@@ -5,9 +5,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.twigcodes.ui.ChartView;
+import com.twigcodes.ui.util.RxUtil;
 import com.usher.demo.R;
 import com.usher.demo.base.BaseActivity;
-import com.usher.demo.utils.RxUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 public class ChartActivity extends BaseActivity {
     @BindView(R.id.chart_view)
@@ -94,7 +94,7 @@ public class ChartActivity extends BaseActivity {
 
         Observable.timer(50, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
-                .as(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe(v -> mChartView.setData(mHumidityData));
 
 //        Observable.timer(3000, TimeUnit.MILLISECONDS)

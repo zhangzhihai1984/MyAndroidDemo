@@ -9,11 +9,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
-import com.jakewharton.rxbinding3.view.touches
+import com.jakewharton.rxbinding4.view.globalLayouts
+import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlin.math.*
 
 /**
@@ -93,7 +93,7 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
     private fun initView() {
         globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mCenterX = width / 2f
                     mCenterY = height / 2f
@@ -119,7 +119,7 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
          * 用户认为是自己刚刚"手抖"了吧.
          */
         touches { true }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     val x = event.x - mCenterX
                     val y = event.y - mCenterY

@@ -5,11 +5,11 @@ import android.content.Context
 import android.text.Spannable
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.dialog_common_layout.*
 
 class CommonDialog(private val mContext: Context) : Dialog(mContext, R.style.FramelessDialog) {
@@ -40,7 +40,7 @@ class CommonDialog(private val mContext: Context) : Dialog(mContext, R.style.Fra
     private fun initView() {
         cancel_button.clicks()
                 .take(1)
-                .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
+                .to(RxUtil.autoDispose(mContext as LifecycleOwner))
                 .subscribe {
                     mClickSubject.onNext(Click(ClickType.CANCEL, mData))
                     dismiss()
@@ -48,7 +48,7 @@ class CommonDialog(private val mContext: Context) : Dialog(mContext, R.style.Fra
 
         Observable.merge(confirm_button.clicks(), done_button.clicks())
                 .take(1)
-                .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
+                .to(RxUtil.autoDispose(mContext as LifecycleOwner))
                 .subscribe {
                     mClickSubject.onNext(Click(ClickType.CONFIRM, mData))
                     dismiss()

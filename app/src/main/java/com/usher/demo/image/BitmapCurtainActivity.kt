@@ -1,7 +1,7 @@
 package com.usher.demo.image
 
 import android.os.Bundle
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -18,7 +18,7 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
     private fun initView() {
         debug_imageview.clicks()
                 .compose(RxUtil.singleClick())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     bitmap_curtain_layout1.debug = bitmap_curtain_layout1.debug.not()
                     bitmap_curtain_layout2.debug = bitmap_curtain_layout2.debug.not()
@@ -26,7 +26,7 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         open_imageview.clicks()
                 .compose(RxUtil.singleClick())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     bitmap_curtain_layout1.open()
                     bitmap_curtain_layout2.open()
@@ -34,7 +34,7 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         close_imageview.clicks()
                 .compose(RxUtil.singleClick())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     bitmap_curtain_layout1.close()
                     bitmap_curtain_layout2.close()

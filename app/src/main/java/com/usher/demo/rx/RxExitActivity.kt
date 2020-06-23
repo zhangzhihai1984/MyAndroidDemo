@@ -4,11 +4,11 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.animation.OvershootInterpolator
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_rx_exit.*
 
 class RxExitActivity : BaseActivity(Theme.LIGHT_AUTO) {
@@ -37,17 +37,17 @@ class RxExitActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         exit_imageview.clicks()
                 .map { mBackSubject.onNext(Unit) }
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { }
 
         val interval = mBackSubject.timeInterval().map { it.time() }
         val exit = interval.skip(1).filter { it < EXIT_DURATION }
 
         interval.takeUntil(exit)
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { showToast("Click Once More to EXIT") }
 
-        exit.`as`(RxUtil.autoDispose(this)).subscribe { finish() }
+        exit.to(RxUtil.autoDispose(this)).subscribe { finish() }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.twigcodes.ui.util.PermissionUtil
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO) : AppCompatActivity() {
     private val mActivityResultSubject = PublishSubject.create<ActivityResult>()

@@ -15,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jakewharton.rxbinding3.view.RxView;
+import com.jakewharton.rxbinding4.view.RxView;
+import com.twigcodes.ui.util.RxUtil;
 import com.usher.demo.R;
-import com.usher.demo.utils.RxUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,12 +60,12 @@ public class ActionAdapter extends RecyclerView.Adapter {
 
         mTouchCallback.dragStarts()
                 .compose(RxUtil.getSchedulerComposer())
-                .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                .to(RxUtil.autoDispose((LifecycleOwner) mContext))
                 .subscribe(dragStart -> recoverSwipeView());
 
         mTouchCallback.dragMoving()
                 .compose(RxUtil.getSchedulerComposer())
-                .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                .to(RxUtil.autoDispose((LifecycleOwner) mContext))
                 .subscribe(dragMoving -> {
                     int fromPos = dragMoving.from;
                     int toPos = dragMoving.to;
@@ -89,7 +89,7 @@ public class ActionAdapter extends RecyclerView.Adapter {
 
         mTouchCallback.swipeMoving()
                 .compose(RxUtil.getSchedulerComposer())
-                .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                .to(RxUtil.autoDispose((LifecycleOwner) mContext))
                 .subscribe(swipeMoving -> {
                     View swipeLayout = ((BaseViewHolder) swipeMoving.viewHolder).swipeLayout;
                     float translationX = Math.max(-mSwipeThreshold, swipeMoving.dX);
@@ -193,14 +193,14 @@ public class ActionAdapter extends RecyclerView.Adapter {
 
             RxView.touches(swipeLayout)
                     .filter(motionEvent -> motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-                    .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                    .to(RxUtil.autoDispose((LifecycleOwner) mContext))
                     .subscribe(motionEvent -> {
                         recoverSwipeView();
                     });
 
             RxView.clicks(deleteLayout)
                     .throttleFirst(500, TimeUnit.MILLISECONDS)
-                    .as(RxUtil.autoDispose((LifecycleOwner) mContext))
+                    .to(RxUtil.autoDispose((LifecycleOwner) mContext))
                     .subscribe(v -> {
                         ActionInfo info = (ActionInfo) deleteLayout.getTag();
                         int position = mData.indexOf(info);

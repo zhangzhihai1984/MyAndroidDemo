@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.jakewharton.rxbinding3.recyclerview.dataChanges
-import com.jakewharton.rxbinding3.recyclerview.scrollEvents
-import com.jakewharton.rxbinding3.view.globalLayouts
-import com.jakewharton.rxbinding3.view.touches
+import com.jakewharton.rxbinding4.recyclerview.dataChanges
+import com.jakewharton.rxbinding4.recyclerview.scrollEvents
+import com.jakewharton.rxbinding4.view.globalLayouts
+import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.seat_selection_layout.view.*
 
 class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
@@ -58,7 +58,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         mSelectionAdapter = SelectionAdapter(mSelectionData, mColumnCount, DEFAULT_SEAT_HEIGHT)
         mSelectionAdapter.seatClicks()
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { click ->
                     mSelectionData[click.rowPosition][click.columnPosition] = mSelectionData[click.rowPosition][click.columnPosition].let { status ->
                         when (status) {
@@ -70,14 +70,14 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                     mSelectionAdapter.notifyDataSetChanged()
                 }
         mSelectionAdapter.dataChanges()
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { mDataChangeSubject.onNext(Unit) }
 
         selection_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         selection_recyclerview.adapter = mSelectionAdapter
         //滑动座位区域的同时对座位排号做相应距离的滚动, 同时禁止手动滑动座位排号
         selection_recyclerview.scrollEvents()
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     index_recyclerview.scrollBy(0, it.dy)
                 }
@@ -86,7 +86,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         index_recyclerview.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         index_recyclerview.adapter = mIndexAdapter
         index_recyclerview.touches { true }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe()
     }
 
@@ -102,7 +102,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
 
         selection_recyclerview.globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mSelectionAdapter.itemHeight = selection_recyclerview.width / columnCount
                     mSelectionAdapter.notifyDataSetChanged()
@@ -189,7 +189,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
 
                 seatAdapter.itemClicks()
                         .compose(RxUtil.getSchedulerComposer())
-                        .`as`(RxUtil.autoDispose(mContext as LifecycleOwner))
+                        .to(RxUtil.autoDispose(mContext as LifecycleOwner))
                         .subscribe { position ->
                             val seatClick = SeatClick(view.tag as Int, position)
                             when (data[seatClick.rowPosition][seatClick.columnPosition]) {

@@ -8,11 +8,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
-import com.jakewharton.rxbinding3.view.touches
+import com.jakewharton.rxbinding4.view.globalLayouts
+import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.floor
@@ -105,7 +105,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
          * offset = min + (max-min) * (dy/itemHeight)
          */
         touches { true }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
@@ -152,7 +152,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                             .takeUntil(mTouchSubject)
                             .takeUntil(mChangeIndexSubject)
                 }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mTextOffsets = mTextOffsets.map { max(it - 10, 0f) }
                     invalidate()
@@ -187,7 +187,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
         globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mItemHeight = height.toFloat() / mData.size
                     invalidate()

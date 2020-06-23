@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.jakewharton.rxbinding3.material.RxAppBarLayout;
+import com.jakewharton.rxbinding4.material.RxAppBarLayout;
+import com.twigcodes.ui.util.RxUtil;
 import com.usher.demo.R;
-import com.usher.demo.utils.RxUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class DragActiity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         RxAppBarLayout.offsetChanges(mAppBarLayout)
-                .as(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe(offset -> {
 //                    Log.i("zzh", "offset: " + offset);
                     callback.setItemViewSwipeEnabled(offset <= -525 || offset >= 0);

@@ -3,7 +3,7 @@ package com.twigcodes.ui.adapter
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 abstract class RxBaseQuickAdapter<T, K : BaseViewHolder>(layoutResId: Int, data: List<T>) : BaseQuickAdapter<T, K>(layoutResId, data) {
     private val mItemClickSubject = PublishSubject.create<Int>()

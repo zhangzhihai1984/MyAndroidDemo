@@ -1,11 +1,11 @@
 package com.usher.demo.rx
 
 import android.os.Bundle
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxjava3.kotlin.Observables
 import kotlinx.android.synthetic.main.activity_rx_sum.*
 
 class RxSumActivity : BaseActivity(Theme.LIGHT_AUTO) {
@@ -31,12 +31,12 @@ class RxSumActivity : BaseActivity(Theme.LIGHT_AUTO) {
 //                param2,
 //                BiFunction { t1, t2 -> t1 + t2 }
 //        )
-//                .`as`(RxUtil.autoDispose(this))
+//                .to(RxUtil.autoDispose(this))
 //                .subscribe { }
 
 
         Observables.combineLatest(param1, param2) { t1, t2 -> t1 + t2 }
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { sum_textview.text = "$it" }
     }
 }

@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.fragment.BasePagerFragment
 import com.twigcodes.ui.pager.LoopViewPager
 import com.twigcodes.ui.util.RxUtil
@@ -31,11 +31,11 @@ class PagerActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indicatorview2.setViewPager(viewpager)
 
         add_imageview.clicks()
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { mPagerAdapter.add() }
 
         remove_imageview.clicks()
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe { mPagerAdapter.remove() }
     }
 

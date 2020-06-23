@@ -15,8 +15,8 @@ import android.view.animation.LinearInterpolator
 import android.widget.Scroller
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
-import com.jakewharton.rxbinding3.view.globalLayouts
-import com.jakewharton.rxbinding3.view.touches
+import com.jakewharton.rxbinding4.view.globalLayouts
+import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import kotlin.math.cos
@@ -136,7 +136,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private fun initView() {
         globalLayouts()
                 .take(1)
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     makeCoordinates(mRowMajorWarpCoordinates)
                     makeCoordinates(mRowMajorOriginalCoordinates)
@@ -160,7 +160,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             } else
                 false
         }
-                .`as`(RxUtil.autoDispose(context as LifecycleOwner))
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { event ->
                     mVelocityTracker.addMovement(event)
                     when (event.action) {

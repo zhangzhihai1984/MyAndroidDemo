@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.jakewharton.rxbinding3.widget.textChanges
+import com.jakewharton.rxbinding4.widget.textChanges
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
@@ -33,7 +33,7 @@ class RxSearchActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .distinctUntilChanged()
                 .map { cities.filter { city -> city.contains(it) } }
                 .compose(RxUtil.getSchedulerComposer())
-                .`as`(RxUtil.autoDispose(this))
+                .to(RxUtil.autoDispose(this))
                 .subscribe {
                     searchResults.clear()
                     searchResults.addAll(it)

@@ -2,12 +2,12 @@ package com.twigcodes.ui.util
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.uber.autodispose.AutoDispose
-import com.uber.autodispose.AutoDisposeConverter
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
-import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import autodispose2.AutoDispose
+import autodispose2.AutoDisposeConverter
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.ObservableTransformer
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 object RxUtil {
