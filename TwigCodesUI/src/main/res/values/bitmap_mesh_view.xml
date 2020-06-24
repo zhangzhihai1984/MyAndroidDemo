@@ -51,7 +51,8 @@
         <attr name="meshDebug" />
         <attr name="curtainTouchable" />
         <attr name="curtainMaxPercent" />
-        <attr name="curtainTextureLayout" format="reference" />
+        <attr name="curtainCoverLayout" format="reference" />
+        <attr name="curtainContentLayout" format="reference" />
     </declare-styleable>
 
 </resources>

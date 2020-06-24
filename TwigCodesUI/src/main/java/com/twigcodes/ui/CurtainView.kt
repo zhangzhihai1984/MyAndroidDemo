@@ -23,6 +23,7 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     private val mSnapshotView = BitmapCurtainView(context).apply { elevation = CURTAIN_BITMAP_ELEVATION }
     private val mTextureView: View
+    private val mContentView: View
 
     var bitmap: Bitmap? = null
         set(value) {
@@ -46,14 +47,22 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         val debug = a.getBoolean(R.styleable.CurtainView_meshDebug, false)
         val gridColor = a.getColor(R.styleable.CurtainView_meshGridColor, BitmapCurtainView.DEFAULT_GRID_COLOR)
         val gridWidth = a.getDimensionPixelSize(R.styleable.CurtainView_meshGridWidth, BitmapCurtainView.DEFAULT_GRID_WIDTH)
-        val curtainTextureLayoutId = a.getResourceId(R.styleable.CurtainView_curtainTextureLayout, -1).also { resourceId ->
+
+        val contentLayoutId = a.getResourceId(R.styleable.CurtainView_curtainContentLayout, -1).also { resourceId ->
             if (resourceId < 0)
-                throw Exception("curtain layout not found")
+                throw Exception("curtainContentLayout attr not found")
+        }
+
+        val curtainTextureLayoutId = a.getResourceId(R.styleable.CurtainView_curtainCoverLayout, -1).also { resourceId ->
+            if (resourceId < 0)
+                throw Exception("curtainCoverLayout attr not found")
         }
         a.recycle()
 
+        mContentView = LayoutInflater.from(context).inflate(contentLayoutId, null, false)
         mTextureView = LayoutInflater.from(context).inflate(curtainTextureLayoutId, null, false).apply { elevation = CURTAIN_TEXTURE_ELECATION }
 
+        addView(mContentView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         addView(mTextureView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
         mTextureView.touches { event ->
