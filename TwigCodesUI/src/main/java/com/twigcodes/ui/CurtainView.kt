@@ -21,18 +21,19 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         private const val CURTAIN_TEXTURE_ELECATION = CURTAIN_BITMAP_ELEVATION + 1f
     }
 
-    private val mCurtainView = BitmapCurtainView(context).apply { elevation = CURTAIN_BITMAP_ELEVATION }
+    private val mSnapshotView = BitmapCurtainView(context).apply { elevation = CURTAIN_BITMAP_ELEVATION }
+    private val mTextureView: View
 
     var bitmap: Bitmap? = null
         set(value) {
             field = value
-            mCurtainView.bitmap = value
+            mSnapshotView.bitmap = value
         }
 
     var debug = false
         set(value) {
             field = value
-            mCurtainView.debug = value
+            mSnapshotView.debug = value
         }
 
     init {
@@ -40,8 +41,8 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         val bitmap = a.getDrawable(R.styleable.CurtainView_android_src)?.toBitmap()
         val meshWidth = a.getInteger(R.styleable.CurtainView_meshRow, BitmapCurtainView.DEFAULT_MESH_WIDTH)
         val meshHeight = a.getInteger(R.styleable.CurtainView_meshColumn, BitmapCurtainView.DEFAULT_MESH_HEIGHT)
-        val maxPercent = a.getFloat(R.styleable.CurtainView_meshCurtainMaxPercent, BitmapCurtainView.DEFAULT_MAX_PERCENT)
-        val touchable = a.getBoolean(R.styleable.CurtainView_meshCurtainTouchable, true)
+        val maxPercent = a.getFloat(R.styleable.CurtainView_curtainMaxPercent, BitmapCurtainView.DEFAULT_MAX_PERCENT)
+        val touchable = a.getBoolean(R.styleable.CurtainView_curtainTouchable, true)
         val debug = a.getBoolean(R.styleable.CurtainView_meshDebug, false)
         val gridColor = a.getColor(R.styleable.CurtainView_meshGridColor, BitmapCurtainView.DEFAULT_GRID_COLOR)
         val gridWidth = a.getDimensionPixelSize(R.styleable.CurtainView_meshGridWidth, BitmapCurtainView.DEFAULT_GRID_WIDTH)
@@ -51,15 +52,15 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         }
         a.recycle()
 
-        val textureView = LayoutInflater.from(context).inflate(curtainTextureLayoutId, null, false).apply { elevation = CURTAIN_TEXTURE_ELECATION }
+        mTextureView = LayoutInflater.from(context).inflate(curtainTextureLayoutId, null, false).apply { elevation = CURTAIN_TEXTURE_ELECATION }
 
-        addView(textureView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        addView(mTextureView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
-        textureView.touches { event ->
+        mTextureView.touches { event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    mCurtainView.bitmap = ImageUtil.getViewBitmap(textureView)
-                    textureView.visibility = View.GONE
+                    mSnapshotView.bitmap = ImageUtil.getViewBitmap(mTextureView)
+                    mTextureView.visibility = View.GONE
                 }
             }
             false
@@ -72,16 +73,16 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
                 .take(1)
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
-                    mCurtainView.config(meshWidth, meshHeight, bitmap, maxPercent, touchable, debug, gridColor, gridWidth)
-                    addView(mCurtainView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+                    mSnapshotView.config(meshWidth, meshHeight, bitmap, maxPercent, touchable, debug, gridColor, gridWidth)
+                    addView(mSnapshotView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 }
     }
 
     fun open() {
-        mCurtainView.open()
+        mSnapshotView.open()
     }
 
     fun close() {
-        mCurtainView.close()
+        mSnapshotView.close()
     }
 }

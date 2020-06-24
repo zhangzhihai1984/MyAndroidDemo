@@ -89,9 +89,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         bitmap = a.getDrawable(R.styleable.BitmapCurtainView_android_src)?.toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_HEIGHT)
-        mMaxPercent = min(max(a.getFloat(R.styleable.BitmapCurtainView_meshCurtainMaxPercent, DEFAULT_MAX_PERCENT), 0f), 1f)
+        mMaxPercent = min(max(a.getFloat(R.styleable.BitmapCurtainView_curtainMaxPercent, DEFAULT_MAX_PERCENT), 0f), 1f)
 //        mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
-        mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_meshCurtainTouchable, true)
+        mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_curtainTouchable, true)
         debug = a.getBoolean(R.styleable.BitmapCurtainView_meshDebug, false)
 
         mColors = IntArray((mMeshWidth + 1) * (mMeshHeight + 1)) { Color.WHITE }
