@@ -1,7 +1,9 @@
 package com.twigcodes.ui.layout
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
@@ -13,6 +15,12 @@ import com.twigcodes.ui.util.RxUtil
 class CurtainLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val mCurtainView: BitmapCurtainView = BitmapCurtainView(context).apply { elevation = 100f }
+
+    var bitmap: Bitmap? = null
+        set(value) {
+            field = value
+            mCurtainView.bitmap = value
+        }
 
     var debug: Boolean = false
         set(value) {
@@ -30,7 +38,13 @@ class CurtainLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         val debug = a.getBoolean(R.styleable.CurtainLayout_meshDebug, false)
         val gridColor = a.getColor(R.styleable.CurtainLayout_meshGridColor, BitmapCurtainView.DEFAULT_GRID_COLOR)
         val gridWidth = a.getDimensionPixelSize(R.styleable.CurtainLayout_meshGridWidth, BitmapCurtainView.DEFAULT_GRID_WIDTH)
+        val curtainId = a.getResourceId(R.styleable.CurtainLayout_curtainLayout, -1).also { resourceId ->
+            if (resourceId < 0)
+                throw Exception("curtain layout not found")
+        }
         a.recycle()
+
+        addView(LayoutInflater.from(context).inflate(curtainId, null, false), LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
         globalLayouts()
                 .take(1)
