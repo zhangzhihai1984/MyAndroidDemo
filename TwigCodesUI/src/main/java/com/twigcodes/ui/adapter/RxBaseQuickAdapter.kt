@@ -3,6 +3,7 @@ package com.twigcodes.ui.adapter
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 abstract class RxBaseQuickAdapter<T, K : BaseViewHolder>(layoutResId: Int, data: List<T>) : BaseQuickAdapter<T, K>(layoutResId, data) {
@@ -23,9 +24,9 @@ abstract class RxBaseQuickAdapter<T, K : BaseViewHolder>(layoutResId: Int, data:
         setOnItemChildClickListener { _, view, position -> mItemChildClickSubject.onNext(ClickItem(view, position)) }
     }
 
-    fun itemClicks() = mItemClickSubject
+    fun itemClicks(): Observable<Int> = mItemClickSubject
 
-    fun itemLongClicks() = mItemLongClickSubject
+    fun itemLongClicks(): Observable<Int> = mItemLongClickSubject
 
-    fun itemChildClicks() = mItemChildClickSubject
+    fun itemChildClicks(): Observable<ClickItem> = mItemChildClickSubject
 }

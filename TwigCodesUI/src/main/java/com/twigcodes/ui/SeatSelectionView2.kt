@@ -17,6 +17,7 @@ import com.jakewharton.rxbinding4.view.scrollChangeEvents
 import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.seat_selection_layout2.view.*
 
@@ -125,7 +126,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                 }
     }
 
-    fun dataChanges() = mDataChangeSubject
+    fun dataChanges(): Observable<Unit> = mDataChangeSubject
 
     private class SelectionAdapter(data: List<List<Status>>, var itemWidth: Int, var itemHeight: Int) : RxBaseQuickAdapter<List<Status>, SelectionAdapter.SelectionViewHolder>(R.layout.item_seat_selection2, data) {
 
@@ -138,7 +139,7 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
             helper.statusAdapter.setNewData(statusList)
         }
 
-        fun seatClicks() = mClickSubject
+        fun seatClicks(): Observable<SeatClick> = mClickSubject
 
         private inner class SelectionViewHolder(view: View) : BaseViewHolder(view) {
             val statusAdapter = StatusAdapter(listOf(), itemWidth, itemHeight)

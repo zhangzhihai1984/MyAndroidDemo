@@ -21,6 +21,7 @@ import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_channel_edit.*
 import kotlinx.android.synthetic.main.item_channel.view.*
@@ -229,7 +230,7 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
             }
         }
 
-        fun removes() = mRemoveSubject
+        fun removes(): Observable<Remove> = mRemoveSubject
 
         private inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -312,11 +313,11 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
         override fun canDropOver(recyclerView: RecyclerView, current: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean =
                 current.itemViewType == target.itemViewType
 
-        fun dragStarts() = mDragStartSubject
+        fun dragStarts(): Observable<DragStart> = mDragStartSubject
 
-        fun dragMoving() = mDragMovingSubject
+        fun dragMoving(): Observable<DragMoving> = mDragMovingSubject
 
-        fun dragEnds() = mDragEndSubject
+        fun dragEnds(): Observable<DragEnd> = mDragEndSubject
 
         data class DragStart(val viewHolder: RecyclerView.ViewHolder, val position: Int)
         data class DragEnd(val viewHolder: RecyclerView.ViewHolder, val position: Int)

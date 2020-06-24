@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding4.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
 import kotlin.math.abs
 
 class ColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
@@ -64,5 +65,5 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     fun updateColor(color: Int) = mSimpleColorPickerView.updateColor(color)
 
-    fun colorPicks() = mSimpleColorPickerView.colorPicks()
+    fun colorPicks(): Observable<Int> = mSimpleColorPickerView.colorPicks()
 }

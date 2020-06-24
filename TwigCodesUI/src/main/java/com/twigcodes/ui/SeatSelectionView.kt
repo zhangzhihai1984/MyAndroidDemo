@@ -17,6 +17,7 @@ import com.jakewharton.rxbinding4.view.globalLayouts
 import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.seat_selection_layout.view.*
 
@@ -114,7 +115,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
                 }
     }
 
-    fun dataChanges() = mDataChangeSubject
+    fun dataChanges(): Observable<Unit> = mDataChangeSubject
 
     private class SelectionAdapter(data: List<List<Status>>, var columnCount: Int, var itemHeight: Int) : RxBaseQuickAdapter<List<Status>, SelectionAdapter.SelectionViewHolder>(R.layout.item_seat_selection, data) {
 
@@ -168,7 +169,7 @@ class SeatSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
             return seatList
         }
 
-        fun seatClicks() = mClickSubject
+        fun seatClicks(): Observable<SeatClick> = mClickSubject
 
         private inner class SelectionViewHolder(view: View) : BaseViewHolder(view) {
             val seatRecyclerView: RecyclerView = view.findViewById(R.id.seat_recyclerview)

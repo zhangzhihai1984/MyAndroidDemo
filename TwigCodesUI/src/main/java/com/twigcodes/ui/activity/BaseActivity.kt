@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.twigcodes.ui.util.PermissionUtil
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO) : AppCompatActivity() {
@@ -67,7 +68,7 @@ open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK
         mIsLocalNightMode = isCurrentNightMode
     }
 
-    fun activityResult() = mActivityResultSubject
+    fun activityResult(): Observable<ActivityResult> = mActivityResultSubject
 
     fun showToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 

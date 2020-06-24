@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding4.view.globalLayouts
 import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlin.math.*
 
@@ -211,9 +212,9 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
         invalidate()
     }
 
-    fun colorChanges() = mColorChangeSubject
+    fun colorChanges(): Observable<Int> = mColorChangeSubject
 
-    fun colorPicks() = mColorPickSubject
+    fun colorPicks(): Observable<Int> = mColorPickSubject
 
 //    private fun floatToByte(x: Float): Int {
 //        return Math.round(x)

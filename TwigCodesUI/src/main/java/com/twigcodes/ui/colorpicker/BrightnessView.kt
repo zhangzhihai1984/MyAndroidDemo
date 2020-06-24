@@ -9,6 +9,7 @@ import com.jakewharton.rxbinding4.view.globalLayouts
 import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlin.math.max
 import kotlin.math.min
@@ -92,5 +93,5 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
         invalidate()
     }
 
-    fun brightnessChanges() = mBrightnessChangeSubject
+    fun brightnessChanges(): Observable<Int> = mBrightnessChangeSubject
 }

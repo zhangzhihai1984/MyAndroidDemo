@@ -194,7 +194,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 }
     }
 
-    fun touches() = mTouchSubject
+    fun touches(): Observable<Int> = mTouchSubject
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
