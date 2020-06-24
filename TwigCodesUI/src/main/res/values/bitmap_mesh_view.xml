@@ -41,7 +41,7 @@
         <attr name="meshCurtainMaxPercent" />
     </declare-styleable>
 
-    <declare-styleable name="CurtainLayout">
+    <declare-styleable name="CurtainView">
         <attr name="android:src" format="reference" />
         <attr name="meshRow" />
         <attr name="meshColumn" />
@@ -51,7 +51,7 @@
         <attr name="meshDebug" />
         <attr name="meshCurtainTouchable" />
         <attr name="meshCurtainMaxPercent" />
-        <attr name="curtainLayout" format="reference" />
+        <attr name="curtainTextureLayout" format="reference" />
     </declare-styleable>
 
 </resources>
