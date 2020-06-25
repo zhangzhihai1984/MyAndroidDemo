@@ -19,6 +19,8 @@ import com.jakewharton.rxbinding4.view.globalLayouts
 import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
@@ -65,6 +67,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mCenterY = 0f
     private var mDownX = 0f
 
+    private val mPercentChangeSubject = PublishSubject.create<Float>()
+
     var bitmap: Bitmap? = null
         set(value) {
             field = value
@@ -76,6 +80,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             field = min(max(value, 0f), mMaxPercent)
             makeWarpCoordinates()
             invalidate()
+
+            mPercentChangeSubject.onNext(field)
         }
 
     var debug: Boolean = false
@@ -164,7 +170,10 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 .subscribe { event ->
                     mVelocityTracker.addMovement(event)
                     when (event.action) {
-                        MotionEvent.ACTION_DOWN -> mDownX = event.x
+                        MotionEvent.ACTION_DOWN -> {
+                            mScroller.abortAnimation()
+                            mDownX = event.x
+                        }
                         MotionEvent.ACTION_MOVE -> {
                             percent += (event.x - mDownX) / (width - paddingStart - paddingEnd)
                             mDownX = event.x
@@ -384,4 +393,6 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             addUpdateListener { percent = animatedValue as Float }
         }.start()
     }
+
+    fun percentChanges(): Observable<Float> = mPercentChangeSubject
 }

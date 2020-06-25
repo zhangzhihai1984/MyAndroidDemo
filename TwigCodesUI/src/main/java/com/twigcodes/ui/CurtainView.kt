@@ -14,6 +14,8 @@ import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.bitmapmesh.BitmapCurtainView
 import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 
 class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -22,8 +24,8 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     private val mSnapshotView = BitmapCurtainView(context).apply { elevation = CURTAIN_BITMAP_ELEVATION }
-    private val mTextureView: View
     private val mContentView: View
+    private val mCoverView: View
 
     var bitmap: Bitmap? = null
         set(value) {
@@ -60,22 +62,31 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         a.recycle()
 
         mContentView = LayoutInflater.from(context).inflate(contentLayoutId, null, false)
-        mTextureView = LayoutInflater.from(context).inflate(curtainTextureLayoutId, null, false).apply { elevation = CURTAIN_TEXTURE_ELECATION }
+        mCoverView = LayoutInflater.from(context).inflate(curtainTextureLayoutId, null, false).apply { elevation = CURTAIN_TEXTURE_ELECATION }
 
         addView(mContentView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-        addView(mTextureView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        addView(mCoverView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
-        mTextureView.touches { event ->
+        mCoverView.touches { event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    mSnapshotView.bitmap = ImageUtil.getViewBitmap(mTextureView)
-                    mTextureView.visibility = View.GONE
+                    mSnapshotView.bitmap = ImageUtil.getViewBitmap(mCoverView)
+                    mCoverView.visibility = View.GONE
                 }
             }
             false
         }
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
+                }
+
+        mSnapshotView.percentChanges()
+                .debounce(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter { percent -> percent == 0f }
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    mCoverView.visibility = View.VISIBLE
                 }
 
         globalLayouts()
@@ -88,7 +99,9 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     fun open() {
+        mSnapshotView.bitmap = ImageUtil.getViewBitmap(mCoverView)
         mSnapshotView.open()
+        mCoverView.visibility = View.GONE
     }
 
     fun close() {
