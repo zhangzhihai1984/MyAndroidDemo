@@ -14,8 +14,6 @@ import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.bitmapmesh.BitmapCurtainView
 import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import java.util.concurrent.TimeUnit
 
 class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -69,24 +67,18 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         mCoverView.touches { event ->
             when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    mSnapshotView.bitmap = ImageUtil.getViewBitmap(mCoverView)
-                    mCoverView.visibility = View.GONE
-                }
+                MotionEvent.ACTION_DOWN -> mSnapshotView.bitmap = ImageUtil.getViewBitmap(mCoverView)
             }
             false
         }
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe {
-                }
+                .subscribe {}
 
         mSnapshotView.percentChanges()
-                .debounce(100, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter { percent -> percent == 0f }
+                .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe {
-                    mCoverView.visibility = View.VISIBLE
+                .subscribe { percent ->
+                    mCoverView.visibility = if (percent == 0f) View.VISIBLE else View.GONE
                 }
 
         globalLayouts()
