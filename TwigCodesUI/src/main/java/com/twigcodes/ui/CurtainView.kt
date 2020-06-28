@@ -15,13 +15,24 @@ import com.twigcodes.ui.bitmapmesh.BitmapCurtainView
 import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 
+/**
+ * CoverView模拟窗帘, ContentView模拟窗帘后的内容, 拉开窗帘后显示.
+ * CoverView并不拦截touch事件, 它需要做的是当touch_down时, 将当前View的内容"截取"下来后交给SnapshotView.
+ * 真正滑动的其实是SnapshotView, 也就是[BitmapCurtainView], 它处于CoverView的下方, 当percent大于0时,
+ * 隐藏CoverView, 露出SnapshotView, 用户可以看到滑动的效果. 当percent为0时, 说明窗帘完全关闭, 此时显示CoverView,
+ * 遮挡住SnapshotView, 用户可以正常操作CoverView.
+ *
+ * 注: CoverView中的内容应以展示为主, 如果有支持点击(Button, TextView)或滚动(ScrollView)的控件都将影响窗帘的滑动,
+ * 因为作为child, 他们会先将touch事件截获. 当然也可以根据需求直接调用[open]和[close]进行窗帘的开和关, 只不过没有了
+ * 中间状态而已.
+ */
 class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
-        private const val CURTAIN_BITMAP_ELEVATION = 100f
-        private const val CURTAIN_TEXTURE_ELECATION = CURTAIN_BITMAP_ELEVATION + 1f
+        private const val CURTAIN_SNAPSHOT_ELEVATION = 100f
+        private const val CURTAIN_COVER_ELEVATION = CURTAIN_SNAPSHOT_ELEVATION + 1f
     }
 
-    private val mSnapshotView = BitmapCurtainView(context).apply { elevation = CURTAIN_BITMAP_ELEVATION }
+    private val mSnapshotView = BitmapCurtainView(context).apply { elevation = CURTAIN_SNAPSHOT_ELEVATION }
     private val mContentView: View
     private val mCoverView: View
 
@@ -53,14 +64,15 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
                 throw Exception("curtainContentLayout attr not found")
         }
 
-        val curtainTextureLayoutId = a.getResourceId(R.styleable.CurtainView_curtainCoverLayout, -1).also { resourceId ->
+        val coverLayoutId = a.getResourceId(R.styleable.CurtainView_curtainCoverLayout, -1).also { resourceId ->
             if (resourceId < 0)
                 throw Exception("curtainCoverLayout attr not found")
         }
+
         a.recycle()
 
         mContentView = LayoutInflater.from(context).inflate(contentLayoutId, null, false)
-        mCoverView = LayoutInflater.from(context).inflate(curtainTextureLayoutId, null, false).apply { elevation = CURTAIN_TEXTURE_ELECATION }
+        mCoverView = LayoutInflater.from(context).inflate(coverLayoutId, null, false).apply { elevation = CURTAIN_COVER_ELEVATION }
 
         addView(mContentView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         addView(mCoverView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))

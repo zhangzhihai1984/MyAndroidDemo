@@ -6,8 +6,7 @@
     <attr name="meshGridWidth" format="dimension" />
     <attr name="meshMaskColor" format="reference|color" />
     <attr name="meshDebug" format="boolean" />
-    <attr name="curtainTouchable" format="boolean" />
-    <attr name="curtainMaxPercent" format="float" />
+
 
     <declare-styleable name="BitmapWarpView">
         <attr name="android:src" format="reference" />
@@ -28,6 +27,9 @@
         <attr name="meshMaskColor" />
         <attr name="meshDebug" />
     </declare-styleable>
+
+    <attr name="curtainTouchable" format="boolean" />
+    <attr name="curtainMaxPercent" format="float" />
 
     <declare-styleable name="BitmapCurtainView">
         <attr name="android:src" format="reference" />
