@@ -34,7 +34,6 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         internal const val DEFAULT_GRID_WIDTH = 3
         internal const val DEFAULT_MAX_PERCENT = 0.8f
 
-        //        private const val DEFAULT_MASK_COLOR = Color.WHITE
         private const val PI2 = 2 * Math.PI
         private const val WAVE_MAX_HEIGHT = 30
         private const val WAVE_MAX_WIDHT = 120
@@ -47,13 +46,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mColors: IntArray
     private var mTouchable: Boolean
 
-    //    private val mMaskColor: Int
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
 
-    private val mBitmapPaint = Paint().apply {
-//        xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
-    }
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -96,7 +91,6 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_HEIGHT)
         mMaxPercent = min(max(a.getFloat(R.styleable.BitmapCurtainView_curtainMaxPercent, DEFAULT_MAX_PERCENT), 0f), 1f)
-//        mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
         mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_curtainTouchable, true)
         debug = a.getBoolean(R.styleable.BitmapCurtainView_meshDebug, false)
 
@@ -118,10 +112,9 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         initView()
     }
 
-    internal fun config(meshWidth: Int, meshHeight: Int, bitmap: Bitmap?, maxPercent: Float, touchable: Boolean, debug: Boolean, gridColor: Int, gridWidth: Int) {
+    internal fun config(meshWidth: Int, meshHeight: Int, maxPercent: Float, touchable: Boolean, debug: Boolean, gridColor: Int, gridWidth: Int) {
         mMeshWidth = meshWidth
         mMeshHeight = meshHeight
-        this.bitmap = bitmap
         mMaxPercent = min(max(maxPercent, 0f), 1f)
         mTouchable = touchable
         this.debug = debug
@@ -321,7 +314,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
                 .toFloatArray()
 
         bitmap?.run {
-            canvas.drawBitmapMesh(this, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, mBitmapPaint)
+            canvas.drawBitmapMesh(this, mMeshWidth, mMeshHeight, verts, 0, mColors, 0, null)
         }
     }
 
@@ -360,7 +353,6 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-//        canvas.drawColor(mMaskColor)
         drawBitmapMesh(canvas)
 
         if (debug) {

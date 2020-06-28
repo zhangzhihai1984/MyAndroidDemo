@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding4.view.globalLayouts
 import com.jakewharton.rxbinding4.view.touches
@@ -50,7 +49,6 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.CurtainView, defStyleAttr, defStyleRes)
-        val bitmap = a.getDrawable(R.styleable.CurtainView_android_src)?.toBitmap()
         val meshWidth = a.getInteger(R.styleable.CurtainView_meshRow, BitmapCurtainView.DEFAULT_MESH_WIDTH)
         val meshHeight = a.getInteger(R.styleable.CurtainView_meshColumn, BitmapCurtainView.DEFAULT_MESH_HEIGHT)
         val maxPercent = a.getFloat(R.styleable.CurtainView_curtainMaxPercent, BitmapCurtainView.DEFAULT_MAX_PERCENT)
@@ -97,7 +95,7 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
                 .take(1)
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
-                    mSnapshotView.config(meshWidth, meshHeight, bitmap, maxPercent, touchable, debug, gridColor, gridWidth)
+                    mSnapshotView.config(meshWidth, meshHeight, maxPercent, touchable, debug, gridColor, gridWidth)
                     addView(mSnapshotView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 }
     }

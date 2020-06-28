@@ -44,7 +44,6 @@
     </declare-styleable>
 
     <declare-styleable name="CurtainView">
-        <attr name="android:src" format="reference" />
         <attr name="meshRow" />
         <attr name="meshColumn" />
         <attr name="meshGridColor" />
