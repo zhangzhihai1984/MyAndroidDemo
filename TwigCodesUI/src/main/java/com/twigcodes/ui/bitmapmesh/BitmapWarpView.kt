@@ -57,8 +57,8 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapWarpView, defStyleAttr, defStyleRes)
         bitmap = a.getDrawable(R.styleable.BitmapWarpView_android_src)?.toBitmap()
-        mMeshWidth = a.getInteger(R.styleable.BitmapWarpView_meshRow, DEFAULT_MESH_WIDTH)
-        mMeshHeight = a.getInteger(R.styleable.BitmapWarpView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMeshWidth = a.getInteger(R.styleable.BitmapWarpView_meshColumn, DEFAULT_MESH_WIDTH)
+        mMeshHeight = a.getInteger(R.styleable.BitmapWarpView_meshRow, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapWarpView_meshMaskColor, DEFAULT_MASK_COLOR)
         debug = a.getBoolean(R.styleable.BitmapWarpView_meshDebug, false)
 

@@ -64,8 +64,8 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapRippleView, defStyleAttr, defStyleRes)
         bitmap = a.getDrawable(R.styleable.BitmapRippleView_android_src)?.toBitmap()
-        mMeshWidth = a.getInteger(R.styleable.BitmapRippleView_meshRow, DEFAULT_MESH_WIDTH)
-        mMeshHeight = a.getInteger(R.styleable.BitmapRippleView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMeshWidth = a.getInteger(R.styleable.BitmapRippleView_meshColumn, DEFAULT_MESH_WIDTH)
+        mMeshHeight = a.getInteger(R.styleable.BitmapRippleView_meshRow, DEFAULT_MESH_HEIGHT)
         mMaskColor = a.getColor(R.styleable.BitmapRippleView_meshMaskColor, DEFAULT_MASK_COLOR)
         debug = a.getBoolean(R.styleable.BitmapRippleView_meshDebug, false)
 

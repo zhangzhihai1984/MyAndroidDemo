@@ -13,6 +13,8 @@ import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.bitmapmesh.BitmapCurtainView
 import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 /**
  * CoverView模拟窗帘, ContentView模拟窗帘后的内容, 拉开窗帘后显示.
@@ -31,6 +33,7 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         private const val CURTAIN_COVER_ELEVATION = CURTAIN_SNAPSHOT_ELEVATION + 1f
     }
 
+    private val mPercentChangeSubject = PublishSubject.create<Float>()
     private val mSnapshotView = BitmapCurtainView(context).apply { elevation = CURTAIN_SNAPSHOT_ELEVATION }
     private val mContentView: View
     private val mCoverView: View
@@ -49,8 +52,8 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.CurtainView, defStyleAttr, defStyleRes)
-        val meshWidth = a.getInteger(R.styleable.CurtainView_meshRow, BitmapCurtainView.DEFAULT_MESH_WIDTH)
-        val meshHeight = a.getInteger(R.styleable.CurtainView_meshColumn, BitmapCurtainView.DEFAULT_MESH_HEIGHT)
+        val meshWidth = a.getInteger(R.styleable.CurtainView_meshColumn, BitmapCurtainView.DEFAULT_MESH_WIDTH)
+        val meshHeight = a.getInteger(R.styleable.CurtainView_meshRow, BitmapCurtainView.DEFAULT_MESH_HEIGHT)
         val maxPercent = a.getFloat(R.styleable.CurtainView_curtainMaxPercent, BitmapCurtainView.DEFAULT_MAX_PERCENT)
         val touchable = a.getBoolean(R.styleable.CurtainView_curtainTouchable, true)
         val debug = a.getBoolean(R.styleable.CurtainView_meshDebug, false)
@@ -88,6 +91,7 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { percent ->
+                    mPercentChangeSubject.onNext(percent)
                     mCoverView.visibility = if (percent == 0f) View.VISIBLE else View.GONE
                 }
 
@@ -109,4 +113,6 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     fun close() {
         mSnapshotView.close()
     }
+
+    fun percentChanges(): Observable<Float> = mPercentChangeSubject
 }

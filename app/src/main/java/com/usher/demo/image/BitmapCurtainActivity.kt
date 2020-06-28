@@ -6,6 +6,7 @@ import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bitmap_curtain.*
+import kotlinx.android.synthetic.main.curtain_content_layout.*
 
 class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
@@ -16,28 +17,33 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
+        curtain_view.percentChanges()
+                .compose(RxUtil.getSchedulerComposer())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { percent ->
+                    mask_view.alpha = 1 - percent - 0.2f
+                    percent_textview.text = "${(percent * 100).toInt()}"
+                }
+
         debug_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
                 .subscribe {
-                    bitmap_curtain_layout1.debug = bitmap_curtain_layout1.debug.not()
-                    bitmap_curtain_layout2.debug = bitmap_curtain_layout2.debug.not()
+                    curtain_view.debug = curtain_view.debug.not()
                 }
 
         open_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
                 .subscribe {
-                    bitmap_curtain_layout1.open()
-                    bitmap_curtain_layout2.open()
+                    curtain_view.open()
                 }
 
         close_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
                 .subscribe {
-                    bitmap_curtain_layout1.close()
-                    bitmap_curtain_layout2.close()
+                    curtain_view.close()
                 }
     }
 }

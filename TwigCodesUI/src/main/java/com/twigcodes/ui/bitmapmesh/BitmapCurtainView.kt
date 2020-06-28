@@ -49,6 +49,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
 
+    private val mBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -88,8 +89,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.BitmapCurtainView, defStyleAttr, defStyleRes)
         bitmap = a.getDrawable(R.styleable.BitmapCurtainView_android_src)?.toBitmap()
-        mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_WIDTH)
-        mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_HEIGHT)
+        mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_WIDTH)
+        mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_HEIGHT)
         mMaxPercent = min(max(a.getFloat(R.styleable.BitmapCurtainView_curtainMaxPercent, DEFAULT_MAX_PERCENT), 0f), 1f)
         mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_curtainTouchable, true)
         debug = a.getBoolean(R.styleable.BitmapCurtainView_meshDebug, false)
