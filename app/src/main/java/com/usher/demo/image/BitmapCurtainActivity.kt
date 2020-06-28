@@ -7,6 +7,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bitmap_curtain.*
 import kotlinx.android.synthetic.main.curtain_content_layout.*
+import kotlinx.android.synthetic.main.curtain_cover_layout.*
 
 class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
@@ -17,12 +18,21 @@ class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
+        val resIds = listOf(R.drawable.demo_slamdunk, R.drawable.demo_mall, R.drawable.demo_tree, R.drawable.demo_hardworking, R.drawable.demo_arale)
+
         curtain_view.percentChanges()
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))
                 .subscribe { percent ->
                     mask_view.alpha = 1 - percent - 0.2f
                     percent_textview.text = "${(percent * 100).toInt()}"
+                }
+
+        shuffle_imageview.clicks()
+                .compose(RxUtil.singleClick())
+                .to(RxUtil.autoDispose(this))
+                .subscribe {
+                    cover_imageview.setImageResource(resIds[(resIds.indices).random()])
                 }
 
         debug_imageview.clicks()
