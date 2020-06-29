@@ -16,14 +16,19 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
+        color_picker_view.colorPicks()
+                .compose(RxUtil.getSchedulerComposer())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { color -> graffiti_view.strokeColor = color }
+
         undo_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe { path_view.undo() }
+                .subscribe { graffiti_view.undo() }
 
         clear_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe { path_view.clear() }
+                .subscribe { graffiti_view.clear() }
     }
 }
