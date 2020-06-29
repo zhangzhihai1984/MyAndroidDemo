@@ -5,7 +5,6 @@ import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.itemtouch.ChannelEditActivity
 import com.usher.demo.image.*
-import com.usher.demo.kotlin.KotlinActivity
 import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
 import com.usher.demo.material.TabLayoutActivity
@@ -35,7 +34,6 @@ object DemoConfig {
     private const val KEY_MATERIAL = "material"
     private const val KEY_AWESOME = "awesome"
     private const val KEY_OTHER = "other"
-    private const val KEY_KOTLIN = "kotlin"
 
     init {
         configMap[KEY_MAIN] = listOf(
@@ -45,8 +43,7 @@ object DemoConfig {
                 DemoItem("view", KEY_VIEW, DemoListActivity::class.java),
                 DemoItem("web", KEY_WEB, DemoListActivity::class.java),
                 DemoItem("other", KEY_OTHER, DemoListActivity::class.java),
-                DemoItem("awesome", KEY_AWESOME, DemoListActivity::class.java),
-                DemoItem("kotlin", KEY_KOTLIN, KotlinActivity::class.java)
+                DemoItem("awesome", KEY_AWESOME, DemoListActivity::class.java)
         )
 
         configMap[KEY_RX] = listOf(
@@ -61,8 +58,7 @@ object DemoConfig {
                 DemoItem("scale type", ImageScaleTypeActivity::class.java),
                 DemoItem("picasso transform", PicassoTransformationActivity::class.java),
                 DemoItem("bitmap warp", BitmapWarpActivity::class.java),
-                DemoItem("bitmap ripple", BitmapRippleActivity::class.java),
-                DemoItem("bitmap curtain", BitmapCurtainActivity::class.java)
+                DemoItem("bitmap ripple", BitmapRippleActivity::class.java)
         )
 
         configMap[KEY_WEB] = listOf(
@@ -88,7 +84,8 @@ object DemoConfig {
                 DemoItem("loop recycler", LoopRecyclerActivity::class.java),
                 DemoItem("scan", ScanActivity::class.java),
                 DemoItem("index", IndexActivity::class.java),
-                DemoItem("color picker", ColorPickerActivity::class.java)
+                DemoItem("color picker", ColorPickerActivity::class.java),
+                DemoItem("curtain", CurtainActivity::class.java)
         )
 
         configMap[KEY_OTHER] = listOf(

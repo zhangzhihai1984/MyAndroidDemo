@@ -91,11 +91,6 @@
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".image.BitmapCurtainActivity"
-            android:configChanges="uiMode"
-            android:screenOrientation="portrait"
-            android:theme="@style/CommonTheme" />
 
         <!-- Material Demo -->
         <activity
@@ -180,6 +175,11 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.ColorPickerActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".view.CurtainActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />

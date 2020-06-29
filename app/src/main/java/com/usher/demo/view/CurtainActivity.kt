@@ -1,19 +1,19 @@
-package com.usher.demo.image
+package com.usher.demo.view
 
 import android.os.Bundle
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_bitmap_curtain.*
+import kotlinx.android.synthetic.main.activity_curtain.*
 import kotlinx.android.synthetic.main.curtain_content_layout.*
 import kotlinx.android.synthetic.main.curtain_cover_layout.*
 
-class BitmapCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class CurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bitmap_curtain)
+        setContentView(R.layout.activity_curtain)
         initView()
     }
 
