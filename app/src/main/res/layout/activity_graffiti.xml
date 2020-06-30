@@ -23,7 +23,8 @@
                 android:id="@+id/graffiti_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:strokeColor="@color/colorPrimary" />
+                app:graffitiStrokeColor="@android:color/black"
+                app:graffitiStrokeWidth="5dp" />
 
         </androidx.cardview.widget.CardView>
 
@@ -43,7 +44,7 @@
 
             <com.twigcodes.ui.colorpicker.ColorPickerView
                 android:id="@+id/color_picker_view"
-                android:layout_width="180dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 app:brightnessCornerRadius="5dp"
@@ -55,9 +56,10 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginEnd="10dp"
-                android:gravity="center"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <ImageView
@@ -79,7 +81,40 @@
                     android:scaleType="center"
                     android:src="@drawable/ic_refresh_white" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:padding="5dp"
+                        android:src="@drawable/common_mask_circle_background" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@null"
+                        android:padding="2.5dp"
+                        android:src="@drawable/common_mask_circle_background" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/common_mask_circle_background" />
+
+                </LinearLayout>
+
             </LinearLayout>
+
 
         </LinearLayout>
 

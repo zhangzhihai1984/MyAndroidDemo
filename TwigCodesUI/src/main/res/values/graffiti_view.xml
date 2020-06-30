@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="GraffitiView">
-        <attr name="android:strokeColor" format="reference|color" />
-        <attr name="android:strokeWidth" format="float" />
+        <attr name="graffitiStrokeColor" format="reference|color" />
+        <attr name="graffitiStrokeWidth" format="dimension" />
     </declare-styleable>
 </resources>

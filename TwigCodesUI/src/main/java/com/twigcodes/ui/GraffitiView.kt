@@ -12,7 +12,7 @@ import com.twigcodes.ui.util.RxUtil
 class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private const val DEFAULT_STROKE_COLOR = Color.BLACK
-        private const val DEFAULT_STROKE_WIDTH = 15f
+        private const val DEFAULT_STROKE_WIDTH = 15
     }
 
     private val mPathWithPaints = arrayListOf<Pair<Path, Paint>>()
@@ -40,8 +40,8 @@ class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeS
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.GraffitiView, defStyleAttr, defStyleRes)
 
         mPaint.run {
-            color = a.getColor(R.styleable.GraffitiView_android_strokeColor, DEFAULT_STROKE_COLOR)
-            strokeWidth = a.getFloat(R.styleable.GraffitiView_android_strokeWidth, DEFAULT_STROKE_WIDTH)
+            color = a.getColor(R.styleable.GraffitiView_graffitiStrokeColor, DEFAULT_STROKE_COLOR)
+            strokeWidth = a.getDimensionPixelSize(R.styleable.GraffitiView_graffitiStrokeWidth, DEFAULT_STROKE_WIDTH).toFloat()
         }
 
         a.recycle()
