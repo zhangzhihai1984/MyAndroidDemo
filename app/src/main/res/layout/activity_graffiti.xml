@@ -90,6 +90,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/stroke_imageview1"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:contentDescription="@null"
@@ -97,6 +98,7 @@
                         android:src="@drawable/common_mask_circle_background" />
 
                     <ImageView
+                        android:id="@+id/stroke_imageview2"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginStart="10dp"
@@ -106,6 +108,7 @@
                         android:src="@drawable/common_mask_circle_background" />
 
                     <ImageView
+                        android:id="@+id/stroke_imageview3"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:contentDescription="@null"
@@ -114,7 +117,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
 
         </LinearLayout>
 

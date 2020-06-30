@@ -30,5 +30,20 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
                 .subscribe { graffiti_view.clear() }
+
+        stroke_imageview1.clicks()
+                .compose(RxUtil.singleClick())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { graffiti_view.strokeWidth = 15f }
+
+        stroke_imageview2.clicks()
+                .compose(RxUtil.singleClick())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { graffiti_view.strokeWidth = 30f }
+
+        stroke_imageview3.clicks()
+                .compose(RxUtil.singleClick())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { graffiti_view.strokeWidth = 45f }
     }
 }

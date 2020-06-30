@@ -30,7 +30,7 @@ class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeS
             mPaint.color = value
         }
 
-    var storkeWidth: Float = mPaint.strokeWidth
+    var strokeWidth: Float = mPaint.strokeWidth
         set(value) {
             field = value
             mPaint.strokeWidth = value
