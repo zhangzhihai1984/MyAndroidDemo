@@ -51,14 +51,15 @@ class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeS
                 .subscribe { event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            val pathWithPaint = Path().apply { moveTo(event.x, event.y) } to Paint(mPaint)
-                            mPathWithPaints.add(pathWithPaint)
+                            val path = Path().apply { moveTo(event.x, event.y) }
+                            val paint = Paint(mPaint)
+                            mPathWithPaints.add(path to paint)
                         }
-                        MotionEvent.ACTION_MOVE -> {
+                        MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
                             mPathWithPaints.lastOrNull()?.first?.lineTo(event.x, event.y)
+                            invalidate()
                         }
                     }
-                    invalidate()
                 }
     }
 

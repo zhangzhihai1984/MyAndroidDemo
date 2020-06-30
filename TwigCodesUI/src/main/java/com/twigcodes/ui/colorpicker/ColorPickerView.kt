@@ -10,7 +10,7 @@ import com.jakewharton.rxbinding4.view.globalLayouts
 import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.rxjava3.core.Observable
-import kotlin.math.abs
+import kotlin.math.max
 
 class ColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
@@ -41,12 +41,17 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
     private fun initView() {
+        /**
+         * 为了美观, 我们通过设置margin的方式将[BrightnessView]的宽度与[SimpleColorPickerView]中的"颜色选取"区域
+         * 这个圆形的宽度保持一致:
+         * 如果[SimpleColorPickerView]的宽度大于高度, 左右margin = (width - height) / 2, 否则为0.
+         */
         mSimpleColorPickerView.globalLayouts()
                 .take(1)
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mBrightnessView.updateLayoutParams<LayoutParams> {
-                        val margin = abs(mSimpleColorPickerView.width - mSimpleColorPickerView.height) / 2
+                        val margin = max(mSimpleColorPickerView.width - mSimpleColorPickerView.height, 0) / 2
                         leftMargin = margin
                         rightMargin = margin
                     }

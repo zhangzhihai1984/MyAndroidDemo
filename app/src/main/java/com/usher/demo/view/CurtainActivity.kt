@@ -31,29 +31,21 @@ class CurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
         shuffle_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe {
-                    cover_imageview.setImageResource(resIds[(resIds.indices).random()])
-                }
+                .subscribe { cover_imageview.setImageResource(resIds[resIds.indices.random()]) }
 
         debug_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe {
-                    curtain_view.debug = curtain_view.debug.not()
-                }
+                .subscribe { curtain_view.debug = curtain_view.debug.not() }
 
         open_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe {
-                    curtain_view.open()
-                }
+                .subscribe { curtain_view.open() }
 
         close_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe {
-                    curtain_view.close()
-                }
+                .subscribe { curtain_view.close() }
     }
 }
