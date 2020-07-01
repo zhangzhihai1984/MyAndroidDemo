@@ -127,7 +127,7 @@
                         android:layout_height="20dp"
                         android:contentDescription="@null"
                         android:padding="5dp"
-                        android:src="@drawable/common_mask_circle_background" />
+                        android:src="@drawable/common_gray_circle_background" />
 
                     <ImageView
                         android:id="@+id/stroke_imageview2"
@@ -137,14 +137,14 @@
                         android:layout_marginEnd="10dp"
                         android:contentDescription="@null"
                         android:padding="2.5dp"
-                        android:src="@drawable/common_mask_circle_background" />
+                        android:src="@drawable/common_gray_circle_background" />
 
                     <ImageView
                         android:id="@+id/stroke_imageview3"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/common_mask_circle_background" />
+                        android:src="@drawable/common_gray_circle_background" />
 
                 </LinearLayout>
 

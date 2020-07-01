@@ -8,6 +8,7 @@ import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_graffiti.*
 
 class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
@@ -28,25 +29,18 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 null
         )
 
+        val stroke1 = stroke_imageview1.clicks().map { 15f }
+        val stroke2 = stroke_imageview2.clicks().map { 30f }
+        val stroke3 = stroke_imageview3.clicks().map { 45f }
+
+        Observable.merge(stroke1, stroke2, stroke3)
+                .to(RxUtil.autoDispose(this))
+                .subscribe { graffiti_view.strokeWidth = it }
+
         color_picker_view.colorPicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))
                 .subscribe { color -> graffiti_view.strokeColor = color }
-
-        stroke_imageview1.clicks()
-                .compose(RxUtil.singleClick())
-                .to(RxUtil.autoDispose(this))
-                .subscribe { graffiti_view.strokeWidth = 15f }
-
-        stroke_imageview2.clicks()
-                .compose(RxUtil.singleClick())
-                .to(RxUtil.autoDispose(this))
-                .subscribe { graffiti_view.strokeWidth = 30f }
-
-        stroke_imageview3.clicks()
-                .compose(RxUtil.singleClick())
-                .to(RxUtil.autoDispose(this))
-                .subscribe { graffiti_view.strokeWidth = 45f }
 
         shuffle_imageview.clicks()
                 .compose(RxUtil.singleClick())
