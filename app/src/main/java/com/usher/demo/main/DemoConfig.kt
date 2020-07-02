@@ -59,7 +59,8 @@ object DemoConfig {
                 DemoItem("picasso transform", PicassoTransformationActivity::class.java),
                 DemoItem("bitmap warp", BitmapWarpActivity::class.java),
                 DemoItem("bitmap ripple", BitmapRippleActivity::class.java),
-                DemoItem("graffiti", GraffitiActivity::class.java)
+                DemoItem("graffiti", GraffitiActivity::class.java),
+                DemoItem("porterduff", PorterDuffActivity::class.java)
         )
 
         configMap[KEY_WEB] = listOf(
