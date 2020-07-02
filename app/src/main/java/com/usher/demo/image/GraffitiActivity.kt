@@ -1,6 +1,7 @@
 package com.usher.demo.image
 
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.core.graphics.drawable.toDrawable
 import com.jakewharton.rxbinding4.view.clicks
@@ -9,6 +10,7 @@ import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.withLatestFrom
 import kotlinx.android.synthetic.main.activity_graffiti.*
 
 class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
@@ -29,18 +31,28 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 null
         )
 
-        val stroke1 = stroke_imageview1.clicks().map { 15f }
-        val stroke2 = stroke_imageview2.clicks().map { 30f }
-        val stroke3 = stroke_imageview3.clicks().map { 45f }
+        val strokeImageViews = listOf(stroke_imageview1, stroke_imageview2, stroke_imageview3)
+        val strokeClicks = Observable.merge(strokeImageViews.mapIndexed { i, imageView -> imageView.clicks().map { i }.share() })
+                .startWith(Observable.just(1).compose(RxUtil.getSchedulerComposer()))
 
-        Observable.merge(stroke1, stroke2, stroke3)
-                .to(RxUtil.autoDispose(this))
-                .subscribe { graffiti_view.strokeWidth = it }
+        val colorPicks = color_picker_view.colorPicks()
+                .startWith(Observable.just(Color.BLACK).compose(RxUtil.getSchedulerComposer()))
 
-        color_picker_view.colorPicks()
-                .compose(RxUtil.getSchedulerComposer())
+        colorPicks.withLatestFrom(strokeClicks) { color, i ->
+            graffiti_view.strokeColor = color
+            strokeImageViews[i].setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        }
                 .to(RxUtil.autoDispose(this))
-                .subscribe { color -> graffiti_view.strokeColor = color }
+                .subscribe {}
+
+        strokeClicks.withLatestFrom(colorPicks) { current, color ->
+            graffiti_view.strokeWidth = (current + 1) * 15f
+            strokeImageViews.forEachIndexed { i, imageView ->
+                imageView.setColorFilter(color, if (i == current) PorterDuff.Mode.SRC_IN else PorterDuff.Mode.DST)
+            }
+        }
+                .to(RxUtil.autoDispose(this))
+                .subscribe {}
 
         shuffle_imageview.clicks()
                 .compose(RxUtil.singleClick())
