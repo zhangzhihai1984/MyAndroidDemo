@@ -38,7 +38,7 @@ class DemoListActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
     }
 
-    class DemoAdapter(data: List<DemoItem>) : RxBaseQuickAdapter<DemoItem, BaseViewHolder>(R.layout.item_demo, data) {
+    private class DemoAdapter(data: List<DemoItem>) : RxBaseQuickAdapter<DemoItem, BaseViewHolder>(R.layout.item_demo, data) {
         override fun convert(helper: BaseViewHolder, demoItem: DemoItem) {
             helper.setText(R.id.desc_textview, demoItem.desc)
         }

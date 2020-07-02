@@ -37,7 +37,7 @@ class ImageBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indicatorview.setViewPager(viewpager)
     }
 
-    class BlurFragmentAdapter(fm: FragmentManager, private var mData: List<Int>) : FragmentStatePagerAdapter(fm) {
+    private class BlurFragmentAdapter(fm: FragmentManager, private var mData: List<Int>) : FragmentStatePagerAdapter(fm) {
         override fun getItem(position: Int): Fragment = BlurFragment.newInstance(mData[position])
 
         override fun getCount(): Int = mData.size

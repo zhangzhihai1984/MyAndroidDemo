@@ -34,7 +34,7 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT_AUTO) {
         recyclerview.adapter = PicassoAdapter(transformations)
     }
 
-    class PicassoAdapter(data: List<Transformation?>) : RxBaseQuickAdapter<Transformation?, BaseViewHolder>(R.layout.item_picasso_transformation, data) {
+    private class PicassoAdapter(data: List<Transformation?>) : RxBaseQuickAdapter<Transformation?, BaseViewHolder>(R.layout.item_picasso_transformation, data) {
         override fun convert(helper: BaseViewHolder, transformation: Transformation?) {
             Picasso.get().load(R.drawable.demo_hardworking)
                     .transform(transformation ?: object : Transformation {

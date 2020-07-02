@@ -39,7 +39,7 @@ class PagerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe { mPagerAdapter.remove() }
     }
 
-    class PagerFragmentAdapter(fm: FragmentManager, private var mSize: Int = 5) : FragmentStatePagerAdapter(fm) {
+    private class PagerFragmentAdapter(fm: FragmentManager, private var mSize: Int = 5) : FragmentStatePagerAdapter(fm) {
         override fun getItem(position: Int): Fragment {
             val pos = LoopViewPager.getMatchedPosition(position, count)
             return PagerFragment.newInstance(pos + 1)
