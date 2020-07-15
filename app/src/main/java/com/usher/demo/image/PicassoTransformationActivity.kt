@@ -28,7 +28,7 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.duggee1, R.drawable.demo_mall)
+        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.duggee1)
 
         viewpager.adapter = PicassoTransformationFragmentAdapter(supportFragmentManager, resIds)
         indicatorview.setViewPager(viewpager)
@@ -51,29 +51,30 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         override fun init() {
-            val transformations = listOf(
-                    null,
-                    ImageUtil.getBlurTransformation(requireContext()),
-                    ImageUtil.getSquareTransformation(),
-                    ImageUtil.getCircleTransformation(),
-                    ImageUtil.getRoundTransformation(200f)
+            val transformationPairs = listOf(
+                    object : Transformation {
+                        override fun key(): String = "NoTransformation"
+
+                        override fun transform(source: Bitmap): Bitmap = source
+                    } to "NULL",
+                    ImageUtil.getBlurTransformation(requireContext()) to "BLUR",
+                    ImageUtil.getSquareTransformation() to "SQUARE",
+                    ImageUtil.getCircleTransformation() to "CIRCLE",
+                    ImageUtil.getRoundTransformation(200f) to "ROUND"
             )
 
             arguments?.run {
                 recyclerview.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
-                recyclerview.adapter = PicassoTransformationAdapter(transformations, getInt(Constants.TAG_DATA))
+                recyclerview.adapter = PicassoTransformationAdapter(transformationPairs, getInt(Constants.TAG_DATA))
             }
         }
     }
 
-    private class PicassoTransformationAdapter(data: List<Transformation?>, private val resId: Int) : RxBaseQuickAdapter<Transformation?, BaseViewHolder>(R.layout.item_picasso_transformation, data) {
-        override fun convert(helper: BaseViewHolder, transformation: Transformation?) {
-            Picasso.get().load(resId)
-                    .transform(transformation ?: object : Transformation {
-                        override fun key(): String = "NoBlurTransformation"
+    private class PicassoTransformationAdapter(data: List<Pair<Transformation, String>>, private val resId: Int) : RxBaseQuickAdapter<Pair<Transformation, String>, BaseViewHolder>(R.layout.item_picasso_transformation, data) {
+        override fun convert(helper: BaseViewHolder, transformationPair: Pair<Transformation, String>) {
+            Picasso.get().load(resId).transform(transformationPair.first).into(helper.getView<ImageView>(R.id.picasso_imageview))
 
-                        override fun transform(source: Bitmap): Bitmap = source
-                    }).into(helper.getView<ImageView>(R.id.picasso_imageview))
+            helper.setText(R.id.textview, transformationPair.second)
         }
     }
 }

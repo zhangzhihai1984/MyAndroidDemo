@@ -62,7 +62,10 @@ object ImageUtil {
                     val radius = size.toFloat() / 2
 
                     canvas.drawCircle(radius, radius, radius, paint)
-                    canvas.drawBitmap(source, 0f, 0f, paint.apply {
+
+                    val left = -(source.width - size) / 2f
+                    val top = -(source.height - size) / 2f
+                    canvas.drawBitmap(source, left, top, paint.apply {
                         xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
                     })
 
