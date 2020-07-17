@@ -30,20 +30,20 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT_AUTO) {
     private fun initView() {
         val resIds = listOf(R.drawable.demo_hardworking, R.drawable.duggee1)
 
-        viewpager.adapter = PicassoTransformationFragmentAdapter(supportFragmentManager, resIds)
+        viewpager.adapter = PicassoXferFragmentAdapter(supportFragmentManager, resIds)
         indicatorview.setViewPager(viewpager)
     }
 
-    private class PicassoTransformationFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>) : FragmentStatePagerAdapter(fm) {
-        override fun getItem(position: Int): Fragment = PicassoTransformationFragment.newInstance(mResIds[position])
+    private class PicassoXferFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>) : FragmentStatePagerAdapter(fm) {
+        override fun getItem(position: Int): Fragment = PicassoXferFragment.newInstance(mResIds[position])
 
         override fun getCount(): Int = mResIds.size
     }
 
-    class PicassoTransformationFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
+    class PicassoXferFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
         companion object {
             fun newInstance(resId: Int) =
-                    PicassoTransformationFragment(R.layout.fragment_picasso_transformation).apply {
+                    PicassoXferFragment(R.layout.fragment_picasso_transformation).apply {
                         arguments = Bundle().apply {
                             putInt(Constants.TAG_DATA, resId)
                         }
@@ -51,7 +51,7 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         override fun init() {
-            val transformationPairs = listOf(
+            val xferPairs = listOf(
                     object : Transformation {
                         override fun key(): String = "NoTransformation"
 
@@ -65,16 +65,16 @@ class PicassoTransformationActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
             arguments?.run {
                 recyclerview.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
-                recyclerview.adapter = PicassoTransformationAdapter(transformationPairs, getInt(Constants.TAG_DATA))
+                recyclerview.adapter = PicassoXferAdapter(xferPairs, getInt(Constants.TAG_DATA))
             }
         }
     }
 
-    private class PicassoTransformationAdapter(data: List<Pair<Transformation, String>>, private val resId: Int) : RxBaseQuickAdapter<Pair<Transformation, String>, BaseViewHolder>(R.layout.item_picasso_transformation, data) {
-        override fun convert(helper: BaseViewHolder, transformationPair: Pair<Transformation, String>) {
-            Picasso.get().load(resId).transform(transformationPair.first).into(helper.getView<ImageView>(R.id.picasso_imageview))
+    private class PicassoXferAdapter(data: List<Pair<Transformation, String>>, private val resId: Int) : RxBaseQuickAdapter<Pair<Transformation, String>, BaseViewHolder>(R.layout.item_picasso_transformation, data) {
+        override fun convert(helper: BaseViewHolder, xferPair: Pair<Transformation, String>) {
+            Picasso.get().load(resId).transform(xferPair.first).into(helper.getView<ImageView>(R.id.picasso_imageview))
 
-            helper.setText(R.id.textview, transformationPair.second)
+            helper.setText(R.id.textview, xferPair.second)
         }
     }
 }

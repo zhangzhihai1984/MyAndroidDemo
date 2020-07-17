@@ -89,7 +89,7 @@ public class ChartActivity extends BaseActivity {
 //        mHumidityData.add(45.0f);
 
 
-        mChartView.setConfig(ChartView.ChartType.COLUMN, ChartView.XType.MONTH, ChartView.YType.HUMIDITY);
+        mChartView.setConfig(ChartView.XType.MONTH, ChartView.YType.HUMIDITY, true);
 //        mChartView.setData(mTempData);
 
         Observable.timer(50, TimeUnit.MILLISECONDS)
