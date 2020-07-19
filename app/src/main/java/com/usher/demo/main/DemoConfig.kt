@@ -29,7 +29,7 @@ object DemoConfig {
     private const val KEY_MAIN = "main"
     private const val KEY_RX = "rx"
     private const val KEY_WEB = "web"
-    private const val KEY_IMAGE = "image"
+    private const val KEY_DEMONSTRATION = "demonstration"
     private const val KEY_VIEW = "view"
     private const val KEY_MATERIAL = "material"
     private const val KEY_AWESOME = "awesome"
@@ -38,7 +38,7 @@ object DemoConfig {
     init {
         configMap[KEY_MAIN] = listOf(
                 DemoItem("rx", KEY_RX, DemoListActivity::class.java),
-                DemoItem("image", KEY_IMAGE, DemoListActivity::class.java),
+                DemoItem("demonstration", KEY_DEMONSTRATION, DemoListActivity::class.java),
                 DemoItem("material", KEY_MATERIAL, DemoListActivity::class.java),
                 DemoItem("view", KEY_VIEW, DemoListActivity::class.java),
                 DemoItem("web", KEY_WEB, DemoListActivity::class.java),
@@ -53,7 +53,7 @@ object DemoConfig {
                 DemoItem("search", RxSearchActivity::class.java)
         )
 
-        configMap[KEY_IMAGE] = listOf(
+        configMap[KEY_DEMONSTRATION] = listOf(
                 DemoItem("blur", ImageBlurActivity::class.java),
                 DemoItem("scale type", ImageScaleTypeActivity::class.java),
                 DemoItem("bitmap xfer", BitmapXferActivity::class.java),
