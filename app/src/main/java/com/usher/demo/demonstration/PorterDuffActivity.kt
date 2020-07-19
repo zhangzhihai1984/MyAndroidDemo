@@ -1,4 +1,4 @@
-package com.usher.demo.image
+package com.usher.demo.demonstration
 
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -36,7 +36,9 @@ class PorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 PorterDuff.Mode.DARKEN,
                 PorterDuff.Mode.LIGHTEN,
                 PorterDuff.Mode.MULTIPLY,
-                PorterDuff.Mode.SCREEN
+                PorterDuff.Mode.SCREEN,
+                PorterDuff.Mode.ADD,
+                PorterDuff.Mode.OVERLAY
         )
         recyclerview.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
         recyclerview.adapter = PorterDuffAdapter(modes)

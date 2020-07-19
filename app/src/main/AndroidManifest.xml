@@ -67,37 +67,37 @@
 
         <!-- Image Demo -->
         <activity
-            android:name=".image.ImageBlurActivity"
+            android:name=".demonstration.ImageBlurActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.BitmapXferActivity"
+            android:name=".demonstration.BitmapXferActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.ImageScaleTypeActivity"
+            android:name=".demonstration.ImageScaleTypeActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.BitmapWarpActivity"
+            android:name=".demonstration.BitmapWarpActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.BitmapRippleActivity"
+            android:name=".demonstration.BitmapRippleActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.GraffitiActivity"
+            android:name=".demonstration.GraffitiActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".image.PorterDuffActivity"
+            android:name=".demonstration.PorterDuffActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />

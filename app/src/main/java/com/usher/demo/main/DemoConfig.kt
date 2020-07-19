@@ -4,7 +4,7 @@ import com.usher.demo.awesome.decoration.ContactsActivity
 import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.itemtouch.ChannelEditActivity
-import com.usher.demo.image.*
+import com.usher.demo.demonstration.*
 import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
 import com.usher.demo.material.TabLayoutActivity

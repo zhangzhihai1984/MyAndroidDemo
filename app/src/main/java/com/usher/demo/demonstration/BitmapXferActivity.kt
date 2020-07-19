@@ -1,4 +1,4 @@
-package com.usher.demo.image
+package com.usher.demo.demonstration
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -59,7 +59,8 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         ImageUtil.getScaledBlurBitmap(bitmap) to "SCALED RENDER",
                         ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
                         ImageUtil.getCircleBitmap(bitmap) to "CIRCLE",
-                        ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND"
+                        ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND",
+                        ImageUtil.getColorFilterBitmap(bitmap) to "COLOR FILTER"
                 )
 
                 recyclerview.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)

@@ -1,4 +1,4 @@
-package com.usher.demo.image
+package com.usher.demo.demonstration
 
 import android.graphics.Color
 import android.os.Bundle

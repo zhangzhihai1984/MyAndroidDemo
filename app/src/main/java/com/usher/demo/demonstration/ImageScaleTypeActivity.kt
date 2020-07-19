@@ -1,4 +1,4 @@
-package com.usher.demo.image
+package com.usher.demo.demonstration
 
 import android.content.Context
 import android.os.Bundle
