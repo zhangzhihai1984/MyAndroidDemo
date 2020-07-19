@@ -2,6 +2,8 @@ package com.usher.demo.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
@@ -40,7 +42,11 @@ class DemoListActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     private class DemoAdapter(data: List<DemoItem>) : RxBaseQuickAdapter<DemoItem, BaseViewHolder>(R.layout.item_demo, data) {
         override fun convert(helper: BaseViewHolder, demoItem: DemoItem) {
-            helper.setText(R.id.desc_textview, demoItem.desc)
+            helper.setText(R.id.title_textview, demoItem.title)
+
+            val descTextView = helper.getView<TextView>(R.id.desc_textview)
+            descTextView.text = demoItem.desc
+            descTextView.visibility = if (demoItem.desc.isNullOrEmpty()) View.GONE else View.VISIBLE
         }
     }
 }

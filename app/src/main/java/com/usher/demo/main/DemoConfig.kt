@@ -37,76 +37,79 @@ object DemoConfig {
 
     init {
         configMap[KEY_MAIN] = listOf(
-                DemoItem("rx", KEY_RX, DemoListActivity::class.java),
-                DemoItem("demonstration", KEY_DEMONSTRATION, DemoListActivity::class.java),
-                DemoItem("material", KEY_MATERIAL, DemoListActivity::class.java),
-                DemoItem("view", KEY_VIEW, DemoListActivity::class.java),
-                DemoItem("web", KEY_WEB, DemoListActivity::class.java),
-                DemoItem("other", KEY_OTHER, DemoListActivity::class.java),
-                DemoItem("awesome", KEY_AWESOME, DemoListActivity::class.java)
+                DemoItem(KEY_RX, DemoListActivity::class.java, "rx"),
+                DemoItem(KEY_DEMONSTRATION, DemoListActivity::class.java, "demonstration"),
+                DemoItem(KEY_MATERIAL, DemoListActivity::class.java, "material"),
+                DemoItem(KEY_VIEW, DemoListActivity::class.java, "view"),
+                DemoItem(KEY_WEB, DemoListActivity::class.java, "web"),
+                DemoItem(KEY_OTHER, DemoListActivity::class.java, "other"),
+                DemoItem(KEY_AWESOME, DemoListActivity::class.java, "awesome")
         )
 
         configMap[KEY_RX] = listOf(
-                DemoItem("splash", RxSplashActivity::class.java),
-                DemoItem("sum", RxSumActivity::class.java),
-                DemoItem("exit", RxExitActivity::class.java),
-                DemoItem("search", RxSearchActivity::class.java)
+                DemoItem(RxSplashActivity::class.java, "splash"),
+                DemoItem(RxSumActivity::class.java, "sum"),
+                DemoItem(RxExitActivity::class.java, "exit"),
+                DemoItem(RxSearchActivity::class.java, "search")
         )
 
         configMap[KEY_DEMONSTRATION] = listOf(
-                DemoItem("blur", ImageBlurActivity::class.java),
-                DemoItem("scale type", ImageScaleTypeActivity::class.java),
-                DemoItem("bitmap xfer", BitmapXferActivity::class.java),
-                DemoItem("bitmap warp", BitmapWarpActivity::class.java),
-                DemoItem("bitmap ripple", BitmapRippleActivity::class.java),
-                DemoItem("graffiti", GraffitiActivity::class.java),
-                DemoItem("porterduff", PorterDuffActivity::class.java)
+                DemoItem(ImageBlurActivity::class.java, "blur"),
+                DemoItem(ImageScaleTypeActivity::class.java, "scale type"),
+                DemoItem(BitmapXferActivity::class.java, "bitmap xfer"),
+                DemoItem(BitmapWarpActivity::class.java, "bitmap warp"),
+                DemoItem(BitmapRippleActivity::class.java, "bitmap ripple"),
+                DemoItem(GraffitiActivity::class.java, "graffiti"),
+                DemoItem(PorterDuffActivity::class.java, "porterduff"),
+                DemoItem(PorterDuffColorFilterActivity::class.java, "Color Filter", "porterduff")
         )
 
         configMap[KEY_WEB] = listOf(
-                DemoItem("three", ThreeActivity::class.java),
-                DemoItem("angular", AngularActivity::class.java)
+                DemoItem(ThreeActivity::class.java, "three"),
+                DemoItem(AngularActivity::class.java, "angular")
         )
 
         configMap[KEY_MATERIAL] = listOf(
-                DemoItem("fitsSystemWindow", FitsSystemWindowActivity::class.java),
-                DemoItem("tab", TabLayoutActivity::class.java),
-                DemoItem("profile", ProfileActivity::class.java),
-                DemoItem("home", HomeActivity::class.java)
+                DemoItem(FitsSystemWindowActivity::class.java, "fitsSystemWindow"),
+                DemoItem(TabLayoutActivity::class.java, "tab"),
+                DemoItem(ProfileActivity::class.java, "profile"),
+                DemoItem(HomeActivity::class.java, "home")
         )
 
         configMap[KEY_VIEW] = listOf(
-                DemoItem("marquee text", MarqueeTextActivity::class.java),
-                DemoItem("wave", WaveActivity::class.java),
-                DemoItem("pager", PagerActivity::class.java),
-                DemoItem("seat selection", SeatSelectionActivity::class.java),
-                DemoItem("seat selection2", SeatSelection2Activity::class.java),
-                DemoItem("loading", LoadingActivity::class.java),
-                DemoItem("chart", ChartActivity::class.java),
-                DemoItem("loop recycler", LoopRecyclerActivity::class.java),
-                DemoItem("scan", ScanActivity::class.java),
-                DemoItem("index", IndexActivity::class.java),
-                DemoItem("color picker", ColorPickerActivity::class.java),
-                DemoItem("curtain", CurtainActivity::class.java)
+                DemoItem(MarqueeTextActivity::class.java, "marquee text"),
+                DemoItem(WaveActivity::class.java, "wave"),
+                DemoItem(PagerActivity::class.java, "pager"),
+                DemoItem(SeatSelectionActivity::class.java, "seat selection"),
+                DemoItem(SeatSelection2Activity::class.java, "seat selection2"),
+                DemoItem(LoadingActivity::class.java, "loading"),
+                DemoItem(ChartActivity::class.java, "chart"),
+                DemoItem(LoopRecyclerActivity::class.java, "loop recycler"),
+                DemoItem(ScanActivity::class.java, "scan"),
+                DemoItem(IndexActivity::class.java, "index"),
+                DemoItem(ColorPickerActivity::class.java, "color picker"),
+                DemoItem(CurtainActivity::class.java, "curtain")
         )
 
         configMap[KEY_OTHER] = listOf(
-                DemoItem("notification", NotificationActivity::class.java),
-                DemoItem("launch mode", AActivity::class.java),
-                DemoItem("log", LogActivity::class.java)
+                DemoItem(NotificationActivity::class.java, "notification"),
+                DemoItem(AActivity::class.java, "launch mode"),
+                DemoItem(LogActivity::class.java, "log")
         )
 
         configMap[KEY_AWESOME] = listOf(
-                DemoItem("channel edit", ChannelEditActivity::class.java),
-                DemoItem("sticky header", StickyHeaderActivity::class.java),
-                DemoItem("contacts", ContactsActivity::class.java),
-                DemoItem("drag", DragActiity::class.java)
+                DemoItem(ChannelEditActivity::class.java, "channel edit"),
+                DemoItem(StickyHeaderActivity::class.java, "sticky header"),
+                DemoItem(ContactsActivity::class.java, "contacts"),
+                DemoItem(DragActiity::class.java, "drag")
         )
     }
 
     fun getDemoConfig(key: String?): List<DemoItem> = configMap[key ?: KEY_MAIN] ?: listOf()
 }
 
-data class DemoItem(val desc: String, val key: String?, val cls: Class<*>) {
-    constructor(desc: String, cls: Class<*>) : this(desc, null, cls)
+data class DemoItem(val key: String?, val cls: Class<*>, val title: String, val desc: String?) {
+    constructor(key: String, cls: Class<*>, title: String) : this(key, cls, title, null)
+    constructor(cls: Class<*>, title: String) : this(null, cls, title, null)
+    constructor(cls: Class<*>, title: String, desc: String) : this(null, cls, title, desc)
 }
