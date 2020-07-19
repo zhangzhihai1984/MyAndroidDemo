@@ -9,93 +9,118 @@ import android.renderscript.ScriptIntrinsicBlur
 import android.view.View
 import com.squareup.picasso.Transformation
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 object ImageUtil {
     fun getBlurTransformation(context: Context): Transformation =
             object : Transformation {
-                override fun transform(source: Bitmap): Bitmap {
-                    val width = (source.width / 8f).roundToInt()
-                    val height = (source.height / 8f).roundToInt()
-                    val bitmap = Bitmap.createScaledBitmap(source, width, height, false)
-                    val renderScript = RenderScript.create(context)
-                    val input = Allocation.createFromBitmap(renderScript, bitmap)
-                    val output = Allocation.createTyped(renderScript, input.type)
-                    ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript)).run {
-                        setRadius(8f)
-                        setInput(input)
-                        forEach(output)
-                    }
-                    output.copyTo(bitmap)
-                    renderScript.destroy()
-                    source.recycle()
-
-                    return bitmap
-                }
+                override fun transform(source: Bitmap): Bitmap =
+                        getScriptBlurBitmap(context, source).apply { source.recycle() }
 
                 override fun key(): String = "BlurTransformation"
             }
 
     fun getSquareTransformation(): Transformation =
             object : Transformation {
-                override fun transform(source: Bitmap): Bitmap {
-                    val size = min(source.width, source.height)
-                    val x = (source.width - size) / 2
-                    val y = (source.height - size) / 2
-                    val bitmap = Bitmap.createBitmap(source, x, y, size, size)
-
-                    source.recycle()
-
-                    return bitmap
-                }
+                override fun transform(source: Bitmap): Bitmap =
+                        getSquareBitmap(source).apply { source.recycle() }
 
                 override fun key(): String = "SquareTransformation"
             }
 
     fun getCircleTransformation(): Transformation =
             object : Transformation {
-                override fun transform(source: Bitmap): Bitmap {
-                    val size = min(source.width, source.height)
-                    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-                    val canvas = Canvas(bitmap)
-                    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-                    val radius = size.toFloat() / 2
-
-                    canvas.drawCircle(radius, radius, radius, paint)
-
-                    val left = -(source.width - size) / 2f
-                    val top = -(source.height - size) / 2f
-                    canvas.drawBitmap(source, left, top, paint.apply {
-                        xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-                    })
-
-                    source.recycle()
-
-                    return bitmap
-                }
+                override fun transform(source: Bitmap): Bitmap =
+                        getCircleBitmap(source).apply { source.recycle() }
 
                 override fun key(): String = "CircleTransformation"
             }
 
     fun getRoundTransformation(radius: Float = 50f): Transformation =
             object : Transformation {
-                override fun transform(source: Bitmap): Bitmap {
-                    val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
-                    val canvas = Canvas(bitmap)
-                    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
-                    canvas.drawRoundRect(0f, 0f, source.width.toFloat(), source.height.toFloat(), radius, radius, paint)
-                    canvas.drawBitmap(source, 0f, 0f, paint.apply {
-                        xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-                    })
-
-                    source.recycle()
-
-                    return bitmap
-                }
+                override fun transform(source: Bitmap): Bitmap =
+                        getRoundBitmap(source, radius).apply { source.recycle() }
 
                 override fun key(): String = "RoundTransformation"
             }
+
+    fun getScriptBlurBitmap(context: Context, source: Bitmap): Bitmap {
+        val width = source.width / 8
+        val height = source.height / 8
+        val bitmap = Bitmap.createScaledBitmap(source, width, height, false)
+        val renderScript = RenderScript.create(context)
+        val input = Allocation.createFromBitmap(renderScript, bitmap)
+        val output = Allocation.createTyped(renderScript, input.type)
+        ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript)).run {
+            setRadius(8f)
+            setInput(input)
+            forEach(output)
+        }
+        output.copyTo(bitmap)
+        renderScript.destroy()
+
+        return bitmap
+    }
+
+    fun getScaledBlurBitmap(source: Bitmap): Bitmap {
+        val width = source.width / 16
+        val height = source.height / 16
+
+        return Bitmap.createScaledBitmap(source, width, height, true)
+    }
+
+    fun getSquareBitmap(source: Bitmap): Bitmap {
+        val side = min(source.width, source.height)
+        val x = (source.width - side) / 2
+        val y = (source.height - side) / 2
+
+        return Bitmap.createBitmap(source, x, y, side, side)
+    }
+
+    fun getCircleBitmap(source: Bitmap): Bitmap {
+        val side = min(source.width, source.height)
+        val bitmap = Bitmap.createBitmap(side, side, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val radius = side / 2f
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        canvas.drawCircle(radius, radius, radius, paint)
+
+//        val left = -(source.width - side) / 2f
+//        val top = -(source.height - side) / 2f
+//        canvas.drawBitmap(source, left, top, paint.apply {
+//            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+//        })
+
+        val left = (source.width - side) / 2
+        val top = (source.height - side) / 2
+        val right = (source.width + side) / 2
+        val bottom = (source.height + side) / 2
+        val src = Rect(left, top, right, bottom)
+        val dst = Rect(0, 0, bitmap.width, bitmap.height)
+        canvas.drawBitmap(source, src, dst, paint.apply {
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        })
+
+        return bitmap
+    }
+
+    fun getRoundBitmap(source: Bitmap, radius: Float = 50f): Bitmap {
+        val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        canvas.drawRoundRect(0f, 0f, source.width.toFloat(), source.height.toFloat(), radius, radius, paint)
+
+        val dst = Rect(0, 0, bitmap.width, bitmap.height)
+//        canvas.drawBitmap(source, 0f, 0f, paint.apply {
+//            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+//        })
+        canvas.drawBitmap(source, null, dst, paint.apply {
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        })
+
+        return bitmap
+    }
 
     fun getViewBitmap(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
