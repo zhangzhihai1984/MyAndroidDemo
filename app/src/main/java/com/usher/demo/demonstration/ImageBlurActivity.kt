@@ -43,10 +43,10 @@ class ImageBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
         override fun getCount(): Int = mData.size
     }
 
-    class BlurFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
+    class BlurFragment : BasePagerFragment(R.layout.fragment_image_blur) {
         companion object {
             fun newInstance(resId: Int) =
-                    BlurFragment(R.layout.fragment_image_blur).apply {
+                    BlurFragment().apply {
                         arguments = Bundle().apply {
                             putInt(Constants.TAG_DATA, resId)
                         }

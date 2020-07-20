@@ -41,10 +41,10 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
         override fun getCount(): Int = mResIds.size
     }
 
-    class ScaleTypeFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
+    class ScaleTypeFragment : BasePagerFragment(R.layout.fragment_image_scale_type) {
         companion object {
             fun newInstance(resId: Int) =
-                    ScaleTypeFragment(R.layout.fragment_image_scale_type).apply {
+                    ScaleTypeFragment().apply {
                         arguments = Bundle().apply {
                             putInt(Constants.TAG_DATA, resId)
                         }

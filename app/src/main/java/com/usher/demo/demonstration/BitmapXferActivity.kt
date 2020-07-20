@@ -39,10 +39,10 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
         override fun getCount(): Int = mResIds.size
     }
 
-    class BitmapXferFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
+    class BitmapXferFragment : BasePagerFragment(R.layout.fragment_bitmap_xfer) {
         companion object {
             fun newInstance(resId: Int) =
-                    BitmapXferFragment(R.layout.fragment_bitmap_xfer).apply {
+                    BitmapXferFragment().apply {
                         arguments = Bundle().apply {
                             putInt(Constants.TAG_DATA, resId)
                         }

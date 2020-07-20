@@ -59,10 +59,10 @@ class PagerActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
     }
 
-    class PagerFragment(layoutRes: Int) : BasePagerFragment(layoutRes) {
+    class PagerFragment : BasePagerFragment(R.layout.fragment_pager) {
         companion object {
             fun newInstance(num: Int): PagerFragment =
-                    PagerFragment(R.layout.fragment_pager).apply {
+                    PagerFragment().apply {
                         arguments = Bundle().apply {
                             putInt(Constants.TAG_DATA, num)
                         }
