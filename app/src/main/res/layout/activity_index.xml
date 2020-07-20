@@ -11,9 +11,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="100dp"
         android:layout_height="500dp"
-        android:elevation="10dp"
         app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
 
         <com.twigcodes.ui.IndexView
             android:id="@+id/indexview"
@@ -34,9 +34,9 @@
         android:layout_width="100dp"
         android:layout_height="500dp"
         android:layout_marginStart="20dp"
-        android:elevation="10dp"
         app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
 
         <com.twigcodes.ui.IndexView
             android:id="@+id/indexview2"

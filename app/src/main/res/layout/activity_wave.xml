@@ -11,9 +11,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:elevation="10dp"
         app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
 
         <com.twigcodes.ui.WaveView
             android:id="@+id/wave_view"

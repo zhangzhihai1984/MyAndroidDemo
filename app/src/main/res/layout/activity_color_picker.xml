@@ -15,9 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="40dp"
-            android:elevation="10dp"
             app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="10dp"
+            app:cardElevation="5dp">
 
             <com.twigcodes.ui.colorpicker.ColorPickerView
                 android:id="@+id/color_picker_view"
@@ -39,9 +39,9 @@
         android:id="@+id/palette_cardview"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:elevation="10dp"
         app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
 
         <ImageView
             android:id="@+id/palette_imageview"
