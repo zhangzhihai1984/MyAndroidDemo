@@ -11,37 +11,13 @@ import com.squareup.picasso.Transformation
 import kotlin.math.min
 
 object ImageUtil {
-    fun getBlurTransformation(context: Context): Transformation =
-            object : Transformation {
-                override fun transform(source: Bitmap): Bitmap =
-                        getScriptBlurBitmap(context, source).apply { source.recycle() }
+    fun getViewBitmap(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
 
-                override fun key(): String = "BlurTransformation"
-            }
-
-    fun getSquareTransformation(): Transformation =
-            object : Transformation {
-                override fun transform(source: Bitmap): Bitmap =
-                        getSquareBitmap(source).apply { source.recycle() }
-
-                override fun key(): String = "SquareTransformation"
-            }
-
-    fun getCircleTransformation(): Transformation =
-            object : Transformation {
-                override fun transform(source: Bitmap): Bitmap =
-                        getCircleBitmap(source).apply { source.recycle() }
-
-                override fun key(): String = "CircleTransformation"
-            }
-
-    fun getRoundTransformation(radius: Float = 50f): Transformation =
-            object : Transformation {
-                override fun transform(source: Bitmap): Bitmap =
-                        getRoundBitmap(source, radius).apply { source.recycle() }
-
-                override fun key(): String = "RoundTransformation"
-            }
+        return bitmap
+    }
 
     fun getScriptBlurBitmap(context: Context, source: Bitmap): Bitmap {
         val width = source.width / 8
@@ -122,11 +98,46 @@ object ImageUtil {
         return bitmap
     }
 
-    fun getViewBitmap(view: View): Bitmap {
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+    fun getColorFilterBitmap(source: Bitmap, color: Int = Color.RED, mode: PorterDuff.Mode = PorterDuff.Mode.MULTIPLY): Bitmap {
+        val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        view.draw(canvas)
+        val dst = Rect(0, 0, bitmap.width, bitmap.height)
+        canvas.drawBitmap(source, null, dst, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            colorFilter = PorterDuffColorFilter(color, mode)
+        })
 
         return bitmap
     }
+
+    fun getBlurTransformation(context: Context): Transformation =
+            object : Transformation {
+                override fun transform(source: Bitmap): Bitmap =
+                        getScriptBlurBitmap(context, source).apply { source.recycle() }
+
+                override fun key(): String = "BlurTransformation"
+            }
+
+    fun getSquareTransformation(): Transformation =
+            object : Transformation {
+                override fun transform(source: Bitmap): Bitmap =
+                        getSquareBitmap(source).apply { source.recycle() }
+
+                override fun key(): String = "SquareTransformation"
+            }
+
+    fun getCircleTransformation(): Transformation =
+            object : Transformation {
+                override fun transform(source: Bitmap): Bitmap =
+                        getCircleBitmap(source).apply { source.recycle() }
+
+                override fun key(): String = "CircleTransformation"
+            }
+
+    fun getRoundTransformation(radius: Float = 50f): Transformation =
+            object : Transformation {
+                override fun transform(source: Bitmap): Bitmap =
+                        getRoundBitmap(source, radius).apply { source.recycle() }
+
+                override fun key(): String = "RoundTransformation"
+            }
 }
