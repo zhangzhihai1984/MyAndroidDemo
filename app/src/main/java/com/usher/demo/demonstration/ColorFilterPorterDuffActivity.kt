@@ -52,16 +52,12 @@ class ColorFilterPorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
     }
 
-    private class ColorFilterFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>, private var color: Int = Color.RED) : FragmentStatePagerAdapter(fm) {
-        override fun getItem(position: Int): Fragment {
-            return ColorFilterFragment.newInstance(mResIds[position], color)
-        }
+    private class ColorFilterFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>, private var color: Int = Color.RED) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getItem(position: Int): Fragment = ColorFilterFragment.newInstance(mResIds[position], color)
 
         override fun getCount(): Int = mResIds.size
 
-        override fun getItemPosition(obj: Any): Int {
-            return PagerAdapter.POSITION_NONE
-        }
+        override fun getItemPosition(obj: Any): Int = PagerAdapter.POSITION_NONE
 
         fun updateColor(color: Int) {
             this.color = color
