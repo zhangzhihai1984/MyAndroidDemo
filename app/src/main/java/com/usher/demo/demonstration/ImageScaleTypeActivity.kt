@@ -78,7 +78,7 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
             arguments?.run {
                 val scaleTypeAdapter = ScaleTypeAdapter(scaleTypes, getInt(Constants.TAG_DATA))
 
-                recyclerview.layoutManager = GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+                recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
                 recyclerview.adapter = scaleTypeAdapter
 
                 scaleTypeAdapter.itemClicks()

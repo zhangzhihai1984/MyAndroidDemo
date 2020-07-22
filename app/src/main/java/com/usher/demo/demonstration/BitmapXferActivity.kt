@@ -63,7 +63,7 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         ImageUtil.getColorFilterBitmap(bitmap) to "COLOR FILTER"
                 )
 
-                recyclerview.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+                recyclerview.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
                 recyclerview.adapter = BitmapXferAdapter(bitmapPairs)
             }
         }

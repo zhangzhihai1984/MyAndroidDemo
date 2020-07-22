@@ -91,7 +91,7 @@ class ColorFilterPorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
                 val adapter = ColorFilterAdapter(modes, bitmap, color)
 
-                recyclerview.layoutManager = GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+                recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
                 recyclerview.adapter = adapter
             }
         }
