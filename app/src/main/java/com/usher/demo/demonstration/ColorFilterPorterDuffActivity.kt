@@ -20,7 +20,6 @@ import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.Constants
 import kotlinx.android.synthetic.main.activity_colorfilter_porterduff.*
 import kotlinx.android.synthetic.main.fragment_colorfilter_porterduff.*
 
@@ -67,18 +66,22 @@ class ColorFilterPorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     class ColorFilterFragment : BasePagerFragment(R.layout.fragment_colorfilter_porterduff) {
         companion object {
+            private const val RESID = "RESID"
+            private const val COLOR = "COLOR"
+
             fun newInstance(resId: Int, color: Int) =
                     ColorFilterFragment().apply {
                         arguments = Bundle().apply {
-                            putIntegerArrayList(Constants.TAG_DATA, arrayListOf(resId, color))
+                            putInt(RESID, resId)
+                            putInt(COLOR, color)
                         }
                     }
         }
 
         override fun init() {
-            arguments?.getIntegerArrayList(Constants.TAG_DATA)?.run {
-                val resId = this[0]
-                val color = this[1]
+            arguments?.run {
+                val resId = getInt(RESID)
+                val color = getInt(COLOR)
                 val bitmap = resources.getDrawable(resId, null).toBitmap()
                 val modes = listOf(
                         PorterDuff.Mode.DARKEN,
