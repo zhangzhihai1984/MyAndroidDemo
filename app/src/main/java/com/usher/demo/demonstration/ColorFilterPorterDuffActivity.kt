@@ -95,12 +95,12 @@ class ColorFilterPorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 recyclerview.adapter = adapter
             }
         }
-    }
 
-    private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_colorfilter_porterduff, data) {
-        override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
-            helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getColorFilterBitmap(bitmap, color, mode))
-            helper.setText(R.id.mode_textview, mode.name)
+        private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_colorfilter_porterduff, data) {
+            override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
+                helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getColorFilterBitmap(bitmap, color, mode))
+                helper.setText(R.id.mode_textview, mode.name)
+            }
         }
     }
 }
