@@ -5,17 +5,17 @@ import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.twigcodes.ui.PorterDuffView
+import com.twigcodes.ui.PorterDuffXfermodeDiagramView
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_porterduff.*
+import kotlinx.android.synthetic.main.activity_porterduff_xfermode.*
 
-class PorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class PorterDuffXfermodeActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_porterduff)
+        setContentView(R.layout.activity_porterduff_xfermode)
         initView()
     }
 
@@ -44,9 +44,9 @@ class PorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
         recyclerview.adapter = PorterDuffAdapter(modes)
     }
 
-    private class PorterDuffAdapter(data: List<PorterDuff.Mode>) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_porterduff, data) {
+    private class PorterDuffAdapter(data: List<PorterDuff.Mode>) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_porterduff_xfermode, data) {
         override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
-            helper.getView<PorterDuffView>(R.id.porterduff_view).mode = mode
+            helper.getView<PorterDuffXfermodeDiagramView>(R.id.porterduff_view).mode = mode
             helper.setText(R.id.textview, mode.name)
         }
     }

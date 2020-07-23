@@ -97,7 +97,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".demonstration.PorterDuffActivity"
+            android:name=".demonstration.PorterDuffXfermodeActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />

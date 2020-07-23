@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.twigcodes.ui.PorterDuffView
+            <com.twigcodes.ui.PorterDuffXfermodeDiagramView
                 android:id="@+id/porterduff_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

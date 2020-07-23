@@ -60,8 +60,8 @@ object DemoConfig {
                 DemoItem(BitmapWarpActivity::class.java, "Bitmap Warp"),
                 DemoItem(BitmapRippleActivity::class.java, "Bitmap Ripple"),
                 DemoItem(GraffitiActivity::class.java, "Graffiti"),
-                DemoItem(PorterDuffActivity::class.java, "PorterDuff"),
-                DemoItem(ColorFilterPorterDuffActivity::class.java, "Color Filter", "PorterDuff")
+                DemoItem(ColorFilterPorterDuffActivity::class.java, "ColorFilter", "PorterDuff"),
+                DemoItem(PorterDuffXfermodeActivity::class.java, "Xfermode", "PorterDuff")
         )
 
         configMap[KEY_WEB] = listOf(
