@@ -35,7 +35,7 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indicatorview.setViewPager(viewpager)
     }
 
-    private class ScaleTypeFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>) : FragmentStatePagerAdapter(fm) {
+    private class ScaleTypeFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(position: Int): Fragment = ScaleTypeFragment.newInstance(mResIds[position])
 
         override fun getCount(): Int = mResIds.size
