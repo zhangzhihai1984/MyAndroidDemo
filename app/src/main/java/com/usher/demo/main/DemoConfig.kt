@@ -60,7 +60,7 @@ object DemoConfig {
                 DemoItem(BitmapWarpActivity::class.java, "Bitmap Warp"),
                 DemoItem(BitmapRippleActivity::class.java, "Bitmap Ripple"),
                 DemoItem(GraffitiActivity::class.java, "Graffiti"),
-                DemoItem(ColorFilterPorterDuffActivity::class.java, "ColorFilter", "PorterDuff"),
+                DemoItem(PorterDuffColorFilterActivity::class.java, "ColorFilter", "PorterDuff"),
                 DemoItem(PorterDuffXfermodeActivity::class.java, "Xfermode", "PorterDuff")
         )
 

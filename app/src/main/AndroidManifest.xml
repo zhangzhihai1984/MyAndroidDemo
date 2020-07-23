@@ -102,7 +102,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".demonstration.ColorFilterPorterDuffActivity"
+            android:name=".demonstration.PorterDuffColorFilterActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />

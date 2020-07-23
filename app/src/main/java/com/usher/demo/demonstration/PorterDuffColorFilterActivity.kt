@@ -20,13 +20,13 @@ import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_colorfilter_porterduff.*
+import kotlinx.android.synthetic.main.activity_porterduff_colorfilter.*
 import kotlinx.android.synthetic.main.fragment_colorfilter_porterduff.*
 
-class ColorFilterPorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_colorfilter_porterduff)
+        setContentView(R.layout.activity_porterduff_colorfilter)
         initView()
     }
 
@@ -92,14 +92,12 @@ class ColorFilterPorterDuffActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         PorterDuff.Mode.OVERLAY
                 )
 
-                val adapter = ColorFilterAdapter(modes, bitmap, color)
-
                 recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
-                recyclerview.adapter = adapter
+                recyclerview.adapter = ColorFilterAdapter(modes, bitmap, color)
             }
         }
 
-        private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_colorfilter_porterduff, data) {
+        private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_porterduff_colorfilter, data) {
             override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
                 helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getColorFilterBitmap(bitmap, color, mode))
                 helper.setText(R.id.mode_textview, mode.name)
