@@ -7,12 +7,9 @@ import android.view.View
 import kotlin.math.min
 
 class PorterDuffXfermodeDiagramView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
-    companion object {
 
-    }
-
-    private val mCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val mRectPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(233, 30, 99) }
+    private val mRectPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(33, 150, 243) }
     private val mDstBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mSrcBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mBackgroundPaint by lazy {
@@ -30,16 +27,6 @@ class PorterDuffXfermodeDiagramView @JvmOverloads constructor(context: Context, 
             field = value
             invalidate()
         }
-
-    init {
-        mCirclePaint.apply {
-            color = Color.rgb(233, 30, 99)
-        }
-
-        mRectPaint.apply {
-            color = Color.rgb(33, 150, 243)
-        }
-    }
 
     private fun makeDstBitmap(): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -66,7 +53,6 @@ class PorterDuffXfermodeDiagramView @JvmOverloads constructor(context: Context, 
         val saveCount = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
 
         canvas.drawBitmap(makeDstBitmap(), 0f, 0f, mDstBitmapPaint)
-
         canvas.drawBitmap(makeSrcBitmap(), 0f, 0f, mSrcBitmapPaint.apply { xfermode = PorterDuffXfermode(mode) })
 
         canvas.restoreToCount(saveCount)
