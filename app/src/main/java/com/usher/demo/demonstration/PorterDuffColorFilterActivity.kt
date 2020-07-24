@@ -31,7 +31,7 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.demo_trump, R.drawable.demo_mall)
+        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.demo_mall, R.drawable.demo_child)
         val adapter = ColorFilterFragmentAdapter(supportFragmentManager, resIds)
 
         viewpager.adapter = adapter
@@ -84,6 +84,10 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 val color = getInt(COLOR)
                 val bitmap = resources.getDrawable(resId, null).toBitmap()
                 val modes = listOf(
+                        PorterDuff.Mode.SRC_OVER,
+                        PorterDuff.Mode.SRC_IN,
+                        PorterDuff.Mode.SRC_OUT,
+                        PorterDuff.Mode.SRC_ATOP,
                         PorterDuff.Mode.DARKEN,
                         PorterDuff.Mode.LIGHTEN,
                         PorterDuff.Mode.MULTIPLY,
@@ -92,7 +96,7 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         PorterDuff.Mode.OVERLAY
                 )
 
-                recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
+                recyclerview.layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
                 recyclerview.adapter = ColorFilterAdapter(modes, bitmap, color)
             }
         }
