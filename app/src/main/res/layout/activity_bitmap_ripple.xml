@@ -18,12 +18,12 @@
             android:id="@+id/bitmap_ripple_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
+            android:layout_margin="10dp"
             android:src="@drawable/demo_tree"
             app:meshColumn="30"
             app:meshGridColor="@color/colorPrimary"
             app:meshGridWidth="1dp"
-            app:meshMaskColor="@color/image_tint"
+            app:meshMaskColor="@color/mask_color"
             app:meshRow="30" />
 
     </androidx.cardview.widget.CardView>

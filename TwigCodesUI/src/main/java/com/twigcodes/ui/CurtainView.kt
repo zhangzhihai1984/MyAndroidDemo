@@ -2,6 +2,7 @@ package com.twigcodes.ui
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -31,6 +32,7 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     companion object {
         private const val CURTAIN_SNAPSHOT_ELEVATION = 100f
         private const val CURTAIN_COVER_ELEVATION = CURTAIN_SNAPSHOT_ELEVATION + 1f
+        private const val DEFAULT_MASK_COLOR = Color.TRANSPARENT
     }
 
     private val mPercentChangeSubject = PublishSubject.create<Float>()
@@ -59,6 +61,7 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         val debug = a.getBoolean(R.styleable.CurtainView_meshDebug, false)
         val gridColor = a.getColor(R.styleable.CurtainView_meshGridColor, BitmapCurtainView.DEFAULT_GRID_COLOR)
         val gridWidth = a.getDimensionPixelSize(R.styleable.CurtainView_meshGridWidth, BitmapCurtainView.DEFAULT_GRID_WIDTH)
+        val maskColor = a.getColor(R.styleable.CurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
 
         val contentLayoutId = a.getResourceId(R.styleable.CurtainView_curtainContentLayout, -1).also { resourceId ->
             if (resourceId < 0)
@@ -77,6 +80,12 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         addView(mContentView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         addView(mCoverView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+
+        val maskView = View(context).apply {
+            elevation = CURTAIN_COVER_ELEVATION
+            setBackgroundColor(maskColor)
+        }
+        addView(maskView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
         mCoverView.touches { event ->
             when (event.action) {

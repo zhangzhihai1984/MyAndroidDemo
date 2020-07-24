@@ -1,7 +1,10 @@
 package com.twigcodes.ui.bitmapmesh
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -19,7 +22,7 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
         private const val DEFAULT_MESH_HEIGHT = 10
         private const val DEFAULT_GRID_COLOR = Color.BLACK
         private const val DEFAULT_GRID_WIDTH = 3
-        private const val DEFAULT_MASK_COLOR = Color.WHITE
+        private const val DEFAULT_MASK_COLOR = Color.TRANSPARENT
     }
 
     private val mMeshWidth: Int
@@ -32,9 +35,7 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
     private var mTouchRow = 0
     private var mTouchColumn = 0
 
-    private val mBitmapPaint = Paint().apply {
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
-    }
+    private val mBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mGridPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mIntersectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -175,13 +176,14 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawColor(mMaskColor)
         drawBitmapMesh(canvas)
 
         if (debug) {
             drawGrid(canvas)
             drawIntersection(canvas)
         }
+
+        canvas.drawColor(mMaskColor)
     }
 
     fun colorVertex(colors: IntArray) {

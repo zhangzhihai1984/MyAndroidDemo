@@ -24,7 +24,7 @@
             app:meshColumn="30"
             app:meshGridColor="@color/colorPrimary"
             app:meshGridWidth="1dp"
-            app:meshMaskColor="@color/image_tint"
+            app:meshMaskColor="@color/mask_color"
             app:meshRow="40" />
 
     </androidx.cardview.widget.CardView>

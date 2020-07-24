@@ -3,5 +3,6 @@
     <declare-styleable name="GraffitiView">
         <attr name="graffitiStrokeColor" format="reference|color" />
         <attr name="graffitiStrokeWidth" format="dimension" />
+        <attr name="graffitiMaskColor" format="reference|color" />
     </declare-styleable>
 </resources>

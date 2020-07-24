@@ -10,9 +10,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/demo_slamdunk"
-        android:tint="@color/image_tint"
-        android:tintMode="multiply" />
+        android:src="@drawable/demo_slamdunk" />
 
     <ImageView
         android:id="@+id/shuffle_imageview"

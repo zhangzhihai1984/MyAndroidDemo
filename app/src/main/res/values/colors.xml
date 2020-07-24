@@ -28,6 +28,7 @@
 
     <color name="icon_primary">@android:color/black</color>
 
+    <color name="mask_color">@android:color/transparent</color>
     <color name="image_tint">@android:color/white</color>
 
 </resources>

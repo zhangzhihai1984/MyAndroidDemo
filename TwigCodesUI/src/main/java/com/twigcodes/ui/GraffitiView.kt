@@ -13,8 +13,10 @@ class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeS
     companion object {
         private const val DEFAULT_STROKE_COLOR = Color.BLACK
         private const val DEFAULT_STROKE_WIDTH = 15
+        private const val DEFAULT_MASK_COLOR = Color.TRANSPARENT
     }
 
+    private val mMaskColor: Int
     private val mPathWithPaints = arrayListOf<Pair<Path, Paint>>()
 
     private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -38,6 +40,8 @@ class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.GraffitiView, defStyleAttr, defStyleRes)
+
+        mMaskColor = a.getColor(R.styleable.GraffitiView_graffitiMaskColor, DEFAULT_MASK_COLOR)
 
         mPaint.run {
             color = a.getColor(R.styleable.GraffitiView_graffitiStrokeColor, DEFAULT_STROKE_COLOR)
@@ -69,6 +73,8 @@ class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeS
         mPathWithPaints.forEach { pathWithPaint ->
             canvas.drawPath(pathWithPaint.first, pathWithPaint.second)
         }
+
+        canvas.drawColor(mMaskColor)
     }
 
     fun clear() {
@@ -77,7 +83,9 @@ class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     fun undo() {
-        mPathWithPaints.lastOrNull()?.let { pathWithPaint -> mPathWithPaints.remove(pathWithPaint) }
-        invalidate()
+        mPathWithPaints.lastOrNull()?.let { pathWithPaint ->
+            mPathWithPaints.remove(pathWithPaint)
+            invalidate()
+        }
     }
 }

@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/demo_tree"
+                app:graffitiMaskColor="@color/mask_color"
                 app:graffitiStrokeColor="@android:color/black"
                 app:graffitiStrokeWidth="5dp" />
 
