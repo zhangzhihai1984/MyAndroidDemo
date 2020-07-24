@@ -1,7 +1,8 @@
 package com.usher.demo.view
 
 import android.animation.ValueAnimator
-import android.content.res.ColorStateList
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import androidx.core.animation.doOnEnd
 import com.twigcodes.ui.util.RxUtil
@@ -27,7 +28,10 @@ class ColorPickerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         addUpdateListener {
                             palette_cardview.rotation = animatedValue as Float
                         }
-                        doOnEnd { palette_imageview.imageTintList = ColorStateList.valueOf(color) }
+                        doOnEnd {
+//                            palette_imageview.imageTintList = ColorStateList.valueOf(color)
+                            palette_imageview.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+                        }
                     }.start()
                 }
     }
