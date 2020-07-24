@@ -2,6 +2,7 @@ package com.twigcodes.ui.colorpicker
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
@@ -16,10 +17,13 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
     companion object {
         private const val DEFAULT_BRIGHTNESS_HEIGHT = 60
         private const val DEFAULT_BRIGHTNESS_MARGIN_TOP = 30
+        private const val DEFAULT_ALPHA_HEIGHT = 60
+        private const val DEFAULT_ALPHA_MARGIN_TOP = 30
     }
 
     private val mSimpleColorPickerView: SimpleColorPickerView
     private val mBrightnessView: BrightnessView
+    private val mAlphaView: AlphaView
 
     init {
         orientation = VERTICAL
@@ -28,15 +32,22 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         val hasBrightness = a.getBoolean(R.styleable.ColorPickerView_hasBrightness, true)
         val brightnessHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_brightnessHeight, DEFAULT_BRIGHTNESS_HEIGHT)
         val brightnessMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_brightnessMarginTop, DEFAULT_BRIGHTNESS_MARGIN_TOP)
+        val hasAlpha = a.getBoolean(R.styleable.ColorPickerView_hasAlpha, false)
+        val alphaHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_alphaHeight, DEFAULT_ALPHA_HEIGHT)
+        val alphaMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_alphaMarginTop, DEFAULT_ALPHA_MARGIN_TOP)
 
         a.recycle()
 
         mSimpleColorPickerView = SimpleColorPickerView(context, attrs, defStyleAttr, defStyleRes)
         mBrightnessView = BrightnessView(context, attrs, defStyleAttr, defStyleRes)
-        addView(mSimpleColorPickerView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
-        if (hasBrightness)
-            addView(mBrightnessView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, brightnessHeight).apply { topMargin = brightnessMarginTop })
+        mAlphaView = AlphaView(context, attrs, defStyleAttr, defStyleRes)
 
+        addView(mSimpleColorPickerView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        addView(mBrightnessView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, brightnessHeight).apply { topMargin = brightnessMarginTop })
+        addView(mAlphaView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, alphaHeight).apply { topMargin = alphaMarginTop })
+
+        if (!hasBrightness) mBrightnessView.visibility = View.GONE
+        if (!hasAlpha) mAlphaView.visibility = View.GONE
         initView()
     }
 
@@ -55,17 +66,36 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                         leftMargin = margin
                         rightMargin = margin
                     }
+
+                    mAlphaView.updateLayoutParams<LayoutParams> {
+                        val margin = max(mSimpleColorPickerView.width - mSimpleColorPickerView.height, 0) / 2
+                        leftMargin = margin
+                        rightMargin = margin
+                    }
                 }
 
         mSimpleColorPickerView.colorChanges()
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe { color -> mBrightnessView.updateColor(color) }
+                .subscribe { color ->
+                    mBrightnessView.updateColor(color)
+                    mAlphaView.updateColor(color)
+                }
 
         mBrightnessView.brightnessChanges()
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe { color -> mSimpleColorPickerView.updateColor(color, false) }
+                .subscribe { color ->
+                    mSimpleColorPickerView.updateColor(color, false)
+                    mAlphaView.updateColor(color)
+                }
+
+        mAlphaView.alphaChanges()
+                .compose(RxUtil.getSchedulerComposer())
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe { color ->
+                    mSimpleColorPickerView.updateColor(color, false)
+                }
     }
 
     fun updateColor(color: Int) = mSimpleColorPickerView.updateColor(color)

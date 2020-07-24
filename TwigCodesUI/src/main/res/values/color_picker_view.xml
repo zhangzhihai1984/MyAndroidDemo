@@ -4,10 +4,15 @@
         <attr name="paletteWidth" format="dimension" />
         <attr name="paletteMarginInner" format="dimension" />
         <attr name="pickerHaloWidth" format="dimension" />
+        <attr name="hasBrightness" format="boolean" />
+        <attr name="hasBrightnessIndicator" format="boolean" />
         <attr name="brightnessMarginTop" format="dimension" />
         <attr name="brightnessHeight" format="dimension" />
         <attr name="brightnessCornerRadius" format="dimension" />
-        <attr name="hasBrightness" format="boolean" />
-        <attr name="hasBrightnessIndicator" format="boolean" />
+        <attr name="hasAlpha" format="boolean" />
+        <attr name="hasAlphaIndicator" format="boolean" />
+        <attr name="alphaMarginTop" format="dimension" />
+        <attr name="alphaHeight" format="dimension" />
+        <attr name="alphaCornerRadius" format="dimension" />
     </declare-styleable>
 </resources>
