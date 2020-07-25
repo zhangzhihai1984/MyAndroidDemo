@@ -39,12 +39,14 @@ class BitmapBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
         scale_seekbar.changes()
                 .to(RxUtil.autoDispose(this))
                 .subscribe { scale ->
+                    scale_textview.text = "$scale"
                     adapter.updateBlur(scale.toFloat(), radius_seekbar.progress.toFloat())
                 }
 
         radius_seekbar.changes()
                 .to(RxUtil.autoDispose(this))
                 .subscribe { radius ->
+                    radius_textview.text = "$radius"
                     adapter.updateBlur(scale_seekbar.progress.toFloat(), radius.toFloat())
                 }
     }
