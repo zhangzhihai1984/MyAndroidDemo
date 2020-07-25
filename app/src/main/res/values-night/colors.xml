@@ -10,5 +10,5 @@
     <color name="icon_primary">@android:color/white</color>
 
     <color name="mask_color">#66000000</color>
-    <color name="image_tint">#888888</color>
+<!--    <color name="image_tint">#888888</color>-->
 </resources>

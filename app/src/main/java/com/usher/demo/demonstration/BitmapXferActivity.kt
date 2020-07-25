@@ -27,7 +27,7 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.duggee1)
+        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.duggee1, R.drawable.demo_child)
 
         viewpager.adapter = BitmapXferFragmentAdapter(supportFragmentManager, resIds)
         indicatorview.setViewPager(viewpager)
@@ -54,7 +54,7 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 val resId = getInt(Constants.TAG_DATA)
                 val bitmap = resources.getDrawable(resId, null).toBitmap()
                 val bitmapPairs = listOf(
-                        bitmap to "NULL",
+                        bitmap to "ORIGINAL",
                         ImageUtil.getScriptBlurBitmap(requireContext(), bitmap) to "SCRIPT RENDER",
                         ImageUtil.getScaledBlurBitmap(bitmap) to "SCALED RENDER",
                         ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
@@ -63,7 +63,7 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         ImageUtil.getColorFilterBitmap(bitmap) to "COLOR FILTER"
                 )
 
-                recyclerview.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+                recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
                 recyclerview.adapter = BitmapXferAdapter(bitmapPairs)
             }
         }

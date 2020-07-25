@@ -5,5 +5,5 @@
     android:layout_height="match_parent"
     android:contentDescription="@null"
     android:scaleType="centerCrop"
-    android:tint="@color/image_tint"
-    android:tintMode="multiply" />
+    android:tint="@color/mask_color"
+    android:tintMode="src_atop" />
