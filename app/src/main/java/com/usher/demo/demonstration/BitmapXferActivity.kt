@@ -1,6 +1,8 @@
 package com.usher.demo.demonstration
 
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
@@ -55,12 +57,14 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 val bitmap = resources.getDrawable(resId, null).toBitmap()
                 val bitmapPairs = listOf(
                         bitmap to "ORIGINAL",
-                        ImageUtil.getScriptBlurBitmap(requireContext(), bitmap) to "SCRIPT RENDER",
-                        ImageUtil.getScaledBlurBitmap(bitmap) to "SCALED RENDER",
+                        ImageUtil.getRenderScriptBlurScaledBitmap(requireContext(), bitmap) to "RENDER SCRIPT SCALED BLUR",
+                        ImageUtil.getRenderScriptBlurBitmap(requireContext(), bitmap, 25f) to "RENDER SCRIPT BLUR",
+                        ImageUtil.getScaledBlurBitmap(bitmap, 16f) to "SCALED BLUR",
                         ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
                         ImageUtil.getCircleBitmap(bitmap) to "CIRCLE",
                         ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND",
-                        ImageUtil.getColorFilterBitmap(bitmap) to "COLOR FILTER"
+                        ImageUtil.getColorFilterBitmap(bitmap) to "COLOR FILTER",
+                        ImageUtil.getColorFilterBitmap(bitmap, Color.parseColor("#66000000"), PorterDuff.Mode.SRC_ATOP) to "COLOR FILTER"
                 )
 
                 recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)

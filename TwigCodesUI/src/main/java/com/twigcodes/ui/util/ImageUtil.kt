@@ -8,7 +8,9 @@ import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import android.view.View
 import com.squareup.picasso.Transformation
+import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 object ImageUtil {
     fun getViewBitmap(view: View): Bitmap {
@@ -19,15 +21,15 @@ object ImageUtil {
         return bitmap
     }
 
-    fun getScriptBlurBitmap(context: Context, source: Bitmap): Bitmap {
-        val width = source.width / 8
-        val height = source.height / 8
+    fun getRenderScriptBlurScaledBitmap(context: Context, source: Bitmap, scale: Float = 8f, radius: Float = 8f): Bitmap {
+        val width = (source.width / scale).roundToInt()
+        val height = (source.height / scale).roundToInt()
         val bitmap = Bitmap.createScaledBitmap(source, width, height, false)
         val renderScript = RenderScript.create(context)
         val input = Allocation.createFromBitmap(renderScript, bitmap)
         val output = Allocation.createTyped(renderScript, input.type)
         ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript)).run {
-            setRadius(8f)
+            setRadius(min(max(radius, 1f), 25f))
             setInput(input)
             forEach(output)
         }
@@ -37,9 +39,25 @@ object ImageUtil {
         return bitmap
     }
 
-    fun getScaledBlurBitmap(source: Bitmap): Bitmap {
-        val width = source.width / 16
-        val height = source.height / 16
+    fun getRenderScriptBlurBitmap(context: Context, source: Bitmap, radius: Float = 8f): Bitmap {
+        val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+        val renderScript = RenderScript.create(context)
+        val input = Allocation.createFromBitmap(renderScript, source)
+        val output = Allocation.createFromBitmap(renderScript, bitmap)
+        ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript)).run {
+            setRadius(min(max(radius, 1f), 25f))
+            setInput(input)
+            forEach(output)
+        }
+        output.copyTo(bitmap)
+        renderScript.destroy()
+
+        return bitmap
+    }
+
+    fun getScaledBlurBitmap(source: Bitmap, scale: Float = 8f): Bitmap {
+        val width = (source.width / scale).roundToInt()
+        val height = (source.height / scale).roundToInt()
 
         return Bitmap.createScaledBitmap(source, width, height, true)
     }
@@ -112,7 +130,7 @@ object ImageUtil {
     fun getBlurTransformation(context: Context): Transformation =
             object : Transformation {
                 override fun transform(source: Bitmap): Bitmap =
-                        getScriptBlurBitmap(context, source).apply { source.recycle() }
+                        getRenderScriptBlurBitmap(context, source).apply { source.recycle() }
 
                 override fun key(): String = "BlurTransformation"
             }
