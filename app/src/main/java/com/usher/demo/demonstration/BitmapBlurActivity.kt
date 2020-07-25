@@ -13,13 +13,13 @@ import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_image_blur.*
-import kotlinx.android.synthetic.main.fragment_image_blur.*
+import kotlinx.android.synthetic.main.activity_bitmap_blur.*
+import kotlinx.android.synthetic.main.fragment_bitmap_blur.*
 
-class ImageBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class BitmapBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_blur)
+        setContentView(R.layout.activity_bitmap_blur)
         initView()
     }
 
@@ -63,7 +63,7 @@ class ImageBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
     }
 
-    class BlurFragment : BasePagerFragment(R.layout.fragment_image_blur) {
+    class BlurFragment : BasePagerFragment(R.layout.fragment_bitmap_blur) {
         companion object {
             private const val RESID = "RESID"
             private const val SCALE = "SCALE"

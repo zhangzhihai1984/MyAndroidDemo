@@ -67,7 +67,7 @@
 
         <!-- Image Demo -->
         <activity
-            android:name=".demonstration.ImageBlurActivity"
+            android:name=".demonstration.BitmapBlurActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />

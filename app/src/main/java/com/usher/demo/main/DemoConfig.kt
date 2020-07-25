@@ -54,7 +54,7 @@ object DemoConfig {
         )
 
         configMap[KEY_DEMONSTRATION] = listOf(
-                DemoItem(ImageBlurActivity::class.java, "Blur"),
+                DemoItem(BitmapBlurActivity::class.java, "Bitmap Blur"),
                 DemoItem(ImageScaleTypeActivity::class.java, "Scale Type"),
                 DemoItem(BitmapXferActivity::class.java, "Bitmap Xfer"),
                 DemoItem(BitmapWarpActivity::class.java, "Bitmap Warp"),
