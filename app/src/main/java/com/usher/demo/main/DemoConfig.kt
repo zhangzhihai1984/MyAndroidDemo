@@ -54,14 +54,14 @@ object DemoConfig {
         )
 
         configMap[KEY_DEMONSTRATION] = listOf(
-                DemoItem(BitmapBlurActivity::class.java, "Bitmap Blur"),
-                DemoItem(ImageScaleTypeActivity::class.java, "Scale Type"),
+                DemoItem(ImageScaleTypeActivity::class.java, "ScaleType"),
                 DemoItem(BitmapXferActivity::class.java, "Bitmap Xfer"),
-                DemoItem(BitmapWarpActivity::class.java, "Bitmap Warp"),
-                DemoItem(BitmapRippleActivity::class.java, "Bitmap Ripple"),
-                DemoItem(GraffitiActivity::class.java, "Graffiti"),
+                DemoItem(BitmapBlurActivity::class.java, "Bitmap Blur", "RenderScript"),
                 DemoItem(PorterDuffColorFilterActivity::class.java, "ColorFilter", "PorterDuff"),
-                DemoItem(PorterDuffXfermodeActivity::class.java, "Xfermode", "PorterDuff")
+                DemoItem(PorterDuffXfermodeActivity::class.java, "Xfermode", "PorterDuff"),
+                DemoItem(BitmapMeshWarpActivity::class.java, "Bitmap Mesh", "Warp"),
+                DemoItem(BitmapMeshRippleActivity::class.java, "Bitmap Mesh", "Ripple"),
+                DemoItem(GraffitiActivity::class.java, "Graffiti")
         )
 
         configMap[KEY_WEB] = listOf(

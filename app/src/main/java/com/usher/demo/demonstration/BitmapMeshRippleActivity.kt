@@ -5,12 +5,12 @@ import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_bitmap_ripple.*
+import kotlinx.android.synthetic.main.activity_bitmap_mesh_ripple.*
 
-class BitmapRippleActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class BitmapMeshRippleActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bitmap_ripple)
+        setContentView(R.layout.activity_bitmap_mesh_ripple)
         initView()
     }
 
