@@ -43,7 +43,9 @@
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_shuffle_main" />
+                    android:src="@drawable/ic_shuffle_main"
+                    android:tint="@android:color/white"
+                    android:tintMode="src_atop" />
 
                 <ImageView
                     android:id="@+id/undo_imageview"
@@ -53,7 +55,9 @@
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_undo_white" />
+                    android:src="@drawable/ic_undo_main"
+                    android:tint="@android:color/white"
+                    android:tintMode="src_atop" />
 
                 <ImageView
                     android:id="@+id/clear_imageview"
@@ -63,7 +67,9 @@
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_refresh_main" />
+                    android:src="@drawable/ic_refresh_main"
+                    android:tint="@android:color/white"
+                    android:tintMode="src_atop" />
 
                 <ImageView
                     android:id="@+id/done_imageview"
@@ -73,7 +79,9 @@
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_done_white" />
+                    android:src="@drawable/ic_done_main"
+                    android:tint="@android:color/white"
+                    android:tintMode="src_atop" />
 
             </LinearLayout>
 

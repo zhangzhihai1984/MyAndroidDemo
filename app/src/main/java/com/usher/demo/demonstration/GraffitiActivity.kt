@@ -72,6 +72,6 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
         done_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe { snapshot_imageview.setImageBitmap(ImageUtil.getViewBitmap(graffiti_view)) }
+                .subscribe { snapshot_imageview.background = (ImageUtil.getViewBitmap(graffiti_view).toDrawable(resources)) }
     }
 }
