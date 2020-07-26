@@ -21,6 +21,6 @@
         android:background="@drawable/common_mask_circle_background"
         android:contentDescription="@null"
         android:scaleType="center"
-        android:src="@drawable/ic_shuffle_white" />
+        android:src="@drawable/ic_shuffle_main" />
 
 </RelativeLayout>

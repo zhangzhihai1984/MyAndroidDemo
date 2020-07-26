@@ -25,7 +25,7 @@
         android:background="@drawable/common_mask_circle_background"
         android:contentDescription="@null"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_refresh_white" />
+        android:src="@drawable/ic_refresh_main" />
 
     <TextView
         android:id="@+id/count_textview"
