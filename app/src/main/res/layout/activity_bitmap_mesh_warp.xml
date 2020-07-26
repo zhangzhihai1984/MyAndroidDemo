@@ -26,6 +26,7 @@
                 android:layout_margin="10dp"
                 android:src="@drawable/demo_trump"
                 app:meshColumn="8"
+                app:meshDebug="true"
                 app:meshGridColor="@color/colorPrimary"
                 app:meshGridWidth="1dp"
                 app:meshMaskColor="@color/mask_color"
@@ -93,7 +94,7 @@
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_debug_white" />
+                    android:src="@drawable/ic_debug_main" />
 
             </LinearLayout>
 

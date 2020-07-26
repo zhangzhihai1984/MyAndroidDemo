@@ -61,6 +61,7 @@ object DemoConfig {
                 DemoItem(PorterDuffXfermodeActivity::class.java, "Xfermode", "PorterDuff"),
                 DemoItem(BitmapMeshWarpActivity::class.java, "Bitmap Mesh", "Warp"),
                 DemoItem(BitmapMeshRippleActivity::class.java, "Bitmap Mesh", "Ripple"),
+                DemoItem(BitmapMeshCurtainActivity::class.java, "Bitmap Mesh", "Curtain"),
                 DemoItem(GraffitiActivity::class.java, "Graffiti")
         )
 

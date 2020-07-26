@@ -35,8 +35,8 @@ class BitmapRippleView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private val mMeshWidth: Int
     private val mMeshHeight: Int
-    private val mIntersectionRadius: Float
     private val mMaskColor: Int
+    private val mIntersectionRadius: Float
     private val mRowMajorOriginalCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mRowMajorWarpCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private val mTouchDownSubject = PublishSubject.create<Unit>()

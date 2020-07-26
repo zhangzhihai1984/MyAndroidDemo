@@ -32,6 +32,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         internal const val DEFAULT_MESH_HEIGHT = 20
         internal const val DEFAULT_GRID_COLOR = Color.BLACK
         internal const val DEFAULT_GRID_WIDTH = 3
+        private const val DEFAULT_MASK_COLOR = Color.TRANSPARENT
         internal const val DEFAULT_MAX_PERCENT = 0.8f
 
         private const val PI2 = 2 * Math.PI
@@ -41,6 +42,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
 
     private var mMeshWidth: Int
     private var mMeshHeight: Int
+    private val mMaskColor: Int
     private var mIntersectionRadius: Float
     private var mMaxPercent: Float
     private var mColors: IntArray
@@ -91,6 +93,7 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
         bitmap = a.getDrawable(R.styleable.BitmapCurtainView_android_src)?.toBitmap()
         mMeshWidth = a.getInteger(R.styleable.BitmapCurtainView_meshColumn, DEFAULT_MESH_WIDTH)
         mMeshHeight = a.getInteger(R.styleable.BitmapCurtainView_meshRow, DEFAULT_MESH_HEIGHT)
+        mMaskColor = a.getColor(R.styleable.BitmapCurtainView_meshMaskColor, DEFAULT_MASK_COLOR)
         mMaxPercent = min(max(a.getFloat(R.styleable.BitmapCurtainView_curtainMaxPercent, DEFAULT_MAX_PERCENT), 0f), 1f)
         mTouchable = a.getBoolean(R.styleable.BitmapCurtainView_curtainTouchable, true)
         debug = a.getBoolean(R.styleable.BitmapCurtainView_meshDebug, false)
@@ -360,6 +363,8 @@ class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: Attri
             drawGrid(canvas)
             drawIntersection(canvas)
         }
+
+        canvas.drawColor(mMaskColor)
     }
 
     override fun computeScroll() {

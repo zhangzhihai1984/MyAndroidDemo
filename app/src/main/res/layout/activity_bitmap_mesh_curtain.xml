@@ -14,8 +14,8 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp">
 
-        <com.twigcodes.ui.bitmapmesh.BitmapRippleView
-            android:id="@+id/bitmap_ripple_view"
+        <com.twigcodes.ui.bitmapmesh.BitmapCurtainView
+            android:id="@+id/bitmap_curtain_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"

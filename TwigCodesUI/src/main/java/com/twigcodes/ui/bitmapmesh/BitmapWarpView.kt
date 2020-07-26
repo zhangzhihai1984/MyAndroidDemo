@@ -27,8 +27,8 @@ class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     private val mMeshWidth: Int
     private val mMeshHeight: Int
-    private val mIntersectionRadius: Float
     private val mMaskColor: Int
+    private val mIntersectionRadius: Float
     private val mRowMajorCoordinates: ArrayList<ArrayList<Pair<Float, Float>>> = arrayListOf()
     private var mColors: IntArray? = null
 
