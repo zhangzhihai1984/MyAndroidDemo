@@ -49,7 +49,7 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
         updateColor(alpha, red, green, blue)
     }
 
-    fun updateColor(alpha: Int, red: Int, green: Int, blue: Int) {
+    private fun updateColor(alpha: Int, red: Int, green: Int, blue: Int) {
         alpha_seekbar.progress = alpha
         red_seekbar.progress = red
         green_seekbar.progress = green

@@ -47,8 +47,8 @@
             app:cardCornerRadius="5dp"
             app:cardElevation="5dp">
 
-            <com.twigcodes.ui.colorpicker.ColorPickerView
-                android:id="@+id/color_picker_view"
+            <com.twigcodes.ui.ColorSeekerView
+                android:id="@+id/color_seeker_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
