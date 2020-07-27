@@ -29,10 +29,10 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         orientation = VERTICAL
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
-        val hasBrightness = a.getBoolean(R.styleable.ColorPickerView_colorShowBrightness, true)
+        val showBrightness = a.getBoolean(R.styleable.ColorPickerView_colorShowBrightness, true)
         val brightnessHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorBrightnessHeight, DEFAULT_BRIGHTNESS_HEIGHT)
         val brightnessMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorBrightnessMarginTop, DEFAULT_BRIGHTNESS_MARGIN_TOP)
-        val hasAlpha = a.getBoolean(R.styleable.ColorPickerView_colorShowAlpha, false)
+        val showAlpha = a.getBoolean(R.styleable.ColorPickerView_colorShowAlpha, false)
         val alphaHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorAlphaHeight, DEFAULT_ALPHA_HEIGHT)
         val alphaMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorAlphaMarginTop, DEFAULT_ALPHA_MARGIN_TOP)
 
@@ -46,8 +46,8 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         addView(mBrightnessView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, brightnessHeight).apply { topMargin = brightnessMarginTop })
         addView(mAlphaView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, alphaHeight).apply { topMargin = alphaMarginTop })
 
-        if (!hasBrightness) mBrightnessView.visibility = View.GONE
-        if (!hasAlpha) mAlphaView.visibility = View.GONE
+        if (!showBrightness) mBrightnessView.visibility = View.GONE
+        if (!showAlpha) mAlphaView.visibility = View.GONE
         initView()
     }
 
