@@ -92,6 +92,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
+            android:name=".demonstration.LightingColorFilterActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+        <activity
             android:name=".demonstration.BitmapMeshWarpActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"

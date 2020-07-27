@@ -57,11 +57,12 @@ object DemoConfig {
                 DemoItem(ImageScaleTypeActivity::class.java, "ScaleType"),
                 DemoItem(BitmapXferActivity::class.java, "Bitmap Xfer"),
                 DemoItem(BitmapBlurActivity::class.java, "Bitmap Blur", "RenderScript"),
-                DemoItem(PorterDuffColorFilterActivity::class.java, "ColorFilter", "PorterDuff"),
-                DemoItem(PorterDuffXfermodeActivity::class.java, "Xfermode", "PorterDuff"),
-                DemoItem(BitmapMeshWarpActivity::class.java, "Bitmap Mesh", "Warp"),
-                DemoItem(BitmapMeshRippleActivity::class.java, "Bitmap Mesh", "Ripple"),
-                DemoItem(BitmapMeshCurtainActivity::class.java, "Bitmap Mesh", "Curtain"),
+                DemoItem(PorterDuffColorFilterActivity::class.java, "PorterDuff", "ColorFilter"),
+                DemoItem(LightingColorFilterActivity::class.java, "Lighting", "ColorFilter"),
+                DemoItem(PorterDuffXfermodeActivity::class.java, "PorterDuff", "Xfermode"),
+                DemoItem(BitmapMeshWarpActivity::class.java, "Warp", "Bitmap Mesh"),
+                DemoItem(BitmapMeshRippleActivity::class.java, "Ripple", "Bitmap Mesh"),
+                DemoItem(BitmapMeshCurtainActivity::class.java, "Curtain", "Bitmap Mesh"),
                 DemoItem(GraffitiActivity::class.java, "Graffiti")
         )
 
