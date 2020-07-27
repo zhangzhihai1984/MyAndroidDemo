@@ -28,8 +28,9 @@ class PorterDuffXfermodeActivity : BaseActivity(Theme.LIGHT_AUTO) {
     private fun initView() {
         val colorPairs = listOf(
                 Color.rgb(33, 150, 243) to Color.rgb(233, 30, 99),
-                Color.parseColor("#66000000") to Color.rgb(233, 30, 99),
-                Color.WHITE to Color.BLACK
+                Color.rgb(33, 150, 243) to Color.argb(102, 233, 30, 99),
+                Color.argb(102, 33, 150, 243) to Color.rgb(233, 30, 99),
+                Color.argb(102, 33, 150, 243) to Color.argb(102, 233, 30, 99)
         )
 
         viewpager.adapter = PorterDuffFragmentAdapter(supportFragmentManager, colorPairs)
