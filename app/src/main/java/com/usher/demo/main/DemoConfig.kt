@@ -90,6 +90,7 @@ object DemoConfig {
                 DemoItem(ScanActivity::class.java, "Scan"),
                 DemoItem(IndexActivity::class.java, "Index"),
                 DemoItem(ColorPickerActivity::class.java, "Color Picker"),
+                DemoItem(ColorSeekerActivity::class.java, "Color Seeker"),
                 DemoItem(CurtainActivity::class.java, "Curtain")
         )
 

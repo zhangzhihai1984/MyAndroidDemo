@@ -204,6 +204,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
+            android:name=".view.ColorSeekerActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+        <activity
             android:name=".view.CurtainActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"

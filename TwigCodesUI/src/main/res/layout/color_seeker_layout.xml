@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SeekBar
+        android:id="@+id/red_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:max="255"
+        android:min="0" />
+
+    <SeekBar
+        android:id="@+id/green_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:max="255"
+        android:min="0" />
+
+    <SeekBar
+        android:id="@+id/blue_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:max="255"
+        android:min="0" />
+
+</merge>
