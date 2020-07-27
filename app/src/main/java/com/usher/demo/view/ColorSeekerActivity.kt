@@ -22,5 +22,7 @@ class ColorSeekerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .subscribe { color ->
                     palette_imageview.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
                 }
+
+        color_seeker_view.updateColor(getColor(R.color.colorPrimary))
     }
 }

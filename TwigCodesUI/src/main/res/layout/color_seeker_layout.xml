@@ -6,23 +6,47 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@null"
         android:max="255"
-        android:min="0" />
+        android:min="0"
+        android:progressTint="#ffff0000"
+        android:progressTintMode="src_in"
+        android:thumb="@null" />
 
     <SeekBar
         android:id="@+id/green_seekbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@null"
         android:max="255"
-        android:min="0" />
+        android:min="0"
+        android:progressTint="#ff00ff00"
+        android:progressTintMode="src_in"
+        android:thumb="@null" />
 
     <SeekBar
         android:id="@+id/blue_seekbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@null"
         android:max="255"
-        android:min="0" />
+        android:min="0"
+        android:progressTint="#ff0000ff"
+        android:progressTintMode="src_in"
+        android:thumb="@null" />
+
+    <SeekBar
+        android:id="@+id/alpha_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:max="255"
+        android:min="0"
+        android:progress="255"
+        android:progressTintMode="src_in"
+        android:thumb="@null" />
 
 </merge>
