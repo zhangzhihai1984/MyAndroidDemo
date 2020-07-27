@@ -21,7 +21,7 @@ import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_porterduff_colorfilter.*
-import kotlinx.android.synthetic.main.fragment_colorfilter_porterduff.*
+import kotlinx.android.synthetic.main.fragment_porterduff_colorfilter.*
 
 class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +64,7 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
     }
 
-    class ColorFilterFragment : BasePagerFragment(R.layout.fragment_colorfilter_porterduff) {
+    class ColorFilterFragment : BasePagerFragment(R.layout.fragment_porterduff_colorfilter) {
         companion object {
             private const val RESID = "RESID"
             private const val COLOR = "COLOR"
