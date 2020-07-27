@@ -63,8 +63,8 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
                         ImageUtil.getCircleBitmap(bitmap) to "CIRCLE",
                         ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND",
-                        ImageUtil.getColorFilterBitmap(bitmap) to "COLOR FILTER",
-                        ImageUtil.getColorFilterBitmap(bitmap, Color.parseColor("#66000000"), PorterDuff.Mode.SRC_ATOP) to "COLOR FILTER"
+                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.RED) to "COLOR FILTER",
+                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.parseColor("#66000000"), PorterDuff.Mode.SRC_ATOP) to "COLOR FILTER"
                 )
 
                 recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)

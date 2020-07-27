@@ -34,8 +34,8 @@ internal class AlphaView @JvmOverloads constructor(context: Context, attrs: Attr
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
-        mCornerRadius = a.getDimensionPixelSize(R.styleable.ColorPickerView_alphaCornerRadius, DEFAULT_CORNER_RADIUS).toFloat()
-        val hasIndicator = a.getBoolean(R.styleable.ColorPickerView_hasAlphaIndicator, false)
+        mCornerRadius = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorAlphaCornerRadius, DEFAULT_CORNER_RADIUS).toFloat()
+        val hasIndicator = a.getBoolean(R.styleable.ColorPickerView_colorShowAlphaIndicator, false)
 
         if (hasIndicator) {
             mAlphaMarginBottom = DEFAULT_ALPHA_MARGIN_BOTTOM

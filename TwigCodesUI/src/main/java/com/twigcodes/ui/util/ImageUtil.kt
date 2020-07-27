@@ -41,6 +41,7 @@ object ImageUtil {
 
     fun getRenderScriptBlurBitmap(context: Context, source: Bitmap, radius: Float = 8f): Bitmap {
         val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+//        val bitmap = Bitmap.createBitmap(source)
         val renderScript = RenderScript.create(context)
         val input = Allocation.createFromBitmap(renderScript, source)
         val output = Allocation.createFromBitmap(renderScript, bitmap)
@@ -116,12 +117,23 @@ object ImageUtil {
         return bitmap
     }
 
-    fun getColorFilterBitmap(source: Bitmap, color: Int = Color.RED, mode: PorterDuff.Mode = PorterDuff.Mode.MULTIPLY): Bitmap {
+    fun getPorterDuffColorFilterBitmap(source: Bitmap, color: Int, mode: PorterDuff.Mode = PorterDuff.Mode.MULTIPLY): Bitmap {
         val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val dst = Rect(0, 0, bitmap.width, bitmap.height)
         canvas.drawBitmap(source, null, dst, Paint(Paint.ANTI_ALIAS_FLAG).apply {
             colorFilter = PorterDuffColorFilter(color, mode)
+        })
+
+        return bitmap
+    }
+
+    fun getLightingColorFilterBitmap(source: Bitmap, mul: Int, add: Int): Bitmap {
+        val bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val dst = Rect(0, 0, bitmap.width, bitmap.height)
+        canvas.drawBitmap(source, null, dst, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            colorFilter = LightingColorFilter(mul, add)
         })
 
         return bitmap

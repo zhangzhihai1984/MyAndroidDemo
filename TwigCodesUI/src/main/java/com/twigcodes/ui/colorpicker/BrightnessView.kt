@@ -34,8 +34,8 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
-        mCornerRadius = a.getDimensionPixelSize(R.styleable.ColorPickerView_brightnessCornerRadius, DEFAULT_CORNER_RADIUS).toFloat()
-        val hasIndicator = a.getBoolean(R.styleable.ColorPickerView_hasBrightnessIndicator, false)
+        mCornerRadius = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorBrightnessCornerRadius, DEFAULT_CORNER_RADIUS).toFloat()
+        val hasIndicator = a.getBoolean(R.styleable.ColorPickerView_colorShowBrightnessIndicator, false)
 
         if (hasIndicator) {
             mBrightnessMarginBottom = DEFAULT_BRIGHTNESS_MARGIN_BOTTOM

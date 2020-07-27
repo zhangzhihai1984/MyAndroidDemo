@@ -24,14 +24,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
-                app:alphaCornerRadius="5dp"
-                app:brightnessCornerRadius="5dp"
-                app:brightnessHeight="20dp"
-                app:hasAlpha="true"
-                app:hasAlphaIndicator="true"
-                app:paletteMarginInner="20dp"
-                app:paletteWidth="40dp"
-                app:pickerHaloWidth="2dp" />
+                app:colorAlphaCornerRadius="5dp"
+                app:colorBrightnessCornerRadius="5dp"
+                app:colorBrightnessHeight="20dp"
+                app:colorShowAlpha="true"
+                app:colorShowAlphaIndicator="true"
+                app:colorPaletteMarginInner="20dp"
+                app:colorPaletteWidth="40dp"
+                app:colorPickerHaloWidth="2dp" />
 
         </androidx.cardview.widget.CardView>
 

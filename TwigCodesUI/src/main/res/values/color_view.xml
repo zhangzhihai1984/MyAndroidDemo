@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ColorPickerView">
+        <attr name="colorPaletteWidth" format="dimension" />
+        <attr name="colorPaletteMarginInner" format="dimension" />
+        <attr name="colorPickerHaloWidth" format="dimension" />
+        <attr name="colorShowBrightness" format="boolean" />
+        <attr name="colorShowBrightnessIndicator" format="boolean" />
+        <attr name="colorBrightnessMarginTop" format="dimension" />
+        <attr name="colorBrightnessHeight" format="dimension" />
+        <attr name="colorBrightnessCornerRadius" format="dimension" />
+        <attr name="colorShowAlpha" format="boolean" />
+        <attr name="colorShowAlphaIndicator" format="boolean" />
+        <attr name="colorAlphaMarginTop" format="dimension" />
+        <attr name="colorAlphaHeight" format="dimension" />
+        <attr name="colorAlphaCornerRadius" format="dimension" />
+    </declare-styleable>
+</resources>

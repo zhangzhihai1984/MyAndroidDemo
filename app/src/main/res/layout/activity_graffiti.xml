@@ -116,12 +116,12 @@
                     android:layout_height="0dp"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    app:brightnessCornerRadius="5dp"
-                    app:brightnessHeight="15dp"
-                    app:hasBrightnessIndicator="true"
-                    app:paletteMarginInner="10dp"
-                    app:paletteWidth="20dp"
-                    app:pickerHaloWidth="2dp" />
+                    app:colorBrightnessCornerRadius="5dp"
+                    app:colorBrightnessHeight="15dp"
+                    app:colorShowBrightnessIndicator="true"
+                    app:colorPaletteMarginInner="10dp"
+                    app:colorPaletteWidth="20dp"
+                    app:colorPickerHaloWidth="2dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

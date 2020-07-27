@@ -105,7 +105,7 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_porterduff_colorfilter, data) {
             override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
-                helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getColorFilterBitmap(bitmap, color, mode))
+                helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getPorterDuffColorFilterBitmap(bitmap, color, mode))
                 helper.setText(R.id.mode_textview, mode.name)
             }
         }

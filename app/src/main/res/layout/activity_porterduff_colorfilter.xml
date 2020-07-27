@@ -51,17 +51,7 @@
                 android:id="@+id/color_seeker_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                app:alphaCornerRadius="5dp"
-                app:alphaHeight="15dp"
-                app:brightnessCornerRadius="5dp"
-                app:brightnessHeight="15dp"
-                app:hasAlpha="true"
-                app:hasAlphaIndicator="true"
-                app:hasBrightnessIndicator="true"
-                app:paletteMarginInner="10dp"
-                app:paletteWidth="20dp"
-                app:pickerHaloWidth="2dp" />
+                android:layout_margin="10dp" />
 
         </androidx.cardview.widget.CardView>
 

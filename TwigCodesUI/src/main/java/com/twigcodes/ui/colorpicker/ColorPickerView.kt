@@ -29,12 +29,12 @@ class ColorPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
         orientation = VERTICAL
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
-        val hasBrightness = a.getBoolean(R.styleable.ColorPickerView_hasBrightness, true)
-        val brightnessHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_brightnessHeight, DEFAULT_BRIGHTNESS_HEIGHT)
-        val brightnessMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_brightnessMarginTop, DEFAULT_BRIGHTNESS_MARGIN_TOP)
-        val hasAlpha = a.getBoolean(R.styleable.ColorPickerView_hasAlpha, false)
-        val alphaHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_alphaHeight, DEFAULT_ALPHA_HEIGHT)
-        val alphaMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_alphaMarginTop, DEFAULT_ALPHA_MARGIN_TOP)
+        val hasBrightness = a.getBoolean(R.styleable.ColorPickerView_colorShowBrightness, true)
+        val brightnessHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorBrightnessHeight, DEFAULT_BRIGHTNESS_HEIGHT)
+        val brightnessMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorBrightnessMarginTop, DEFAULT_BRIGHTNESS_MARGIN_TOP)
+        val hasAlpha = a.getBoolean(R.styleable.ColorPickerView_colorShowAlpha, false)
+        val alphaHeight = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorAlphaHeight, DEFAULT_ALPHA_HEIGHT)
+        val alphaMarginTop = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorAlphaMarginTop, DEFAULT_ALPHA_MARGIN_TOP)
 
         a.recycle()
 

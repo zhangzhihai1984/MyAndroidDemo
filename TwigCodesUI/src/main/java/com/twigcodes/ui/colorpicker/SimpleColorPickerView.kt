@@ -77,14 +77,14 @@ internal class SimpleColorPickerView @JvmOverloads constructor(context: Context,
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, defStyleRes)
 
         mPalettePaint.run {
-            strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_paletteWidth, DEFAULT_PALETTE_STROKE_WIDTH).toFloat()
+            strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorPaletteWidth, DEFAULT_PALETTE_STROKE_WIDTH).toFloat()
         }
 
         mPickerHaloPaint.run {
-            strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_pickerHaloWidth, DEFAULT_PICKER_HALO_WIDTH).toFloat()
+            strokeWidth = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorPickerHaloWidth, DEFAULT_PICKER_HALO_WIDTH).toFloat()
         }
 
-        mPaletteMarginInner = a.getDimensionPixelSize(R.styleable.ColorPickerView_paletteMarginInner, DEFAULT_PALETTE_MARGIN_INNER).toFloat()
+        mPaletteMarginInner = a.getDimensionPixelSize(R.styleable.ColorPickerView_colorPaletteMarginInner, DEFAULT_PALETTE_MARGIN_INNER).toFloat()
 
         a.recycle()
 
