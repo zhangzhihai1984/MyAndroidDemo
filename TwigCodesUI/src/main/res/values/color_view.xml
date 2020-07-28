@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="colorShowAlpha" format="boolean" />
+
     <declare-styleable name="ColorPickerView">
         <attr name="colorPaletteWidth" format="dimension" />
         <attr name="colorPaletteMarginInner" format="dimension" />
@@ -9,10 +11,14 @@
         <attr name="colorBrightnessMarginTop" format="dimension" />
         <attr name="colorBrightnessHeight" format="dimension" />
         <attr name="colorBrightnessCornerRadius" format="dimension" />
-        <attr name="colorShowAlpha" format="boolean" />
+        <attr name="colorShowAlpha" />
         <attr name="colorShowAlphaIndicator" format="boolean" />
         <attr name="colorAlphaMarginTop" format="dimension" />
         <attr name="colorAlphaHeight" format="dimension" />
         <attr name="colorAlphaCornerRadius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="ColorSeekerView">
+        <attr name="colorShowAlpha" />
     </declare-styleable>
 </resources>

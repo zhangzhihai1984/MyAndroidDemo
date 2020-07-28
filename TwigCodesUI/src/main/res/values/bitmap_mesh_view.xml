@@ -7,7 +7,6 @@
     <attr name="meshMaskColor" format="reference|color" />
     <attr name="meshDebug" format="boolean" />
 
-
     <declare-styleable name="BitmapWarpView">
         <attr name="android:src" format="reference" />
         <attr name="meshRow" />

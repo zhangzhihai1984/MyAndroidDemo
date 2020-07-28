@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding4.view.globalLayouts
@@ -20,6 +21,13 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
     init {
         inflate(context, R.layout.color_seeker_layout, this)
         orientation = VERTICAL
+
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorSeekerView, defStyleAttr, defStyleRes)
+        val showAlpha = a.getBoolean(R.styleable.ColorSeekerView_colorShowAlpha, true)
+
+        a.recycle()
+
+        alpha_seekbar.visibility = if (showAlpha) View.VISIBLE else View.GONE
 
         initView()
     }
