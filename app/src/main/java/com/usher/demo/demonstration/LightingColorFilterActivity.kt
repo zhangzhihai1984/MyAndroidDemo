@@ -7,6 +7,11 @@ import com.usher.demo.base.BaseActivity
 class LightingColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_lighting_colorfilter)
+        setContentView(R.layout.activity_colorfilter_lighting)
+        initView()
+    }
+
+    private fun initView() {
+
     }
 }
