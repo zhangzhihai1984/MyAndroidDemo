@@ -51,10 +51,10 @@ class BitmapBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 }
     }
 
-    private class BlurFragmentAdapter(fm: FragmentManager, private var mResIds: List<Int>, private var scale: Float, private var radius: Float) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getItem(position: Int): Fragment = BlurFragment.newInstance(mResIds[position], scale, radius)
+    private class BlurFragmentAdapter(fm: FragmentManager, private val resIds: List<Int>, private var scale: Float, private var radius: Float) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getItem(position: Int): Fragment = BlurFragment.newInstance(resIds[position], scale, radius)
 
-        override fun getCount(): Int = mResIds.size
+        override fun getCount(): Int = resIds.size
 
         override fun getItemPosition(obj: Any): Int = PagerAdapter.POSITION_NONE
 

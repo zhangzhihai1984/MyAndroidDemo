@@ -61,17 +61,19 @@ class PagerActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
     class PagerFragment : BasePagerFragment(R.layout.fragment_pager) {
         companion object {
+            private const val RESID = "RESID"
+
             fun newInstance(num: Int): PagerFragment =
                     PagerFragment().apply {
                         arguments = Bundle().apply {
-                            putInt(Constants.TAG_DATA, num)
+                            putInt(RESID, num)
                         }
                     }
         }
 
         override fun init() {
             arguments?.run {
-                textview.text = "${getInt(Constants.TAG_DATA)}"
+                textview.text = "${getInt(RESID)}"
             }
 
             val color = Color.rgb((0..256).random(), (0..256).random(), (0..256).random())

@@ -35,18 +35,20 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indicatorview.setViewPager(viewpager)
     }
 
-    private class ScaleTypeFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getItem(position: Int): Fragment = ScaleTypeFragment.newInstance(mResIds[position])
+    private class ScaleTypeFragmentAdapter(fm: FragmentManager, private val resIds: List<Int>) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getItem(position: Int): Fragment = ScaleTypeFragment.newInstance(resIds[position])
 
-        override fun getCount(): Int = mResIds.size
+        override fun getCount(): Int = resIds.size
     }
 
     class ScaleTypeFragment : BasePagerFragment(R.layout.fragment_image_scale_type) {
         companion object {
+            private const val RESID = "RESID"
+
             fun newInstance(resId: Int) =
                     ScaleTypeFragment().apply {
                         arguments = Bundle().apply {
-                            putInt(Constants.TAG_DATA, resId)
+                            putInt(RESID, resId)
                         }
                     }
 
@@ -76,7 +78,8 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
             )
 
             arguments?.run {
-                val scaleTypeAdapter = ScaleTypeAdapter(scaleTypes, getInt(Constants.TAG_DATA))
+                val resId = getInt(RESID)
+                val scaleTypeAdapter = ScaleTypeAdapter(scaleTypes, resId)
 
                 recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
                 recyclerview.adapter = scaleTypeAdapter

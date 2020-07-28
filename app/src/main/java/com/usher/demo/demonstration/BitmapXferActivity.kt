@@ -17,7 +17,6 @@ import com.twigcodes.ui.fragment.BasePagerFragment
 import com.twigcodes.ui.util.ImageUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.Constants
 import kotlinx.android.synthetic.main.activity_bitmap_xfer.*
 import kotlinx.android.synthetic.main.fragment_bitmap_xfer.*
 
@@ -35,25 +34,27 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
         indicatorview.setViewPager(viewpager)
     }
 
-    private class BitmapXferFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getItem(position: Int): Fragment = BitmapXferFragment.newInstance(mResIds[position])
+    private class BitmapXferFragmentAdapter(fm: FragmentManager, private val resIds: List<Int>) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getItem(position: Int): Fragment = BitmapXferFragment.newInstance(resIds[position])
 
-        override fun getCount(): Int = mResIds.size
+        override fun getCount(): Int = resIds.size
     }
 
     class BitmapXferFragment : BasePagerFragment(R.layout.fragment_bitmap_xfer) {
         companion object {
+            private const val RESID = "RESID"
+
             fun newInstance(resId: Int) =
                     BitmapXferFragment().apply {
                         arguments = Bundle().apply {
-                            putInt(Constants.TAG_DATA, resId)
+                            putInt(RESID, resId)
                         }
                     }
         }
 
         override fun init() {
             arguments?.run {
-                val resId = getInt(Constants.TAG_DATA)
+                val resId = getInt(RESID)
                 val bitmap = resources.getDrawable(resId, null).toBitmap()
                 val bitmapPairs = listOf(
                         bitmap to "ORIGINAL",

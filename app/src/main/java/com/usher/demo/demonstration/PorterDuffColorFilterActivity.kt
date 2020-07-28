@@ -53,10 +53,10 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
         color_seeker_view.updateColor(getColor(R.color.colorPrimary))
     }
 
-    private class ColorFilterFragmentAdapter(fm: FragmentManager, private val mResIds: List<Int>, private var color: Int = Color.TRANSPARENT) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getItem(position: Int): Fragment = ColorFilterFragment.newInstance(mResIds[position], color)
+    private class ColorFilterFragmentAdapter(fm: FragmentManager, private val resIds: List<Int>, private var color: Int = Color.TRANSPARENT) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getItem(position: Int): Fragment = ColorFilterFragment.newInstance(resIds[position], color)
 
-        override fun getCount(): Int = mResIds.size
+        override fun getCount(): Int = resIds.size
 
         override fun getItemPosition(obj: Any): Int = PagerAdapter.POSITION_NONE
 
