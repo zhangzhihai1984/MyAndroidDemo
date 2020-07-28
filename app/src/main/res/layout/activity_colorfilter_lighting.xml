@@ -64,12 +64,14 @@
                 android:orientation="vertical">
 
                 <com.twigcodes.ui.ColorSeekerView
+                    android:id="@+id/mul_color_seeker_view"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_margin="10dp"
                     app:colorShowAlpha="false" />
 
                 <com.twigcodes.ui.ColorSeekerView
+                    android:id="@+id/add_color_seeker_view"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_margin="10dp"
