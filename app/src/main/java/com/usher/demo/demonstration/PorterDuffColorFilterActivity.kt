@@ -16,7 +16,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.jakewharton.rxbinding4.viewpager.pageSelections
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.fragment.BasePagerFragment
-import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -31,7 +30,7 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.demo_plaster, R.drawable.demo_hardworking, R.drawable.demo_mall, R.drawable.demo_child)
+        val resIds = listOf(R.drawable.demo_plaster, R.drawable.picasso_reading_at_a_table, R.drawable.demo_bottle, R.drawable.demo_bottle2)
         val adapter = ColorFilterFragmentAdapter(supportFragmentManager, resIds)
 
         viewpager.adapter = adapter
@@ -105,7 +104,12 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_colorfilter_porterduff, data) {
             override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
-                helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getPorterDuffColorFilterBitmap(bitmap, color, mode))
+//                helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getPorterDuffColorFilterBitmap(bitmap, color, mode))
+
+                helper.getView<ImageView>(R.id.colorfilter_imageview).run {
+                    setImageBitmap(bitmap)
+                    setColorFilter(color, mode)
+                }
                 helper.setText(R.id.mode_textview, mode.name)
             }
         }

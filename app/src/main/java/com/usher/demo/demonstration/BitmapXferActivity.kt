@@ -64,7 +64,7 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                         ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
                         ImageUtil.getCircleBitmap(bitmap) to "CIRCLE",
                         ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND",
-                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.RED) to "COLOR FILTER",
+                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, requireContext().getColor(R.color.colorPrimary)) to "COLOR FILTER",
                         ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.parseColor("#66000000"), PorterDuff.Mode.SRC_ATOP) to "COLOR FILTER"
                 )
 
