@@ -12,7 +12,6 @@ import com.twigcodes.ui.pager.LoopViewPager
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.Constants
 import kotlinx.android.synthetic.main.activity_pager.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 import kotlin.math.max

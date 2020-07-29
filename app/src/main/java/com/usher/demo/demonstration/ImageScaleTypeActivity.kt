@@ -10,13 +10,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.squareup.picasso.Picasso
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.fragment.BasePagerFragment
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.Constants
 import com.usher.demo.widget.CommonDialog
 import kotlinx.android.synthetic.main.activity_image_scale_type.*
 import kotlinx.android.synthetic.main.fragment_image_scale_type.*
@@ -29,7 +27,7 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.demo_tree, R.drawable.demo_mall, R.drawable.demo_child)
+        val resIds = listOf(R.drawable.picasso_the_weeping_woman, R.drawable.picasso_reading_at_a_table, R.drawable.demo_bottle_s)
 
         viewpager.adapter = ScaleTypeFragmentAdapter(supportFragmentManager, resIds)
         indicatorview.setViewPager(viewpager)
@@ -100,7 +98,7 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
         private class ScaleTypeAdapter(data: List<ImageView.ScaleType>, private val resId: Int) : RxBaseQuickAdapter<ImageView.ScaleType, BaseViewHolder>(R.layout.item_image_scale_type, data) {
             override fun convert(helper: BaseViewHolder, type: ImageView.ScaleType) {
                 helper.getView<ImageView>(R.id.scale_type_imageview).run {
-                    Picasso.get().load(resId).into(this)
+                    setImageResource(resId)
                     scaleType = type
                 }
 

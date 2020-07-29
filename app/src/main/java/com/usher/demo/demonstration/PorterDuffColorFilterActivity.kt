@@ -31,7 +31,7 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.demo_mall, R.drawable.demo_child)
+        val resIds = listOf(R.drawable.demo_plaster, R.drawable.demo_hardworking, R.drawable.demo_mall, R.drawable.demo_child)
         val adapter = ColorFilterFragmentAdapter(supportFragmentManager, resIds)
 
         viewpager.adapter = adapter
