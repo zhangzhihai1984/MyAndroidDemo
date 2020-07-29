@@ -28,7 +28,7 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.picasso_girl_before_a_mirror, R.drawable.picasso_reading_at_a_table, R.drawable.demo_plaster)
+        val resIds = listOf(R.drawable.picasso_girl_before_a_mirror, R.drawable.picasso_the_women_of_algiers, R.drawable.demo_plaster)
 
         viewpager.adapter = BitmapXferFragmentAdapter(supportFragmentManager, resIds)
         indicatorview.setViewPager(viewpager)

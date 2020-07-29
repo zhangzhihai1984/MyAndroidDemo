@@ -23,6 +23,7 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
         orientation = VERTICAL
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.ColorSeekerView, defStyleAttr, defStyleRes)
+        val colorInit = a.getColor(R.styleable.ColorSeekerView_colorInit, Color.BLACK)
         val showAlpha = a.getBoolean(R.styleable.ColorSeekerView_colorShowAlpha, true)
 
         a.recycle()
@@ -30,6 +31,7 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
         alpha_seekbar.visibility = if (showAlpha) View.VISIBLE else View.GONE
 
         initView()
+        updateColor(colorInit)
     }
 
     private fun initView() {

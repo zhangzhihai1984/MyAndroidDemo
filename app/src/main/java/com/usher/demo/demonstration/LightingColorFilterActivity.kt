@@ -1,15 +1,14 @@
 package com.usher.demo.demonstration
 
 import android.graphics.Color
+import android.graphics.LightingColorFilter
 import android.os.Bundle
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import com.jakewharton.rxbinding4.viewpager.pageSelections
 import com.twigcodes.ui.fragment.BasePagerFragment
-import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -25,7 +24,7 @@ class LightingColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.demo_hardworking, R.drawable.demo_tree, R.drawable.demo_arale)
+        val resIds = listOf(R.drawable.picasso_girl_with_mandolin, R.drawable.picasso_portrait_of_dora_maar, R.drawable.picasso_dora_maar_au_chat)
         val adapter = ColorFilterFragmentAdapter(supportFragmentManager, resIds)
 
         viewpager.adapter = adapter
@@ -80,8 +79,9 @@ class LightingColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 val resId = getInt(RESID)
                 val mul = getInt(MUL)
                 val add = getInt(ADD)
-                val bitmap = resources.getDrawable(resId, null).toBitmap()
-                colorfilter_imageview.setImageBitmap(ImageUtil.getLightingColorFilterBitmap(bitmap, mul, add))
+
+                colorfilter_imageview.setImageResource(resId)
+                colorfilter_imageview.colorFilter = LightingColorFilter(mul, add)
             }
         }
 

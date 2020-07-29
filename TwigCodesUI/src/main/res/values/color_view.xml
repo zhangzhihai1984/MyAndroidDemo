@@ -19,6 +19,7 @@
     </declare-styleable>
 
     <declare-styleable name="ColorSeekerView">
+        <attr name="colorInit" format="reference|color" />
         <attr name="colorShowAlpha" />
     </declare-styleable>
 </resources>
