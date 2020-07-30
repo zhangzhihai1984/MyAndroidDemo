@@ -28,7 +28,7 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.picasso_girl_before_a_mirror, R.drawable.picasso_the_women_of_algiers, R.drawable.demo_plaster)
+        val resIds = listOf(R.drawable.picasso_reading_at_a_table, R.drawable.demo_plaster, R.drawable.picasso_girl_before_a_mirror)
 
         viewpager.adapter = BitmapXferFragmentAdapter(supportFragmentManager, resIds)
         indicatorview.setViewPager(viewpager)
@@ -58,14 +58,15 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 val bitmap = resources.getDrawable(resId, null).toBitmap()
                 val bitmapPairs = listOf(
                         bitmap to "ORIGINAL",
-                        ImageUtil.getRenderScriptBlurScaledBitmap(requireContext(), bitmap) to "RENDER SCRIPT SCALED BLUR",
-                        ImageUtil.getRenderScriptBlurBitmap(requireContext(), bitmap, 25f) to "RENDER SCRIPT BLUR",
+                        ImageUtil.getRenderScriptBlurBitmap(requireContext(), bitmap, 25f) to "SCRIPT BLUR",
+                        ImageUtil.getRenderScriptBlurScaledBitmap(requireContext(), bitmap) to "SCRIPT BLUR PRO",
                         ImageUtil.getScaledBlurBitmap(bitmap, 16f) to "SCALED BLUR",
                         ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
                         ImageUtil.getCircleBitmap(bitmap) to "CIRCLE",
                         ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND",
-                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, requireContext().getColor(R.color.colorPrimary)) to "COLOR FILTER",
-                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.parseColor("#66000000"), PorterDuff.Mode.SRC_ATOP) to "COLOR FILTER"
+                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.YELLOW, PorterDuff.Mode.DARKEN) to "PORTERDUFF FILTER",
+                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.BLACK, PorterDuff.Mode.OVERLAY) to "PORTERDUFF FILTER",
+                        ImageUtil.getLightingColorFilterBitmap(bitmap, Color.YELLOW, Color.BLUE) to "LIGHTING FILTER"
                 )
 
                 recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
