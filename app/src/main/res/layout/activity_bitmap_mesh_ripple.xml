@@ -9,7 +9,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
-        android:layout_height="400dp"
+        android:layout_height="370dp"
         app:cardBackgroundColor="@color/item_background"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp">
@@ -19,13 +19,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:src="@drawable/demo_tree"
+            android:src="@drawable/demo_plaster"
             app:meshColumn="30"
-            app:meshDebug="true"
+            app:meshDebug="false"
             app:meshGridColor="@color/colorPrimary"
-            app:meshGridWidth="1dp"
+            app:meshGridWidth="0.5dp"
             app:meshMaskColor="@color/mask_color"
-            app:meshRow="30" />
+            app:meshRow="40" />
 
     </androidx.cardview.widget.CardView>
 
@@ -33,10 +33,10 @@
         android:id="@+id/debug_imageview"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="20dp"
         android:background="@drawable/common_main_circle_stroke_background"
         android:contentDescription="@null"
-        android:scaleType="center"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_debug_main" />
 
 </LinearLayout>

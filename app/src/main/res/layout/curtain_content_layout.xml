@@ -29,7 +29,7 @@
             android:background="@drawable/common_mask_circle_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_door_open_white" />
+            android:src="@drawable/ic_door_open_main" />
 
         <ImageView
             android:id="@+id/close_imageview"
@@ -39,7 +39,7 @@
             android:background="@drawable/common_mask_circle_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_door_closed_white" />
+            android:src="@drawable/ic_door_close_main" />
 
         <ImageView
             android:id="@+id/debug_imageview"

@@ -19,5 +19,15 @@ class BitmapMeshCurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
                 .subscribe { bitmap_curtain_view.debug = bitmap_curtain_view.debug.not() }
+
+        open_imageview.clicks()
+                .compose(RxUtil.singleClick())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { bitmap_curtain_view.open() }
+
+        close_imageview.clicks()
+                .compose(RxUtil.singleClick())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { bitmap_curtain_view.close() }
     }
 }

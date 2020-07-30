@@ -21,7 +21,7 @@
             android:layout_margin="10dp"
             android:src="@drawable/demo_plaster"
             app:meshColumn="2"
-            app:meshDebug="true"
+            app:meshDebug="false"
             app:meshGridColor="@color/colorPrimary"
             app:meshGridWidth="1dp"
             app:meshMaskColor="@color/mask_color"
