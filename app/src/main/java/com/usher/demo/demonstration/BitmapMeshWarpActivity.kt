@@ -17,7 +17,7 @@ class BitmapMeshWarpActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        color_picker_view.colorPicks()
+        color_seeker_view.colorSeeks()
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))
                 .subscribe { color -> bitmap_warp_view.colorVertex(color) }
