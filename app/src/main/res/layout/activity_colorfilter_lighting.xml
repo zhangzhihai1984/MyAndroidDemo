@@ -61,7 +61,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/item_background"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp">
@@ -69,30 +69,70 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MUL"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <com.twigcodes.ui.ColorSeekerView
                     android:id="@+id/mul_color_seeker_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:layout_margin="10dp"
-                    app:colorInit="@android:color/white"
+                    android:layout_weight="1"
+                    app:colorInit="@android:color/holo_red_dark"
                     app:colorShowAlpha="false" />
+
+                <ImageView
+                    android:id="@+id/mul_palette_imageview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_palette" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ADD"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <com.twigcodes.ui.ColorSeekerView
                     android:id="@+id/add_color_seeker_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:layout_margin="10dp"
+                    android:layout_weight="1"
                     app:colorInit="@color/colorPrimaryDark"
                     app:colorShowAlpha="false" />
+
+                <ImageView
+                    android:id="@+id/add_palette_imageview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_palette" />
 
             </LinearLayout>
 

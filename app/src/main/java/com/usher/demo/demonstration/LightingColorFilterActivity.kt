@@ -2,6 +2,7 @@ package com.usher.demo.demonstration
 
 import android.graphics.Color
 import android.graphics.LightingColorFilter
+import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -24,7 +25,7 @@ class LightingColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val resIds = listOf(R.drawable.picasso_girl_with_mandolin, R.drawable.picasso_portrait_of_dora_maar, R.drawable.picasso_dora_maar_au_chat)
+        val resIds = listOf(R.drawable.picasso_girl_with_mandolin, R.drawable.demo_plaster, R.drawable.picasso_dora_maar_au_chat)
         val adapter = ColorFilterFragmentAdapter(supportFragmentManager, resIds)
 
         viewpager.adapter = adapter
@@ -38,6 +39,8 @@ class LightingColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
 
         Observables.combineLatest(mul_color_seeker_view.colorSeeks(), add_color_seeker_view.colorSeeks()) { mul, add ->
             adapter.updateColorFilter(mul, add)
+            mul_palette_imageview.setColorFilter(mul, PorterDuff.Mode.SRC_IN)
+            add_palette_imageview.setColorFilter(add, PorterDuff.Mode.SRC_IN)
         }
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))
