@@ -3,7 +3,7 @@
     <item android:id="@android:id/background">
         <shape>
             <stroke
-                android:width="4dp"
+                android:width="2dp"
                 android:color="@color/colorPrimaryDark" />
             <corners android:radius="4dp" />
         </shape>
@@ -15,7 +15,7 @@
             android:gravity="bottom">
             <shape>
                 <stroke
-                    android:width="4dp"
+                    android:width="2dp"
                     android:color="@color/colorPrimaryDark" />
                 <solid android:color="@color/colorPrimary" />
                 <corners android:radius="4dp" />
