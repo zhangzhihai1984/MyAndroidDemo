@@ -38,20 +38,20 @@ import java.util.List;
  * 这里有一点需要注意，如果你的Adapter是继承自{@link FragmentPagerAdapter}或{@link FragmentStatePagerAdapter}，
  * 在实现{@link FragmentPagerAdapter#getItem(int)}或{@link FragmentStatePagerAdapter#getItem(int)}时，
  * 不要直接使用position的值，因为那个值是real的，是针对count+2而言的，需要你将该position和Adapter的count传给
- * {@link LoopViewPager#getMatchedPosition(int, int)}，使用该方法返回的index来获取你列表中的数据，以生成相应的
- * {@link Fragment}。具体原因可查看{@link LoopPagerAdapter#instantiateItem(ViewGroup, int)}
+ * {@link LoopViewPager2#getMatchedPosition(int, int)}，使用该方法返回的index来获取你列表中的数据，以生成相应的
+ * {@link Fragment}。具体原因可查看{@link LoopPagerAdapter2#instantiateItem(ViewGroup, int)}
  * <p>
  * <p>
  * <strong>如果你有更新数据的需求的话，不要开启缓存模式(默认不开启)。</strong>同时，建议你的Adapter不要继承自{@link FragmentPagerAdapter}，
  * 具体原因可参见{@link #setCacheEnabled(boolean)}，如果重写{@link FragmentPagerAdapter#instantiateItem(ViewGroup, int)}和
  * {@link FragmentPagerAdapter#destroyItem(ViewGroup, int, Object)}的话，为什么不直接使用{@link FragmentStatePagerAdapter}。
  */
-public class LoopViewPager extends ViewPager {
+public class LoopViewPager2 extends ViewPager {
     private static final int DEFAULT_AUTO_PAGER_INTERVAL = 1000;
 
     private final List<OnPageChangeListener> mOnPageChangeListeners = new ArrayList<>();
 
-    private LoopPagerAdapter mLoopAdapter;
+    private LoopPagerAdapter2 mLoopAdapter;
     private PagerAdapter mRawAdapter;
 
     private AutoPageHandler mAutoPageHandler;
@@ -60,18 +60,18 @@ public class LoopViewPager extends ViewPager {
     private boolean mIsAutoPageEnabled = false;
     private int mAutoPageInterval;
 
-    public LoopViewPager(Context context) {
+    public LoopViewPager2(Context context) {
         this(context, null);
     }
 
-    public LoopViewPager(Context context, AttributeSet attrs) {
+    public LoopViewPager2(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LoopViewPager);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LoopViewPager2);
 
-        mIsAutoPageEnabled = a.getBoolean(R.styleable.LoopViewPager_pager_autopage_enabled, false);
-        mAutoPageInterval = a.getInt(R.styleable.LoopViewPager_pager_autopage_interval, DEFAULT_AUTO_PAGER_INTERVAL);
-        mIsCacheEnabled = a.getBoolean(R.styleable.LoopViewPager_pager_cache_enabled, false);
+        mIsAutoPageEnabled = a.getBoolean(R.styleable.LoopViewPager2_pager_autopage_enabled, false);
+        mAutoPageInterval = a.getInt(R.styleable.LoopViewPager2_pager_autopage_interval, DEFAULT_AUTO_PAGER_INTERVAL);
+        mIsCacheEnabled = a.getBoolean(R.styleable.LoopViewPager2_pager_cache_enabled, false);
 
         a.recycle();
 
@@ -88,7 +88,7 @@ public class LoopViewPager extends ViewPager {
         if (mRawAdapter != null) {
             mRawAdapter.registerDataSetObserver(mDataSetObserver);
 
-            mLoopAdapter = new LoopPagerAdapter(adapter);
+            mLoopAdapter = new LoopPagerAdapter2(adapter);
             mLoopAdapter.setCacheEnabled(mIsCacheEnabled);
 
             if (mIsAutoPageEnabled) {
@@ -115,7 +115,7 @@ public class LoopViewPager extends ViewPager {
      * <p>
      * 以[3,0,1,2,3,0]为例，当我们在index为4的"3"向左滑动屏幕滑至最右侧index为5的"0"时，根据我们无限循环的设计，会瞬间转至index为1的"0",
      * 因此当外界调用该方法时，一旦出现索引值大于等于count-1时，说明此时进行了数据更新(发生了数据更新不一定会发生这种情况，但发生这种情况肯定是
-     * 由数据更新引起的)，考虑到用户会使用Indicator，参见{@link LoopViewPager#mOnPageChangeListener}我们对这种情况的处理方案为立即展现
+     * 由数据更新引起的)，考虑到用户会使用Indicator，参见{@link LoopViewPager2#mOnPageChangeListener}我们对这种情况的处理方案为立即展现
      * position为0的item，相应的，这里返回0，让Indicator获取到正确的position。
      */
     @Override
@@ -339,7 +339,7 @@ public class LoopViewPager extends ViewPager {
 
         /**
          * 防止在实现循环效果时，页面的Indicator调用两次，导致用户看到首尾item的动画play两次。
-         * 具体原理参见{@link LoopViewPager#mOnPageChangeListener#onPageScrollStateChanged(int)}
+         * 具体原理参见{@link LoopViewPager2#mOnPageChangeListener#onPageScrollStateChanged(int)}
          */
         @Override
         public void onPageSelected(int position) {
@@ -413,7 +413,7 @@ public class LoopViewPager extends ViewPager {
         @Override
         public void onPageScrollStateChanged(int state) {
             if (state == SCROLL_STATE_IDLE) {
-                int position = LoopViewPager.super.getCurrentItem();
+                int position = LoopViewPager2.super.getCurrentItem();
 
                 if (position == 0) {
                     setCurrentItem(mRawAdapter.getCount() - 1, false);
@@ -438,15 +438,15 @@ public class LoopViewPager extends ViewPager {
     };
 
     private static class AutoPageHandler extends Handler {
-        private final WeakReference<LoopViewPager> mTarget;
+        private final WeakReference<LoopViewPager2> mTarget;
 
-        AutoPageHandler(LoopViewPager loopViewPager) {
+        AutoPageHandler(LoopViewPager2 loopViewPager) {
             mTarget = new WeakReference<>(loopViewPager);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            LoopViewPager loopViewPager = mTarget.get();
+            LoopViewPager2 loopViewPager = mTarget.get();
 
             if (loopViewPager != null) {
                 loopViewPager.autoPage();
