@@ -62,8 +62,7 @@ object DemoConfig {
                 DemoItem(PorterDuffXfermodeActivity::class.java, "PorterDuff", "Xfermode"),
                 DemoItem(BitmapMeshWarpActivity::class.java, "Warp", "Bitmap Mesh"),
                 DemoItem(BitmapMeshRippleActivity::class.java, "Ripple", "Bitmap Mesh"),
-                DemoItem(BitmapMeshCurtainActivity::class.java, "Curtain", "Bitmap Mesh"),
-                DemoItem(GraffitiActivity::class.java, "Graffiti")
+                DemoItem(BitmapMeshCurtainActivity::class.java, "Curtain", "Bitmap Mesh")
         )
 
         configMap[KEY_WEB] = listOf(
@@ -91,7 +90,8 @@ object DemoConfig {
                 DemoItem(IndexActivity::class.java, "Index"),
                 DemoItem(ColorPickerActivity::class.java, "Color Picker"),
                 DemoItem(ColorSeekerActivity::class.java, "Color Seeker"),
-                DemoItem(CurtainActivity::class.java, "Curtain")
+                DemoItem(CurtainActivity::class.java, "Curtain"),
+                DemoItem(GraffitiActivity::class.java, "Graffiti")
         )
 
         configMap[KEY_OTHER] = listOf(

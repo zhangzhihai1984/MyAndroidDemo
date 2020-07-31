@@ -1,4 +1,4 @@
-package com.usher.demo.demonstration
+package com.usher.demo.view
 
 import android.graphics.PorterDuff
 import android.os.Bundle
