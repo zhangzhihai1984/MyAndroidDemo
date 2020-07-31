@@ -5,128 +5,109 @@
     android:layout_height="match_parent"
     android:background="@color/page_background"
     android:fitsSystemWindows="true"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <com.twigcodes.ui.layout.SquareLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="20dp"
-        android:layout_weight="1"
-        app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/item_background"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="5dp">
 
             <com.twigcodes.ui.GraffitiView
                 android:id="@+id/graffiti_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/demo_tree"
-                app:graffitiMaskColor="@color/mask_color"
-                app:graffitiStrokeColor="@android:color/black"
+                android:background="@drawable/demo_geometry"
+                app:graffitiMaskColor="@android:color/transparent"
+                app:graffitiStrokeColor="@color/text_primary"
                 app:graffitiStrokeWidth="5dp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
+        </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:id="@+id/shuffle_imageview"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/common_mask_circle_background"
-                    android:contentDescription="@null"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_shuffle_main"
-                    android:tint="@android:color/white"
-                    android:tintMode="src_atop" />
-
-                <ImageView
-                    android:id="@+id/undo_imageview"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/common_mask_circle_background"
-                    android:contentDescription="@null"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_undo_main"
-                    android:tint="@android:color/white"
-                    android:tintMode="src_atop" />
-
-                <ImageView
-                    android:id="@+id/clear_imageview"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/common_mask_circle_background"
-                    android:contentDescription="@null"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_refresh_main"
-                    android:tint="@android:color/white"
-                    android:tintMode="src_atop" />
-
-                <ImageView
-                    android:id="@+id/done_imageview"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/common_mask_circle_background"
-                    android:contentDescription="@null"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_done_main"
-                    android:tint="@android:color/white"
-                    android:tintMode="src_atop" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
+    </com.twigcodes.ui.layout.SquareLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="-10dp"
         android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/undo_imageview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/common_main_circle_stroke_background"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_undo_main" />
+
+        <ImageView
+            android:id="@+id/clear_imageview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/common_main_circle_stroke_background"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_refresh_main" />
+
+        <ImageView
+            android:id="@+id/done_imageview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/common_main_circle_stroke_background"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_done_main" />
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardBackgroundColor="@color/item_background"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="5dp">
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical">
 
-                <com.twigcodes.ui.colorpicker.ColorPickerView
+                <com.twigcodes.ui.ColorSeekerView
                     android:id="@+id/color_picker_view"
-                    android:layout_width="120dp"
-                    android:layout_height="0dp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    app:colorBrightnessCornerRadius="5dp"
-                    app:colorBrightnessHeight="15dp"
-                    app:colorShowBrightnessIndicator="true"
-                    app:colorPaletteMarginInner="10dp"
-                    app:colorPaletteWidth="20dp"
-                    app:colorPickerHaloWidth="2dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    app:colorInit="@color/text_primary" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="0dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -159,27 +140,16 @@
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="5dp">
-
             <ImageView
                 android:id="@+id/snapshot_imageview"
-                android:layout_width="match_parent"
+                android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitXY"
+                android:src="@drawable/demo_geometry" />
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

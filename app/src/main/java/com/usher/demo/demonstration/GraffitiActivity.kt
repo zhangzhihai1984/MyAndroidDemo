@@ -1,9 +1,7 @@
 package com.usher.demo.demonstration
 
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import androidx.core.graphics.drawable.toDrawable
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
@@ -22,25 +20,16 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private fun initView() {
-        val drawables = listOf(
-                resources.getDrawable(R.drawable.demo_tree, null),
-                resources.getDrawable(R.drawable.demo_hardworking, null),
-                resources.getDrawable(R.drawable.demo_arale, null),
-                Color.BLACK.toDrawable(),
-                getColor(R.color.colorPrimary).toDrawable(),
-                null
-        )
-
         val strokeImageViews = listOf(stroke_imageview1, stroke_imageview2, stroke_imageview3)
         val strokeClicks = Observable.merge(strokeImageViews.mapIndexed { i, imageView -> imageView.clicks().map { i }.share() })
                 .startWith(Observable.just(1).compose(RxUtil.getSchedulerComposer()))
 
-        val colorPicks = color_picker_view.colorPicks()
-                .startWith(Observable.just(Color.BLACK).compose(RxUtil.getSchedulerComposer()))
+        val colorPicks = color_picker_view.colorSeeks()
+                .startWith(Observable.just(getColor(R.color.text_primary)).compose(RxUtil.getSchedulerComposer()))
 
         colorPicks.withLatestFrom(strokeClicks) { color, i ->
             graffiti_view.strokeColor = color
-            strokeImageViews[i].setColorFilter(color, PorterDuff.Mode.SRC_IN)
+            strokeImageViews[i].setColorFilter(color, PorterDuff.Mode.SRC)
         }
                 .to(RxUtil.autoDispose(this))
                 .subscribe {}
@@ -48,16 +37,11 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
         strokeClicks.withLatestFrom(colorPicks) { current, color ->
             graffiti_view.strokeWidth = (current + 1) * 15f
             strokeImageViews.forEachIndexed { i, imageView ->
-                imageView.setColorFilter(color, if (i == current) PorterDuff.Mode.SRC_IN else PorterDuff.Mode.DST)
+                imageView.setColorFilter(color, if (i == current) PorterDuff.Mode.SRC else PorterDuff.Mode.DST)
             }
         }
                 .to(RxUtil.autoDispose(this))
                 .subscribe {}
-
-        shuffle_imageview.clicks()
-                .compose(RxUtil.singleClick())
-                .to(RxUtil.autoDispose(this))
-                .subscribe { graffiti_view.background = drawables[drawables.indices.random()] }
 
         undo_imageview.clicks()
                 .compose(RxUtil.singleClick())
@@ -72,6 +56,6 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
         done_imageview.clicks()
                 .compose(RxUtil.singleClick())
                 .to(RxUtil.autoDispose(this))
-                .subscribe { snapshot_imageview.background = (ImageUtil.getViewBitmap(graffiti_view).toDrawable(resources)) }
+                .subscribe { snapshot_imageview.setImageBitmap(ImageUtil.getViewBitmap(graffiti_view)) }
     }
 }
