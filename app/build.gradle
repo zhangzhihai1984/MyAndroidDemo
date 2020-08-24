@@ -118,24 +118,28 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':TwigCodesUI')
 
-    implementation 'androidx.appcompat:appcompat:1.3.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.3.0-alpha02'
 
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit2}"
-    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit2}"
-    implementation "com.squareup.retrofit2:adapter-rxjava:${versions.retrofit2}"
+    //Kotlin
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha02'
+    implementation 'androidx.palette:palette-ktx:1.0.0'
+
+    //RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.3'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.0'
+
+    //RxJava AudoDispose
     implementation "com.uber.autodispose2:autodispose:${versions.autodispose}"
     implementation "com.uber.autodispose2:autodispose-android:${versions.autodispose}"
     implementation "com.uber.autodispose2:autodispose-lifecycle:${versions.autodispose}"
     implementation "com.uber.autodispose2:autodispose-androidx-lifecycle:${versions.autodispose}"
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
 
+    //RxBinding
     implementation "com.jakewharton.rxbinding4:rxbinding:${versions.rxbinding}"
     implementation "com.jakewharton.rxbinding4:rxbinding-appcompat:${versions.rxbinding}"
     implementation "com.jakewharton.rxbinding4:rxbinding-leanback:${versions.rxbinding}"
@@ -144,23 +148,33 @@ dependencies {
     implementation "com.jakewharton.rxbinding4:rxbinding-viewpager:${versions.rxbinding}"
     implementation "com.jakewharton.rxbinding4:rxbinding-material:${versions.rxbinding}"
 
-    implementation "com.jakewharton:butterknife:${versions.butterknife}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butterknife}"
+    //Retrofit2
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit2}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit2}"
+    implementation "com.squareup.retrofit2:adapter-rxjava:${versions.retrofit2}"
 
-    implementation 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'
-    //Optional: see how to use the utility.
-    implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-11'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //Loading
+    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
 
     //RecyclerView
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45'
 
-    //Kotlin
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72'
-    implementation 'androidx.core:core-ktx:1.5.0-alpha01'
-    implementation 'androidx.palette:palette-ktx:1.0.0'
-    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.0'
+    //SmartTabLayout
+    implementation 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'
+    //Optional: see how to use the utility.
+    implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
+
+    //Refresh
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-11'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation "com.jakewharton:butterknife:${versions.butterknife}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butterknife}"
 }
