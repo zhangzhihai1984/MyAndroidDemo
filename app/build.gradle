@@ -25,6 +25,7 @@ android {
         resValue "string", "app_name", "MyDemo"
         buildConfigField "String", "API_HOST", '"https://api.twigcodes.usher"'
     }
+    
     buildTypes {
         release {
             minifyEnabled false
@@ -125,7 +126,7 @@ dependencies {
 
     //Kotlin
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
-    implementation 'androidx.core:core-ktx:1.5.0-alpha02'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha03'
     implementation 'androidx.palette:palette-ktx:1.0.0'
 
     //RxJava
@@ -133,7 +134,7 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.0'
 
-    //RxJava AudoDispose
+    //RxJava AutoDispose
     implementation "com.uber.autodispose2:autodispose:${versions.autodispose}"
     implementation "com.uber.autodispose2:autodispose-android:${versions.autodispose}"
     implementation "com.uber.autodispose2:autodispose-lifecycle:${versions.autodispose}"
