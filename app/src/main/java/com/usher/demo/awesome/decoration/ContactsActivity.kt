@@ -14,6 +14,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.core.content.ContextCompat
 import androidx.core.view.forEachIndexed
 import androidx.core.view.get
 import androidx.core.view.isNotEmpty
@@ -224,12 +225,12 @@ class ContactsActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         private val mHeaderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = context.getColor(R.color.item_background)
+            color = ContextCompat.getColor(context, R.color.item_background)
             style = Paint.Style.FILL
         }
 
         private val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FAKE_BOLD_TEXT_FLAG).apply {
-            color = context.getColor(R.color.text_secondary)
+            color = ContextCompat.getColor(context, R.color.text_secondary)
             textAlign = Paint.Align.LEFT
             textSize = 40f
         }

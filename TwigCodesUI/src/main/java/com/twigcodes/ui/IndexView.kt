@@ -152,6 +152,7 @@ class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                             .takeUntil(mTouchSubject)
                             .takeUntil(mChangeIndexSubject)
                 }
+                .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe {
                     mTextOffsets = mTextOffsets.map { max(it - 10, 0f) }

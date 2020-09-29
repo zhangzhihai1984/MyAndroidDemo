@@ -2,13 +2,13 @@ package com.usher.demo.view
 
 import android.graphics.PorterDuff
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.withLatestFrom
 import kotlinx.android.synthetic.main.activity_graffiti.*
 
 class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
@@ -25,7 +25,7 @@ class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .startWith(Observable.just(1).compose(RxUtil.getSchedulerComposer()))
 
         val colorPicks = color_picker_view.colorSeeks()
-                .startWith(Observable.just(getColor(R.color.text_primary)).compose(RxUtil.getSchedulerComposer()))
+                .startWith(Observable.just(ContextCompat.getColor(this, R.color.text_primary)).compose(RxUtil.getSchedulerComposer()))
 
         colorPicks.withLatestFrom(strokeClicks) { color, i ->
             graffiti_view.strokeColor = color

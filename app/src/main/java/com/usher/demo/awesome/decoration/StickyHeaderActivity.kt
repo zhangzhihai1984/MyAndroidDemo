@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.forEach
 import androidx.core.view.forEachIndexed
@@ -63,13 +64,13 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
         }
 
         private val mStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = context.getColor(R.color.colorPrimary)
+            color = ContextCompat.getColor(context, R.color.colorPrimary)
             style = Paint.Style.STROKE
             strokeWidth = 6f
         }
 
         private val mHeaderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = context.getColor(R.color.colorPrimary)
+            color = ContextCompat.getColor(context, R.color.colorPrimary)
             alpha = 0x66
             style = Paint.Style.FILL
         }

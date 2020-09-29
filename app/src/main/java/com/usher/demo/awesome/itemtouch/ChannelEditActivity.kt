@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
@@ -185,19 +186,19 @@ class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 ITEM_VIEW_TYPE_FIXED_CHANNEL ->
                     holder.itemView.run {
                         name_textview.text = data[position].first
-                        name_textview.setTextColor(context.getColor(R.color.text_secondary))
+                        name_textview.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
                         delete_imageview.visibility = View.GONE
                     }
                 ITEM_VIEW_TYPE_SELECTED_CHANNEL ->
                     holder.itemView.run {
                         name_textview.text = data[position].first
-                        name_textview.setTextColor(context.getColor(R.color.text_primary))
+                        name_textview.setTextColor(ContextCompat.getColor(context, R.color.text_primary))
                         delete_imageview.visibility = View.VISIBLE
                     }
                 ITEM_VIEW_TYPE_RECOMMENDED_CHANNEL ->
                     holder.itemView.run {
                         name_textview.text = data[position].first
-                        name_textview.setTextColor(context.getColor(R.color.text_primary))
+                        name_textview.setTextColor(ContextCompat.getColor(context, R.color.text_primary))
                         delete_imageview.visibility = View.GONE
                     }
             }

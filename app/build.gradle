@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.usher.demo"
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -25,7 +25,7 @@ android {
         resValue "string", "app_name", "MyDemo"
         buildConfigField "String", "API_HOST", '"https://api.twigcodes.usher"'
     }
-    
+
     buildTypes {
         release {
             minifyEnabled false
@@ -121,13 +121,13 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'com.google.android.material:material:1.3.0-alpha02'
 
     //Kotlin
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
+//    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.5.0-alpha03'
-    implementation 'androidx.palette:palette-ktx:1.0.0'
 
     //RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.3'
