@@ -8,7 +8,7 @@ import java.io.InputStream
 import kotlin.concurrent.thread
 
 object LogUtil {
-    private const val TAG = "ZZH"
+    private const val TAG = "zzh"
     private var readLogFlag = false
     private var reader: BufferedReader? = null
     private var `in`: InputStream? = null

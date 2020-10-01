@@ -13,8 +13,10 @@ import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import io.reactivex.rxjava3.kotlin.Observables
 import kotlinx.android.synthetic.main.activity_bitmap_blur.*
 import kotlinx.android.synthetic.main.fragment_bitmap_blur.*
+import kotlin.math.max
 
 class BitmapBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,19 +38,16 @@ class BitmapBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
 //
         indicatorview.setViewPager(viewpager)
 
-        scale_seekbar.changes()
-                .to(RxUtil.autoDispose(this))
-                .subscribe { scale ->
-                    scale_textview.text = "$scale"
-                    adapter.updateBlur(scale.toFloat(), radius_seekbar.progress.toFloat())
-                }
+        val scaleChanges = scale_seekbar.changes().map { max(it, 2) }
+        val radiusChanges = radius_seekbar.changes().map { max(it, 1) }
 
-        radius_seekbar.changes()
+        Observables.combineLatest(scaleChanges, radiusChanges) { scale, radius ->
+            scale_textview.text = "$scale"
+            radius_textview.text = "$radius"
+            adapter.updateBlur(scale.toFloat(), radius.toFloat())
+        }
                 .to(RxUtil.autoDispose(this))
-                .subscribe { radius ->
-                    radius_textview.text = "$radius"
-                    adapter.updateBlur(scale_seekbar.progress.toFloat(), radius.toFloat())
-                }
+                .subscribe()
     }
 
     private class BlurFragmentAdapter(fm: FragmentManager, private val resIds: List<Int>, private var scale: Float, private var radius: Float) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

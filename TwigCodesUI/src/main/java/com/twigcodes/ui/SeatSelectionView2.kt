@@ -89,9 +89,11 @@ class SeatSelectionView2 @JvmOverloads constructor(context: Context, attrs: Attr
                 .subscribe()
 
         //横向滑动座位区域的同时对屏幕区域做相应的横向滚动, 同时禁止手动滑动屏幕区域
-        selection_scrollview.scrollChangeEvents()
-                .to(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe { screen_scrollview.scrollTo(it.scrollX, 0) }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            selection_scrollview.scrollChangeEvents()
+                    .to(RxUtil.autoDispose(context as LifecycleOwner))
+                    .subscribe { screen_scrollview.scrollTo(it.scrollX, 0) }
+        }
 
         screen_scrollview.touches { true }
                 .to(RxUtil.autoDispose(context as LifecycleOwner))

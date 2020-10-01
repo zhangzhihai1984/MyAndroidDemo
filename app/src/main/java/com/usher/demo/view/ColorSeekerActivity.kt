@@ -24,8 +24,6 @@ class ColorSeekerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     palette_imageview.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
                 }
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            color_seeker_view.updateColor(ContextCompat.getColor(this, R.color.colorPrimary))
-        }
+        color_seeker_view.updateColor(ContextCompat.getColor(this, R.color.colorPrimary))
     }
 }

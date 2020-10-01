@@ -592,6 +592,7 @@ public class ChartView extends View {
                 Observable.timer(1000, TimeUnit.MILLISECONDS)
                         .takeUntil(mTouchDownSubject)
                         .takeUntil(mSetConfigSubject)
+                        .compose(RxUtil.getSchedulerComposer())
                         .to(RxUtil.autoDispose((LifecycleOwner) getContext()))
                         .subscribe(v -> {
                             mSelectedDataIndex = -1;
