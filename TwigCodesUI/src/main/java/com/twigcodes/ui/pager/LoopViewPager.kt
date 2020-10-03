@@ -14,6 +14,20 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
+/**
+ * 这是一个实现了"无限循环"的ViewPager.
+ * 以4个item的[0,1,2,3]为例, 我们期望的效果是:
+ * 1. 当前为"0", 向右滑动, "3"从左侧进入
+ * 2. 当前为"3", 向左滑动, "0"从右侧进入
+ *
+ * 正常来讲, [ViewPager]是不支持循环滑动的, 我们只能通过视觉上的错觉来实现"无限循环".
+ * 我们的思路是在首尾添加两个item, 形成4+2个item, 即[3,0,1,2,3,0].
+ * 1. 当前为index为1的"0", 向右滑动, index为0的"3"从左侧进入, 随后通过[setCurrentItem], 跳转至index为4的"3"
+ * 2. 当前为index为4的"3", 向左滑动, index为5的"0"从右侧进入, 随后通过[setCurrentItem], 跳转至index为1的"0"
+ *
+ * 需要注意的是, 通过getItem创建Fragment时不要直接使用position, 它是real的, 是针对count+2的position,
+ * 需要通过[getRevisedPosition]获得"修正"position.
+ */
 class LoopViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
     companion object {
         private const val DEFAULT_AUTO_PAGER_PERIOD = 1000
