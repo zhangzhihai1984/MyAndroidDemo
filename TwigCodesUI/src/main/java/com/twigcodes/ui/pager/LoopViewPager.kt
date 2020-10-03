@@ -25,6 +25,55 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
     private val mAutoPagePeriod: Long
     private val mOnPageChangeListeners = arrayListOf<OnPageChangeListener>()
 
+    /**
+     * 以[0,1,2,3]从"1"向左滑动至"2"为例, 方法调用顺序如下:
+     * 1. 手动:
+     * onPageScrollStateChanged:    state为drag, 开始拖动
+     * onPageScrolled:              position为1, offset从0开始增加
+     * onPageScrollStateChanged:    state为settle, 松手
+     * onPageSelected:              position为2
+     * onPageScrolled:              position为1, offset逐渐接近1
+     * onPageScrolled:              position为2, offset为0
+     * onPageScrollStateChanged:    state为idle, 静止
+     *
+     * 2. 调用setCurrentItem, smoothScroll为true:
+     * onPageScrollStateChanged:    state为settle
+     * onPageSelected:              position为2
+     * onPageScrolled:              position为1, offset从0开始增加, 逐渐接近1
+     * onPageScrolled:              position为2, offset为0
+     * onPageScrollStateChanged:    state为idle, 静止
+     *
+     * 3. 调用setCurrentItem, smoothScroll为false:
+     * onPageSelected:              position为2
+     * onPageScrolled:              position为2, offset为0
+     *
+     *
+     * 以[0,1,2,3]remove掉一个数据为例, 方法调用顺序如下:
+     * 1. 当前在"2":
+     * onPageScrolled:              position为2, offset为0
+     *
+     * 2. 当前在"3":
+     * onPageSelected:              position为2
+     * onPageScrolled:              position为2, offset为0
+     *
+     * 可以看到, 同样是remove数据, 如果当前item的index小于count, position不变, 只是调用一下onPageScrolled,
+     * 好像在说, 你很安全, 继续在这呆着吧, 当然, 对于数据增加或是不变的情况, 调用的效果也是这样. 如果当前的item的index
+     * 大于等于count了, 说明"越界"了, 这时候好像有人在说, 兄弟, 往里挪挪吧, 你出界了, 这时会调用onPageSelected和
+     * onPageScrolled, position为count-1.
+     *
+     * 鉴于循环效果的设计, 以[3,0,1,2,3,0]为例:
+     * 如果当前处于index为4的"3"的情况下remove掉一个数据后变为[2,0,1,2,0], index为4的"3"变成了"0", 仍然是"安全"的,
+     * 但是根据"无限循环"的设计, 只有通过滑动才能展示首尾两个item, 也就是说, 此时尽管是"安全"的, 但是这并不是一个可以
+     * "呆着"的地方, 我们可以把它理解为"越界"了, 如何处理呢？
+     * 我们需要考虑一下用户的体验, 通过onPageSelected, indicator此刻已经知道了当前展示的是"0", 也就是已经完成了动画
+     * 的展示, 自然用户也看到了. 这个时候我们只能"将错就错", 也就是显示index为1的"0".
+     *
+     * 实现方案:
+     * 可以看到只有onPageScrolled是一定会调用的, 因此我们只能在这里处理.
+     * position为count-1的情况有两种: item滑动或是删除数据.
+     * 如果是item滑动, offset会在[0, 1)变化, 在state为idle前变为0, 如果是删除数据, 会调用一次onPageScrolled,
+     * offset为0, 那么如果两次offset均为0的话, 我们便可以认为是进行了数据更新.
+     */
     private val mOnPageChangeListener = object : OnPageChangeListener {
         private var mPreviousPosition = -1
         private var mPreviousOffset = -1f

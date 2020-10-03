@@ -18,11 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.twigcodes.ui.pager.LoopViewPager2
+            <com.twigcodes.ui.pager.LoopViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never" />
+                android:overScrollMode="never"
+                app:pager_autopage_enabled="false"
+                app:pager_autopage_period="3000" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
