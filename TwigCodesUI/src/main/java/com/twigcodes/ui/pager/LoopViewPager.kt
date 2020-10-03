@@ -126,17 +126,15 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
             })
 
             mLoopAdapter = LoopPagerAdapter(rawAdapter)
-
+            super.setAdapter(mLoopAdapter)
             currentItem = 0
-        }
-
-        super.setAdapter(mLoopAdapter)
+        } ?: super.setAdapter(null)
     }
 
     override fun getAdapter(): PagerAdapter? = mRawAdapter
 
     /**
-     * [ViewPager.getCurrentItem]获得的是"real"的index, 由于在首尾添加了两个item, 因此此处需要"revise"一下.
+     * [ViewPager.getCurrentItem]获得的是"real"的index, 由于在首尾添加了两个item, 因此此处需要"修正"一下.
      */
     override fun getCurrentItem(): Int {
         val currentItem = super.getCurrentItem()
