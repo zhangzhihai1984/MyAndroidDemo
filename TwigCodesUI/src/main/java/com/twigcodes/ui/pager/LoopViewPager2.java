@@ -6,15 +6,17 @@ import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.os.Handler;
 import android.os.Message;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.ViewGroup;
 
 import com.twigcodes.ui.R;
 
@@ -67,7 +69,8 @@ public class LoopViewPager2 extends ViewPager {
     public LoopViewPager2(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LoopViewPager2);
+//        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LoopViewPager2);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LoopViewPager2, 0, 0);
 
         mIsAutoPageEnabled = a.getBoolean(R.styleable.LoopViewPager2_pager_autopage_enabled, false);
         mAutoPageInterval = a.getInt(R.styleable.LoopViewPager2_pager_autopage_interval, DEFAULT_AUTO_PAGER_INTERVAL);
@@ -120,6 +123,7 @@ public class LoopViewPager2 extends ViewPager {
      */
     @Override
     public int getCurrentItem() {
+        Log.i("zzh", "getCurrent " + super.getCurrentItem() + " " + (mLoopAdapter.getCount() - 1));
         if (mRawAdapter != null && mRawAdapter.getCount() > 0) {
             if (super.getCurrentItem() >= mLoopAdapter.getCount() - 1) {
                 return 0;
@@ -137,6 +141,7 @@ public class LoopViewPager2 extends ViewPager {
      */
     @Override
     public void setCurrentItem(int item, boolean smoothScroll) {
+        Log.i("zzh", "setCurrent " + item);
         if (mRawAdapter == null || mRawAdapter.getCount() <= 0)
             return;
 
@@ -344,12 +349,13 @@ public class LoopViewPager2 extends ViewPager {
         @Override
         public void onPageSelected(int position) {
             int matchedPosition = getMatchedPosition(position);
+            Log.i("zzh", "selected: " + position);
 
             if (mPreviousPosition != matchedPosition) {
                 mPreviousPosition = matchedPosition;
 
                 for (OnPageChangeListener listener : mOnPageChangeListeners) {
-                    listener.onPageSelected(getMatchedPosition(position));
+                    listener.onPageSelected(matchedPosition);
                 }
             }
         }
@@ -377,6 +383,7 @@ public class LoopViewPager2 extends ViewPager {
          */
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            Log.i("zzh", "scrolled pos: " + position + " offset: " + positionOffset);
             if (mPreviousOffset == 0 && positionOffset == 0) {
                 if (mLoopAdapter.getCount() > 1 && position == mLoopAdapter.getCount() - 1) {
                     setCurrentItem(0, false);
@@ -412,6 +419,7 @@ public class LoopViewPager2 extends ViewPager {
          */
         @Override
         public void onPageScrollStateChanged(int state) {
+            Log.i("zzh", "state: " + state);
             if (state == SCROLL_STATE_IDLE) {
                 int position = LoopViewPager2.super.getCurrentItem();
 
