@@ -3,26 +3,31 @@ package com.twigcodes.ui.pager
 import android.content.Context
 import android.database.DataSetObserver
 import android.util.AttributeSet
+import android.view.MotionEvent
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.R
+import com.twigcodes.ui.util.RxUtil
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 class LoopViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
     companion object {
         private const val DEFAULT_AUTO_PAGER_PERIOD = 1000
     }
 
+    private val mAutoPageStarts = PublishSubject.create<Unit>()
+    private val mAutoPageStops = PublishSubject.create<Unit>()
     private val mAutoPageEnabled: Boolean
-    private val mAutoPagePeriod: Int
+    private val mAutoPagePeriod: Long
     private val mOnPageChangeListeners = arrayListOf<OnPageChangeListener>()
 
-    private var mRawAdapter: PagerAdapter? = null
-    private var mLoopAdapter: LoopPagerAdapter? = null
-
-    private var mPreviousPosition = -1
-
-
     private val mOnPageChangeListener = object : OnPageChangeListener {
+        private var mPreviousPosition = -1
+        private var mPreviousOffset = -1f
 
         /**
          * position指的是屏幕中间可见的最左侧item的index.
@@ -48,6 +53,16 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
          * 3. positionOffset小于0.5意味着"3"从左侧进入并且超过50%或是"0"从右侧进入没超过50%, 此时position传3, 否则传0.
          */
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            if (mPreviousOffset == 0f && positionOffset == 0f) {
+                mLoopAdapter?.run {
+                    if (count > 1 && position == count - 1) {
+                        setCurrentItem(0, false)
+                    }
+                }
+            }
+
+            mPreviousOffset = positionOffset
+
             val revisedPosition = getRevisedPosition(position)
 
             mOnPageChangeListeners.forEach { listener ->
@@ -84,7 +99,6 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
         override fun onPageScrollStateChanged(state: Int) {
             if (state == SCROLL_STATE_IDLE) {
                 mRawAdapter?.let { rawAdapter ->
-                    currentItem
                     when (super@LoopViewPager.getCurrentItem()) {
                         0 -> setCurrentItem(rawAdapter.count - 1, false)
                         rawAdapter.count + 1 -> setCurrentItem(0, false)
@@ -96,21 +110,45 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
         }
     }
 
+    private var mRawAdapter: PagerAdapter? = null
+    private var mLoopAdapter: LoopPagerAdapter? = null
+
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.LoopViewPager, 0, 0)
         mAutoPageEnabled = a.getBoolean(R.styleable.LoopViewPager_pager_autopage_enabled, false)
-        mAutoPagePeriod = a.getInt(R.styleable.LoopViewPager_pager_autopage_period, DEFAULT_AUTO_PAGER_PERIOD)
+        mAutoPagePeriod = a.getInt(R.styleable.LoopViewPager_pager_autopage_period, DEFAULT_AUTO_PAGER_PERIOD).toLong()
         a.recycle()
 
         super.addOnPageChangeListener(mOnPageChangeListener)
-    }
 
-    fun getRevisedPosition(position: Int): Int =
-            mRawAdapter?.run {
-                if (count <= 0)
-                    throw Exception("Adapter is empty")
-                (position - 1 + count) % count
-            } ?: throw Exception("Adapter is NULL")
+        touches { event ->
+            if (mAutoPageEnabled)
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> mAutoPageStops.onNext(Unit)
+                    MotionEvent.ACTION_UP -> mAutoPageStarts.onNext(Unit)
+                }
+            false
+        }
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe { }
+
+        mAutoPageStarts.switchMap {
+            Observable.interval(mAutoPagePeriod, TimeUnit.MILLISECONDS)
+                    .takeUntil(mAutoPageStops)
+                    .filter { mRawAdapter?.run { count > 1 } ?: false }
+        }
+                .compose(RxUtil.getSchedulerComposer())
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    mRawAdapter?.run {
+                        val position = currentItem
+                        if (position == count - 1)
+                            currentItem = 0
+                        else
+                            setCurrentItem(position + 1, true)
+                    }
+                }
+    }
 
     /**
      * 这里需要将currentItem置为0, 否则, 以[3,0,1,2,3,0]为例, 会默认显示"3"而不是"0".
@@ -128,6 +166,12 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
             mLoopAdapter = LoopPagerAdapter(rawAdapter)
             super.setAdapter(mLoopAdapter)
             currentItem = 0
+
+            if (mAutoPageEnabled) {
+                mAutoPageStops.onNext(Unit)
+                mAutoPageStarts.onNext(Unit)
+            }
+
         } ?: super.setAdapter(null)
     }
 
@@ -166,4 +210,10 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun clearOnPageChangeListeners() = mOnPageChangeListeners.clear()
 
+    fun getRevisedPosition(position: Int): Int =
+            mRawAdapter?.run {
+                if (count <= 0)
+                    throw Exception("Adapter is empty")
+                (position - 1 + count) % count
+            } ?: throw Exception("Adapter is NULL")
 }
