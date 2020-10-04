@@ -22,8 +22,9 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import com.usher.demo.R;
+import com.usher.demo.base.BaseActivity;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
     private int mStatusBarHeight;
     private int mThresholdOffset;
 

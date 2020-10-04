@@ -11,7 +11,7 @@ import com.twigcodes.ui.util.PermissionUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO) : AppCompatActivity() {
+open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO, private val fullScreen: Boolean = false) : AppCompatActivity() {
     private val mActivityResultSubject = PublishSubject.create<ActivityResult>()
     private var mIsLocalNightMode = false
 
@@ -19,12 +19,14 @@ open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK
         set(isLight) {
             field = isLight
 
-            val decorView = window.decorView
-            val visibility = decorView.systemUiVisibility
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                val decorView = window.decorView
+                val visibility = decorView.systemUiVisibility
 
-            decorView.systemUiVisibility = when (isLight) {
-                true -> visibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                false -> visibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                decorView.systemUiVisibility = when (isLight) {
+                    true -> visibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    false -> visibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                }
             }
         }
 
@@ -42,6 +44,10 @@ open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (fullScreen) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        }
 
         mIsLocalNightMode = isSystemNightMode
         updateStatusBarTheme(mIsLocalNightMode)

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,11 +26,11 @@
         android:layout_marginTop="20dp"
         android:background="#66000000"
         android:padding="10dp"
-        android:visibility="visible"
         android:text="@string/fitssystemwindow_attr_des"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/status_textview"
@@ -60,7 +59,7 @@
             android:layout_height="45dp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
-            android:text="None"
+            android:text="@string/fitssystemwindow_none_view"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -72,7 +71,7 @@
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
-            android:text="Root View"
+            android:text="@string/fitssystemwindow_root_view"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -84,7 +83,7 @@
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
-            android:text="Top View"
+            android:text="@string/fitssystemwindow_top_view"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />

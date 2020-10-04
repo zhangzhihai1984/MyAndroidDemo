@@ -96,6 +96,9 @@
     <string name="fitssystemwindow_top_text">I am the top view</string>
     <string name="fitssystemwindow_attr_des">Boolean internal attribute to adjust view layout based on system windows such as the status bar. If true, adjusts the padding of this view to leave space for the system windows. Will only take effect if this view is in a non-embedded activity.</string>
     <string name="fitssystemwindow_status_text">%1$s set fitsSystemWindow TRUE</string>
+    <string name="fitssystemwindow_none_view">None</string>
+    <string name="fitssystemwindow_root_view">Root View</string>
+    <string name="fitssystemwindow_top_view">Top View</string>
 
     <string name="application_id">App ID: %1$s</string>
     <string name="application_name">App Name: %1$s</string>
