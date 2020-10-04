@@ -5,59 +5,53 @@ import android.animation.AnimatorInflater
 import android.content.Context
 import android.database.DataSetObserver
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.animation.Interpolator
 import android.widget.LinearLayout
-import androidx.annotation.AnimatorRes
 import androidx.annotation.DrawableRes
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.twigcodes.ui.R
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
-        private const val DEFAULT_INDICATOR_WIDTH = 5f
+        private const val DEFAULT_INDICATOR_VALUE = 15
     }
 
-    private var mIndicatorMargin: Int = -1
-    private var mIndicatorWidth: Int = -1
-    private var mIndicatorHeight: Int = -1
-    private var mInAnimatorResId: Int = -1
-    private var mOutAnimatorResId: Int = -1
-    private var mIndicatorBackgroundResId = -1
-    private var mIndicatorIdleBackgroundResId = -1
+    private val mIndicatorWidth: Int
+    private val mIndicatorHeight: Int
+    private val mIndicatorMargin: Int
+    private val mInAnimatorResId: Int
+    private val mOutAnimatorResId: Int
+    private val mIndicatorBackgroundResId: Int
+    private val mIndicatorIdleBackgroundResId: Int
 
     private lateinit var mViewPager: ViewPager
-    private lateinit var mInAnimator: Animator
-    private lateinit var mOutAnimator: Animator
-    private lateinit var mImmediateInAnimator: Animator
-    private lateinit var mImmediateOutAnimator: Animator
+    private var mInAnimator: Animator
+    private var mOutAnimator: Animator
+    private var mImmediateInAnimator: Animator
+    private var mImmediateOutAnimator: Animator
     private var mCurrentPosition = -1
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.PageIndicatorView)
-        val indicatorWidth = a.getDimensionPixelSize(R.styleable.PageIndicatorView_indicator_width, -1)
-        val indicatorHeight = a.getDimensionPixelSize(R.styleable.PageIndicatorView_indicator_height, -1)
-        val indicatorMargin = a.getDimensionPixelSize(R.styleable.PageIndicatorView_indicator_margin, -1)
-        val inAnimatorResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_animator_in, -1)
-        val outAnimatorResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_animator_out, -1)
-        val indicatorBackgroundResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_drawable, -1)
-        val indicatorIdleBackgroundResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_idle_drawable, -1)
+        mIndicatorWidth = a.getDimensionPixelSize(R.styleable.PageIndicatorView_indicator_width, DEFAULT_INDICATOR_VALUE)
+        mIndicatorHeight = a.getDimensionPixelSize(R.styleable.PageIndicatorView_indicator_height, DEFAULT_INDICATOR_VALUE)
+        mIndicatorMargin = a.getDimensionPixelSize(R.styleable.PageIndicatorView_indicator_margin, DEFAULT_INDICATOR_VALUE)
+        mInAnimatorResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_animator_in, R.animator.page_indicator_default_animator)
+        mOutAnimatorResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_animator_out, -1)
+        mIndicatorBackgroundResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_drawable, R.drawable.page_indicator_default_drawable)
+        mIndicatorIdleBackgroundResId = a.getResourceId(R.styleable.PageIndicatorView_indicator_idle_drawable, mIndicatorBackgroundResId)
 
-        config(
-                indicatorWidth,
-                indicatorHeight,
-                indicatorMargin,
-                inAnimatorResId,
-                outAnimatorResId,
-                indicatorBackgroundResId,
-                indicatorIdleBackgroundResId
-        )
+//        val defaultValue = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_INDICATOR_WIDTH, resources.displayMetrics).run { roundToInt() }
+
+        mInAnimator = createInAnimator()
+        mImmediateInAnimator = createInAnimator().setDuration(0)
+        mOutAnimator = createOutAnimator()
+        mImmediateOutAnimator = createOutAnimator().setDuration(0)
 
         val o = a.getInt(R.styleable.PageIndicatorView_indicator_orientation, -1)
         orientation = if (o >= 0) o else HORIZONTAL
@@ -66,33 +60,6 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         gravity = if (g >= 0) g else Gravity.CENTER
 
         a.recycle()
-    }
-
-    private fun config(
-            indicatorWidth: Int,
-            indicatorHeight: Int,
-            indicatorMargin: Int,
-            @AnimatorRes inAnimatorResId: Int = -1,
-            @AnimatorRes outAnimatorrResId: Int = -1,
-            @DrawableRes indicatorBackgroundResId: Int = -1,
-            @DrawableRes indicatorIdleBackgroundResId: Int = -1
-    ) {
-        val defaultValue = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_INDICATOR_WIDTH, resources.displayMetrics).run { roundToInt() }
-        mIndicatorWidth = indicatorWidth.takeIf { it > 0 } ?: defaultValue
-        mIndicatorHeight = indicatorHeight.takeIf { it > 0 } ?: defaultValue
-        mIndicatorMargin = indicatorMargin.takeIf { it >= 0 } ?: defaultValue
-        mInAnimatorResId = inAnimatorResId.takeIf { it > 0 }
-                ?: R.animator.page_indicator_default_animator
-        mOutAnimatorResId = outAnimatorrResId.takeIf { it > 0 } ?: -1
-        mIndicatorBackgroundResId = indicatorBackgroundResId.takeIf { it > 0 }
-                ?: R.drawable.page_indicator_default_drawable
-        mIndicatorIdleBackgroundResId = indicatorIdleBackgroundResId.takeIf { it > 0 }
-                ?: mIndicatorBackgroundResId
-
-        mInAnimator = createInAnimator()
-        mImmediateInAnimator = createInAnimator().setDuration(0)
-        mOutAnimator = createOutAnimator()
-        mImmediateOutAnimator = createOutAnimator().setDuration(0)
     }
 
     private fun createInAnimator(): Animator =
