@@ -31,6 +31,12 @@ import java.util.concurrent.TimeUnit
 class LoopViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
     companion object {
         private const val DEFAULT_AUTO_PAGER_PERIOD = 1000
+
+        fun getRevisedPosition(position: Int, count: Int): Int {
+            if (count <= 0)
+                throw Exception("Adapter is empty")
+            return (position - 1 + count) % count
+        }
     }
 
     private val mAutoPageStarts = PublishSubject.create<Unit>()
@@ -177,7 +183,7 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
     private var mLoopAdapter: LoopPagerAdapter? = null
 
     init {
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.LoopViewPager, 0, 0)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.LoopViewPager, 0, 0)
         mAutoPageEnabled = a.getBoolean(R.styleable.LoopViewPager_pager_autopage_enabled, false)
         mAutoPagePeriod = a.getInt(R.styleable.LoopViewPager_pager_autopage_period, DEFAULT_AUTO_PAGER_PERIOD).toLong()
         a.recycle()
@@ -275,8 +281,6 @@ class LoopViewPager @JvmOverloads constructor(context: Context, attrs: Attribute
 
     fun getRevisedPosition(position: Int): Int =
             mRawAdapter?.run {
-                if (count <= 0)
-                    throw Exception("Adapter is empty")
-                (position - 1 + count) % count
+                getRevisedPosition(position, count)
             } ?: throw Exception("Adapter is NULL")
 }
