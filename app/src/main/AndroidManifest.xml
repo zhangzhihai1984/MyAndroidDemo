@@ -71,6 +71,11 @@
         <activity
             android:name=".awesome.drag.DragActiity"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".awesome.LoopHintActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
 
         <!-- Demonstration Demo -->
         <activity

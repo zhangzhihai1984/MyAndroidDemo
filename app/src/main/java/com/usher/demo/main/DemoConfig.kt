@@ -1,5 +1,6 @@
 package com.usher.demo.main
 
+import com.usher.demo.awesome.LoopHintActivity
 import com.usher.demo.awesome.decoration.ContactsActivity
 import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
@@ -104,6 +105,7 @@ object DemoConfig {
                 DemoItem(ChannelEditActivity::class.java, "Channel Edit"),
                 DemoItem(StickyHeaderActivity::class.java, "Sticky Header"),
                 DemoItem(ContactsActivity::class.java, "Contacts"),
+                DemoItem(LoopHintActivity::class.java, "Loop Hint"),
                 DemoItem(DragActiity::class.java, "Drag")
         )
     }

@@ -345,10 +345,10 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
     fun getFirstViewPosition(): Int =
             mFirstView?.let { view -> getPosition(view) } ?: -1
 
-    fun getFirstViewPositionWithCorrection(recyclerView: RecyclerView) {
+    fun getFirstViewPositionWithRevision(recyclerView: RecyclerView) {
         when (mOrientation) {
-            HORIZONTAL -> getFirstViewPositionWithCorrectionHorizontal(recyclerView)
-            else -> getFirstViewPositionWithCorrectionVertical(recyclerView)
+            HORIZONTAL -> getFirstViewPositionWithRevisionHorizontal(recyclerView)
+            else -> getFirstViewPositionWithRevisionVertical(recyclerView)
         }
     }
 
@@ -358,7 +358,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
      * 如果大于, 说明只有不到一半的view离开可视范围, 需要向右滑动, position不变.
      * 否则, 说明有超过一半的view离开可视范围, 需要向左滑动, position(position + 1) % itemCount.
      */
-    private fun getFirstViewPositionWithCorrectionHorizontal(recyclerView: RecyclerView): Int =
+    private fun getFirstViewPositionWithRevisionHorizontal(recyclerView: RecyclerView): Int =
             mFirstView?.let { view ->
                 var position = getPosition(view)
 
@@ -385,7 +385,7 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
      * 如果大于, 说明只有不到一半的view离开可视范围, 需要向下滑动, position不变.
      * 否则, 说明有超过一半的view离开可视范围, 需要向上滑动, position为(position + 1) % itemCount.
      */
-    private fun getFirstViewPositionWithCorrectionVertical(recyclerView: RecyclerView): Int =
+    private fun getFirstViewPositionWithRevisionVertical(recyclerView: RecyclerView): Int =
             mFirstView?.let { view ->
                 var position = getPosition(view)
 
