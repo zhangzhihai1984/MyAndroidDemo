@@ -28,13 +28,13 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
     private val mOutAnimatorResId: Int
     private val mIndicatorBackgroundResId: Int
     private val mIndicatorIdleBackgroundResId: Int
-
-    private lateinit var mViewPager: ViewPager
     private val mInAnimator: Animator
     private val mOutAnimator: Animator
     private val mImmediateInAnimator: Animator
     private val mImmediateOutAnimator: Animator
+
     private var mCurrentPosition = -1
+    private var mViewPager: ViewPager? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.PageIndicatorView)
@@ -73,15 +73,16 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
 
     fun setViewPager(viewPager: ViewPager) {
         mViewPager = viewPager
-        mViewPager.run {
+        mViewPager?.run {
             adapter?.registerDataSetObserver(object : DataSetObserver() {
                 override fun onChanged() {
                     mCurrentPosition = currentItem
                     createIndicators()
                 }
-            })
-                    ?: throw IllegalStateException("Please set adapter for the ViewPager")
+            }) ?: throw IllegalStateException("Please set adapter for the ViewPager")
+
             mCurrentPosition = currentItem
+
             removeOnPageChangeListener(mPageChangeListener)
             addOnPageChangeListener(mPageChangeListener)
         }
@@ -116,7 +117,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
     private fun createIndicators() {
         removeAllViews()
 
-        val count = mViewPager.adapter?.count ?: 0
+        val count = mViewPager?.adapter?.count ?: 0
         IntRange(0, count - 1).forEach {
             if (mCurrentPosition == it)
                 addIndicator(mIndicatorBackgroundResId, mImmediateInAnimator)
@@ -142,6 +143,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
                 }
             }
         }
+
         addView(indicator, lp)
         animator.setTarget(indicator)
         animator.start()
