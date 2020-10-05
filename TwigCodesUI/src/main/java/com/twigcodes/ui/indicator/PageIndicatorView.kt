@@ -30,10 +30,10 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
     private val mIndicatorIdleBackgroundResId: Int
 
     private lateinit var mViewPager: ViewPager
-    private var mInAnimator: Animator
-    private var mOutAnimator: Animator
-    private var mImmediateInAnimator: Animator
-    private var mImmediateOutAnimator: Animator
+    private val mInAnimator: Animator
+    private val mOutAnimator: Animator
+    private val mImmediateInAnimator: Animator
+    private val mImmediateOutAnimator: Animator
     private var mCurrentPosition = -1
 
     init {
@@ -74,7 +74,12 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
     fun setViewPager(viewPager: ViewPager) {
         mViewPager = viewPager
         mViewPager.run {
-            adapter?.registerDataSetObserver(mDataSetObserver)
+            adapter?.registerDataSetObserver(object : DataSetObserver() {
+                override fun onChanged() {
+                    mCurrentPosition = currentItem
+                    createIndicators()
+                }
+            })
                     ?: throw IllegalStateException("Please set adapter for the ViewPager")
             mCurrentPosition = currentItem
             removeOnPageChangeListener(mPageChangeListener)
@@ -82,14 +87,6 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         }
 
         createIndicators()
-    }
-
-    private val mDataSetObserver: DataSetObserver = object : DataSetObserver() {
-        override fun onChanged() {
-            mCurrentPosition = mViewPager.currentItem
-
-            createIndicators()
-        }
     }
 
     private val mPageChangeListener: OnPageChangeListener = object : SimpleOnPageChangeListener() {
