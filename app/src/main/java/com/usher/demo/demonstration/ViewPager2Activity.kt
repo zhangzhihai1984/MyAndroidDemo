@@ -37,19 +37,19 @@ class ViewPager2Activity : BaseActivity(R.layout.activity_viewpager2, Theme.LIGH
 
     class Pager2Fragment : BasePagerFragment(R.layout.fragment_pager) {
         companion object {
-            private const val RESID = "RESID"
+            private const val POSITION = "POSITION"
 
-            fun newInstance(num: Int): Pager2Fragment =
+            fun newInstance(position: Int): Pager2Fragment =
                     Pager2Fragment().apply {
                         arguments = Bundle().apply {
-                            putInt(RESID, num)
+                            putInt(POSITION, position)
                         }
                     }
         }
 
         override fun init() {
             arguments?.run {
-                textview.text = "${getInt(RESID)}"
+                textview.text = "${getInt(POSITION)}"
             }
 
             val color = Color.rgb((0..256).random(), (0..256).random(), (0..256).random())

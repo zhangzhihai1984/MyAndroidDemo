@@ -19,18 +19,19 @@ import kotlin.math.max
 class LoopPagerActivity : BaseActivity(R.layout.activity_loop_pager, Theme.LIGHT_AUTO) {
 
     override fun initView() {
-        val mPagerAdapter = PagerFragmentAdapter(supportFragmentManager)
-        viewpager.adapter = mPagerAdapter
+        val pagerAdapter = PagerFragmentAdapter(supportFragmentManager)
+
+        viewpager.adapter = pagerAdapter
         indicatorview.setViewPager(viewpager)
         indicatorview2.setViewPager(viewpager)
 
         add_imageview.clicks()
                 .to(RxUtil.autoDispose(this))
-                .subscribe { mPagerAdapter.add() }
+                .subscribe { pagerAdapter.add() }
 
         remove_imageview.clicks()
                 .to(RxUtil.autoDispose(this))
-                .subscribe { mPagerAdapter.remove() }
+                .subscribe { pagerAdapter.remove() }
     }
 
     private class PagerFragmentAdapter(fm: FragmentManager, private var mSize: Int = 5) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -55,19 +56,19 @@ class LoopPagerActivity : BaseActivity(R.layout.activity_loop_pager, Theme.LIGHT
 
     class PagerFragment : BasePagerFragment(R.layout.fragment_pager) {
         companion object {
-            private const val RESID = "RESID"
+            private const val POSITION = "POSITION"
 
-            fun newInstance(num: Int): PagerFragment =
+            fun newInstance(position: Int): PagerFragment =
                     PagerFragment().apply {
                         arguments = Bundle().apply {
-                            putInt(RESID, num)
+                            putInt(POSITION, position)
                         }
                     }
         }
 
         override fun init() {
             arguments?.run {
-                textview.text = "${getInt(RESID)}"
+                textview.text = "${getInt(POSITION)}"
             }
 
             val color = Color.rgb((0..256).random(), (0..256).random(), (0..256).random())

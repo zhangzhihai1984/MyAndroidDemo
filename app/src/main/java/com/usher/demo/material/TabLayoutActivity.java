@@ -147,7 +147,7 @@ public class TabLayoutActivity extends AppCompatActivity {
             Log.i("zzh", getArguments().getInt(ARG_SECTION_NUMBER) + " onCreateView");
             if (null == mFragmentView) {
                 mFragmentView = inflater.inflate(R.layout.fragment_tab_layout, container, false);
-                TextView textView = mFragmentView.findViewById(R.id.section_label);
+                TextView textView = mFragmentView.findViewById(R.id.pager_textview);
                 textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
                 mCreated$.onNext(true);
