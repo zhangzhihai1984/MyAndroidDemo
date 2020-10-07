@@ -29,7 +29,7 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
                 .to(RxUtil.autoDispose(this))
                 .subscribe {
-                    (vertical_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithCorrection(vertical_recyclerview)
+                    (vertical_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithRevision(vertical_recyclerview)
                 }
 
         horizontal_recyclerview.layoutManager = LoopLayoutManager(RecyclerView.HORIZONTAL)
@@ -38,19 +38,19 @@ class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
                 .filter { it == RecyclerView.SCROLL_STATE_IDLE }
                 .to(RxUtil.autoDispose(this))
                 .subscribe {
-                    (horizontal_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithCorrection(horizontal_recyclerview)
+                    (horizontal_recyclerview.layoutManager as LoopLayoutManager).getFirstViewPositionWithRevision(horizontal_recyclerview)
                 }
     }
 
     private class VerticalAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_loop_recycler_vertical, data) {
-        override fun convert(helper: BaseViewHolder, item: String) {
-            (helper.itemView as TextView).text = item
+        override fun convert(holder: BaseViewHolder, item: String) {
+            (holder.itemView as TextView).text = item
         }
     }
 
     private class HorizontalAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_loop_recycler_horizontal, data) {
-        override fun convert(helper: BaseViewHolder, item: String) {
-            (helper.itemView as TextView).text = item
+        override fun convert(holder: BaseViewHolder, item: String) {
+            (holder.itemView as TextView).text = item
         }
     }
 }

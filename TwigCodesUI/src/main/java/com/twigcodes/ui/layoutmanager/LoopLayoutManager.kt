@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int) : RecyclerView.LayoutManager() {
+class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int = RecyclerView.VERTICAL) : RecyclerView.LayoutManager() {
     companion object {
         const val VERTICAL = RecyclerView.VERTICAL
         const val HORIZONTAL = RecyclerView.HORIZONTAL
@@ -345,12 +345,11 @@ class LoopLayoutManager(@RecyclerView.Orientation private val mOrientation: Int)
     fun getFirstViewPosition(): Int =
             mFirstView?.let { view -> getPosition(view) } ?: -1
 
-    fun getFirstViewPositionWithRevision(recyclerView: RecyclerView) {
-        when (mOrientation) {
-            HORIZONTAL -> getFirstViewPositionWithRevisionHorizontal(recyclerView)
-            else -> getFirstViewPositionWithRevisionVertical(recyclerView)
-        }
-    }
+    fun getFirstViewPositionWithRevision(recyclerView: RecyclerView): Int =
+            when (mOrientation) {
+                HORIZONTAL -> getFirstViewPositionWithRevisionHorizontal(recyclerView)
+                else -> getFirstViewPositionWithRevisionVertical(recyclerView)
+            }
 
     /**
      * end - start = getDecoratedMeasuredWidth + lp.leftMargin + lp.rightMargin

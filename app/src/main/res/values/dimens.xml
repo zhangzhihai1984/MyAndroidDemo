@@ -28,4 +28,5 @@
     <!-- Drag -->
     <dimen name="drag_delete_width">102dp</dimen>
 
+    <dimen name="loop_hint_item_height">45dp</dimen>
 </resources>
