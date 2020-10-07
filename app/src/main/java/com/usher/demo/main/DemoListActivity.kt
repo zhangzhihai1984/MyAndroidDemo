@@ -1,9 +1,7 @@
 package com.usher.demo.main
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
@@ -12,15 +10,11 @@ import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_demo_list.*
+import kotlinx.android.synthetic.main.item_demo.view.*
 
-class DemoListActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_demo_list)
-        initView()
-    }
+class DemoListActivity : BaseActivity(R.layout.activity_demo_list, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         val tag = intent.getStringExtra(DemoConfig.TAG_KEY)
         val demoItems = DemoConfig.getDemoConfig(tag)
         val adapter = DemoAdapter(demoItems)
@@ -41,12 +35,12 @@ class DemoListActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private class DemoAdapter(data: List<DemoItem>) : RxBaseQuickAdapter<DemoItem, BaseViewHolder>(R.layout.item_demo, data) {
-        override fun convert(helper: BaseViewHolder, demoItem: DemoItem) {
-            helper.setText(R.id.title_textview, demoItem.title)
-
-            val descTextView = helper.getView<TextView>(R.id.desc_textview)
-            descTextView.text = demoItem.desc
-            descTextView.visibility = if (demoItem.desc.isNullOrEmpty()) View.GONE else View.VISIBLE
+        override fun convert(holder: BaseViewHolder, demoItem: DemoItem) {
+            holder.itemView.run {
+                title_textview.text = demoItem.title
+                desc_textview.text = demoItem.desc
+                desc_textview.visibility = if (demoItem.desc.isNullOrEmpty()) View.GONE else View.VISIBLE
+            }
         }
     }
 }

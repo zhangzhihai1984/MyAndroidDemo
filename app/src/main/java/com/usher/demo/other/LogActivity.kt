@@ -1,6 +1,5 @@
 package com.usher.demo.other
 
-import android.os.Bundle
 import android.widget.ScrollView
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
@@ -10,15 +9,9 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_log.*
 import java.util.concurrent.TimeUnit
 
-class LogActivity : BaseActivity() {
+class LogActivity : BaseActivity(R.layout.activity_log) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_log)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         LogUtil.readLog()
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))

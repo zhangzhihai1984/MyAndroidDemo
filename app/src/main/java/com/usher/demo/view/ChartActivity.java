@@ -3,11 +3,11 @@ package com.usher.demo.view;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.twigcodes.ui.ChartView;
 import com.twigcodes.ui.util.RxUtil;
 import com.usher.demo.R;
-import com.usher.demo.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.rxjava3.core.Observable;
 
-public class ChartActivity extends BaseActivity {
+public class ChartActivity extends AppCompatActivity {
     @BindView(R.id.chart_view)
     ChartView mChartView;
 

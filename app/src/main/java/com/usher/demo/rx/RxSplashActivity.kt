@@ -1,7 +1,6 @@
 package com.usher.demo.rx
 
 import android.animation.ValueAnimator
-import android.os.Bundle
 import android.view.KeyEvent
 import android.view.animation.OvershootInterpolator
 import com.jakewharton.rxbinding4.view.clicks
@@ -12,18 +11,12 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_rx_splash.*
 import java.util.concurrent.TimeUnit
 
-class RxSplashActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class RxSplashActivity : BaseActivity(R.layout.activity_rx_splash, Theme.LIGHT_AUTO) {
     companion object {
         private const val COUNTDOWN_SECONDS = 10L
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_rx_splash)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         ValueAnimator.ofFloat(1f, 1.1f, 1f).apply {
             duration = 1000
             interpolator = OvershootInterpolator()

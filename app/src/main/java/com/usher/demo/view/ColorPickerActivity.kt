@@ -3,21 +3,15 @@ package com.usher.demo.view
 import android.animation.ValueAnimator
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.os.Bundle
 import androidx.core.animation.doOnEnd
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_color_picker.*
 
-class ColorPickerActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_color_picker)
-        initView()
-    }
+class ColorPickerActivity : BaseActivity(R.layout.activity_color_picker, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         color_picker_view.colorPicks()
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))

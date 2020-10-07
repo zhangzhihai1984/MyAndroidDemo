@@ -5,18 +5,15 @@ import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.usher.demo.R;
-import com.usher.demo.base.BaseActivity;
 
-public class ProfileActivity extends BaseActivity {
+public class ProfileActivity extends AppCompatActivity {
     private int mStatusBarHeight;
     private int mThresholdOffset;
 
@@ -64,12 +61,7 @@ public class ProfileActivity extends BaseActivity {
         });
 
         SmartRefreshLayout smartRefreshLayout = findViewById(R.id.refreshlayout);
-        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishRefresh(true);
-            }
-        });
+        smartRefreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.finishRefresh(true));
 
     }
 

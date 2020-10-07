@@ -1,6 +1,5 @@
 package com.usher.demo.kotlin
 
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.twigcodes.ui.util.RxUtil
@@ -13,7 +12,7 @@ import io.reactivex.rxjava3.kotlin.Observables
 import kotlinx.android.synthetic.main.activity_kotlin.*
 import java.util.concurrent.TimeUnit
 
-class KotlinActivity : BaseActivity() {
+class KotlinActivity : BaseActivity(R.layout.activity_kotlin) {
     companion object Constants {
         const val name = "HAHA"
 
@@ -24,21 +23,15 @@ class KotlinActivity : BaseActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_kotlin)
-
-//        init()
-        lambda()
-    }
-
-    private fun init() {
+    override fun initData() {
         Observable.timer(3000, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))
                 .subscribe { v ->
                     Log.i("zzh", "haha")
                 }
+
+        lambda()
     }
 
     data class Person(var name: String, val age: Int)

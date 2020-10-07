@@ -2,7 +2,6 @@ package com.usher.demo.awesome.decoration
 
 import android.content.Context
 import android.graphics.*
-import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -17,16 +16,11 @@ import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_sticky_header.*
+import kotlinx.android.synthetic.main.item_sticky_header.view.*
 
-class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
+class StickyHeaderActivity : BaseActivity(R.layout.activity_sticky_header, Theme.DARK_ONLY) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sticky_header)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@StickyHeaderActivity) }
 
         val data = listOf(
@@ -49,8 +43,8 @@ class StickyHeaderActivity : BaseActivity(Theme.DARK_ONLY) {
     }
 
     private class StickyHeaderAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_sticky_header, data) {
-        override fun convert(helper: BaseViewHolder, content: String) {
-            helper.setText(R.id.content_textview, content)
+        override fun convert(holder: BaseViewHolder, content: String) {
+            holder.itemView.content_textview.text = content
         }
     }
 

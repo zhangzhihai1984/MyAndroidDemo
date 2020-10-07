@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -21,15 +21,11 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_colorfilter_porterduff.*
 import kotlinx.android.synthetic.main.fragment_colorfilter_porterduff.*
+import kotlinx.android.synthetic.main.item_colorfilter_porterduff.view.*
 
-class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_colorfilter_porterduff)
-        initView()
-    }
+class PorterDuffColorFilterActivity : BaseActivity(R.layout.activity_colorfilter_porterduff, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         val resIds = listOf(R.drawable.demo_plaster, R.drawable.picasso_reading_at_a_table, R.drawable.demo_bottle, R.drawable.demo_bottle2)
         val adapter = ColorFilterFragmentAdapter(supportFragmentManager, resIds)
 
@@ -49,7 +45,7 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
                     adapter.updateColor(color)
                 }
 
-        color_seeker_view.updateColor(getColor(R.color.colorPrimary))
+        color_seeker_view.updateColor(ContextCompat.getColor(this, R.color.colorPrimary))
     }
 
     private class ColorFilterFragmentAdapter(fm: FragmentManager, private val resIds: List<Int>, private var color: Int = Color.TRANSPARENT) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -103,14 +99,13 @@ class PorterDuffColorFilterActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_colorfilter_porterduff, data) {
-            override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
-//                helper.getView<ImageView>(R.id.colorfilter_imageview).setImageBitmap(ImageUtil.getPorterDuffColorFilterBitmap(bitmap, color, mode))
+            override fun convert(holder: BaseViewHolder, mode: PorterDuff.Mode) {
+                holder.itemView.run {
+                    colorfilter_imageview.setImageBitmap(bitmap)
+                    colorfilter_imageview.setColorFilter(color, mode)
 
-                helper.getView<ImageView>(R.id.colorfilter_imageview).run {
-                    setImageBitmap(bitmap)
-                    setColorFilter(color, mode)
+                    mode_textview.text = mode.name
                 }
-                helper.setText(R.id.mode_textview, mode.name)
             }
         }
     }

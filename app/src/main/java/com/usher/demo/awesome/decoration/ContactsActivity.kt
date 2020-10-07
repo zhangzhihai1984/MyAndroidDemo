@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
@@ -32,14 +31,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.concurrent.TimeUnit
 
-class ContactsActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_contacts)
-        initView()
-    }
+class ContactsActivity : BaseActivity(R.layout.activity_contacts, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ContactsActivity) }
 
         val serverData = listOf(

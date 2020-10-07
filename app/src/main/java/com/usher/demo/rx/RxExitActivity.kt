@@ -1,7 +1,6 @@
 package com.usher.demo.rx
 
 import android.animation.ValueAnimator
-import android.os.Bundle
 import android.view.KeyEvent
 import android.view.animation.OvershootInterpolator
 import com.jakewharton.rxbinding4.view.clicks
@@ -11,20 +10,14 @@ import com.usher.demo.base.BaseActivity
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_rx_exit.*
 
-class RxExitActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class RxExitActivity : BaseActivity(R.layout.activity_rx_exit, Theme.LIGHT_AUTO) {
     companion object {
         private const val EXIT_DURATION = 500
     }
 
     private val mBackSubject = PublishSubject.create<Unit>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_rx_exit)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         ValueAnimator.ofFloat(1f, 1.1f, 1f).apply {
             duration = 1000
             interpolator = OvershootInterpolator()

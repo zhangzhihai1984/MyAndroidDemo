@@ -18,15 +18,11 @@ import com.usher.demo.base.BaseActivity
 import com.usher.demo.widget.CommonDialog
 import kotlinx.android.synthetic.main.activity_image_scale_type.*
 import kotlinx.android.synthetic.main.fragment_image_scale_type.*
+import kotlinx.android.synthetic.main.item_image_scale_type.view.*
 
-class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_scale_type)
-        initView()
-    }
+class ImageScaleTypeActivity : BaseActivity(R.layout.activity_image_scale_type, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         val resIds = listOf(R.drawable.picasso_the_weeping_woman, R.drawable.picasso_reading_at_a_table, R.drawable.demo_bottle_s)
 
         viewpager.adapter = ScaleTypeFragmentAdapter(supportFragmentManager, resIds)
@@ -96,13 +92,13 @@ class ImageScaleTypeActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         private class ScaleTypeAdapter(data: List<ImageView.ScaleType>, private val resId: Int) : RxBaseQuickAdapter<ImageView.ScaleType, BaseViewHolder>(R.layout.item_image_scale_type, data) {
-            override fun convert(helper: BaseViewHolder, type: ImageView.ScaleType) {
-                helper.getView<ImageView>(R.id.scale_type_imageview).run {
-                    setImageResource(resId)
-                    scaleType = type
-                }
+            override fun convert(holder: BaseViewHolder, type: ImageView.ScaleType) {
+                holder.itemView.run {
+                    scale_type_imageview.setImageResource(resId)
+                    scale_type_imageview.scaleType = type
 
-                helper.setText(R.id.textview, type.name)
+                    textview.text = type.name
+                }
             }
         }
     }

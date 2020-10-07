@@ -1,6 +1,5 @@
 package com.usher.demo.awesome
 
-import android.os.Bundle
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.jakewharton.rxbinding4.view.clicks
@@ -13,15 +12,9 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_loop_hint.*
 import java.util.concurrent.TimeUnit
 
-class LoopHintActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class LoopHintActivity : BaseActivity(R.layout.activity_loop_hint, Theme.LIGHT_AUTO) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_loop_hint)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         val data = listOf(*resources.getStringArray(R.array.selected_channels))
 
         loop_hint_recyclerview.layoutManager = LoopLayoutManager()

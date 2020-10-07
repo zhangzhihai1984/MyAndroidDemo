@@ -1,6 +1,5 @@
 package com.usher.demo.view
 
-import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
@@ -12,15 +11,9 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_loop_recycler.*
 
-class LoopRecyclerActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class LoopRecyclerActivity : BaseActivity(R.layout.activity_loop_recycler, Theme.LIGHT_AUTO) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_loop_recycler)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         val data = List(10) { "$it" }
 
         vertical_recyclerview.layoutManager = LoopLayoutManager(RecyclerView.VERTICAL)

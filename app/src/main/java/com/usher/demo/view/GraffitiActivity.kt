@@ -1,7 +1,6 @@
 package com.usher.demo.view
 
 import android.graphics.PorterDuff
-import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.ImageUtil
@@ -11,15 +10,9 @@ import com.usher.demo.base.BaseActivity
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_graffiti.*
 
-class GraffitiActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class GraffitiActivity : BaseActivity(R.layout.activity_graffiti, Theme.LIGHT_AUTO) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_graffiti)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         val strokeImageViews = listOf(stroke_imageview1, stroke_imageview2, stroke_imageview3)
         val strokeClicks = Observable.merge(strokeImageViews.mapIndexed { i, imageView -> imageView.clicks().map { i }.share() })
                 .startWith(Observable.just(1).compose(RxUtil.getSchedulerComposer()))

@@ -11,7 +11,7 @@ import com.twigcodes.ui.util.PermissionUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO, private val fullScreen: Boolean = false) : AppCompatActivity() {
+open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO, private val fullScreen: Boolean = false) : AppCompatActivity(contentLayoutId) {
     private val mActivityResultSubject = PublishSubject.create<ActivityResult>()
     private var mIsLocalNightMode = false
 
@@ -51,7 +51,14 @@ open class BaseActivity(private val statusBarThemeForDayMode: Theme = Theme.DARK
 
         mIsLocalNightMode = isSystemNightMode
         updateStatusBarTheme(mIsLocalNightMode)
+
+        initData()
+        initView()
     }
+
+    open fun initData() {}
+
+    open fun initView() {}
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
             grantResults.firstOrNull { it == PackageManager.PERMISSION_DENIED }?.run {

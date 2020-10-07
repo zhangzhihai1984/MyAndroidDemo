@@ -16,14 +16,9 @@ import kotlinx.android.synthetic.main.activity_pager.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 import kotlin.math.max
 
-class PagerActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pager)
-        initView()
-    }
+class PagerActivity : BaseActivity(R.layout.activity_pager, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         val mPagerAdapter = PagerFragmentAdapter(supportFragmentManager)
         viewpager.adapter = mPagerAdapter
         indicatorview.setViewPager(viewpager)

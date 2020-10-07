@@ -7,7 +7,7 @@ import com.twigcodes.ui.activity.BaseActivity
 import com.usher.demo.main.DemoListActivity
 
 @SuppressLint("Registered")
-open class BaseActivity(statusBarThemeForDayMode: Theme = Theme.DARK_AUTO, fullScreen: Boolean = true) : BaseActivity(statusBarThemeForDayMode, fullScreen) {
+open class BaseActivity(contentLayoutId: Int, statusBarThemeForDayMode: Theme = Theme.DARK_AUTO, fullScreen: Boolean = true) : BaseActivity(contentLayoutId, statusBarThemeForDayMode, fullScreen) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

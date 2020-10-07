@@ -1,6 +1,5 @@
 package com.usher.demo.rx
 
-import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
@@ -10,16 +9,12 @@ import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_rx_search.*
+import kotlinx.android.synthetic.main.item_search.view.*
 import java.util.concurrent.TimeUnit
 
-class RxSearchActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_rx_search)
-        initView()
-    }
+class RxSearchActivity : BaseActivity(R.layout.activity_rx_search, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         val searchResults = arrayListOf<String>()
         val cities = listOf("北京市", "上海市", "天津市", "重庆市", "沈阳市", "台北市")
         val adapter = SearchAdapter(searchResults)
@@ -42,8 +37,8 @@ class RxSearchActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private class SearchAdapter(data: List<String>) : RxBaseQuickAdapter<String, BaseViewHolder>(R.layout.item_search, data) {
-        override fun convert(helper: BaseViewHolder, item: String) {
-            helper.setText(R.id.name_textview, item)
+        override fun convert(holder: BaseViewHolder, item: String) {
+            holder.itemView.name_textview.text = item
         }
     }
 }

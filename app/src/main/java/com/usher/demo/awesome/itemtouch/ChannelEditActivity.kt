@@ -3,7 +3,6 @@ package com.usher.demo.awesome.itemtouch
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,15 +27,9 @@ import kotlinx.android.synthetic.main.activity_channel_edit.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
 
-class ChannelEditActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class ChannelEditActivity : BaseActivity(R.layout.activity_channel_edit, Theme.LIGHT_AUTO) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_channel_edit)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ChannelEditActivity) }
 
         val fixedChannels = listOf("关注", "推荐").map { it to ChannelAdapter.ITEM_VIEW_TYPE_FIXED_CHANNEL }

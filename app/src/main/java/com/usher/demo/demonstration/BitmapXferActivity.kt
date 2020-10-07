@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -19,15 +18,11 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bitmap_xfer.*
 import kotlinx.android.synthetic.main.fragment_bitmap_xfer.*
+import kotlinx.android.synthetic.main.item_bitmap_xfer.view.*
 
-class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bitmap_xfer)
-        initView()
-    }
+class BitmapXferActivity : BaseActivity(R.layout.activity_bitmap_xfer, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         val resIds = listOf(R.drawable.picasso_reading_at_a_table, R.drawable.demo_plaster, R.drawable.picasso_girl_before_a_mirror)
 
         viewpager.adapter = BitmapXferFragmentAdapter(supportFragmentManager, resIds)
@@ -76,9 +71,11 @@ class BitmapXferActivity : BaseActivity(Theme.LIGHT_AUTO) {
     }
 
     private class BitmapXferAdapter(data: List<Pair<Bitmap, String>>) : RxBaseQuickAdapter<Pair<Bitmap, String>, BaseViewHolder>(R.layout.item_bitmap_xfer, data) {
-        override fun convert(helper: BaseViewHolder, xferPair: Pair<Bitmap, String>) {
-            helper.getView<ImageView>(R.id.xfer_imageview).setImageBitmap(xferPair.first)
-            helper.setText(R.id.textview, xferPair.second)
+        override fun convert(holder: BaseViewHolder, xferPair: Pair<Bitmap, String>) {
+            holder.itemView.run {
+                xfer_imageview.setImageBitmap(xferPair.first)
+                textview.text = xferPair.second
+            }
         }
     }
 }

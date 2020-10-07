@@ -1,7 +1,6 @@
 package com.usher.demo.view.seat
 
 import android.animation.ValueAnimator
-import android.os.Bundle
 import android.view.animation.OvershootInterpolator
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.SeatSelectionView
@@ -10,15 +9,9 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_seat_selection.*
 
-class SeatSelectionActivity : BaseActivity(Theme.DARK_ONLY) {
+class SeatSelectionActivity : BaseActivity(R.layout.activity_seat_selection, Theme.DARK_ONLY) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_seat_selection)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         var seatData: ArrayList<ArrayList<SeatSelectionView.Status>> = arrayListOf()
 
         val countAnimator = ValueAnimator.ofFloat(1f, 1.5f, 1f).apply {

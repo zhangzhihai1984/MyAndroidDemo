@@ -1,6 +1,5 @@
 package com.usher.demo.view
 
-import android.os.Bundle
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
@@ -9,15 +8,9 @@ import kotlinx.android.synthetic.main.activity_curtain.*
 import kotlinx.android.synthetic.main.curtain_content_layout.*
 import kotlinx.android.synthetic.main.curtain_cover_layout.*
 
-class CurtainActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class CurtainActivity : BaseActivity(R.layout.activity_curtain, Theme.LIGHT_AUTO) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_curtain)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         val resIds = listOf(R.drawable.demo_slamdunk, R.drawable.demo_mall, R.drawable.demo_tree, R.drawable.demo_hardworking, R.drawable.demo_arale)
 
         curtain_view.percentChanges()

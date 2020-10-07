@@ -1,20 +1,14 @@
 package com.usher.demo.view
 
 import android.animation.ValueAnimator
-import android.os.Bundle
 import android.view.animation.DecelerateInterpolator
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_wave.*
 
-class WaveActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wave)
-        initView()
-    }
+class WaveActivity : BaseActivity(R.layout.activity_wave, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
 //        Observable.interval(0, 200, TimeUnit.MILLISECONDS)
 //                .take(100 + 1)
 //                .map { it.toInt() }

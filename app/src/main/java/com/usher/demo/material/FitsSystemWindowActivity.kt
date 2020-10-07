@@ -1,14 +1,13 @@
 package com.usher.demo.material
 
 import android.content.Intent
-import android.os.Bundle
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_fitssystemwindow.*
 
-class FitsSystemWindowActivity : BaseActivity() {
+class FitsSystemWindowActivity : BaseActivity(R.layout.activity_fitssystemwindow) {
     companion object {
         private const val EXTRA_NAME = "EXTRA_TAG"
         private const val EXTRA_VALUE_NONE = "NONE"
@@ -16,13 +15,7 @@ class FitsSystemWindowActivity : BaseActivity() {
         private const val EXTRA_VALUE_TOP = "TOP"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fitssystemwindow)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         val name = when (intent.getStringExtra(EXTRA_NAME)) {
             EXTRA_VALUE_ROOT -> {
                 root_layout.fitsSystemWindows = true

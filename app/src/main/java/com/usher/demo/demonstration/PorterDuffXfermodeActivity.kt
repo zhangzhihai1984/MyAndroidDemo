@@ -9,23 +9,17 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
-import com.twigcodes.ui.PorterDuffXfermodeDiagramView
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.fragment.BasePagerFragment
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_porterduff_xfermode.*
 import kotlinx.android.synthetic.main.fragment_porterduff_xfermode.*
+import kotlinx.android.synthetic.main.item_porterduff_xfermode.view.*
 
-class PorterDuffXfermodeActivity : BaseActivity(Theme.LIGHT_AUTO) {
+class PorterDuffXfermodeActivity : BaseActivity(R.layout.activity_porterduff_xfermode, Theme.LIGHT_AUTO) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_porterduff_xfermode)
-        initView()
-    }
-
-    private fun initView() {
+    override fun initView() {
         val colorPairs = listOf(
                 Color.rgb(33, 150, 243) to Color.rgb(233, 30, 99),
                 Color.rgb(33, 150, 243) to Color.argb(102, 233, 30, 99),
@@ -89,9 +83,11 @@ class PorterDuffXfermodeActivity : BaseActivity(Theme.LIGHT_AUTO) {
         }
 
         private class PorterDuffAdapter(data: List<PorterDuff.Mode>, private val srcColor: Int, private val dstColor: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_porterduff_xfermode, data) {
-            override fun convert(helper: BaseViewHolder, mode: PorterDuff.Mode) {
-                helper.getView<PorterDuffXfermodeDiagramView>(R.id.porterduff_view).update(mode, srcColor, dstColor)
-                helper.setText(R.id.textview, mode.name)
+            override fun convert(holder: BaseViewHolder, mode: PorterDuff.Mode) {
+                holder.itemView.run {
+                    porterduff_view.update(mode, srcColor, dstColor)
+                    textview.text = mode.name
+                }
             }
         }
     }

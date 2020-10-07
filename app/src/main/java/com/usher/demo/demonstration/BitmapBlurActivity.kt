@@ -18,14 +18,9 @@ import kotlinx.android.synthetic.main.activity_bitmap_blur.*
 import kotlinx.android.synthetic.main.fragment_bitmap_blur.*
 import kotlin.math.max
 
-class BitmapBlurActivity : BaseActivity(Theme.LIGHT_AUTO) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bitmap_blur)
-        initView()
-    }
+class BitmapBlurActivity : BaseActivity(R.layout.activity_bitmap_blur, Theme.LIGHT_AUTO) {
 
-    private fun initView() {
+    override fun initView() {
         val resIds = listOf(R.drawable.picasso_dora_maar_au_chat, R.drawable.picasso_the_weeping_woman, R.drawable.picasso_portrait_of_dora_maar)
         val adapter = BlurFragmentAdapter(supportFragmentManager, resIds, 8f, 8f)
 
