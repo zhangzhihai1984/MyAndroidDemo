@@ -63,7 +63,8 @@ object DemoConfig {
                 DemoItem(PorterDuffXfermodeActivity::class.java, "PorterDuff", "Xfermode"),
                 DemoItem(BitmapMeshWarpActivity::class.java, "Warp", "Bitmap Mesh"),
                 DemoItem(BitmapMeshRippleActivity::class.java, "Ripple", "Bitmap Mesh"),
-                DemoItem(BitmapMeshCurtainActivity::class.java, "Curtain", "Bitmap Mesh")
+                DemoItem(BitmapMeshCurtainActivity::class.java, "Curtain", "Bitmap Mesh"),
+                DemoItem(ViewPager2Activity::class.java, "ViewPager2")
         )
 
         configMap[KEY_WEB] = listOf(
@@ -82,7 +83,6 @@ object DemoConfig {
                 DemoItem(MarqueeTextActivity::class.java, "Marquee Text"),
                 DemoItem(WaveActivity::class.java, "Wave"),
                 DemoItem(LoopPagerActivity::class.java, "Loop Pager"),
-                DemoItem(Pager2Activity::class.java, "Pager2"),
                 DemoItem(SeatSelectionActivity::class.java, "Seat Selection"),
                 DemoItem(SeatSelection2Activity::class.java, "Seat Selection2"),
                 DemoItem(LoadingActivity::class.java, "Loading"),

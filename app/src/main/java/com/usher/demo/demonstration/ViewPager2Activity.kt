@@ -1,4 +1,4 @@
-package com.usher.demo.view
+package com.usher.demo.demonstration
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,10 +10,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.twigcodes.ui.fragment.BasePagerFragment
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_pager2.*
+import kotlinx.android.synthetic.main.activity_viewpager2.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 
-class Pager2Activity : BaseActivity(R.layout.activity_pager2, Theme.LIGHT_AUTO) {
+class ViewPager2Activity : BaseActivity(R.layout.activity_viewpager2, Theme.LIGHT_AUTO) {
 
     override fun initView() {
         val adapterH = PagerFragmentAdapter(this)
@@ -39,8 +39,8 @@ class Pager2Activity : BaseActivity(R.layout.activity_pager2, Theme.LIGHT_AUTO) 
         companion object {
             private const val RESID = "RESID"
 
-            fun newInstance(num: Int): LoopPagerActivity.PagerFragment =
-                    LoopPagerActivity.PagerFragment().apply {
+            fun newInstance(num: Int): Pager2Fragment =
+                    Pager2Fragment().apply {
                         arguments = Bundle().apply {
                             putInt(RESID, num)
                         }

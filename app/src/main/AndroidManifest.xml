@@ -123,13 +123,18 @@
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".demonstration.ViewPager2Activity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
 
         <!-- Material Demo -->
         <activity
-            android:name=".material.TabLayoutActivity"
+            android:name=".material.FitsSystemWindowActivity"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".material.FitsSystemWindowActivity"
+            android:name=".material.TabLayoutActivity"
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".material.ProfileActivity"
@@ -175,11 +180,6 @@
             android:theme="@style/CommonTheme" />
         <activity
             android:name=".view.LoopPagerActivity"
-            android:configChanges="uiMode"
-            android:screenOrientation="portrait"
-            android:theme="@style/CommonTheme" />
-        <activity
-            android:name=".view.Pager2Activity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
