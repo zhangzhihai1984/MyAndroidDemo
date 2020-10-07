@@ -81,7 +81,7 @@ object DemoConfig {
         configMap[KEY_VIEW] = listOf(
                 DemoItem(MarqueeTextActivity::class.java, "Marquee Text"),
                 DemoItem(WaveActivity::class.java, "Wave"),
-                DemoItem(PagerActivity::class.java, "Pager"),
+                DemoItem(LoopPagerActivity::class.java, "Loop Pager"),
                 DemoItem(SeatSelectionActivity::class.java, "Seat Selection"),
                 DemoItem(SeatSelection2Activity::class.java, "Seat Selection2"),
                 DemoItem(LoadingActivity::class.java, "Loading"),

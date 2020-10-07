@@ -12,11 +12,11 @@ import com.twigcodes.ui.pager.LoopViewPager2
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_pager.*
+import kotlinx.android.synthetic.main.activity_loop_pager.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 import kotlin.math.max
 
-class PagerActivity : BaseActivity(R.layout.activity_pager, Theme.LIGHT_AUTO) {
+class LoopPagerActivity : BaseActivity(R.layout.activity_loop_pager, Theme.LIGHT_AUTO) {
 
     override fun initView() {
         val mPagerAdapter = PagerFragmentAdapter(supportFragmentManager)

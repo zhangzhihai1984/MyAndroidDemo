@@ -174,7 +174,7 @@
             android:configChanges="uiMode"
             android:theme="@style/CommonTheme" />
         <activity
-            android:name=".view.PagerActivity"
+            android:name=".view.LoopPagerActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
