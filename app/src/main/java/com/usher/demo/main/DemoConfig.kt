@@ -64,7 +64,8 @@ object DemoConfig {
                 DemoItem(BitmapMeshWarpActivity::class.java, "Warp", "Bitmap Mesh"),
                 DemoItem(BitmapMeshRippleActivity::class.java, "Ripple", "Bitmap Mesh"),
                 DemoItem(BitmapMeshCurtainActivity::class.java, "Curtain", "Bitmap Mesh"),
-                DemoItem(ViewPager2Activity::class.java, "ViewPager2")
+                DemoItem(ViewPager2Activity::class.java, "ViewPager2"),
+                DemoItem(TabLayout2Activity::class.java, "TabLayout", "ViewPager2")
         )
 
         configMap[KEY_WEB] = listOf(
