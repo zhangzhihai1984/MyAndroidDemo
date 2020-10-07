@@ -65,6 +65,7 @@ object DemoConfig {
                 DemoItem(BitmapMeshRippleActivity::class.java, "Ripple", "Bitmap Mesh"),
                 DemoItem(BitmapMeshCurtainActivity::class.java, "Curtain", "Bitmap Mesh"),
                 DemoItem(ViewPager2Activity::class.java, "ViewPager2"),
+                DemoItem(TabLayout1Activity::class.java, "TabLayout", "ViewPager"),
                 DemoItem(TabLayout2Activity::class.java, "TabLayout", "ViewPager2")
         )
 

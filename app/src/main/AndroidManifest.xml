@@ -129,6 +129,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
+            android:name=".demonstration.TabLayout1Activity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+        <activity
             android:name=".demonstration.TabLayout2Activity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
