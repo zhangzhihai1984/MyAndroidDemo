@@ -15,12 +15,32 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="10dp">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager2_horizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:overScrollMode="never" />
+            android:layout_height="match_parent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewpager2_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:overScrollMode="never" />
+
+            <com.twigcodes.ui.indicator.PageIndicatorView
+                android:id="@+id/indicatorview_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:background="#66000000"
+                app:indicator_animator_in="@animator/indicator_animator"
+                app:indicator_animator_out="@animator/indicator_animator_reverse"
+                app:indicator_drawable="@drawable/indicator_black_corner_background"
+                app:indicator_height="4dp"
+                app:indicator_margin="6dp"
+                app:indicator_width="10dp" />
+
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -32,12 +52,27 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="10dp">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager2_vertical"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:overScrollMode="never" />
+            android:layout_height="match_parent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewpager2_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:overScrollMode="never" />
+
+            <com.twigcodes.ui.indicator.PageIndicatorView
+                android:id="@+id/indicatorview_vertical"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:background="#66000000"
+                app:indicator_gravity="center_horizontal|bottom"
+                app:indicator_orientation="vertical" />
+
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 

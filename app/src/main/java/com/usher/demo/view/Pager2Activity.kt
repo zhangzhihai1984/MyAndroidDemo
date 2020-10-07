@@ -16,8 +16,15 @@ import kotlinx.android.synthetic.main.fragment_pager.*
 class Pager2Activity : BaseActivity(R.layout.activity_pager2, Theme.LIGHT_AUTO) {
 
     override fun initView() {
-        viewpager2_horizontal.adapter = PagerFragmentAdapter(this)
-        viewpager2_vertical.adapter = PagerFragmentAdapter(this)
+        val adapterH = PagerFragmentAdapter(this)
+        val adapterV = PagerFragmentAdapter(this)
+
+        viewpager2_horizontal.adapter = adapterH
+        viewpager2_vertical.adapter = adapterV
+
+        indicatorview_horizontal.setViewPager(viewpager2_horizontal)
+        indicatorview_vertical.setViewPager(viewpager2_vertical)
+
         (viewpager2_horizontal.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         (viewpager2_vertical.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
     }

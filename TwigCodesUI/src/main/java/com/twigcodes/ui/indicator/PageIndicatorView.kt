@@ -10,9 +10,11 @@ import android.view.View
 import android.view.animation.Interpolator
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
+import androidx.viewpager2.widget.ViewPager2
 import com.twigcodes.ui.R
 import kotlin.math.abs
 
@@ -35,6 +37,7 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
 
     private var mCurrentPosition = -1
     private var mViewPager: ViewPager? = null
+    private var mViewPager2: ViewPager2? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.PageIndicatorView)
@@ -90,34 +93,75 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         createIndicators()
     }
 
+    fun setViewPager(viewPager: ViewPager2) {
+        mViewPager2 = viewPager
+        mViewPager2?.run {
+            adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onChanged() {
+                    mCurrentPosition = currentItem
+                    createIndicators2()
+                }
+            }) ?: throw IllegalStateException("Please set adapter for the ViewPager")
+
+            mCurrentPosition = currentItem
+
+            unregisterOnPageChangeCallback(mPageChangeCallback)
+            registerOnPageChangeCallback(mPageChangeCallback)
+        }
+
+        createIndicators2()
+    }
+
     private val mPageChangeListener: OnPageChangeListener = object : SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
-            if (mInAnimator.isRunning)
-                mInAnimator.end()
-
-            if (mOutAnimator.isRunning)
-                mOutAnimator.end()
-
-            getChildAt(mCurrentPosition)?.run {
-                setBackgroundResource(mIndicatorIdleBackgroundResId)
-                mOutAnimator.setTarget(this)
-                mOutAnimator.start()
-            }
-
-            getChildAt(position)?.run {
-                setBackgroundResource(mIndicatorBackgroundResId)
-                mInAnimator.setTarget(this)
-                mInAnimator.start()
-            }
-
-            mCurrentPosition = position
+            pageSelected(position)
         }
+    }
+
+    private val mPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            pageSelected(position)
+        }
+    }
+
+    private fun pageSelected(position: Int) {
+        if (mInAnimator.isRunning)
+            mInAnimator.end()
+
+        if (mOutAnimator.isRunning)
+            mOutAnimator.end()
+
+        getChildAt(mCurrentPosition)?.run {
+            setBackgroundResource(mIndicatorIdleBackgroundResId)
+            mOutAnimator.setTarget(this)
+            mOutAnimator.start()
+        }
+
+        getChildAt(position)?.run {
+            setBackgroundResource(mIndicatorBackgroundResId)
+            mInAnimator.setTarget(this)
+            mInAnimator.start()
+        }
+
+        mCurrentPosition = position
     }
 
     private fun createIndicators() {
         removeAllViews()
 
         val count = mViewPager?.adapter?.count ?: 0
+        IntRange(0, count - 1).forEach {
+            if (mCurrentPosition == it)
+                addIndicator(mIndicatorBackgroundResId, mImmediateInAnimator)
+            else
+                addIndicator(mIndicatorIdleBackgroundResId, mImmediateOutAnimator)
+        }
+    }
+
+    private fun createIndicators2() {
+        removeAllViews()
+
+        val count = mViewPager2?.adapter?.itemCount ?: 0
         IntRange(0, count - 1).forEach {
             if (mCurrentPosition == it)
                 addIndicator(mIndicatorBackgroundResId, mImmediateInAnimator)
