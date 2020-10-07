@@ -126,14 +126,14 @@ dependencies {
     implementation project(path: ':TwigCodesUI')
 
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
-    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation 'com.google.android.material:material:1.3.0-alpha03'
 
     //Kotlin
 //    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.5.0-alpha03'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha04'
 
     //RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.3'
