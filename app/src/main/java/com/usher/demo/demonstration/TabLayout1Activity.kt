@@ -45,13 +45,13 @@ class TabLayout1Activity : BaseActivity(R.layout.activity_tablayout1, Theme.LIGH
 
         tab_viewpager.adapter = PagerFragmentAdapter(supportFragmentManager, data)
 
-        tablayout1.setupWithViewPager(tab_viewpager)
+        tablayout.setupWithViewPager(tab_viewpager)
 
         data.indices.forEach {
-            tablayout1.getTabAt(it)?.customView = getCustomView(data[it])
+            tablayout.getTabAt(it)?.customView = getCustomView(data[it])
         }
 
-        (tablayout1.getChildAt(0) as ViewGroup).children.forEach { view ->
+        (tablayout.getChildAt(0) as ViewGroup).children.forEach { view ->
             view.updateLayoutParams<ViewGroup.MarginLayoutParams> { rightMargin = resources.getDimensionPixelSize(R.dimen.tab_margin_end) }
             view.setPadding(0)
         }
@@ -61,7 +61,7 @@ class TabLayout1Activity : BaseActivity(R.layout.activity_tablayout1, Theme.LIGH
                 .subscribe { position ->
                     LogUtil.log("pos: $position")
                     data.indices.forEach {
-                        tablayout1.getTabAt(it)?.customView?.textview?.textSize = if (it == position) 19f else 14f
+                        tablayout.getTabAt(it)?.customView?.textview?.textSize = if (it == position) 19f else 14f
                     }
                 }
     }
