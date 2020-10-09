@@ -16,7 +16,6 @@ import com.twigcodes.ui.fragment.BasePagerFragment
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import com.usher.demo.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_tablayout1.*
 import kotlinx.android.synthetic.main.fragment_tab_layout.*
 import kotlinx.android.synthetic.main.smart_tab_item.view.*
@@ -45,21 +44,32 @@ class TabLayout1Activity : BaseActivity(R.layout.activity_tablayout1, Theme.LIGH
 
         tab_viewpager.adapter = PagerFragmentAdapter(supportFragmentManager, data)
 
+        /**
+         * 连接ViewPager和TabLayout
+         */
         tablayout.setupWithViewPager(tab_viewpager)
 
+        /**
+         * 遍历TabLayout中的Tab, 设置CustomView
+         */
         data.indices.forEach {
             tablayout.getTabAt(it)?.customView = getCustomView(data[it])
         }
 
+        /**
+         * 遍历TabLayout中的TabView, 设置margin和padding
+         */
         (tablayout.getChildAt(0) as ViewGroup).children.forEach { view ->
             view.updateLayoutParams<ViewGroup.MarginLayoutParams> { rightMargin = resources.getDimensionPixelSize(R.dimen.tab_margin_end) }
             view.setPadding(0)
         }
 
+        /**
+         * 监听滑动, 修改CustomView中的textSize
+         */
         tab_viewpager.pageSelections()
                 .to(RxUtil.autoDispose(this))
                 .subscribe { position ->
-                    LogUtil.log("pos: $position")
                     data.indices.forEach {
                         tablayout.getTabAt(it)?.customView?.textview?.textSize = if (it == position) 19f else 14f
                     }

@@ -25,6 +25,10 @@ class ViewPager2Activity : BaseActivity(R.layout.activity_viewpager2, Theme.LIGH
         indicatorview_horizontal.setViewPager(viewpager2_horizontal)
         indicatorview_vertical.setViewPager(viewpager2_vertical)
 
+        /**
+         * ViewPager2内部是一个RecyclerView, 由于没有提供属性修改其overScrollMode,
+         * 这里通过getChildAt(0)获取到内部的RecyclerView, 然后修改overScrollMode.
+         */
         (viewpager2_horizontal.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         (viewpager2_vertical.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
     }
