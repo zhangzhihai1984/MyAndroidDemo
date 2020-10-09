@@ -41,7 +41,7 @@ import kotlinx.android.synthetic.main.smart_tab_item.view.*
 class TabLayout1Activity : BaseActivity(R.layout.activity_tablayout1, Theme.LIGHT_AUTO) {
 
     override fun initView() {
-        val data = listOf(*resources.getStringArray(R.array.sticky_list1))
+        val data = listOf(*resources.getStringArray(R.array.selected_channels))
 
         tab_viewpager.adapter = PagerFragmentAdapter(supportFragmentManager, data)
 
