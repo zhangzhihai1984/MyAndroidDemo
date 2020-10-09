@@ -127,7 +127,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
     implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation 'com.google.android.material:material:1.3.0-alpha03'
 
     //Kotlin
@@ -153,6 +153,7 @@ dependencies {
     implementation "com.jakewharton.rxbinding4:rxbinding-recyclerview:${versions.rxbinding}"
     implementation "com.jakewharton.rxbinding4:rxbinding-swiperefreshlayout:${versions.rxbinding}"
     implementation "com.jakewharton.rxbinding4:rxbinding-viewpager:${versions.rxbinding}"
+    implementation "com.jakewharton.rxbinding4:rxbinding-viewpager2:${versions.rxbinding}"
     implementation "com.jakewharton.rxbinding4:rxbinding-material:${versions.rxbinding}"
 
     //Retrofit2
