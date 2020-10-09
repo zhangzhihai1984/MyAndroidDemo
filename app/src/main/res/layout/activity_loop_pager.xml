@@ -54,28 +54,34 @@
 
             </RelativeLayout>
 
-            <com.twigcodes.ui.indicator.PageIndicatorView
-                android:id="@+id/indicatorview"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="90dp"
-                android:background="#66000000"
-                app:indicator_animator_in="@animator/indicator_animator"
-                app:indicator_animator_out="@animator/indicator_animator_reverse"
-                app:indicator_drawable="@drawable/indicator_black_corner_background"
-                app:indicator_height="4dp"
-                app:indicator_margin="6dp"
-                app:indicator_width="10dp" />
+                android:orientation="vertical">
 
-            <com.twigcodes.ui.indicator.PageIndicatorView
-                android:id="@+id/indicatorview2"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
-                android:background="#66000000"
-                app:indicator_gravity="center_vertical" />
+                <com.twigcodes.ui.indicator.PageIndicatorView
+                    android:id="@+id/indicatorview"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="#66000000"
+                    app:indicator_animator_in="@animator/indicator_animator"
+                    app:indicator_animator_out="@animator/indicator_animator_reverse"
+                    app:indicator_drawable="@drawable/indicator_black_corner_background"
+                    app:indicator_height="4dp"
+                    app:indicator_margin="6dp"
+                    app:indicator_width="10dp" />
+
+                <com.twigcodes.ui.indicator.PageIndicatorView
+                    android:id="@+id/indicatorview2"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="#66000000"
+                    app:indicator_gravity="center_vertical" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
