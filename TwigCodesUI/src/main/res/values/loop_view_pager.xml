@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="pager_autopage_enabled" format="boolean" />
-    <declare-styleable name="LoopViewPager2">
+    <declare-styleable name="LoopViewPagerLegacy">
         <attr name="pager_autopage_enabled" />
         <attr name="pager_autopage_interval" format="integer" />
         <attr name="pager_cache_enabled" format="boolean" />

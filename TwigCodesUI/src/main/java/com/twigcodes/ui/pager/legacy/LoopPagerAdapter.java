@@ -1,4 +1,4 @@
-package com.twigcodes.ui.pager;
+package com.twigcodes.ui.pager.legacy;
 
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
@@ -13,10 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * 与{@link LoopViewPager2}配合使用的Adapter，你通过调用{@link LoopViewPager2#setAdapter(PagerAdapter)},
- * 最终生成的其实是{@link LoopPagerAdapter2}，这个类不暴露给用户使用。
+ * 与{@link LoopViewPager}配合使用的Adapter，你通过调用{@link LoopViewPager#setAdapter(PagerAdapter)},
+ * 最终生成的其实是{@link LoopPagerAdapter}，这个类不暴露给用户使用。
  */
-class LoopPagerAdapter2 extends PagerAdapter {
+class LoopPagerAdapter extends PagerAdapter {
 
     private final PagerAdapter mRawAdapter;
 
@@ -24,7 +24,7 @@ class LoopPagerAdapter2 extends PagerAdapter {
 
     private boolean mIsCacheEnabled = false;
 
-    LoopPagerAdapter2(PagerAdapter adapter) {
+    LoopPagerAdapter(PagerAdapter adapter) {
         mRawAdapter = adapter;
     }
 
@@ -59,7 +59,7 @@ class LoopPagerAdapter2 extends PagerAdapter {
      * <p>
      * 需要注意的是，当我们实现{@link FragmentPagerAdapter#getItem(int)}时，
      * 传过来的position是{@link FragmentPagerAdapter#instantiateItem(ViewGroup, int)}中的position，
-     * 它是"real"的，因此我们需要调用一下{@link LoopViewPager2#getMatchedPosition(int, int)},
+     * 它是"real"的，因此我们需要调用一下{@link LoopViewPager#getMatchedPosition(int, int)},
      * 将这个"real" position转换成[1,2,3]对应的index，即[0->3, 1->0, 2->1, 3->2, 4->3, 5->0]。
      */
     @NonNull

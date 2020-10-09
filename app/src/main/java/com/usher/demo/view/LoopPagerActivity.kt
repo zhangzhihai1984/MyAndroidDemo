@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.fragment.BasePagerFragment
-import com.twigcodes.ui.pager.LoopViewPager2
+import com.twigcodes.ui.pager.LoopViewPager
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
@@ -36,7 +36,7 @@ class LoopPagerActivity : BaseActivity(R.layout.activity_loop_pager, Theme.LIGHT
 
     private class PagerFragmentAdapter(fm: FragmentManager, private var mSize: Int = 5) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(position: Int): Fragment {
-            val pos = LoopViewPager2.getMatchedPosition(position, count)
+            val pos = LoopViewPager.getRevisedPosition(position, count)
             return PagerFragment.newInstance(pos + 1)
         }
 
