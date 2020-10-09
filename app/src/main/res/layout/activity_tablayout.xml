@@ -25,7 +25,7 @@
         android:id="@+id/smarttablayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:stl_customTabTextLayoutId="@layout/smarthome_tab_item"
+        app:stl_customTabTextLayoutId="@layout/smart_tab_item"
         app:stl_customTabTextViewId="@id/textview"
         app:stl_dividerColor="#4D000000"
         app:stl_dividerThickness="1dp"

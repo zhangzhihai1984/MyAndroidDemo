@@ -1,6 +1,4 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
     <!-- LoadingView -->
@@ -10,23 +8,16 @@
     <dimen name="loading_view_progress_radius">20dp</dimen>
     <!-- loading_view_radius - loading_view_stroke_width -->
 
-    <!-- PopupWindow -->
-    <dimen name="popup_width">200dp</dimen>
-    <dimen name="popup_height">300dp</dimen>
-
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="appbar_padding_top">8dp</dimen>
-
-    <!-- Smart Home -->
-    <dimen name="smart_appbar_height">210dp</dimen>
-    <dimen name="smart_toolbar_height">60dp</dimen>
-    <dimen name="smart_tab_background_height">60dp</dimen>
-    <dimen name="smart_indoor_background_height">170dp</dimen> <!-- 210 - 60 + 20(radius) = 170 -->
 
     <!-- Drag -->
     <dimen name="drag_delete_width">102dp</dimen>
 
+    <!-- Loop Hint -->
     <dimen name="loop_hint_item_height">45dp</dimen>
+
+    <!-- -->
+    <dimen name="tab_margin_end">16dp</dimen>
 </resources>
