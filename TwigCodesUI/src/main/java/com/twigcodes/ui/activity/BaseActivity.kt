@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.twigcodes.ui.util.PermissionUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -41,6 +42,10 @@ open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMo
     }
 
     data class ActivityResult(val requestCode: Int, val resultCode: Int, val data: Intent?)
+
+    init {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
