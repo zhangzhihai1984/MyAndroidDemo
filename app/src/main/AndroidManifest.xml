@@ -194,6 +194,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
         <activity
+            android:name=".view.LoopPager2Activity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+        <activity
             android:name=".view.ChartActivity"
             android:theme="@style/CommonTheme" />
         <activity

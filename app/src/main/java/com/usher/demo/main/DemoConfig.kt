@@ -85,6 +85,7 @@ object DemoConfig {
                 DemoItem(MarqueeTextActivity::class.java, "Marquee Text"),
                 DemoItem(WaveActivity::class.java, "Wave"),
                 DemoItem(LoopPagerActivity::class.java, "Loop Pager"),
+                DemoItem(LoopPager2Activity::class.java, "Loop Pager2"),
                 DemoItem(SeatSelectionActivity::class.java, "Seat Selection"),
                 DemoItem(SeatSelection2Activity::class.java, "Seat Selection2"),
                 DemoItem(LoadingActivity::class.java, "Loading"),

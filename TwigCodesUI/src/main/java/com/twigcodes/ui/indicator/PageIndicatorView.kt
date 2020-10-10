@@ -77,54 +77,54 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
     fun setViewPager(viewPager: ViewPager) {
         mViewPager = viewPager
         mViewPager?.run {
-            adapter?.registerDataSetObserver(object : DataSetObserver() {
-                override fun onChanged() {
-                    mCurrentPosition = currentItem
-                    createIndicators()
-                }
-            }) ?: throw IllegalStateException("Please set adapter for the ViewPager")
+            adapter?.run {
+                registerDataSetObserver(object : DataSetObserver() {
+                    override fun onChanged() {
+                        createIndicators(count, currentItem)
+                    }
+                })
 
-            mCurrentPosition = currentItem
+                createIndicators(count, currentItem)
+
+            } ?: throw IllegalStateException("Please set adapter for the ViewPager")
 
             removeOnPageChangeListener(mPageChangeListener)
             addOnPageChangeListener(mPageChangeListener)
         }
-
-        createIndicators()
     }
 
     fun setViewPager(viewPager: ViewPager2) {
         mViewPager2 = viewPager
         mViewPager2?.run {
-            adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-                override fun onChanged() {
-                    mCurrentPosition = currentItem
-                    createIndicators2()
-                }
-            }) ?: throw IllegalStateException("Please set adapter for the ViewPager")
+            adapter?.run {
+                registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                    override fun onChanged() {
+                        createIndicators(itemCount, currentItem)
+                    }
+                })
 
-            mCurrentPosition = currentItem
+                createIndicators(itemCount, currentItem)
+
+            } ?: throw IllegalStateException("Please set adapter for the ViewPager")
 
             unregisterOnPageChangeCallback(mPageChangeCallback)
             registerOnPageChangeCallback(mPageChangeCallback)
         }
-
-        createIndicators2()
     }
 
     private val mPageChangeListener: OnPageChangeListener = object : SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
-            pageSelected(position)
+            selectPage(position)
         }
     }
 
     private val mPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            pageSelected(position)
+            selectPage(position)
         }
     }
 
-    private fun pageSelected(position: Int) {
+    fun selectPage(position: Int) {
         if (mInAnimator.isRunning)
             mInAnimator.end()
 
@@ -146,22 +146,10 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         mCurrentPosition = position
     }
 
-    private fun createIndicators() {
+    fun createIndicators(count: Int, currentPosition: Int = 0) {
         removeAllViews()
 
-        val count = mViewPager?.adapter?.count ?: 0
-        IntRange(0, count - 1).forEach {
-            if (mCurrentPosition == it)
-                addIndicator(mIndicatorBackgroundResId, mImmediateInAnimator)
-            else
-                addIndicator(mIndicatorIdleBackgroundResId, mImmediateOutAnimator)
-        }
-    }
-
-    private fun createIndicators2() {
-        removeAllViews()
-
-        val count = mViewPager2?.adapter?.itemCount ?: 0
+        mCurrentPosition = currentPosition
         IntRange(0, count - 1).forEach {
             if (mCurrentPosition == it)
                 addIndicator(mIndicatorBackgroundResId, mImmediateInAnimator)
