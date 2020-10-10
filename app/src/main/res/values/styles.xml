@@ -7,15 +7,10 @@
     </style>
 
     <style name="CommonTheme" parent="AppTheme">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">#33000000</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="MaterialTheme" parent="AppTheme">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/holo_red_dark</item>
-    </style>
+    <style name="MaterialTheme" parent="AppTheme" />
 
     <style name="FramelessDialog" parent="@style/Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
