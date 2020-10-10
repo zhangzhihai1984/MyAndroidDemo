@@ -26,7 +26,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
-class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
+class BitmapCurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr) {
     companion object {
         internal const val DEFAULT_MESH_WIDTH = 20
         internal const val DEFAULT_MESH_HEIGHT = 20

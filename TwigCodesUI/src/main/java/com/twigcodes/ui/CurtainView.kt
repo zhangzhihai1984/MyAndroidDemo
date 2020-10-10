@@ -28,7 +28,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
  * 因为作为child, 他们会先将touch事件截获. 当然也可以根据需求直接调用[open]和[close]进行窗帘的开和关, 只不过没有了
  * 中间状态而已.
  */
-class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
+class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
     companion object {
         private const val CURTAIN_SNAPSHOT_ELEVATION = 100f
         private const val CURTAIN_COVER_ELEVATION = CURTAIN_SNAPSHOT_ELEVATION + 1f

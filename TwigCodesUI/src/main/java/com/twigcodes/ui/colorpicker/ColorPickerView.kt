@@ -13,7 +13,7 @@ import com.twigcodes.ui.util.RxUtil
 import io.reactivex.rxjava3.core.Observable
 import kotlin.math.max
 
-class ColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+class ColorPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
     companion object {
         private const val DEFAULT_BRIGHTNESS_HEIGHT = 60
         private const val DEFAULT_BRIGHTNESS_MARGIN_TOP = 30
