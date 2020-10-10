@@ -127,7 +127,10 @@ object ImageUtil {
         val canvas = Canvas(bitmap).apply { density = source.density }
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-        canvas.drawRoundRect(0f, 0f, source.width.toFloat(), source.height.toFloat(), radius, radius, paint)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+            canvas.drawRoundRect(0f, 0f, source.width.toFloat(), source.height.toFloat(), radius, radius, paint)
+        else
+            canvas.drawRect(0f, 0f, source.width.toFloat(), source.height.toFloat(), paint)
 
         canvas.drawBitmap(source, 0f, 0f, paint.apply {
             xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)

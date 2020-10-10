@@ -70,7 +70,10 @@ internal class BrightnessView @JvmOverloads constructor(context: Context, attrs:
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat() - mBrightnessMarginBottom, mCornerRadius, mCornerRadius, mPaint)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+            canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat() - mBrightnessMarginBottom, mCornerRadius, mCornerRadius, mPaint)
+        else
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat() - mBrightnessMarginBottom, mPaint)
         canvas.drawRect(0f, height.toFloat() - mIndicatorHeight, width.toFloat() * mPercent, height.toFloat(), mPaint)
     }
 
