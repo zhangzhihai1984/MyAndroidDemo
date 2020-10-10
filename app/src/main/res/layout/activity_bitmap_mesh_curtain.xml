@@ -43,7 +43,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_debug_main" />
+            app:srcCompat="@drawable/ic_debug_main" />
 
         <ImageView
             android:id="@+id/open_imageview"
@@ -53,7 +53,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_door_open_main" />
+            app:srcCompat="@drawable/ic_door_open_main" />
 
         <ImageView
             android:id="@+id/close_imageview"
@@ -63,7 +63,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_door_close_main" />
+            app:srcCompat="@drawable/ic_door_close_main" />
 
     </LinearLayout>
 

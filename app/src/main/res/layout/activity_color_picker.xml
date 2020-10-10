@@ -51,7 +51,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_palette" />
+            app:srcCompat="@drawable/ic_palette" />
 
     </androidx.cardview.widget.CardView>
 

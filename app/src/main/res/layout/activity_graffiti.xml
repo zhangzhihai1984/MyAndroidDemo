@@ -51,7 +51,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_undo_main" />
+            app:srcCompat="@drawable/ic_undo_main" />
 
         <ImageView
             android:id="@+id/clear_imageview"
@@ -61,7 +61,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_refresh_main" />
+            app:srcCompat="@drawable/ic_refresh_main" />
 
         <ImageView
             android:id="@+id/done_imageview"
@@ -71,7 +71,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_done_main" />
+            app:srcCompat="@drawable/ic_done_main" />
 
     </LinearLayout>
 

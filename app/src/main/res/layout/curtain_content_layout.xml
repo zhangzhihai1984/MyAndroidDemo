@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary_900">
@@ -29,7 +30,7 @@
             android:background="@drawable/common_mask_circle_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_door_open_main" />
+            app:srcCompat="@drawable/ic_door_open_main" />
 
         <ImageView
             android:id="@+id/close_imageview"
@@ -39,7 +40,7 @@
             android:background="@drawable/common_mask_circle_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_door_close_main" />
+            app:srcCompat="@drawable/ic_door_close_main" />
 
         <ImageView
             android:id="@+id/debug_imageview"
@@ -49,7 +50,7 @@
             android:background="@drawable/common_mask_circle_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_debug_main" />
+            app:srcCompat="@drawable/ic_debug_main" />
 
     </LinearLayout>
 

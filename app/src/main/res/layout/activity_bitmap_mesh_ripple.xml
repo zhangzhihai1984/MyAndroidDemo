@@ -37,6 +37,6 @@
         android:background="@drawable/common_main_circle_stroke_background"
         android:contentDescription="@null"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_debug_main" />
+        app:srcCompat="@drawable/ic_debug_main" />
 
 </LinearLayout>

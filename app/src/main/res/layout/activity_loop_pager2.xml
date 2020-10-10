@@ -40,7 +40,7 @@
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_add_circle_outline_white" />
+                    app:srcCompat="@drawable/ic_add_circle_outline_white" />
 
                 <ImageView
                     android:id="@+id/remove_imageview"
@@ -51,7 +51,7 @@
                     android:background="@drawable/common_mask_circle_background"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_remove_circle_outline_white" />
+                    app:srcCompat="@drawable/ic_remove_circle_outline_white" />
 
             </RelativeLayout>
 

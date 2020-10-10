@@ -37,7 +37,7 @@
         android:background="@drawable/common_main_circle_stroke_background"
         android:contentDescription="@null"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_debug_main" />
+        app:srcCompat="@drawable/ic_debug_main" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
@@ -69,7 +69,7 @@
                 android:background="@drawable/common_main_circle_stroke_background"
                 android:contentDescription="@null"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_shuffle_main" />
+                app:srcCompat="@drawable/ic_shuffle_main" />
 
             <ImageView
                 android:id="@+id/clear_imageview"
@@ -79,7 +79,7 @@
                 android:background="@drawable/common_main_circle_stroke_background"
                 android:contentDescription="@null"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_refresh_main" />
+                app:srcCompat="@drawable/ic_refresh_main" />
 
         </LinearLayout>
 
