@@ -13,52 +13,67 @@ import com.twigcodes.ui.fragment.BasePagerFragment
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_loop_pager2.*
 import kotlinx.android.synthetic.main.fragment_pager.*
+import java.util.concurrent.TimeUnit
 
 class LoopPager2Activity : BaseActivity(R.layout.activity_loop_pager2, Theme.LIGHT_AUTO) {
 
     override fun initView() {
-        viewpager2.adapter = LoopPagerFragmentAdapter(this, PagerFragmentAdapter(this))
-        viewpager2.currentItem = 1
+        val data = List(5) { it }
+        val adapter = LoopPagerFragmentAdapter(this)
 
-        indicatorview.createIndicators(5)
-        indicatorview2.createIndicators(5)
+        viewpager2.adapter = adapter
 
-        viewpager2.pageSelections()
-                .to(RxUtil.autoDispose(this))
-                .subscribe { position ->
+        val pages = viewpager2.pageSelections()
+                .doOnNext { position ->
                     val revisedPos = (position - 1 + 5) % 5
-                    indicatorview.selectPage(revisedPos)
-                    indicatorview2.selectPage(revisedPos)
-                }
 
-//        val pages = viewpager2.pageSelections()
-//                .doOnNext { position ->
-//                    indicatorview.selectPage(position)
-//                    indicatorview2.selectPage(position)
-//                }
+                    if (revisedPos != indicatorview.getCurrentItem()) {
+                        indicatorview.setCurrentItem(revisedPos)
+                        indicatorview2.setCurrentItem(revisedPos)
+                    }
+                }
 
         viewpager2.pageScrollStateChanges()
                 .filter { it == ViewPager2.SCROLL_STATE_IDLE }
+                .withLatestFrom(pages) { _, position ->
+                    when (position) {
+                        0 -> viewpager2.setCurrentItem(5, false)
+                        5 + 1 -> viewpager2.setCurrentItem(1, false)
+                    }
+                }
                 .to(RxUtil.autoDispose(this))
                 .subscribe { }
+
+        Observable.timer(1000, TimeUnit.MILLISECONDS)
+                .compose(RxUtil.getSchedulerComposer())
+                .to(RxUtil.autoDispose(this))
+                .subscribe {
+                    adapter.data = data
+                    adapter.notifyDataSetChanged()
+                    viewpager2.currentItem = 1
+                    indicatorview.createIndicators(data.size)
+                    indicatorview2.createIndicators(data.size)
+                }
     }
 
-    private class PagerFragmentAdapter(activity: FragmentActivity, private var mSize: Int = 5) : FragmentStateAdapter(activity) {
-        override fun createFragment(position: Int): Fragment = Pager2Fragment.newInstance((position - 1 + mSize) % mSize)
+//    private class PagerFragmentAdapter(activity: FragmentActivity, private var mSize: Int = 5) : FragmentStateAdapter(activity) {
+//        override fun createFragment(position: Int): Fragment = Pager2Fragment.newInstance((position - 1 + mSize) % mSize)
+//
+//        override fun getItemCount(): Int = mSize
+//    }
 
-        override fun getItemCount(): Int = mSize
-    }
-
-    private class LoopPagerFragmentAdapter(activity: FragmentActivity, private val rawAdapter: FragmentStateAdapter) : FragmentStateAdapter(activity) {
+    private class LoopPagerFragmentAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
+        var data = listOf<Int>()
         override fun getItemCount(): Int =
                 when {
-                    rawAdapter.itemCount <= 1 -> rawAdapter.itemCount
-                    else -> rawAdapter.itemCount + 2
+                    data.size <= 1 -> data.size
+                    else -> data.size + 2
                 }
 
-        override fun createFragment(position: Int): Fragment = rawAdapter.createFragment(position)
+        override fun createFragment(position: Int): Fragment = Pager2Fragment.newInstance((position - 1 + data.size) % data.size)
 
     }
 

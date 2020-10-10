@@ -39,6 +39,18 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mViewPager: ViewPager? = null
     private var mViewPager2: ViewPager2? = null
 
+    private val mPageChangeListener: OnPageChangeListener = object : SimpleOnPageChangeListener() {
+        override fun onPageSelected(position: Int) {
+            setCurrentItem(position)
+        }
+    }
+
+    private val mPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            setCurrentItem(position)
+        }
+    }
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.PageIndicatorView)
         mIndicatorWidth = a.getDimensionPixelSize(R.styleable.PageIndicatorView_indicator_width, DEFAULT_INDICATOR_VALUE)
@@ -112,19 +124,9 @@ class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    private val mPageChangeListener: OnPageChangeListener = object : SimpleOnPageChangeListener() {
-        override fun onPageSelected(position: Int) {
-            selectPage(position)
-        }
-    }
+    fun getCurrentItem(): Int = mCurrentPosition
 
-    private val mPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            selectPage(position)
-        }
-    }
-
-    fun selectPage(position: Int) {
+    fun setCurrentItem(position: Int) {
         if (mInAnimator.isRunning)
             mInAnimator.end()
 
