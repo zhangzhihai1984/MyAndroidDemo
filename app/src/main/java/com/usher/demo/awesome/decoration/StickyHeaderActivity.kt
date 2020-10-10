@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.forEach
 import androidx.core.view.forEachIndexed
@@ -86,14 +87,16 @@ class StickyHeaderActivity : BaseActivity(R.layout.activity_sticky_header, Theme
                 val centerX = (parent.paddingStart + OFFSET_LEFT / 2).toFloat()
                 val centerY = (view.top + view.height / 2).toFloat()
 
-                val bitmap = context.resources.getDrawable(R.drawable.ic_face_primary, null).toBitmap()
+
                 val dst = RectF()
                 dst.top = centerY - SIDE_LENGTH / 2
                 dst.bottom = centerY + SIDE_LENGTH / 2
                 dst.left = centerX - SIDE_LENGTH / 2
                 dst.right = centerX + SIDE_LENGTH / 2
 
-                c.drawBitmap(bitmap, null, dst, null)
+                ResourcesCompat.getDrawable(context.resources, R.drawable.ic_face_primary, null)?.toBitmap()?.let { bitmap ->
+                    c.drawBitmap(bitmap, null, dst, null)
+                }
                 c.drawCircle(centerX, centerY, CIRCLE_RADIUS, mStrokePaint)
                 c.drawLine(centerX, centerY - CIRCLE_RADIUS, centerX, view.top.toFloat() /*- DIVIDER_HEIGHT*/, mStrokePaint)
                 c.drawLine(centerX, centerY + CIRCLE_RADIUS, centerX, view.bottom.toFloat(), mStrokePaint)

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -50,22 +51,23 @@ class BitmapXferActivity : BaseActivity(R.layout.activity_bitmap_xfer, Theme.LIG
         override fun init() {
             arguments?.run {
                 val resId = getInt(RESID)
-                val bitmap = resources.getDrawable(resId, null).toBitmap()
-                val bitmapPairs = listOf(
-                        bitmap to "ORIGINAL",
-                        ImageUtil.getRenderScriptBlurBitmap(requireContext(), bitmap, 25f) to "SCRIPT BLUR",
-                        ImageUtil.getRenderScriptBlurScaledBitmap(requireContext(), bitmap) to "SCRIPT BLUR PRO",
-                        ImageUtil.getScaledBlurBitmap(bitmap, 16f) to "SCALED BLUR",
-                        ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
-                        ImageUtil.getCircleBitmap(bitmap) to "CIRCLE",
-                        ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND",
-                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.parseColor("#4400ffff"), PorterDuff.Mode.MULTIPLY) to "PORTERDUFF FILTER",
-                        ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.CYAN, PorterDuff.Mode.OVERLAY) to "PORTERDUFF FILTER",
-                        ImageUtil.getLightingColorFilterBitmap(bitmap, Color.WHITE, Color.CYAN) to "LIGHTING FILTER"
-                )
+                ResourcesCompat.getDrawable(resources, resId, null)?.toBitmap()?.let { bitmap ->
+                    val bitmapPairs = listOf(
+                            bitmap to "ORIGINAL",
+                            ImageUtil.getRenderScriptBlurBitmap(requireContext(), bitmap, 25f) to "SCRIPT BLUR",
+                            ImageUtil.getRenderScriptBlurScaledBitmap(requireContext(), bitmap) to "SCRIPT BLUR PRO",
+                            ImageUtil.getScaledBlurBitmap(bitmap, 16f) to "SCALED BLUR",
+                            ImageUtil.getSquareBitmap(bitmap) to "SQUARE",
+                            ImageUtil.getCircleBitmap(bitmap) to "CIRCLE",
+                            ImageUtil.getRoundBitmap(bitmap, 100f) to "ROUND",
+                            ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.parseColor("#4400ffff"), PorterDuff.Mode.MULTIPLY) to "PORTERDUFF FILTER",
+                            ImageUtil.getPorterDuffColorFilterBitmap(bitmap, Color.CYAN, PorterDuff.Mode.OVERLAY) to "PORTERDUFF FILTER",
+                            ImageUtil.getLightingColorFilterBitmap(bitmap, Color.WHITE, Color.CYAN) to "LIGHTING FILTER"
+                    )
 
-                recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
-                recyclerview.adapter = BitmapXferAdapter(bitmapPairs)
+                    recyclerview.layoutManager = GridLayoutManager(context, 3, RecyclerView.VERTICAL, false)
+                    recyclerview.adapter = BitmapXferAdapter(bitmapPairs)
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -79,7 +80,6 @@ class PorterDuffColorFilterActivity : BaseActivity(R.layout.activity_colorfilter
             arguments?.run {
                 val resId = getInt(RESID)
                 val color = getInt(COLOR)
-                val bitmap = resources.getDrawable(resId, null).toBitmap()
                 val modes = listOf(
                         PorterDuff.Mode.SRC_OVER,
                         PorterDuff.Mode.SRC_IN,
@@ -93,8 +93,10 @@ class PorterDuffColorFilterActivity : BaseActivity(R.layout.activity_colorfilter
                         PorterDuff.Mode.OVERLAY
                 )
 
-                recyclerview.layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
-                recyclerview.adapter = ColorFilterAdapter(modes, bitmap, color)
+                ResourcesCompat.getDrawable(resources, resId, null)?.toBitmap()?.let { bitmap ->
+                    recyclerview.layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
+                    recyclerview.adapter = ColorFilterAdapter(modes, bitmap, color)
+                }
             }
         }
 

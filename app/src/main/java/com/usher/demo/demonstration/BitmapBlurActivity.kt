@@ -1,6 +1,7 @@
 package com.usher.demo.demonstration
 
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -80,8 +81,9 @@ class BitmapBlurActivity : BaseActivity(R.layout.activity_bitmap_blur, Theme.LIG
                 val resId = getInt(RESID)
                 val scale = getFloat(SCALE)
                 val radius = getFloat(RADIUS)
-                val bitmap = resources.getDrawable(resId, null).toBitmap()
-                blur_imageview.setImageBitmap(ImageUtil.getRenderScriptBlurScaledBitmap(requireContext(), bitmap, scale, radius))
+                ResourcesCompat.getDrawable(resources, resId, null)?.toBitmap()?.let { bitmap ->
+                    blur_imageview.setImageBitmap(ImageUtil.getRenderScriptBlurScaledBitmap(requireContext(), bitmap, scale, radius))
+                }
             }
         }
     }
