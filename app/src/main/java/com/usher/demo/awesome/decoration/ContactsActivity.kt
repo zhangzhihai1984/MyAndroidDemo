@@ -14,7 +14,6 @@ import android.widget.TextView
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEachIndexed
 import androidx.core.view.get
 import androidx.core.view.isNotEmpty
@@ -65,7 +64,7 @@ class ContactsActivity : BaseActivity(R.layout.activity_contacts, Theme.LIGHT_AU
 
         indexview.setData(indexData)
 
-        indicator_textview.background = ResourcesCompat.getDrawable(resources, R.drawable.ic_index_indicator, null)
+        indicator_textview.background = ContextCompat.getDrawable(this, R.drawable.ic_index_indicator)
 
         val showScaleAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             addUpdateListener {

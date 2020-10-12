@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -51,7 +51,7 @@ class BitmapXferActivity : BaseActivity(R.layout.activity_bitmap_xfer, Theme.LIG
         override fun init() {
             arguments?.run {
                 val resId = getInt(RESID)
-                ResourcesCompat.getDrawable(resources, resId, null)?.toBitmap()?.let { bitmap ->
+                ContextCompat.getDrawable(requireContext(), resId)?.toBitmap()?.let { bitmap ->
                     val bitmapPairs = listOf(
                             bitmap to "ORIGINAL",
                             ImageUtil.getRenderScriptBlurBitmap(requireContext(), bitmap, 25f) to "SCRIPT BLUR",
