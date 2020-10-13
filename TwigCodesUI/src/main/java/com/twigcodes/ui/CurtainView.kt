@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding4.view.globalLayouts
 import com.jakewharton.rxbinding4.view.touches
@@ -36,7 +37,7 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     private val mPercentChangeSubject = PublishSubject.create<Float>()
-    private val mSnapshotView = BitmapCurtainView(context).apply { elevation = CURTAIN_SNAPSHOT_ELEVATION }
+    private val mSnapshotView = BitmapCurtainView(context).apply { ViewCompat.setElevation(this, CURTAIN_SNAPSHOT_ELEVATION) }
     private val mContentView: View
     private val mCoverView: View
 
@@ -76,13 +77,13 @@ class CurtainView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         a.recycle()
 
         mContentView = LayoutInflater.from(context).inflate(contentLayoutId, null, false)
-        mCoverView = LayoutInflater.from(context).inflate(coverLayoutId, null, false).apply { elevation = CURTAIN_COVER_ELEVATION }
+        mCoverView = LayoutInflater.from(context).inflate(coverLayoutId, null, false).apply { ViewCompat.setElevation(this, CURTAIN_COVER_ELEVATION) }
 
         addView(mContentView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         addView(mCoverView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
         val maskView = View(context).apply {
-            elevation = CURTAIN_COVER_ELEVATION
+            ViewCompat.setElevation(this, CURTAIN_COVER_ELEVATION)
             setBackgroundColor(maskColor)
         }
         addView(maskView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))

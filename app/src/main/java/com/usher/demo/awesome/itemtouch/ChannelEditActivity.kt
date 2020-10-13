@@ -10,6 +10,7 @@ import android.view.animation.LinearInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
@@ -199,7 +200,7 @@ class ChannelEditActivity : BaseActivity(R.layout.activity_channel_edit, Theme.L
 
         fun onDragStart(itemView: View) {
             itemView.run {
-                name_textview.elevation = 10f
+                ViewCompat.setElevation(name_textview, 10f)
                 delete_imageview.visibility = View.INVISIBLE
             }
         }
@@ -219,7 +220,7 @@ class ChannelEditActivity : BaseActivity(R.layout.activity_channel_edit, Theme.L
 
         fun onDragEnd(itemView: View) {
             itemView.run {
-                name_textview.elevation = 0f
+                ViewCompat.setElevation(name_textview, 0f)
                 delete_imageview.visibility = View.VISIBLE
             }
         }

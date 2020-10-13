@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background"
@@ -16,7 +17,7 @@
         android:layout_height="45dp"
         android:background="@color/item_background"
         android:gravity="center"
-        android:text="频道定制"
+        android:text="@string/channel_edit_title"
         android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -28,21 +29,6 @@
         android:layout_marginEnd="8dp"
         android:layout_weight="1">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="1dp"
-            android:overScrollMode="never" />
-
-        <ImageView
-            android:id="@+id/item_capture_imageview"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:contentDescription="@null"
-            android:elevation="1dp"
-            android:visibility="invisible" />
-
         <ImageView
             android:id="@+id/item_outline_imageview"
             android:layout_width="wrap_content"
@@ -51,6 +37,23 @@
             android:padding="5dp"
             android:src="@drawable/channel_item_outline_background"
             android:visibility="invisible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:overScrollMode="never"
+            tools:targetApi="lollipop" />
+
+        <ImageView
+            android:id="@+id/item_capture_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:contentDescription="@null"
+            android:elevation="1dp"
+            android:visibility="invisible"
+            tools:targetApi="lollipop" />
 
     </RelativeLayout>
 

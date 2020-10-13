@@ -108,4 +108,6 @@
 
     <string name="rx_sum_init_value">--</string>
 
+    <string name="channel_edit_title">频道定制</string>
+
 </resources>
