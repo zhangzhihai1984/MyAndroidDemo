@@ -137,7 +137,8 @@
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
                 android:tint="@color/mask_color"
-                android:tintMode="src_atop" />
+                android:tintMode="src_atop"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

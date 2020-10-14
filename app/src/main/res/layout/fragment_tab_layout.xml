@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/pager_imageview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@null"
-        android:tint="@color/mask_color"
-        android:tintMode="src_atop" />
-
     <TextView
         android:id="@+id/pager_textview"
         android:layout_width="wrap_content"

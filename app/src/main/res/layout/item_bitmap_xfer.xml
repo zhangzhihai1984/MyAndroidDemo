@@ -26,7 +26,8 @@
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:tint="@color/mask_color"
-                android:tintMode="src_atop" />
+                android:tintMode="src_atop"
+                tools:targetApi="lollipop" />
 
         </com.twigcodes.ui.layout.SquareLayout>
 
