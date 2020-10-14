@@ -76,6 +76,11 @@
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".awesome.ZipCodeActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
 
         <!-- Demonstration Demo -->
         <activity
