@@ -44,7 +44,9 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
                 }
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { color ->
-                    alpha_seekbar.progressTintList = ColorStateList.valueOf(color)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        alpha_seekbar.progressTintList = ColorStateList.valueOf(color)
+                    }
                     mColorSeekSubject.onNext(color)
                 }
 
