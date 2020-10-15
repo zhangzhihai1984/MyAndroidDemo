@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" filepath="$PROJECT_DIR$/AnotherDemo/AnotherDemo.iml" group="MyAndroidDemo/AnotherDemo" />
-      <module fileurl="file://$PROJECT_DIR$/MyAndroidDemo.iml" filepath="$PROJECT_DIR$/MyAndroidDemo.iml" group="MyAndroidDemo" />
-      <module fileurl="file://$PROJECT_DIR$/MyApplication.iml" filepath="$PROJECT_DIR$/MyApplication.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" filepath="$PROJECT_DIR$/TwigCodesUI/TwigCodesUI.iml" group="MyAndroidDemo/TwigCodesUI" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="MyAndroidDemo/app" />
+      <module fileurl="file://$PROJECT_DIR$/MyAndroidDemo.iml" filepath="$PROJECT_DIR$/MyAndroidDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AnotherDemo/MyAndroidDemo.AnotherDemo.iml" filepath="$PROJECT_DIR$/.idea/modules/AnotherDemo/MyAndroidDemo.AnotherDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TwigCodesUI/MyAndroidDemo.TwigCodesUI.iml" filepath="$PROJECT_DIR$/.idea/modules/TwigCodesUI/MyAndroidDemo.TwigCodesUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MyAndroidDemo.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MyAndroidDemo.app.iml" />
     </modules>
   </component>
 </project>
