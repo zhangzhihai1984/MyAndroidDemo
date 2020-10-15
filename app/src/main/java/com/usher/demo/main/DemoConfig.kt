@@ -1,7 +1,7 @@
 package com.usher.demo.main
 
 import com.usher.demo.awesome.LoopHintActivity
-import com.usher.demo.awesome.ZipCodeActivity
+import com.usher.demo.awesome.zipcode.ZipCodeActivity
 import com.usher.demo.awesome.decoration.ContactsActivity
 import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity

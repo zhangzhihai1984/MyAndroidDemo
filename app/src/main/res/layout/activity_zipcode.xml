@@ -5,4 +5,26 @@
     android:background="@color/page_background"
     android:fitsSystemWindows="true">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true">
+
+        <com.usher.demo.awesome.zipcode.ZipCodeView
+            android:id="@+id/zipcodeview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/zipcode_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:cursorVisible="false"
+            android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:maxLength="6"
+            android:textSize="0sp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>
