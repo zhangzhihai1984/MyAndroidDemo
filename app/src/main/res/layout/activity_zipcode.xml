@@ -10,7 +10,7 @@
         android:layout_height="40dp"
         android:layout_centerInParent="true">
 
-        <com.usher.demo.awesome.zipcode.ZipCodeView
+        <com.twigcodes.ui.ZipCodeView
             android:id="@+id/zipcodeview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
