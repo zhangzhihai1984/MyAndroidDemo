@@ -11,4 +11,17 @@
         android:layout_height="40dp"
         android:layout_centerInParent="true" />
 
+    <TextView
+        android:id="@+id/zipcode_textview"
+        android:layout_width="150dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/zipcodeview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
+        android:background="@drawable/common_gray_corner_25_background"
+        android:gravity="center"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
 </RelativeLayout>

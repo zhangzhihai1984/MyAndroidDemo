@@ -14,8 +14,11 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.twigcodes.ui.util.RxUtil
 import com.twigcodes.ui.util.SystemUtil
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
+    private val mZipCodeSubject = BehaviorSubject.create<String>()
     private val displayView: ZipCodeDisplayView
     private val editView: EditText
 
@@ -28,8 +31,13 @@ class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         editView.textChanges()
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe { displayView.update(it.toList().map { c -> "$c" }) }
+                .subscribe {
+                    mZipCodeSubject.onNext(it.toString())
+                    displayView.update(it.toList().map { c -> "$c" })
+                }
     }
+
+    fun zipCodeChanges(): Observable<String> = mZipCodeSubject
 
     private class ZipCodeDisplayView(context: Context) : LinearLayout(context) {
         init {
