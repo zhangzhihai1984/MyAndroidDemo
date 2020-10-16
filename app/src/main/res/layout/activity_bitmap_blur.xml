@@ -130,7 +130,7 @@
 
             </LinearLayout>
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/original_imageview"
                 android:layout_width="90dp"
                 android:layout_height="match_parent"
