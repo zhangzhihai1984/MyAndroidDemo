@@ -157,6 +157,9 @@
         <activity
             android:name=".material.home.HomeActivity"
             android:theme="@style/CommonTheme" />
+        <activity
+            android:name=".material.ShoppingActivity"
+            android:theme="@style/CommonTheme" />
 
         <!-- Rx Demo -->
         <activity

@@ -1,14 +1,15 @@
 package com.usher.demo.main
 
 import com.usher.demo.awesome.LoopHintActivity
-import com.usher.demo.awesome.zipcode.ZipCodeActivity
 import com.usher.demo.awesome.decoration.ContactsActivity
 import com.usher.demo.awesome.decoration.StickyHeaderActivity
 import com.usher.demo.awesome.drag.DragActiity
 import com.usher.demo.awesome.itemtouch.ChannelEditActivity
+import com.usher.demo.awesome.zipcode.ZipCodeActivity
 import com.usher.demo.demonstration.*
 import com.usher.demo.material.FitsSystemWindowActivity
 import com.usher.demo.material.ProfileActivity
+import com.usher.demo.material.ShoppingActivity
 import com.usher.demo.material.TabLayoutActivity
 import com.usher.demo.material.home.HomeActivity
 import com.usher.demo.other.LogActivity
@@ -77,8 +78,9 @@ object DemoConfig {
 
         configMap[KEY_MATERIAL] = listOf(
                 DemoItem(FitsSystemWindowActivity::class.java, "fitsSystemWindow"),
-                DemoItem(TabLayoutActivity::class.java, "tab"),
-                DemoItem(ProfileActivity::class.java, "profile"),
+                DemoItem(TabLayoutActivity::class.java, "Tab"),
+                DemoItem(ProfileActivity::class.java, "Profile"),
+                DemoItem(ShoppingActivity::class.java, "Shopping"),
                 DemoItem(HomeActivity::class.java, "home")
         )
 
