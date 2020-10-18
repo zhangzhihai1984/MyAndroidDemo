@@ -20,4 +20,12 @@
 
     <!-- -->
     <dimen name="tab_margin_end">16dp</dimen>
+
+    <!-- Shopping -->
+    <dimen name="shopping_search_margin_top_min">9dp</dimen>
+    <dimen name="shopping_search_margin_top_max">50dp</dimen>
+    <dimen name="shopping_search_margin_start_min">12dp</dimen>
+    <dimen name="shopping_search_margin_start_max">37dp</dimen>
+    <dimen name="shopping_search_margin_end_min">12dp</dimen>
+    <dimen name="shopping_search_margin_end_max">92dp</dimen>
 </resources>

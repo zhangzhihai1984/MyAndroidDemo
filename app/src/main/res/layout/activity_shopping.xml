@@ -15,6 +15,7 @@
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbarlayout"
             android:layout_width="match_parent"
             android:layout_height="114dp"
             android:background="@android:color/transparent"
@@ -91,12 +92,15 @@
                 </androidx.appcompat.widget.Toolbar>
 
                 <View
+                    android:id="@+id/search_view"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="12dp"
-                    android:background="@drawable/shopping_edittext_background" />
+                    android:background="@drawable/shopping_edittext_background"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="1.0" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
