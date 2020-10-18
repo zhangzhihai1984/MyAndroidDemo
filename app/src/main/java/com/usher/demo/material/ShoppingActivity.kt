@@ -3,7 +3,9 @@ package com.usher.demo.material
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import com.jakewharton.rxbinding4.material.offsetChanges
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.util.RxUtil
+import com.twigcodes.ui.util.SystemUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import com.usher.demo.utils.LogUtil
@@ -43,6 +45,15 @@ class ShoppingActivity : BaseActivity(R.layout.activity_shopping, Theme.DARK_ONL
                         leftMargin = finalLeft.roundToInt()
                         rightMargin = finalright.roundToInt()
                     }
+
+                    promise_layout.alpha = percent
+                    mask_view.alpha = 1 - percent
                 }
+
+        statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ShoppingActivity) }
+
+        location_imageview.clicks()
+                .to(RxUtil.autoDispose(this))
+                .subscribe { showToast("Location") }
     }
 }
