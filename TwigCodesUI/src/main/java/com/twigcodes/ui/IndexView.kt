@@ -18,7 +18,7 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
 
-class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr) {
+class IndexView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private const val DEFAULT_TEXT_SIZE = 40
         private const val DEFAULT_IDLE_COLOR = Color.GRAY

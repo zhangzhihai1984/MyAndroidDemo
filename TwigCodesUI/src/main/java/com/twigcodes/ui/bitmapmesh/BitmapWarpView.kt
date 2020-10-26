@@ -16,7 +16,7 @@ import com.twigcodes.ui.R
 import com.twigcodes.ui.util.RxUtil
 import kotlin.math.pow
 
-class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr) {
+class BitmapWarpView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private const val DEFAULT_MESH_WIDTH = 10
         private const val DEFAULT_MESH_HEIGHT = 10

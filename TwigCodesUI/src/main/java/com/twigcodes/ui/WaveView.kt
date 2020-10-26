@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.min
 import kotlin.math.sin
 
-class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
+class WaveView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private const val DEFAULT_FRONT_WAVE_COLOR = Color.WHITE
         private const val DEFAULT_BACK_WAVE_COLOR = Color.WHITE

@@ -18,7 +18,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.twigcodes.ui.R
 import kotlin.math.abs
 
-class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
+class PageIndicatorView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private const val DEFAULT_INDICATOR_VALUE = 15
     }

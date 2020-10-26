@@ -15,7 +15,7 @@ import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.color_seeker_layout.view.*
 
-class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
+class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
     private val mColorSeekSubject = PublishSubject.create<Int>()
 
     init {
@@ -44,9 +44,7 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
                 }
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { color ->
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                        alpha_seekbar.progressTintList = ColorStateList.valueOf(color)
-                    }
+                    alpha_seekbar.progressTintList = ColorStateList.valueOf(color)
                     mColorSeekSubject.onNext(color)
                 }
 

@@ -51,8 +51,7 @@ open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMo
         super.onCreate(savedInstanceState)
 
         if (fullScreen) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE /*or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION*/
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE /*or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION*/
         }
 
         mIsLocalNightMode = isSystemNightMode
@@ -66,10 +65,12 @@ open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMo
 
     open fun initView() {}
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) =
-            grantResults.firstOrNull { it == PackageManager.PERMISSION_DENIED }?.run {
-                PermissionUtil.deny()
-            } ?: PermissionUtil.grant()
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        grantResults.firstOrNull { it == PackageManager.PERMISSION_DENIED }?.run {
+            PermissionUtil.deny()
+        } ?: PermissionUtil.grant()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

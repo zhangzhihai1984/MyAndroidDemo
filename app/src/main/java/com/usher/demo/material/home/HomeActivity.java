@@ -18,9 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import com.usher.demo.R;
 
@@ -54,10 +54,7 @@ public class HomeActivity extends AppCompatActivity {
     private void initBackground() {
         ImageView mBlurImageView = findViewById(R.id.blur_imageview);
 
-        Glide.with(this)
-                .load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602570022896&di=b88d6662683e464ba22f1fbe0e02c58a&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg")
-                .into(mBlurImageView);
-//        Picasso.get().load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602570022896&di=b88d6662683e464ba22f1fbe0e02c58a&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg").into(mBlurImageView);
+        Picasso.get().load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602570022896&di=b88d6662683e464ba22f1fbe0e02c58a&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg").into(mBlurImageView);
     }
 
     private class BlurTransformation implements Transformation {

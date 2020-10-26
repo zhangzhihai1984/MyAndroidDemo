@@ -12,7 +12,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -296,7 +295,7 @@ public class ChartView extends View {
     }
 
     public ChartView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs, defStyleAttr, defStyleRes);
 
         initView();
     }
@@ -881,13 +880,8 @@ public class ChartView extends View {
             float rectTop = y - TOOLTIP_HEIGHT / 2;
             float rectBottom = y + TOOLTIP_HEIGHT / 2;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, TOOLTIP_CORNER_RADIUS, TOOLTIP_CORNER_RADIUS, mTooltipBackgroundPaint);
-                canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, TOOLTIP_CORNER_RADIUS, TOOLTIP_CORNER_RADIUS, mTooltipBorderPaint);
-            } else {
-                canvas.drawRect(rectLeft, rectTop, rectRight, rectBottom, mTooltipBackgroundPaint);
-                canvas.drawRect(rectLeft, rectTop, rectRight, rectBottom, mTooltipBorderPaint);
-            }
+            canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, TOOLTIP_CORNER_RADIUS, TOOLTIP_CORNER_RADIUS, mTooltipBackgroundPaint);
+            canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, TOOLTIP_CORNER_RADIUS, TOOLTIP_CORNER_RADIUS, mTooltipBorderPaint);
 
             canvas.drawText(mSolidData.get(mSelectedDataIndex) + TOOLTIP_TEXT_SUFFIX, valueTextX, y + TOOLTIP_TEXT_BASELINE_OFFSET, mTooltipTextPaint);
         }

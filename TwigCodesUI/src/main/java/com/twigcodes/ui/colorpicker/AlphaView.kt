@@ -64,10 +64,7 @@ internal class AlphaView @JvmOverloads constructor(context: Context, attrs: Attr
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-            canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat() - mAlphaMarginBottom, mCornerRadius, mCornerRadius, mPaint)
-        else
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat() - mAlphaMarginBottom, mPaint)
+        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat() - mAlphaMarginBottom, mCornerRadius, mCornerRadius, mPaint)
         canvas.drawRect(0f, height.toFloat() - mIndicatorHeight, width.toFloat() * mPercent, height.toFloat(), mPaint)
     }
 

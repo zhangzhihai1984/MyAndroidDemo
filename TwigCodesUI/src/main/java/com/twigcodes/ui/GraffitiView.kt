@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.jakewharton.rxbinding4.view.touches
 import com.twigcodes.ui.util.RxUtil
 
-class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr) {
+class GraffitiView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
     companion object {
         private const val DEFAULT_STROKE_COLOR = Color.BLACK
         private const val DEFAULT_STROKE_WIDTH = 15

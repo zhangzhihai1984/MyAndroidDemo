@@ -17,12 +17,10 @@ android {
 
     defaultConfig {
         applicationId "com.usher.demo"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
-        vectorDrawables.useSupportLibrary true
 
         resValue "string", "app_name", "MyDemo"
         buildConfigField "String", "API_HOST", '"https://api.twigcodes.usher"'
@@ -173,8 +171,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+//    implementation 'com.github.bumptech.glide:glide:4.11.0'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     //Loading
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'

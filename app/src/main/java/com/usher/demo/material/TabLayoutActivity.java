@@ -92,7 +92,7 @@ public class TabLayoutActivity extends AppCompatActivity {
                 .to(RxUtil.autoDispose(this))
                 .subscribe(position -> {
                     for (int i = 0; i < 3; i++) {
-                        TextView view = (TextView) smartTabLayout.getTabAt(i);
+                        TextView view = (TextView) smartTabLayout.getTabAt(i).findViewById(R.id.textview);
                         view.setTextSize(i == position ? 18 : 14);
                     }
                 });
