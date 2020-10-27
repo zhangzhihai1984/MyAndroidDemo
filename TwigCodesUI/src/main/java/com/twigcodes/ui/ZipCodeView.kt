@@ -2,7 +2,6 @@ package com.twigcodes.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
@@ -42,35 +41,45 @@ import kotlin.math.min
 class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
     private val mZipCodeSubject = BehaviorSubject.create<String>()
     private val mImm by lazy { context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
-    private val mDisplayViews = arrayListOf<TextView>()
+    private val mBoxViews = arrayListOf<TextView>()
 
-    private var mZipCode = "000000"
-    private var mCurrentDisplay = 0
+    private var mZipCode = "      "
+
+    //    private var mZipCode = "000000"
+    private var mCurrentBoxIndex = 0
 
     init {
         inflate(context, R.layout.zipcode_layout, this)
 
         IntRange(0, 5).forEach { index ->
-            val view = LayoutInflater.from(context).inflate(R.layout.item_zipcode_display, this, false) as TextView
+            val view = LayoutInflater.from(context).inflate(R.layout.zipcode_box_layout, this, false) as TextView
             val margin = when (index) {
                 0 -> 0
                 4 -> SystemUtil.dip2px(context, 30f)
                 else -> SystemUtil.dip2px(context, 10f)
             }
             zicode_container.addView(view, LinearLayout.LayoutParams(view.layoutParams).apply { marginStart = margin })
-            mDisplayViews.add(view)
+            mBoxViews.add(view)
         }
 
-        mDisplayViews.forEachIndexed { index, view ->
+        mBoxViews.forEachIndexed { index, view ->
             view.clicks()
                     .compose(RxUtil.singleClick())
                     .to(RxUtil.autoDispose(context as LifecycleOwner))
                     .subscribe {
-                        mCurrentDisplay = index
+                        mCurrentBoxIndex = index
+
+                        /**
+                         * EditText获取焦点, 将光标移至index+1, 同时唤起输入法.
+                         */
                         zipcode_edittext.requestFocus()
-                        zipcode_edittext.setSelection(index + 1)
+                        zipcode_edittext.setSelection(mCurrentBoxIndex + 1)
                         mImm.showSoftInput(zipcode_edittext, 0)
-                        mDisplayViews.forEach { view -> view.background = ContextCompat.getDrawable(context, R.drawable.zipcode_default_background) }
+
+                        /**
+                         * 取消所有盒子高亮, 将当前盒子高亮.
+                         */
+                        mBoxViews.forEach { view -> view.background = ContextCompat.getDrawable(context, R.drawable.zipcode_default_background) }
                         view.background = ContextCompat.getDrawable(context, R.drawable.zipcode_selected_background)
                     }
         }
@@ -86,19 +95,17 @@ class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         zipcode_edittext.setText(mZipCode)
         zipcode_edittext.setSelection(0)
-
-        val before = "000456"
-        val after = "0003456"
-        val index = 2
-        val sub1 = after.substring(0, 2)
-        val sub2 = after.substring(3, 7)
-        Log.i("zzh", "sub1: $sub1 sub2: $sub2")
     }
 
     fun update(zipCode: String) {
 
+        /**
+         * 取消所有盒子高亮
+         */
+        mBoxViews.forEach { view -> view.background = ContextCompat.getDrawable(context, R.drawable.zipcode_default_background) }
+
         if (zipCode.length > 6) {
-            mZipCode = zipCode.substring(0, mCurrentDisplay) + zipCode.substring(mCurrentDisplay + 1, 7)
+            mZipCode = zipCode.substring(0, mCurrentBoxIndex) + zipCode.substring(mCurrentBoxIndex + 1, 7)
 
             /**
              * 更新EditText的text
@@ -108,20 +115,22 @@ class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSe
             /**
              * 将zipcode填充至6个盒子中
              */
-            mDisplayViews.zip(mZipCode.toList()).forEach { it.first.text = "${it.second}" }
+            mBoxViews.zip(mZipCode.toList()).forEach { it.first.text = "${it.second}" }
 
             /**
-             * 取消所有盒子高亮
+             * 将index的值加1, 让下一个盒子高亮.
+             * 如果index为6, 说明最后一个盒子已经输入结束, 此时收起键盘.
+             * 为了防止在某种极端情况下用户可以继续输入, 我们将index的最大值固定在6, 光标也放在6的位置上, 这样即使继续
+             * 输入也不会引发数组越界, 同时也不会有什么效果.
              */
-            mDisplayViews.forEach { view -> view.background = ContextCompat.getDrawable(context, R.drawable.zipcode_default_background) }
+            mCurrentBoxIndex = min(++mCurrentBoxIndex, mBoxViews.size)
 
-            mCurrentDisplay = min(++mCurrentDisplay, mDisplayViews.size)
-
-            if (mCurrentDisplay < mDisplayViews.size) {
-                mDisplayViews[mCurrentDisplay].background = ContextCompat.getDrawable(context, R.drawable.zipcode_selected_background)
-                zipcode_edittext.setSelection(mCurrentDisplay + 1)
+            if (mCurrentBoxIndex < mBoxViews.size) {
+                mBoxViews[mCurrentBoxIndex].background = ContextCompat.getDrawable(context, R.drawable.zipcode_selected_background)
+                zipcode_edittext.setSelection(mCurrentBoxIndex + 1)
             } else {
-                zipcode_edittext.setSelection(mDisplayViews.size)
+                zipcode_edittext.setSelection(mBoxViews.size)
+                mImm.hideSoftInputFromWindow(zipcode_edittext.windowToken, 0)
             }
         }
     }
