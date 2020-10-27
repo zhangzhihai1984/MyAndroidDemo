@@ -3,16 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <com.twigcodes.ui.ZipCodeEditText
         android:id="@+id/zipcode_edittext"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:cursorVisible="true"
-        android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        android:maxLength="6"
-        android:textSize="16sp"
-        />
+        android:digits="0123456789 abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/zicode_container"
