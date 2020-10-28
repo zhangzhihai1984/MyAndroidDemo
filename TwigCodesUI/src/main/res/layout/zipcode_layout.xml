@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.twigcodes.ui.ZipCodeEditText
         android:id="@+id/zipcode_edittext"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:cursorVisible="false"
         android:digits="0123456789 abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -20,4 +20,4 @@
         android:gravity="center"
         android:orientation="horizontal" />
 
-</RelativeLayout>
+</merge>

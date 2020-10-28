@@ -22,7 +22,7 @@ import kotlin.math.min
 /**
  * 初始zipcode值设为"6个空格", 为了方便解释, 下面以"ABCDEF"为例.
  * 控件有6个"盒子", 用于显示zipcode. 后面隐藏一个EditText, 用于编辑zipcode.
- * 点击某个盒子后该盒子高亮, 唤起输入法, 输入后, 右侧的盒子高亮, 直至最后一个盒子, 如果是删除的话, 左侧的盒子高亮,
+ * 点击某个盒子后该盒子高亮, 唤起软键盘, 输入后, 右侧的盒子高亮, 直至最后一个盒子, 如果是删除的话, 左侧的盒子高亮,
  * 直至第一个盒子.
  *
  * 处理逻辑主要分"输入"和"删除"两部分:
@@ -32,7 +32,7 @@ import kotlin.math.min
  * "AB3CDEF", 此时它的长度变为7, 与zipcode的长度6不符, 因此需要处理一下:
  * 我们需要保留的是index前面的"A"以及index+1后面的"3DEFG",也就是
  * text.substring(0, index) + text.substring(index + 1, 7)
- * 关于后面的"7"需要说一下, 用户输入的不一定是一个字母或数字, 由于输入法的原因, 可能一次性输入的是一个单词, 这样的话,
+ * 关于后面的"7"需要说一下, 用户输入的不一定是一个字母或数字, 由于软键盘的原因, 可能一次性输入的是一个单词, 这样的话,
  * 我们需要保证最终截取的字符串的长度为6, 这个处理后的字符串就是我们需要的zipcode.
  *
  * 这时我们需要做几件事情:
@@ -42,7 +42,7 @@ import kotlin.math.min
  * (4) 将index的值加1.
  * (5) 让下一个盒子高亮.
  * (6) 由于更新了EditText的text, 光标会处于0处, 因此重新将光标移至index+1处.
- * (7) 如果index为6, 说明最后一个盒子已经输入结束, 收起键盘.
+ * (7) 如果index为6, 说明最后一个盒子已经输入结束, 收起软键盘.
  *
  * 注意: 为了防止在某种极端情况下用户可以继续输入, 我们将index的最大值固定在6, 光标也放在6的位置上, 这样即使继续输入
  * 也不会引发数组越界, 同时也不会有什么效果.
@@ -83,13 +83,6 @@ class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSe
             mBoxViews.add(view)
         }
 
-        /**
-         * 防止点击6个盒子之外的地方让EditText获取焦点.
-         */
-        zicode_container.clicks()
-                .to(RxUtil.autoDispose(context as LifecycleOwner))
-                .subscribe { }
-
         mBoxViews.forEachIndexed { index, view ->
             view.clicks()
                     .compose(RxUtil.singleClick())
@@ -98,7 +91,7 @@ class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSe
                         mCurrentBoxIndex = index
 
                         /**
-                         * EditText获取焦点, 将光标移至index+1, 同时唤起输入法.
+                         * EditText获取焦点, 将光标移至index+1, 同时唤起软键盘.
                          */
                         zipcode_edittext.requestFocus()
                         zipcode_edittext.setSelection(mCurrentBoxIndex + 1)
@@ -153,7 +146,7 @@ class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSe
              * 将index的值加1.
              * 让下一个盒子高亮.
              * 由于更新了EditText的text, 光标会处于0处, 因此重新将光标移至index+1处.
-             * 如果index为6, 说明最后一个盒子已经输入结束, 此时收起键盘.
+             * 如果index为6, 说明最后一个盒子已经输入结束, 此时收起软键盘.
              * 为了防止在某种极端情况下用户可以继续输入, 我们将index的最大值固定在6, 光标也放在6的位置上, 这样即使继续
              * 输入也不会引发数组越界, 同时也不会有什么效果.
              */
