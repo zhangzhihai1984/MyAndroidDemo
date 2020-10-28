@@ -118,6 +118,13 @@ class ZipCodeView @JvmOverloads constructor(context: Context, attrs: AttributeSe
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { update(it.toString()) }
 
+        zipcode_edittext.inputMethodDismiss()
+                .compose(RxUtil.getSchedulerComposer())
+                .to(RxUtil.autoDispose(context as LifecycleOwner))
+                .subscribe {
+                    mBoxViews.forEach { view -> view.background = ContextCompat.getDrawable(context, R.drawable.zipcode_default_background) }
+                }
+
         zipcode_edittext.setText(mZipCode)
     }
 
