@@ -125,23 +125,20 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':TwigCodesUI')
 
-    implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
-    implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
-    implementation 'com.google.android.material:material:1.3.0-alpha03'
+    implementation 'androidx.appcompat:appcompat:1.4.0-alpha03'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'com.google.android.material:material:1.5.0-alpha02'
 
     //Kotlin
 //    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.5.0-alpha04'
-
-    //4.4
-    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.core:core-ktx:1.7.0-alpha01'
 
     //RxJava
-    implementation 'io.reactivex.rxjava3:rxjava:3.0.3'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.11-RC5'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
 
     //RxJava AutoDispose
     implementation "com.uber.autodispose2:autodispose:${versions.autodispose}"
