@@ -8,6 +8,8 @@
     <com.usher.demo.web.three.ThreeWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
 
 </RelativeLayout>
