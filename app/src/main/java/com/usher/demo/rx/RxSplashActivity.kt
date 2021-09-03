@@ -30,7 +30,9 @@ class RxSplashActivity : BaseActivity(R.layout.activity_rx_splash, Theme.LIGHT_A
         Observable.timer(2000, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))
-                .subscribe { ad_imageview.setImageResource(R.drawable.common_gradient_primary_radial_background) }
+                .subscribe {
+                    window.setBackgroundDrawableResource(R.drawable.common_gradient_primary_radial_background)
+                }
 
         Observable.interval(0, 1000, TimeUnit.MILLISECONDS)
                 .compose(RxUtil.getSchedulerComposer())
@@ -38,13 +40,12 @@ class RxSplashActivity : BaseActivity(R.layout.activity_rx_splash, Theme.LIGHT_A
                 .map { COUNTDOWN_SECONDS - it }
                 .takeUntil { it <= 0 }
                 .takeUntil(countdown_textview.clicks().take(1))
+                .doOnComplete { finish() }
                 .to(RxUtil.autoDispose(this))
-                .subscribe({
-                    countdown_textview.text = "$it"
+                .subscribe {
+                    countdown_textview.text = it.toString()
                     progressbar.progress = it.toInt()
-                }, {}, {
-                    finish()
-                })
+                }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
