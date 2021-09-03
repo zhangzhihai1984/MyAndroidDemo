@@ -41,17 +41,22 @@
             android:value="2.1" />
 
         <activity
-            android:name=".main.DemoListActivity"
+            android:name=".SplashActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
-            android:theme="@style/CommonTheme"
-            android:windowSoftInputMode="adjustNothing">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".main.DemoListActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+
         <!-- Awesome Demo -->
         <activity
             android:name=".awesome.itemtouch.ChannelEditActivity"

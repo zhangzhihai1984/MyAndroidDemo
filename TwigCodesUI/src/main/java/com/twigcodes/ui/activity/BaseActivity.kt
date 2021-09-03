@@ -12,7 +12,7 @@ import com.twigcodes.ui.util.PermissionUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO, private val fullScreen: Boolean = false) : AppCompatActivity(contentLayoutId) {
+open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMode: Theme = Theme.DARK_AUTO, private val fullScreen: Boolean = false, private val hideNavigationBar: Boolean = false) : AppCompatActivity(contentLayoutId) {
     private val mActivityResultSubject = PublishSubject.create<ActivityResult>()
     private var mIsLocalNightMode = false
 
@@ -47,11 +47,20 @@ open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMo
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (fullScreen) {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE /*or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION*/
+//            ViewCompat.getWindowInsetsController(window.decorView)?.let { controller ->
+//                controller.hide(WindowInsetsCompat.Type.statusBars())
+//                controller.hide(WindowInsetsCompat.Type.navigationBars())
+//            }
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        }
+
+        if (hideNavigationBar) {
+            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE
         }
 
         mIsLocalNightMode = isSystemNightMode
