@@ -160,10 +160,10 @@ class KotlinActivity : BaseActivity(R.layout.activity_kotlin) {
         val p2 = Observable.just(Person("B", 12))
 
         //
-        var max1 = people.maxBy({ it.age })
-        Observables.combineLatest(p1, p2, { a, b -> a.age + b.age })
-                .to(RxUtil.autoDispose(this))
-                .subscribe {}
+//        var max1 = people.maxBy({ it.age })
+//        Observables.combineLatest(p1, p2, { a, b -> a.age + b.age })
+//                .to(RxUtil.autoDispose(this))
+//                .subscribe {}
 
         button.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -173,15 +173,15 @@ class KotlinActivity : BaseActivity(R.layout.activity_kotlin) {
         button.setOnClickListener({})
 
         //如果lambda是函数的最后一个实参, 它可以放到括号的外面
-        var max2 = people.maxBy() { it.age }
-        Observables.combineLatest(p1, p2) { a, b -> a.age + b.age }
-                .to(RxUtil.autoDispose(this))
-                .subscribe {}
+//        var max2 = people.maxBy() { it.age }
+//        Observables.combineLatest(p1, p2) { a, b -> a.age + b.age }
+//                .to(RxUtil.autoDispose(this))
+//                .subscribe {}
 
         button.setOnClickListener() {}
 
         //当lambda是函数的唯一实参, 可以去掉括号
-        var max3 = people.maxBy { it.age }
+//        var max3 = people.maxBy { it.age }
 
         button.setOnClickListener { }
 
