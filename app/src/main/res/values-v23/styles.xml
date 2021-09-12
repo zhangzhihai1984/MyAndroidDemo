@@ -2,6 +2,7 @@
 <resources>
 
     <style name="CommonTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/page_background</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/page_background</item>

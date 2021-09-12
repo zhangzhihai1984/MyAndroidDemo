@@ -36,7 +36,6 @@
     </style>
 
     <style name="SplashTheme" parent="FullScreenTheme">
-        <item name="android:windowBackground">@color/page_background</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
