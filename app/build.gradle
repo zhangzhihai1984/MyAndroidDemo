@@ -6,7 +6,6 @@ buildscript {
     ext.versions = [
             'retrofit2'  : '2.9.0',
             'autodispose': '2.0.0',
-            'butterknife': '10.2.1',
             'rxbinding'  : '4.0.0',
     ]
 }
@@ -187,7 +186,4 @@ dependencies {
 //    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-11'
 //    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-    implementation "com.jakewharton:butterknife:${versions.butterknife}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butterknife}"
 }
