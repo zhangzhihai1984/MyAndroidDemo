@@ -18,14 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/scale_type_imageview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
-                android:tint="@color/mask_color"
                 android:tintMode="src_atop"
-                tools:targetApi="lollipop" />
+                app:tint="@color/mask_color" />
 
         </com.twigcodes.ui.layout.SquareLayout>
 

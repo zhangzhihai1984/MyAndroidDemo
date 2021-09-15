@@ -73,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_scale_main" />
+                        android:src="@drawable/ic_scale_main" />
 
                     <SeekBar
                         android:id="@+id/scale_seekbar"
@@ -106,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_radius_main" />
+                        android:src="@drawable/ic_radius_main" />
 
                     <SeekBar
                         android:id="@+id/radius_seekbar"

@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_palette" />
+            android:src="@drawable/ic_palette" />
 
     </androidx.cardview.widget.CardView>
 

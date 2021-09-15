@@ -38,8 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="-10dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="-10dp"
         android:orientation="horizontal">
 
@@ -51,7 +51,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_undo_main" />
+            android:src="@drawable/ic_undo_main" />
 
         <ImageView
             android:id="@+id/clear_imageview"
@@ -61,7 +61,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_refresh_main" />
+            android:src="@drawable/ic_refresh_main" />
 
         <ImageView
             android:id="@+id/done_imageview"
@@ -71,7 +71,7 @@
             android:background="@drawable/common_main_circle_stroke_background"
             android:contentDescription="@null"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_done_main" />
+            android:src="@drawable/ic_done_main" />
 
     </LinearLayout>
 
