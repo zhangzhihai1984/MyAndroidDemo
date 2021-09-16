@@ -12,15 +12,15 @@ import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_demo_list.*
 import kotlinx.android.synthetic.main.item_demo.view.*
 
-class DemoListActivity : BaseActivity(R.layout.activity_demo_list, Theme.LIGHT_AUTO) {
+class DemoListActivity : BaseActivity(R.layout.activity_demo_list) {
 
     override fun initView() {
         val tag = intent.getStringExtra(DemoConfig.TAG_KEY)
         val demoItems = DemoConfig.getDemoConfig(tag)
         val adapter = DemoAdapter(demoItems)
 
-        recyclerview.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
-        recyclerview.adapter = adapter
+        demo_recyclerview.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
+        demo_recyclerview.adapter = adapter
 
         adapter.itemClicks()
                 .compose(RxUtil.singleClick())
