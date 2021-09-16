@@ -37,7 +37,7 @@ import kotlinx.android.synthetic.main.smart_tab_item.view.*
  * 这样的话, 我们就可以通过getChildAt(0)先获取到TabLayout的SlidingTabIndicator, 然后遍历其children, 根据需要
  * 修改margin和padding.
  */
-class TabLayout1Activity : BaseActivity(R.layout.activity_tablayout1, Theme.LIGHT_AUTO) {
+class TabLayout1Activity : BaseActivity(R.layout.activity_tablayout1) {
 
     override fun initView() {
         val data = listOf(*resources.getStringArray(R.array.selected_channels))

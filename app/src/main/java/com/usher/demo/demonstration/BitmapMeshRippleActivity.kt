@@ -6,7 +6,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bitmap_mesh_ripple.*
 
-class BitmapMeshRippleActivity : BaseActivity(R.layout.activity_bitmap_mesh_ripple, Theme.LIGHT_AUTO) {
+class BitmapMeshRippleActivity : BaseActivity(R.layout.activity_bitmap_mesh_ripple) {
 
     override fun initView() {
         debug_imageview.clicks()

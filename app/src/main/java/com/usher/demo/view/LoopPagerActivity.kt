@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_loop_pager.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 import kotlin.math.max
 
-class LoopPagerActivity : BaseActivity(R.layout.activity_loop_pager, Theme.LIGHT_AUTO) {
+class LoopPagerActivity : BaseActivity(R.layout.activity_loop_pager) {
 
     override fun initView() {
         val pagerAdapter = PagerFragmentAdapter(supportFragmentManager)

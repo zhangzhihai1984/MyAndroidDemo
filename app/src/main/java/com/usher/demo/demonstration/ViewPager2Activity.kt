@@ -13,7 +13,7 @@ import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_viewpager2.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 
-class ViewPager2Activity : BaseActivity(R.layout.activity_viewpager2, Theme.LIGHT_AUTO) {
+class ViewPager2Activity : BaseActivity(R.layout.activity_viewpager2) {
 
     override fun initView() {
         val adapterH = PagerFragmentAdapter(this)

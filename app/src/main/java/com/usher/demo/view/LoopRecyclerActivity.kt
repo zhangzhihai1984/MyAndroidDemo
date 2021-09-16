@@ -11,7 +11,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_loop_recycler.*
 
-class LoopRecyclerActivity : BaseActivity(R.layout.activity_loop_recycler, Theme.LIGHT_AUTO) {
+class LoopRecyclerActivity : BaseActivity(R.layout.activity_loop_recycler) {
 
     override fun initView() {
         val data = List(10) { "$it" }

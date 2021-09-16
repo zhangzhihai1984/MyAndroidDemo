@@ -8,7 +8,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_color_seeker.*
 
-class ColorSeekerActivity : BaseActivity(R.layout.activity_color_seeker, Theme.LIGHT_AUTO) {
+class ColorSeekerActivity : BaseActivity(R.layout.activity_color_seeker) {
 
     override fun initView() {
         color_seeker_view.colorSeeks()

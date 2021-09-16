@@ -6,7 +6,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bitmap_mesh_curtain.*
 
-class BitmapMeshCurtainActivity : BaseActivity(R.layout.activity_bitmap_mesh_curtain, Theme.LIGHT_AUTO) {
+class BitmapMeshCurtainActivity : BaseActivity(R.layout.activity_bitmap_mesh_curtain) {
 
     override fun initView() {
         debug_imageview.clicks()

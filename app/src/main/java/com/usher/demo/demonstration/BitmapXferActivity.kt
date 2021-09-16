@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_bitmap_xfer.*
 import kotlinx.android.synthetic.main.fragment_bitmap_xfer.*
 import kotlinx.android.synthetic.main.item_bitmap_xfer.view.*
 
-class BitmapXferActivity : BaseActivity(R.layout.activity_bitmap_xfer, Theme.LIGHT_AUTO) {
+class BitmapXferActivity : BaseActivity(R.layout.activity_bitmap_xfer) {
 
     override fun initView() {
         val resIds = listOf(R.drawable.picasso_reading_at_a_table, R.drawable.demo_plaster, R.drawable.picasso_girl_before_a_mirror)

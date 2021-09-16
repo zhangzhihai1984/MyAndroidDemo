@@ -6,7 +6,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_wave.*
 
-class WaveActivity : BaseActivity(R.layout.activity_wave, Theme.LIGHT_AUTO) {
+class WaveActivity : BaseActivity(R.layout.activity_wave) {
 
     override fun initView() {
 //        Observable.interval(0, 200, TimeUnit.MILLISECONDS)

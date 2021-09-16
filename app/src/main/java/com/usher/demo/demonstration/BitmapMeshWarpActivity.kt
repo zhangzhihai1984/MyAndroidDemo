@@ -7,7 +7,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bitmap_mesh_warp.*
 
-class BitmapMeshWarpActivity : BaseActivity(R.layout.activity_bitmap_mesh_warp, Theme.LIGHT_AUTO) {
+class BitmapMeshWarpActivity : BaseActivity(R.layout.activity_bitmap_mesh_warp) {
 
     override fun initView() {
         color_seeker_view.colorSeeks()

@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_loop_pager2.*
 import kotlinx.android.synthetic.main.fragment_pager.*
 import java.util.concurrent.TimeUnit
 
-class LoopPager2Activity : BaseActivity(R.layout.activity_loop_pager2, Theme.LIGHT_AUTO) {
+class LoopPager2Activity : BaseActivity(R.layout.activity_loop_pager2) {
 
     override fun initView() {
         val data = List(5) { it }

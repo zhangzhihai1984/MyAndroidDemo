@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_curtain.*
 import kotlinx.android.synthetic.main.curtain_content_layout.*
 import kotlinx.android.synthetic.main.curtain_cover_layout.*
 
-class CurtainActivity : BaseActivity(R.layout.activity_curtain, Theme.LIGHT_AUTO) {
+class CurtainActivity : BaseActivity(R.layout.activity_curtain) {
 
     override fun initView() {
         val resIds = listOf(R.drawable.demo_slamdunk, R.drawable.demo_mall, R.drawable.demo_tree, R.drawable.demo_hardworking, R.drawable.demo_arale)

@@ -17,7 +17,7 @@ import io.reactivex.rxjava3.kotlin.Observables
 import kotlinx.android.synthetic.main.activity_colorfilter_lighting.*
 import kotlinx.android.synthetic.main.fragment_colorfilter_lighting.*
 
-class LightingColorFilterActivity : BaseActivity(R.layout.activity_colorfilter_lighting, Theme.LIGHT_AUTO) {
+class LightingColorFilterActivity : BaseActivity(R.layout.activity_colorfilter_lighting) {
 
     override fun initView() {
         val resIds = listOf(R.drawable.picasso_girl_with_mandolin, R.drawable.demo_plaster, R.drawable.picasso_dora_maar_au_chat)

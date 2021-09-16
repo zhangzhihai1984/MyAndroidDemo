@@ -9,7 +9,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_color_picker.*
 
-class ColorPickerActivity : BaseActivity(R.layout.activity_color_picker, Theme.LIGHT_AUTO) {
+class ColorPickerActivity : BaseActivity(R.layout.activity_color_picker) {
 
     override fun initView() {
         color_picker_view.colorPicks()

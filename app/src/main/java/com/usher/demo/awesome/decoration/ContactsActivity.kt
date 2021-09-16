@@ -31,7 +31,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.concurrent.TimeUnit
 
-class ContactsActivity : BaseActivity(R.layout.activity_contacts, Theme.LIGHT_AUTO) {
+class ContactsActivity : BaseActivity(R.layout.activity_contacts) {
 
     override fun initView() {
         statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ContactsActivity) }

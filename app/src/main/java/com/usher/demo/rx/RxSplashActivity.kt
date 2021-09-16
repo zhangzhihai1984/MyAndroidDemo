@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_rx_splash.*
 import java.util.concurrent.TimeUnit
 
-class RxSplashActivity : BaseActivity(R.layout.activity_rx_splash, Theme.LIGHT_AUTO) {
+class RxSplashActivity : BaseActivity(R.layout.activity_rx_splash) {
     companion object {
         private const val COUNTDOWN_SECONDS = 10L
     }

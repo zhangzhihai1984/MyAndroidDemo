@@ -7,7 +7,7 @@ import com.usher.demo.base.BaseActivity
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_rx_sum.*
 
-class RxSumActivity : BaseActivity(R.layout.activity_rx_sum, Theme.LIGHT_AUTO) {
+class RxSumActivity : BaseActivity(R.layout.activity_rx_sum) {
 
     override fun initView() {
         val param1 = param1_textview.clicks()

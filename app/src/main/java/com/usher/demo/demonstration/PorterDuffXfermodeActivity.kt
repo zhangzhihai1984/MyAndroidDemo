@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_porterduff_xfermode.*
 import kotlinx.android.synthetic.main.fragment_porterduff_xfermode.*
 import kotlinx.android.synthetic.main.item_porterduff_xfermode.view.*
 
-class PorterDuffXfermodeActivity : BaseActivity(R.layout.activity_porterduff_xfermode, Theme.LIGHT_AUTO) {
+class PorterDuffXfermodeActivity : BaseActivity(R.layout.activity_porterduff_xfermode) {
 
     override fun initView() {
         val colorPairs = listOf(

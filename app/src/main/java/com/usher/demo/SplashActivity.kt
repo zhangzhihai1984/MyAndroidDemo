@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.util.concurrent.TimeUnit
 
-class SplashActivity : BaseActivity(R.layout.activity_splash, Theme.LIGHT_AUTO) {
+class SplashActivity : BaseActivity(R.layout.activity_splash) {
     companion object {
         private const val DURATION = 600L
     }

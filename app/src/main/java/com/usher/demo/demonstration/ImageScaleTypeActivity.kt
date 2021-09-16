@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_image_scale_type.*
 import kotlinx.android.synthetic.main.fragment_image_scale_type.*
 import kotlinx.android.synthetic.main.item_image_scale_type.view.*
 
-class ImageScaleTypeActivity : BaseActivity(R.layout.activity_image_scale_type, Theme.LIGHT_AUTO) {
+class ImageScaleTypeActivity : BaseActivity(R.layout.activity_image_scale_type) {
 
     override fun initView() {
         val resIds = listOf(R.drawable.picasso_the_weeping_woman, R.drawable.picasso_reading_at_a_table, R.drawable.demo_bottle_s)
@@ -79,7 +79,8 @@ class ImageScaleTypeActivity : BaseActivity(R.layout.activity_image_scale_type, 
                 recyclerview.adapter = scaleTypeAdapter
 
                 scaleTypeAdapter.itemClicks()
-                        .switchMap {
+                        .compose(RxUtil.singleClick())
+                        .flatMap {
                             CommonDialog(context as Context)
                                     .withTitle(scaleTypes[it].name)
                                     .withContent(getScaleTypeDesc(scaleTypes[it]))

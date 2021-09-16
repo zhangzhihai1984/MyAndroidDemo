@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_rx_search.*
 import kotlinx.android.synthetic.main.item_search.view.*
 import java.util.concurrent.TimeUnit
 
-class RxSearchActivity : BaseActivity(R.layout.activity_rx_search, Theme.LIGHT_AUTO) {
+class RxSearchActivity : BaseActivity(R.layout.activity_rx_search) {
     private val mCities = listOf("北京市", "上海市", "天津市", "重庆市", "沈阳市", "台北市")
     private val mAdapter by lazy { SearchAdapter(listOf()) }
 

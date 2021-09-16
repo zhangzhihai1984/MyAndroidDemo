@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_colorfilter_porterduff.*
 import kotlinx.android.synthetic.main.fragment_colorfilter_porterduff.*
 import kotlinx.android.synthetic.main.item_colorfilter_porterduff.view.*
 
-class PorterDuffColorFilterActivity : BaseActivity(R.layout.activity_colorfilter_porterduff, Theme.LIGHT_AUTO) {
+class PorterDuffColorFilterActivity : BaseActivity(R.layout.activity_colorfilter_porterduff) {
 
     override fun initView() {
         val resIds = listOf(R.drawable.demo_plaster, R.drawable.picasso_reading_at_a_table, R.drawable.demo_bottle, R.drawable.demo_bottle2)

@@ -5,7 +5,7 @@ import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_zipcode.*
 
-class ZipCodeActivity : BaseActivity(R.layout.activity_zipcode, Theme.LIGHT_AUTO) {
+class ZipCodeActivity : BaseActivity(R.layout.activity_zipcode) {
 
     override fun initView() {
         zipcodeview.zipCodeChanges()

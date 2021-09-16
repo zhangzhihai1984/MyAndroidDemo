@@ -10,7 +10,7 @@ import com.usher.demo.base.BaseActivity
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_graffiti.*
 
-class GraffitiActivity : BaseActivity(R.layout.activity_graffiti, Theme.LIGHT_AUTO) {
+class GraffitiActivity : BaseActivity(R.layout.activity_graffiti) {
 
     override fun initView() {
         val strokeImageViews = listOf(stroke_imageview1, stroke_imageview2, stroke_imageview3)

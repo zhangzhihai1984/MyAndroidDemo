@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_loop_hint.*
 import java.util.concurrent.TimeUnit
 
-class LoopHintActivity : BaseActivity(R.layout.activity_loop_hint, Theme.LIGHT_AUTO) {
+class LoopHintActivity : BaseActivity(R.layout.activity_loop_hint) {
 
     override fun initView() {
         val data = listOf(*resources.getStringArray(R.array.selected_channels))

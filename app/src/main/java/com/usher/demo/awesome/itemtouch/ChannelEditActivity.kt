@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.activity_channel_edit.*
 import kotlinx.android.synthetic.main.item_channel.view.*
 import kotlinx.android.synthetic.main.item_channel_header.view.*
 
-class ChannelEditActivity : BaseActivity(R.layout.activity_channel_edit, Theme.LIGHT_AUTO) {
+class ChannelEditActivity : BaseActivity(R.layout.activity_channel_edit) {
 
     override fun initView() {
         statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(this@ChannelEditActivity) }

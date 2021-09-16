@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_tablayout2.*
 import kotlinx.android.synthetic.main.fragment_tab_layout.*
 import kotlinx.android.synthetic.main.smart_tab_item.view.*
 
-class TabLayout2Activity : BaseActivity(R.layout.activity_tablayout2, Theme.LIGHT_AUTO) {
+class TabLayout2Activity : BaseActivity(R.layout.activity_tablayout2) {
 
     override fun initView() {
         val data = listOf(*resources.getStringArray(R.array.selected_channels))
