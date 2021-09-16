@@ -13,6 +13,7 @@
         android:overScrollMode="never" />
 
     <ImageView
+        android:id="@+id/setting_imageview"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"

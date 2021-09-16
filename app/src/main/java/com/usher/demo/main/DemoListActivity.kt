@@ -5,10 +5,12 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
+import com.jakewharton.rxbinding4.view.clicks
 import com.twigcodes.ui.adapter.RxBaseQuickAdapter
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
+import com.usher.demo.setting.SettingActivity
 import kotlinx.android.synthetic.main.activity_demo_list.*
 import kotlinx.android.synthetic.main.item_demo.view.*
 
@@ -32,6 +34,11 @@ class DemoListActivity : BaseActivity(R.layout.activity_demo_list) {
                         putExtra(DemoConfig.TAG_KEY, demoItem.key)
                     })
                 }
+
+        setting_imageview.clicks()
+                .compose(RxUtil.singleClick())
+                .to(RxUtil.autoDispose(this))
+                .subscribe { startActivity(Intent(this, SettingActivity::class.java)) }
     }
 
     private class DemoAdapter(data: List<DemoItem>) : RxBaseQuickAdapter<DemoItem, BaseViewHolder>(R.layout.item_demo, data) {
