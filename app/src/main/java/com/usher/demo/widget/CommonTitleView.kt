@@ -22,6 +22,11 @@ class CommonTitleView @JvmOverloads constructor(context: Context, attrs: Attribu
 
         inflate(context, R.layout.common_title_layout, this)
 
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.CommonTitleView, defStyleAttr, defStyleRes)
+        center_textview.text = a.getString(R.styleable.CommonTitleView_title)
+
+        a.recycle()
+
         globalLayouts().take(1)
                 .to(RxUtil.autoDispose(context as LifecycleOwner))
                 .subscribe { title_statusbar_view.updateLayoutParams { height = SystemUtil.getStatusBarHeight(context) } }

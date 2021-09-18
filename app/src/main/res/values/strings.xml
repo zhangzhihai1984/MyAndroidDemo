@@ -110,4 +110,7 @@
 
     <string name="channel_edit_title">频道定制</string>
 
+    <string name="setting_title">设置</string>
+    <string name="setting_night_mode">深色模式</string>
+
 </resources>
