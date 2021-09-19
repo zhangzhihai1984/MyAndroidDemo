@@ -41,10 +41,17 @@ open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMo
         DARK_ONLY(false, false)
     }
 
+    enum class NightModeStrategy {
+        AUTO,
+        YES,
+        NO
+    }
+
     data class ActivityResult(val requestCode: Int, val resultCode: Int, val data: Intent?)
 
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
 

@@ -105,6 +105,10 @@
     <string name="application_version">App Version: %1$s</string>
     <string name="application_flavor">App Flavor: %1$s</string>
     <string name="application_api_host">API Host: %1$s</string>
+    
+    <string name="common_confirm">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_done">我知道了</string>
 
     <string name="rx_sum_init_value">--</string>
 
@@ -117,5 +121,6 @@
     <string name="night_mode_only">深色模式</string>
     <string name="night_mode_auto">跟随系统</string>
     <string name="night_mode_save">保存</string>
+    <string name="night_mode_save_hint">新的设置需要重启应用才能生效</string>
 
 </resources>

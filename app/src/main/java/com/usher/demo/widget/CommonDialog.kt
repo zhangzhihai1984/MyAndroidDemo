@@ -38,7 +38,7 @@ class CommonDialog(private val mContext: Context) : Dialog(mContext, R.style.Fra
     }
 
     private fun initView() {
-        cancel_button.clicks()
+        cancel_textview.clicks()
                 .take(1)
                 .to(RxUtil.autoDispose(mContext as LifecycleOwner))
                 .subscribe {
@@ -46,7 +46,7 @@ class CommonDialog(private val mContext: Context) : Dialog(mContext, R.style.Fra
                     dismiss()
                 }
 
-        Observable.merge(confirm_button.clicks(), done_button.clicks())
+        Observable.merge(confirm_textview.clicks(), done_textview.clicks())
                 .take(1)
                 .to(RxUtil.autoDispose(mContext as LifecycleOwner))
                 .subscribe {
@@ -60,13 +60,13 @@ class CommonDialog(private val mContext: Context) : Dialog(mContext, R.style.Fra
             ButtonType.DOUBLE_PRIMARY -> {
                 double_layout.visibility = View.VISIBLE
                 single_layout.visibility = View.GONE
-                confirm_button.setBackgroundResource(R.drawable.button_primary_corner_background)
+                confirm_textview.setBackgroundResource(R.drawable.button_primary_corner_background)
             }
             //TODO:
             ButtonType.DOUBLE_WARN -> {
                 double_layout.visibility = View.VISIBLE
                 single_layout.visibility = View.GONE
-                confirm_button.setBackgroundResource(R.drawable.button_primary_corner_background)
+                confirm_textview.setBackgroundResource(R.drawable.button_primary_corner_background)
             }
             ButtonType.SINGLE -> {
                 double_layout.visibility = View.GONE

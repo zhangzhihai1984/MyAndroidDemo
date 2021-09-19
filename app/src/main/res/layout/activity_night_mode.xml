@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <com.usher.demo.widget.CommonTitleView
+        android:id="@+id/title_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:centerText="@string/night_mode_title"
