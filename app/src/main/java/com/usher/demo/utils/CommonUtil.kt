@@ -1,7 +1,7 @@
 package com.usher.demo.utils
 
 import android.content.Context
-import com.twigcodes.ui.activity.BaseActivity
+import com.usher.demo.base.BaseActivity
 
 object CommonUtil {
 

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.twigcodes.ui.util.PermissionUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -41,19 +40,7 @@ open class BaseActivity(contentLayoutId: Int, private val statusBarThemeForDayMo
         DARK_ONLY(false, false)
     }
 
-    enum class NightModeStrategy {
-        AUTO,
-        YES,
-        NO
-    }
-
     data class ActivityResult(val requestCode: Int, val resultCode: Int, val data: Intent?)
-
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
