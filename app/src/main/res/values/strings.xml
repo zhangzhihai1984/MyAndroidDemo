@@ -113,4 +113,8 @@
     <string name="setting_title">设置</string>
     <string name="setting_night_mode">深色模式</string>
 
+    <string name="night_mode_title">深色模式设置</string>
+    <string name="night_mode_only">深色模式</string>
+    <string name="night_mode_auto">跟随系统</string>
+
 </resources>

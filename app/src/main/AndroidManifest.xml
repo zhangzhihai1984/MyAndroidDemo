@@ -65,6 +65,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/CommonTheme" />
 
+        <activity
+            android:name=".setting.NightModeActivity"
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/CommonTheme" />
+
         <!-- Awesome Demo -->
         <activity
             android:name=".awesome.itemtouch.ChannelEditActivity"

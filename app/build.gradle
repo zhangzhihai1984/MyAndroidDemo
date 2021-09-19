@@ -48,7 +48,7 @@ android {
     }
 
     lintOptions {
-        disable 'GoogleAppIndexingWarning'
+        disable 'GoogleAppIndexingWarning', 'MissingTranslation', 'ExtraTranslation'
         checkReleaseBuilds false
         abortOnError false
     }
