@@ -12,6 +12,7 @@
         app:endText="@string/night_mode_save" />
 
     <LinearLayout
+        android:id="@+id/night_only_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="1dp"
@@ -28,16 +29,17 @@
             android:textColor="@color/text_primary"
             android:textSize="14sp" />
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+        <CheckBox
+            android:id="@+id/night_only_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_next_secondary" />
+            android:clickable="false" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/night_auto_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="1dp"
@@ -54,12 +56,12 @@
             android:textColor="@color/text_primary"
             android:textSize="14sp" />
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+        <CheckBox
+            android:id="@+id/night_auto_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_next_secondary" />
+            android:clickable="false" />
 
     </LinearLayout>
 
