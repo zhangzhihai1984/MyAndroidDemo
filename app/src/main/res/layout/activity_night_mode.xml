@@ -8,7 +8,7 @@
     <com.usher.demo.widget.CommonTitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/night_mode_title" />
+        app:centerText="@string/night_mode_title" />
 
     <LinearLayout
         android:layout_width="match_parent"

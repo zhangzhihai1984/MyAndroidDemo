@@ -23,7 +23,7 @@ class CommonTitleView @JvmOverloads constructor(context: Context, attrs: Attribu
         inflate(context, R.layout.common_title_layout, this)
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.CommonTitleView, defStyleAttr, defStyleRes)
-        center_textview.text = a.getString(R.styleable.CommonTitleView_title)
+        center_textview.text = a.getString(R.styleable.CommonTitleView_centerText)
 
         a.recycle()
 
