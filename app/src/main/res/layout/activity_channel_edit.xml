@@ -43,8 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="1dp"
-            android:overScrollMode="never"
-            tools:targetApi="lollipop" />
+            android:overScrollMode="never" />
 
         <ImageView
             android:id="@+id/item_capture_imageview"
@@ -52,8 +51,7 @@
             android:layout_height="50dp"
             android:contentDescription="@null"
             android:elevation="1dp"
-            android:visibility="invisible"
-            tools:targetApi="lollipop" />
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

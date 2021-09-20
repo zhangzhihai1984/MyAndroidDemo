@@ -130,15 +130,14 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/original_imageview"
                 android:layout_width="90dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                android:tint="@color/mask_color"
                 android:tintMode="src_atop"
-                tools:targetApi="lollipop" />
+                app:tint="@color/mask_color" />
 
         </LinearLayout>
 
