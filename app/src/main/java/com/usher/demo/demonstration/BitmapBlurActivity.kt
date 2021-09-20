@@ -14,7 +14,7 @@ import com.twigcodes.ui.util.ImageUtil
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.rxjava3.kotlin.Observables
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_bitmap_blur.*
 import kotlinx.android.synthetic.main.fragment_bitmap_blur.*
 import kotlin.math.max
@@ -31,13 +31,13 @@ class BitmapBlurActivity : BaseActivity(R.layout.activity_bitmap_blur) {
                 .subscribe { position ->
                     original_imageview.setImageResource(resIds[position])
                 }
-//
+
         indicatorview.setViewPager(viewpager)
 
         val scaleChanges = scale_seekbar.changes().map { max(it, 2) }
         val radiusChanges = radius_seekbar.changes().map { max(it, 1) }
 
-        Observables.combineLatest(scaleChanges, radiusChanges) { scale, radius ->
+        Observable.combineLatest(scaleChanges, radiusChanges) { scale, radius ->
             scale_textview.text = "$scale"
             radius_textview.text = "$radius"
             adapter.updateBlur(scale.toFloat(), radius.toFloat())
