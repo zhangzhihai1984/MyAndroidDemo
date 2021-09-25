@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background"
     android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical">
@@ -11,8 +10,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
         android:layout_height="400dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         app:cardBackgroundColor="@color/item_background"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp">
@@ -82,7 +79,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MUL"
+                    android:text="@string/lighting_colorfilter_mul"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -114,7 +111,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ADD"
+                    android:text="@string/lighting_colorfilter_add"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />

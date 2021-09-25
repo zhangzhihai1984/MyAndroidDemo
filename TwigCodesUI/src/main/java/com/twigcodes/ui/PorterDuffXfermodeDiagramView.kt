@@ -17,7 +17,7 @@ class PorterDuffXfermodeDiagramView @JvmOverloads constructor(context: Context, 
             val bitmap = Bitmap.createBitmap(intArrayOf(0xFFFFFF, 0xCCCCCC, 0xCCCCCC, 0xFFFFFF), 2, 2, Bitmap.Config.RGB_565)
 
             shader = BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT).apply {
-                setLocalMatrix(Matrix().apply { setScale(16f, 16f) })
+                setLocalMatrix(Matrix().apply { setScale(8f, 8f) })
             }
         }
     }

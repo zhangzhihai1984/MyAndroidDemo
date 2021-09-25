@@ -13,7 +13,7 @@ import com.twigcodes.ui.fragment.BasePagerFragment
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
 import com.usher.demo.base.BaseActivity
-import io.reactivex.rxjava3.kotlin.Observables
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_colorfilter_lighting.*
 import kotlinx.android.synthetic.main.fragment_colorfilter_lighting.*
 
@@ -32,7 +32,7 @@ class LightingColorFilterActivity : BaseActivity(R.layout.activity_colorfilter_l
 
         indicatorview.setViewPager(viewpager)
 
-        Observables.combineLatest(mul_color_seeker_view.colorSeeks(), add_color_seeker_view.colorSeeks()) { mul, add ->
+        Observable.combineLatest(mul_color_seeker_view.colorSeeks(), add_color_seeker_view.colorSeeks()) { mul, add ->
             adapter.updateColorFilter(mul, add)
             mul_palette_imageview.setColorFilter(mul, PorterDuff.Mode.SRC_IN)
             add_palette_imageview.setColorFilter(add, PorterDuff.Mode.SRC_IN)

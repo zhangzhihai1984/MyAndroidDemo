@@ -112,6 +112,9 @@
 
     <string name="rx_sum_init_value">--</string>
 
+    <string name="lighting_colorfilter_mul">MUL</string>
+    <string name="lighting_colorfilter_add">ADD</string>
+
     <string name="channel_edit_title">频道定制</string>
 
     <string name="setting_title">设置</string>
