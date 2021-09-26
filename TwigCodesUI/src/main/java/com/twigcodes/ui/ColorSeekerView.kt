@@ -11,7 +11,6 @@ import com.jakewharton.rxbinding4.view.globalLayouts
 import com.jakewharton.rxbinding4.widget.changes
 import com.twigcodes.ui.util.RxUtil
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.android.synthetic.main.color_seeker_layout.view.*
 
@@ -37,8 +36,8 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
     private fun initView() {
         globalLayouts()
                 .take(1)
-                .switchMap {
-                    Observables.combineLatest(alpha_seekbar.changes(), red_seekbar.changes(), green_seekbar.changes(), blue_seekbar.changes()) { alpha, red, green, blue ->
+                .flatMap {
+                    Observable.combineLatest(alpha_seekbar.changes(), red_seekbar.changes(), green_seekbar.changes(), blue_seekbar.changes()) { alpha, red, green, blue ->
                         Color.argb(alpha, red, green, blue)
                     }
                 }
@@ -47,7 +46,6 @@ class ColorSeekerView @JvmOverloads constructor(context: Context, attrs: Attribu
                     alpha_seekbar.progressTintList = ColorStateList.valueOf(color)
                     mColorSeekSubject.onNext(color)
                 }
-
     }
 
     fun updateColor(color: Int) {

@@ -1,11 +1,9 @@
 package com.usher.demo.demonstration
 
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -92,17 +90,15 @@ class PorterDuffColorFilterActivity : BaseActivity(R.layout.activity_colorfilter
                         PorterDuff.Mode.OVERLAY
                 )
 
-                ContextCompat.getDrawable(requireContext(), resId)?.toBitmap()?.let { bitmap ->
-                    recyclerview.layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
-                    recyclerview.adapter = ColorFilterAdapter(modes, bitmap, color)
-                }
+                recyclerview.layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
+                recyclerview.adapter = ColorFilterAdapter(modes, resId, color)
             }
         }
 
-        private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val bitmap: Bitmap, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_colorfilter_porterduff, data) {
+        private class ColorFilterAdapter(data: List<PorterDuff.Mode>, val resId: Int, var color: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_colorfilter_porterduff, data) {
             override fun convert(holder: BaseViewHolder, mode: PorterDuff.Mode) {
                 holder.itemView.run {
-                    colorfilter_imageview.setImageBitmap(bitmap)
+                    colorfilter_imageview.setImageResource(resId)
                     colorfilter_imageview.setColorFilter(color, mode)
 
                     mode_textview.text = mode.name

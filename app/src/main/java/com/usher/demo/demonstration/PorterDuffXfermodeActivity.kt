@@ -83,6 +83,7 @@ class PorterDuffXfermodeActivity : BaseActivity(R.layout.activity_porterduff_xfe
         }
 
         private class PorterDuffAdapter(data: List<PorterDuff.Mode>, private val srcColor: Int, private val dstColor: Int) : RxBaseQuickAdapter<PorterDuff.Mode, BaseViewHolder>(R.layout.item_porterduff_xfermode, data) {
+
             override fun convert(holder: BaseViewHolder, mode: PorterDuff.Mode) {
                 holder.itemView.run {
                     porterduff_view.update(mode, srcColor, dstColor)
