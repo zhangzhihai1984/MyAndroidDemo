@@ -8,11 +8,9 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        style="@style/CommonCardView.Large"
         android:layout_width="300dp"
-        android:layout_height="370dp"
-        app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        android:layout_height="370dp">
 
         <com.twigcodes.ui.bitmapmesh.BitmapRippleView
             android:id="@+id/bitmap_ripple_view"

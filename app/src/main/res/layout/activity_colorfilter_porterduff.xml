@@ -38,13 +38,11 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+            style="@style/CommonCardView.Middle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp">
+            android:layout_weight="1">
 
             <com.twigcodes.ui.ColorSeekerView
                 android:id="@+id/color_seeker_view"
@@ -55,13 +53,11 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            style="@style/CommonCardView.Middle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp">
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/original_imageview"

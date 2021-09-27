@@ -39,4 +39,18 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="CommonCardView" parent="CardView">
+        <item name="cardBackground">@color/item_background</item>
+    </style>
+
+    <style name="CommonCardView.Large" parent="CommonCardView">
+        <item name="cardCornerRadius">10dp</item>
+        <item name="cardElevation">2dp</item>
+    </style>
+
+    <style name="CommonCardView.Middle" parent="CommonCardView">
+        <item name="cardCornerRadius">5dp</item>
+        <item name="cardElevation">2dp</item>
+    </style>
+
 </resources>
