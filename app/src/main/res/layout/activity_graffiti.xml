@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background"
     android:fitsSystemWindows="true"
     android:gravity="center_vertical"
     android:orientation="vertical">
@@ -13,13 +12,11 @@
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
+            style="@style/CommonCardView.Large"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="5dp">
+            android:layout_weight="1">
 
             <com.twigcodes.ui.GraffitiView
                 android:id="@+id/graffiti_view"
@@ -76,15 +73,13 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
+        style="@style/CommonCardView.Large"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_margin="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"

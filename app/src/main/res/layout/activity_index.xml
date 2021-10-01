@@ -9,11 +9,9 @@
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
+        style="@style/CommonCardView.Large"
         android:layout_width="100dp"
-        android:layout_height="500dp"
-        app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        android:layout_height="500dp">
 
         <com.twigcodes.ui.IndexView
             android:id="@+id/indexview"
@@ -31,12 +29,10 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        style="@style/CommonCardView.Large"
         android:layout_width="100dp"
         android:layout_height="500dp"
-        android:layout_marginStart="20dp"
-        app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        android:layout_marginStart="20dp">
 
         <com.twigcodes.ui.IndexView
             android:id="@+id/indexview2"
