@@ -53,4 +53,18 @@
         <item name="cardElevation">2dp</item>
     </style>
 
+    <style name="CommonSmartTabLayout">
+        <item name="stl_clickable">false</item>
+        <item name="stl_customTabTextLayoutId">@layout/item_indicator_primary</item>
+        <item name="stl_dividerColor">@android:color/transparent</item>
+        <item name="stl_drawDecorationAfterTab">true</item>
+        <item name="stl_indicatorColor">@color/colorPrimaryDark</item>
+        <item name="stl_indicatorCornerRadius">2dp</item>
+        <item name="stl_indicatorGravity">center</item>
+        <item name="stl_indicatorInterpolation">linear</item>
+        <item name="stl_indicatorThickness">3dp</item>
+        <item name="stl_indicatorWidth">auto</item>
+        <item name="stl_underlineColor">@android:color/transparent</item>
+    </style>
+
 </resources>

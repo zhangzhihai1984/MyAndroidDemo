@@ -37,22 +37,12 @@
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/indicatorview"
+        style="@style/CommonSmartTabLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:stl_clickable="false"
-        app:stl_customTabTextLayoutId="@layout/item_indicator_primary"
-        app:stl_dividerColor="@android:color/transparent"
-        app:stl_drawDecorationAfterTab="true"
-        app:stl_indicatorColor="@color/colorPrimaryDark"
-        app:stl_indicatorCornerRadius="2dp"
-        app:stl_indicatorGravity="center"
-        app:stl_indicatorInterpolation="linear"
-        app:stl_indicatorThickness="3dp"
-        app:stl_indicatorWidth="auto"
-        app:stl_underlineColor="@android:color/transparent" />
+        android:layout_marginBottom="10dp" />
 
     <androidx.cardview.widget.CardView
         style="@style/CommonCardView.Large"
