@@ -11,12 +11,10 @@
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
+            style="@style/CommonCardView.Large"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="40dp"
-            app:cardBackgroundColor="@color/item_background"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="5dp">
+            android:layout_margin="40dp">
 
             <com.twigcodes.ui.colorpicker.ColorPickerView
                 android:id="@+id/color_picker_view"
@@ -26,11 +24,11 @@
                 app:colorAlphaCornerRadius="5dp"
                 app:colorBrightnessCornerRadius="5dp"
                 app:colorBrightnessHeight="20dp"
-                app:colorShowAlpha="true"
-                app:colorShowAlphaIndicator="true"
                 app:colorPaletteMarginInner="20dp"
                 app:colorPaletteWidth="40dp"
-                app:colorPickerHaloWidth="2dp" />
+                app:colorPickerHaloWidth="2dp"
+                app:colorShowAlpha="true"
+                app:colorShowAlphaIndicator="true" />
 
         </androidx.cardview.widget.CardView>
 
@@ -38,11 +36,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/palette_cardview"
+        style="@style/CommonCardView.Large"
         android:layout_width="60dp"
-        android:layout_height="60dp"
-        app:cardBackgroundColor="@color/item_background"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        android:layout_height="60dp">
 
         <ImageView
             android:id="@+id/palette_imageview"

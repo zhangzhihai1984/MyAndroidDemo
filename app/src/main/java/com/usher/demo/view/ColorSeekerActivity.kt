@@ -1,7 +1,5 @@
 package com.usher.demo.view
 
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import androidx.core.content.ContextCompat
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
@@ -15,7 +13,7 @@ class ColorSeekerActivity : BaseActivity(R.layout.activity_color_seeker) {
                 .compose(RxUtil.getSchedulerComposer())
                 .to(RxUtil.autoDispose(this))
                 .subscribe { color ->
-                    palette_imageview.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+                    palette_imageview.setColorFilter(color)
                 }
 
         color_seeker_view.updateColor(ContextCompat.getColor(this, R.color.colorPrimary))

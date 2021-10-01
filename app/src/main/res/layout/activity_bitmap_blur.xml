@@ -41,7 +41,7 @@
         app:stl_underlineColor="@android:color/transparent" />
 
     <androidx.cardview.widget.CardView
-        style="@style/CommonCardView.Middle"
+        style="@style/CommonCardView.Large"
         android:layout_width="300dp"
         android:layout_height="120dp">
 

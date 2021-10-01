@@ -1,8 +1,6 @@
 package com.usher.demo.view
 
 import android.animation.ValueAnimator
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import androidx.core.animation.doOnEnd
 import com.twigcodes.ui.util.RxUtil
 import com.usher.demo.R
@@ -24,7 +22,7 @@ class ColorPickerActivity : BaseActivity(R.layout.activity_color_picker) {
                         }
                         doOnEnd {
 //                            palette_imageview.imageTintList = ColorStateList.valueOf(color)
-                            palette_imageview.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+                            palette_imageview.setColorFilter(color)
                         }
                     }.start()
                 }
